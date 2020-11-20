@@ -3,15 +3,27 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
+
+	<meta name="keywords" content="minecraft, map, dynamic" />
+	<meta name="description" content="Minecraft Dynamic Map" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <link rel="stylesheet" type="text/css" href="css/standalone.css?_=a" media="screen" />
+	<link rel="stylesheet" type="text/css" href="css/dynmap_style.css?_=a" media="screen" />
+	<link rel="stylesheet" type="text/css" href="css/rtgame.css?_=a" media="screen" />
+
+	<link rel="icon" href="images/dynmap.ico" type="image/ico" />
   </head>
   <body>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="app"></div>
+    <div id="mcmap" class="dynmap"></div>
     <!-- built files will be auto injected -->
   </body>
 </html>

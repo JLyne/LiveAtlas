@@ -1,0 +1,371 @@
+/* latin */
+@font-face {
+	font-family: 'Raleway';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Raleway'), local('Raleway-Regular'), url(https://fonts.gstatic.com/s/raleway/v14/1Ptug8zYS_SKggPNyC0ITw.woff2) format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+html {
+	font-size: .625em;
+}
+
+body {
+	font-family: Raleway, sans-serif;
+	color: #cccccc;
+	text-shadow: 0.1rem 0.1rem #000000;
+	letter-spacing: 0.02rem;
+	font-size: 1.2em;
+}
+
+.dynmap .sidebar {
+	background-color: #222222;
+	border: none;
+	color: inherit;
+	width: 21rem;
+	box-shadow: -2px 0px 4px 1px rgba(17,17,17,0.8);
+}
+
+.dynmap .panel {
+	padding: 1rem 1.5rem;
+}
+
+.panel .scrollup,
+.panel .scrolldown {
+	background-color: #111111;
+	border: none;
+	cursor: pointer;
+	height: 2.5rem;
+}
+
+.panel .scrollup:hover,
+.panel .scrollup:focus ,
+.panel .scrolldown:hover,
+.panel .scrolldown:focus {
+	border: none;
+	height: 2.5rem;
+}
+
+.dynmap .sidebar .panel > .pin {
+	right: 1.5rem;
+    top: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    background-size: cover;
+}
+
+.dynmap .panel .section {
+	border: none;
+	padding: 0;
+	margin: 0 0 2rem;
+}
+
+.dynmap .panel .section legend {
+	color: #eeeeee;
+	font-size: 1.4rem;
+	letter-spacing: 0.04rem;
+	padding: 0.8rem 0.4rem 0.8rem 0;
+	margin-bottom: 0.5rem;
+}
+
+.dynmap .panel .subsection {
+	margin-bottom: 1rem;
+	border-bottom: none;
+	display: flex;
+	align-items: center;
+}
+
+.dynmap .panel .sublist {
+	display: flex;
+	align-items: center;
+	flex: 0 0 auto;
+	margin-left: auto;
+}
+
+.dynmap .panel .sublist .item {
+	float: none;
+	background-color: #111111 !important;
+	width: 2.6rem;
+	height: 2.6rem;
+	border-radius: 0.2rem;
+	cursor: pointer;
+	margin: 0;
+}
+
+.dynmap .panel .sublist .item + .item {
+	margin-left: 0.5rem;
+}
+
+.dynmap .panel .sublist .item a {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.dynmap .panel .playerlist {
+	display: flex;
+	flex-direction: column;
+}
+
+.dynmap .playerlist .player {
+    display: inline-block;
+    float: none;
+    width: auto;
+    padding: 0;
+    border: none;
+    padding: 0.5rem 0.2rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.dynmap .playerlist .player.following {
+	border: none;
+	border-radius: 0;
+	padding: 0.5rem 0.2rem;
+}
+
+.dynmap .playerlist .player .playerIcon {
+	margin: 0 1rem 0 0;
+	padding: 0;
+}
+
+.dynmap .panel .playerlist .player a {
+	color: inherit;
+}
+
+.dynmap .hitbar {
+	background-color: #222222;
+}
+
+.leaflet-container {
+	font-family: inherit;
+}
+
+.leaflet-left {
+    display: flex;
+    flex-direction: column;
+    height: 50%;
+    align-items: flex-start;
+}
+
+.leaflet-left:before,
+.leaflet-left.leaflet-bottom:after {
+	content: '';
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 4rem;
+	background-color: #222222;
+	z-index: -1;
+    box-shadow: 2px -4px 4px 1px rgba(17,17,17,0.8);
+}
+
+.leaflet-left.leaflet-bottom:after {
+	top: auto;
+	bottom: 0;
+	left: 4rem;
+	height: 4rem;
+	right: 0;
+	width: auto;
+	box-shadow: 0 -2px 4px 1px rgba(17,17,17,0.8);
+	position: fixed;
+}
+
+.leaflet-left.leaflet-top {
+	justify-content: flex-start;
+	z-index: 2;
+}
+
+.leaflet-left.leaflet-bottom {
+	justify-content: flex-end;
+	z-index: 1;
+	box-shadow: 2px 0px 4px 1px rgba(17,17,17,0.8);
+}
+
+.leaflet-left .leaflet-control {
+	margin-left: 0;
+	position: relative;
+	z-index: 2;
+}
+
+.leaflet-top .leaflet-control {
+	margin-top: 2rem;
+}
+
+.leaflet-container .leaflet-control-zoom {
+	margin-top: 1rem;
+	border: none;
+	order: 1;
+}
+
+.leaflet-control-zoom a,
+.leaflet-control-zoom a.leaflet-control-zoom-disabled,
+.leaflet-control-layers,
+.leaflet-control-layers-list,
+.dynmap .dynmap-link a {
+	background-color: #111111;
+	color: #eeeeee;
+}
+
+.leaflet-bar,
+.leaflet-control-layers,
+.dynmap .dynmap-link a {
+	box-shadow: none;
+}
+
+.leaflet-control-zoom a,
+.leaflet-control-layers-toggle,
+.dynmap .dynmap-link a {
+	width: 4rem;
+	height: 4rem;
+	border-radius: 0;
+}
+
+.leaflet-control-zoom a:hover,
+.leaflet-control-zoom a:focus,
+.dynmap .dynmap-link a:hover,
+.dynmap .dynmap-link a:focus,
+.leaflet-control-layers:hover,
+.leaflet-control-layers:focus {
+	background-color: rgba(64,64,64,0.6);
+	color: #ffffff;
+}
+
+.leaflet-control-zoom a {
+	border: none;
+	border-radius: 0;
+	font-size: 2rem;
+	line-height: 2rem;
+	padding: 1rem;
+	box-sizing: border-box;
+}
+
+.leaflet-control-zoom a.leaflet-control-zoom-disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.leaflet-control-layers {
+	border-radius: 0;
+	order: 2;
+}
+
+.leaflet-control-layers-list {
+	position: absolute;
+    top: 0;
+    left: 4rem;
+    width: 15rem;
+    padding: 1rem;
+    color: #cccccc;
+}
+
+.leaflet-control-layers-expanded {
+	padding: 0;
+}
+
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: block;
+}
+
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	position: absolute;
+}
+
+.dynmap .dynmap-link {
+	padding: 0;
+	margin-bottom: 0;
+}
+
+.largeclock.digitalclock {
+	position: fixed;
+    bottom: 0;
+    margin: 0;
+    right: 4rem;
+    top: auto;
+    right: auto;
+    left: 4rem;
+    background-color: #111111;
+    height: 4rem;
+    border: none;
+    font-size: 3rem;
+    line-height: 4rem;
+    box-shadow: none;
+}
+
+.dynmap .coord-control {
+	position: fixed;
+    bottom: 0;
+    left: 21rem;
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    width: auto;
+    font-size: 2rem;
+    white-space: nowrap;
+    margin: 0;
+    height: 4rem;
+    line-height: 4rem;
+}
+
+.leaflet-container .leaflet-control-attribution {
+	background-color: transparent;
+    box-shadow: none;
+    margin: 0;
+    width: 4rem;
+    height: 4rem;
+    order: 0;
+    padding: 0;
+}
+
+.leaflet-container .leaflet-control-attribution a {
+	width: 100%;
+    height: 100%;
+    display: block;
+    padding: 1rem 0.5rem;
+    box-sizing: border-box;
+}
+
+.leaflet-container .leaflet-control-attribution img {
+	display: block;
+    max-width: 100% !important;
+}
+
+.dynmap .mapMarker:hover .markerName,
+.dynmap .mapMarker .markerName-show,
+.dynmap .playerNameSm {
+	padding: 0.2rem 0.5rem;
+	color: #eeeeee;
+}
+
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-control-zoom {
+	border: none;
+}
+
+.leaflet-touch .leaflet-control-layers-toggle,
+.leaflet-touch .leaflet-control-zoom a {
+	width: 4rem;
+	height: 4rem;
+}
+
+.leaflet-touch .leaflet-bar-part {
+	border: none;
+}
+
+.leaflet-touch .leaflet-bar-part-bottom,
+.leaflet-touch .leaflet-bar-part-top {
+	border-radius: 0;
+}
+
+/*.leaflet-touch .coord-control {*/
+/*	display: none;*/
+/*}*/
+
+.sidebar .content.worldlist {
+	min-height: 20rem;
+}
