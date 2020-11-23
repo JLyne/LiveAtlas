@@ -13,8 +13,9 @@
     "vue-class-component": "^8.0.0-0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.33.0",
-    "@typescript-eslint/parser": "^2.33.0",
+    "@types/leaflet": "^1.5.19",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-typescript": "^4.5.9",
@@ -23,9 +24,10 @@
     "@vue/eslint-config-typescript": "^5.0.2",
     "axios": "^0.21.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
+    "eslint": "^7.5.0",
     "eslint-plugin-vue": "^7.0.0-0",
     "leaflet": "^1.7.1",
+    "normalize-scss": "^7.0.1",
     "sass": "^1.29.0",
     "sass-loader": "^10.1.0",
     "typescript": "~3.9.3",

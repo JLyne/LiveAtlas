@@ -1,27 +1,76 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+	<Leaflet></Leaflet>
+	<Sidebar></Sidebar>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import HelloWorld from './components/HelloWorld.vue';
+import {defineComponent, computed, ref} from 'vue';
+import Leaflet from './components/Leaflet.vue';
+import Sidebar from './components/Sidebar.vue';
+import {ActionTypes, useStore} from "./store";
 
-@Options({
-  components: {
-    HelloWorld,
-  },
-})
-export default class App extends Vue {}
+export default defineComponent({
+	name: 'WorldList',
+	components: {
+		Leaflet,
+		Sidebar,
+	},
+
+	setup() {
+		let store = useStore(),
+			updateInterval = computed(() => store.state.configuration.updateInterval),
+			updatesEnabled = ref(false),
+			updateTimeout = ref(0);
+
+		return {
+			store,
+			updateInterval,
+			updatesEnabled,
+			updateTimeout
+		}
+	},
+
+	mounted() {
+		this.loadConfiguration();
+	},
+
+	beforeUnmount() {
+		this.stopUpdates();
+	},
+
+	methods: {
+		loadConfiguration() {
+			useStore().dispatch(ActionTypes.LOAD_CONFIGRUATION, undefined).then(() => {
+				this.startUpdates();
+			});
+		},
+
+		startUpdates() {
+			this.updatesEnabled = true;
+			this.update();
+		},
+
+		update() {
+			useStore().dispatch(ActionTypes.GET_UPDATE, undefined).then(() => {
+				if(this.updatesEnabled) {
+					this.updateTimeout = setTimeout(() => this.update(), this.updateInterval);
+				}
+			});
+		},
+
+		stopUpdates() {
+			this.updatesEnabled = false;
+
+			if (this.updateTimeout) {
+				clearTimeout(this.updateTimeout);
+			}
+
+			this.updateTimeout = 0;
+		}
+	}
+});
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

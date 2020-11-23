@@ -4,6 +4,10 @@
 	border: 1px solid red;
 }*/
 
+html, body {
+    height: 100%;
+}
+
 /*******************
  * Attribution placement
  */
@@ -14,6 +18,11 @@
 /*******************
  * Page setup
  */
+
+
+.dynmap {
+    height: 100%;
+}
 
 .dynmap .map .tile img, img {
     image-rendering: -moz-crisp-edges;
@@ -206,7 +215,7 @@
         margin-right: 0px;
     }
 
-    .dynmap .sidebar < .hitbar:hover {
+    .dynmap .sidebar > .hitbar:hover {
         margin-right: 0px;
     }
 

@@ -13,10 +13,6 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <link rel="stylesheet" type="text/css" href="css/standalone.css?_=a" media="screen" />
-	<link rel="stylesheet" type="text/css" href="css/dynmap_style.css?_=a" media="screen" />
-	<link rel="stylesheet" type="text/css" href="css/rtgame.css?_=a" media="screen" />
-
 	<link rel="icon" href="images/dynmap.ico" type="image/ico" />
   </head>
   <body>
@@ -24,6 +20,7 @@
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="mcmap" class="dynmap"></div>
+    <script src="standalone/config.js"></script>
     <!-- built files will be auto injected -->
   </body>
 </html>
