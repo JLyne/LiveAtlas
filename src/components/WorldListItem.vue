@@ -10,9 +10,10 @@
 </template>
 
 <script lang="ts">
-import {MutationTypes, useStore} from "@/store";
+import {useStore} from "@/store";
 import {DynmapMap, DynmapWorld} from "@/dynmap";
 import {defineComponent} from 'vue';
+import {MutationTypes} from "@/store/mutation-types";
 
 export default defineComponent({
 	name: 'WorldListItem',

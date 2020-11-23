@@ -7,7 +7,8 @@
 import {defineComponent, computed, ref} from 'vue';
 import Leaflet from './components/Leaflet.vue';
 import Sidebar from './components/Sidebar.vue';
-import {ActionTypes, useStore} from "./store";
+import {useStore} from "./store";
+import {ActionTypes} from "@/store/action-types";
 
 export default defineComponent({
 	name: 'WorldList',
@@ -40,7 +41,7 @@ export default defineComponent({
 
 	methods: {
 		loadConfiguration() {
-			useStore().dispatch(ActionTypes.LOAD_CONFIGRUATION, undefined).then(() => {
+			useStore().dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
 				this.startUpdates();
 			});
 		},
