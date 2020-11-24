@@ -1,9 +1,11 @@
-import L from 'leaflet';
+import L, {ControlOptions} from 'leaflet';
 
-const LinkControl = L.Control.extend({
-	options: {position: 'bottomleft'},
+export interface LinkControlOptions extends ControlOptions {}
 
-	onAdd: function (map) {
+export class LinkControl extends L.Control {
+	options: LinkControlOptions
+
+	onAdd(map) {
 		this._map = map;
 		this._container = L.DomUtil.create('div', 'dynmap-link');
 
@@ -12,18 +14,18 @@ const LinkControl = L.Control.extend({
 
 		this._container.appendChild(this._linkButton);
 		return this._container;
-	},
+	}
 
-	getContainer: function () {
+	getContainer() {
 		return this._container;
-	},
+	}
 
-	getPosition: function () {
+	getPosition() {
 		return this.options.position;
-	},
+	}
 
-	_createButton: function (title, className, fn, context) {
-		var link = document.createElement('a');
+	_createButton(title, className, fn, context) {
+		const link = document.createElement('a');
 		link.href = '#';
 		link.title = title;
 		link.className = className;
@@ -36,16 +38,14 @@ const LinkControl = L.Control.extend({
 		L.DomEvent.addListener(link, 'click', fn, context);
 
 		return link;
-	},
+	}
 
-	_follow: function () {
+	_follow() {
 		// var url = dynmap.getLink();
 		// window.location = url;
 	}
-});
+}
 
 // var link = new dynmapLink();
 // dynmap.map.addControl(link);
 // }
-
-export default LinkControl;
