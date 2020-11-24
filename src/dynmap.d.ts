@@ -1,4 +1,4 @@
-import {ControlPosition, LeafletMouseEvent} from "leaflet";
+import {LatLng} from "leaflet";
 
 declare global {
 	interface Window {
@@ -51,6 +51,20 @@ interface DynmapMessageConfig {
 	anonymousQuit: string;
 }
 
+interface DynmapComponentConfig {
+	playerMarkers?: DynmapPlayerMarkersConfig;
+}
+
+interface DynmapPlayerMarkersConfig {
+	hideByDefault: boolean;
+	layerName: string;
+	layerPriority: number;
+	showBodies: boolean;
+	showSkinFaces: boolean;
+	showHealth: boolean;
+	smallFaces: boolean;
+}
+
 interface DynmapWorld {
 	seaLevel: number;
 	name: string;
@@ -62,7 +76,7 @@ interface DynmapWorld {
 }
 
 interface DynmapMap {
-	world: string;
+	world: DynmapWorld;
 	background: string;
 	backgroundDay: string;
 	backgroundNight: string;
@@ -98,6 +112,7 @@ interface DynmapConfigurationResponse {
 	config: DynmapServerConfig,
 	messages: DynmapMessageConfig,
 	worlds: Array<DynmapWorld>,
+	components: DynmapComponentConfig,
 }
 
 interface DynmapUpdateResponse {
@@ -120,35 +135,4 @@ interface DynmapPlayer {
 	location: DynmapLocation;
 }
 
-declare module 'leaflet' {
-	namespace Control {
-		function extend<T extends Object>(props: T): { new(...args: any[]): T } & typeof Control;
 
-		class CoordinatesControl extends Control {
-			constructor(options: CoordinatesControlOptions);
-
-			options: CoordinatesControlOptions
-			_coordsContainer?: HTMLElement
-			_regionContainer?: HTMLElement
-			_chunkContainer?: HTMLElement
-			_map?: L.Map
-
-			_onMouseMove(event: LeafletMouseEvent): void
-
-			_onMouseOut(event: LeafletMouseEvent): void
-
-			_update(): void
-
-		}
-
-		interface CoordinatesControlOptions {
-			showY: boolean
-			showRegion: boolean
-			showChunk: boolean
-			label: string
-			position: ControlPosition
-		}
-
-		function coordinatesControl(options: CoordinatesControlOptions): CoordinatesControl;
-	}
-}

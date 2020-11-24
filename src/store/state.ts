@@ -1,8 +1,17 @@
-import {DynmapMap, DynmapMessageConfig, DynmapPlayer, DynmapServerConfig, DynmapWorld} from "@/dynmap";
+import {
+	DynmapComponentConfig,
+	DynmapMap,
+	DynmapMessageConfig,
+	DynmapPlayer,
+	DynmapServerConfig,
+	DynmapWorld
+} from "@/dynmap";
 
 export type State = {
 	configuration: DynmapServerConfig;
 	messages: DynmapMessageConfig;
+	components: DynmapComponentConfig;
+
 	worlds: Map<string, DynmapWorld>;
 	maps: Map<string, DynmapMap>;
 	players: Map<string, DynmapPlayer>;
@@ -40,6 +49,7 @@ export const state: State = {
 		maxPlayers: 0,
 		hash: 0,
 	},
+
 	messages: {
 		chatNotAllowed: '',
 		chatRequiresLogin: '',
@@ -51,9 +61,14 @@ export const state: State = {
 		anonymousJoin: '',
 		anonymousQuit: '',
 	},
+
 	worlds: new Map(),
 	maps: new Map(),
 	players: new Map(),
+
+	components: {
+		playerMarkers: undefined,
+	},
 
 	raining: false,
 	thundering: false,
@@ -61,7 +76,6 @@ export const state: State = {
 
 	following: undefined,
 
-	// currentServer: undefined,
 	currentWorld: undefined,
 	currentMap: undefined,
 

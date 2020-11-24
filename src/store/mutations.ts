@@ -1,7 +1,7 @@
 import {MutationTree} from "vuex";
 import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
-import {DynmapMessageConfig, DynmapPlayer, DynmapServerConfig, DynmapWorld} from "@/dynmap";
+import {DynmapComponentConfig, DynmapMessageConfig, DynmapPlayer, DynmapServerConfig, DynmapWorld} from "@/dynmap";
 
 export type CurrentMapPayload = {
 	world: string
@@ -12,6 +12,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_CONFIGURATION](state: S, config: DynmapServerConfig): void
 	[MutationTypes.SET_MESSAGES](state: S, messages: DynmapMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<DynmapWorld>): void
+	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
 	[MutationTypes.ADD_WORLD](state: S, world: DynmapWorld): void
 	[MutationTypes.SET_TIME_OF_DAY](state: S, time: number): void
 	[MutationTypes.SET_RAINING](state: S, raining: boolean): void
@@ -53,6 +54,10 @@ export const mutations: MutationTree<State> & Mutations = {
 		});
 	},
 
+	[MutationTypes.SET_COMPONENTS](state: State, components: DynmapComponentConfig) {
+		state.components = components;
+	},
+
 	[MutationTypes.ADD_WORLD](state: State, world: DynmapWorld) {
 		state.worlds.set(world.name, world);
 	},
@@ -92,7 +97,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
 				existing!.health = player.health;
 				existing!.armor = player.armor;
-				existing!.location = player.location;
+				existing!.location = Object.assign(existing!.location, player.location);
 				existing!.name = player.name;
 				existing!.sort = player.sort;
 			} else {

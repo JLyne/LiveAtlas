@@ -28,6 +28,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			commit(MutationTypes.SET_CONFIGURATION, config.config);
 			commit(MutationTypes.SET_MESSAGES, config.messages);
 			commit(MutationTypes.SET_WORLDS, config.worlds);
+			commit(MutationTypes.SET_COMPONENTS, config.components);
 
 			if(config.config.defaultWorld && config.config.defaultMap) {
 				commit(MutationTypes.SET_CURRENT_MAP, {
