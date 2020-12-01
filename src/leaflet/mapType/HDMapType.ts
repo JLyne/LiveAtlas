@@ -19,11 +19,11 @@ export class HDMapType extends DynmapTileLayer {
 		options.minZoom = 0;
 
 		L.Util.setOptions(this, options);
-		this._projection = new HDProjection({
+		this._projection = Object.freeze(new HDProjection({
 			mapToWorld: this._mapSettings.mapToWorld,
 			worldToMap: this._mapSettings.worldToMap,
 			nativeZoomLevels: this._mapSettings.nativeZoomLevels,
-		});
+		}));
 	}
 
 	getTileName(coords: Coordinate) {

@@ -1,0 +1,164 @@
+.leaflet-control {
+	background-color: $global-background;
+	border-radius: $global-border-radius;
+	margin: 0;
+	box-sizing: border-box;
+	overflow: hidden;
+
+	a, button {
+		@extend %button;
+	}
+}
+
+.leaflet-bar {
+	display: flex;
+	align-items: center;
+	padding: 0;
+	border: none;
+
+	a {
+		border-radius: 0;
+		border-bottom: 0.1rem solid #333333;
+	}
+}
+
+.leaflet-touch {
+	.leaflet-bar, .leaflet-control-layers {
+		border: none;
+	}
+
+	.leaflet-control-layers-toggle {
+		width: 5rem;
+		height: 5rem;
+	}
+
+	.leaflet-top {
+		.leaflet-bar a {
+			height: 5rem;
+			width: 5rem;
+			line-height: 5rem;
+
+			&:first-child {
+				border-top-left-radius: 1rem;
+				border-top-right-radius: 1rem;
+			}
+
+			&:last-child {
+				border-bottom-left-radius: 1rem;
+				border-bottom-right-radius: 1rem;
+			}
+		}
+	}
+}
+
+.leaflet-control-link {
+	@extend %button;
+	width: 5rem;
+	height: 5rem;
+	background: $global-background url('../assets/images/link.png') no-repeat center;
+	background-size: 3.2rem 3.2rem;
+}
+
+.leaflet-control-coordinates {
+	display: flex;
+	align-items: center;
+	padding: 0.5rem 1.5rem;
+
+	.value {
+		font-size: 1.6rem;
+		line-height: 1;
+		font-family: monospace;
+		white-space: pre;
+
+		&[data-label]:before {
+			content: attr(data-label);
+			display: block;
+			line-height: 1;
+			margin-bottom: 0.5rem;
+			font-size: 1.4rem;
+			font-family: Raleway, sans-serif;;
+		}
+
+		& + .value {
+			margin-left: 2rem;
+		}
+	}
+}
+
+.leaflet-control-layers {
+	width: 5rem;
+	border: none;
+}
+
+.leaflet-control-logo {
+	width: 5rem;
+	height: 5rem;
+
+	a {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+.leaflet-top, .leaflet-bottom,
+.leaflet-left, .leaflet-right {
+	display: flex;
+}
+
+.leaflet-left {
+	padding-left: 1rem;
+
+	.leaflet-control {
+		margin: 0;
+	}
+}
+
+.leaflet-top {
+	padding-top: 1rem;
+	flex-direction: column;
+
+	.leaflet-control {
+		order: 2;
+		min-width: 5rem;
+
+		& + .leaflet-control {
+			margin-top: 1rem;
+		}
+	}
+
+	.leaflet-bar {
+		flex-direction: column;
+
+		a {
+			width: 5rem;
+			height: 5rem;
+			line-height: 5rem;
+		}
+	}
+
+	.leaflet-control-logo {
+		order: 1;
+		margin-bottom: 1rem;
+		margin-top: 0 !important;
+
+		& + .leaflet-control-logo {
+			margin-top: 1rem !important;
+		}
+	}
+}
+
+.leaflet-bottom {
+	padding-bottom: 1rem;
+
+	&.leaflet-left .leaflet-control + .leaflet-control {
+		margin-left: 1rem;
+	}
+}
+
+.leaflet-control-layers-toggle {
+	width: 5rem;
+	height: 5rem;
+}

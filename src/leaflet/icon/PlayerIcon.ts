@@ -1,7 +1,12 @@
-import L, {DivIconOptions} from 'leaflet';
+import L, {MarkerOptions} from 'leaflet';
 import {DynmapPlayer} from "@/dynmap";
 
-export interface PlayerIconOptions extends DivIconOptions {
+const noSkinImage: HTMLImageElement = document.createElement('img');
+noSkinImage.height = 16;
+noSkinImage.width = 16;
+noSkinImage.src = 'images/player.png';
+
+export interface PlayerIconOptions extends MarkerOptions {
 	smallFace: boolean,
 	showSkinFace: boolean,
 	showBody: boolean,
@@ -37,23 +42,15 @@ export class PlayerIcon extends L.DivIcon {
 
 		this._container = document.createElement('div');
 
-		// var markerPosition = dynmap.getProjection().fromLocationToLatLng(player.location);
-		// player.marker.setLatLng(markerPosition);
-
 		this._container.classList.add('Marker', 'playerMarker', 'leaflet-marker-icon');
-
-		this._playerImage = document.createElement('img');
-		this._playerImage.classList.add(this.options.smallFace ? 'playerIconSm' : 'playerIcon');
-		this._playerImage.src = 'images/player.png';
 
 		this._playerName = document.createElement('span');
 		this._playerName.classList.add(this.options.smallFace ? 'playerNameSm' : 'playerName');
 		this._playerName.innerText = player.name;
 
-		this._container.insertAdjacentElement('beforeend', this._playerImage);
-		this._container.insertAdjacentElement('beforeend', this._playerName);
-
 		if (this.options.showSkinFace) {
+			this._playerImage = document.createElement('img');
+			this._playerImage.classList.add(this.options.smallFace ? 'playerIconSm' : 'playerIcon');
 
 			// if (this.options.smallFace) {
 			// 	getMinecraftHead(player.account, 16, head => {
@@ -68,13 +65,19 @@ export class PlayerIcon extends L.DivIcon {
 			// 		this._playerImage!.src = head.src;
 			// 	});
 			// }
+		} else {
+			this._playerImage = noSkinImage.cloneNode(false) as HTMLImageElement;
+			this._playerImage.classList.add(this.options.smallFace ? 'playerIconSm' : 'playerIcon');
 		}
+
+		this._container.appendChild(this._playerImage);
+		this._container.appendChild(this._playerName);
 
 		if (this.options.showHealth) {
 			this._playerHealth = document.createElement('div');
 
 			this._playerHealth.classList.add(this.options.smallFace ? 'healthContainerSm' : 'healthContainer');
-			this._container.insertAdjacentElement('beforeend', this._playerHealth)
+			this._container.appendChild(this._playerHealth)
 
 			this._playerHealthBar = document.createElement('div');
 			this._playerHealthBar.classList.add('playerHealth');
@@ -88,11 +91,11 @@ export class PlayerIcon extends L.DivIcon {
 			this._playerHealthBg.classList.add('playerHealthBackground');
 			this._playerArmourBar.classList.add('playerArmorBackground');
 
-			this._playerHealthBg.insertAdjacentElement('beforeend', this._playerHealthBar);
-			this._playerArmourBg.insertAdjacentElement('beforeend', this._playerArmourBar);
+			this._playerHealthBg.appendChild(this._playerHealthBar);
+			this._playerArmourBg.appendChild(this._playerArmourBar);
 
-			this._playerHealth.insertAdjacentElement('beforeend', this._playerHealthBg);
-			this._playerHealth.insertAdjacentElement('beforeend', this._playerArmourBg);
+			this._playerHealth.appendChild(this._playerHealthBg);
+			this._playerHealth.appendChild(this._playerArmourBg);
 
 			this._playerHealth.hidden = true;
 		} else {
@@ -103,14 +106,20 @@ export class PlayerIcon extends L.DivIcon {
 	}
 
 	update() {
+		if(!this._container) {
+			return;
+		}
+
 		this._playerName!.innerText = this._player!.name;
 
-		if (this._player.health !== undefined && this._player.armor !== undefined) {
-			this._playerHealth!.hidden = false;
-			this._playerHealthBar!.style.width = Math.ceil(this._player.health * 2.5) + 'px';
-			this._playerArmourBar!.style.width = Math.ceil(this._player.armor * 2.5) + 'px';
-		} else {
-			this._playerHealth!.hidden = true;
+		if(this.options.showHealth) {
+			if (this._player.health !== undefined && this._player.armor !== undefined) {
+				this._playerHealth!.hidden = false;
+				this._playerHealthBar!.style.width = Math.ceil(this._player.health * 2.5) + 'px';
+				this._playerArmourBar!.style.width = Math.ceil(this._player.armor * 2.5) + 'px';
+			} else {
+				this._playerHealth!.hidden = true;
+			}
 		}
 	}
 }

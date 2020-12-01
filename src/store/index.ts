@@ -1,7 +1,7 @@
 import {
 	createStore,
 	Store as VuexStore,
-	createLogger,
+	// createLogger,
 	CommitOptions, DispatchOptions,
 } from 'vuex';
 
@@ -37,7 +37,7 @@ export const store = createStore({
 	mutations,
 	getters,
 	actions,
-	plugins: [createLogger()],
+	// plugins: [createLogger()],
 });
 
 // define your own `useStore` composition function

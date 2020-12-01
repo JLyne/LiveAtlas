@@ -1,8 +1,12 @@
-import {LatLng} from "leaflet";
+import {CircleMarkerOptions, PathOptions, PointTuple, PolylineOptions} from "leaflet";
+import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
+import {LogoControlOptions} from "@/leaflet/control/LogoControl";
+import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 
 declare global {
 	interface Window {
-		config: DynmapConfig
+		config: DynmapConfig;
+		hideSplash: Function;
 	}
 }
 
@@ -27,9 +31,9 @@ interface DynmapServerConfig {
 	chatInterval: number;
 	defaultMap?: string;
 	defaultWorld?: string;
-	defaultZoom?: number;
+	defaultZoom: number;
 	followMap?: string;
-	followZoom?: number;
+	followZoom: number;
 	updateInterval: number;
 	showLayerControl: boolean;
 	title: string;
@@ -52,7 +56,16 @@ interface DynmapMessageConfig {
 }
 
 interface DynmapComponentConfig {
+	markers: DynmapMarkersConfig;
 	playerMarkers?: DynmapPlayerMarkersConfig;
+	coordinatesControl?: CoordinatesControlOptions;
+	clockControl ?: ClockControlOptions;
+	linkControl: boolean;
+	logoControls: Array<LogoControlOptions>;
+}
+
+interface DynmapMarkersConfig {
+	showLabels: boolean
 }
 
 interface DynmapPlayerMarkersConfig {
@@ -72,7 +85,7 @@ interface DynmapWorld {
 	title: string;
 	height: number;
 	center: Coordinate;
-	maps: Array<DynmapMap>;
+	maps: Map<String, DynmapMap>;
 }
 
 interface DynmapMap {
@@ -93,6 +106,12 @@ interface DynmapMap {
 	worldToMap: [number, number, number, number, number, number, number, number, number];
 	nativeZoomLevels: number;
 	extraZoomLevels: number;
+}
+
+interface DynmapWorldState {
+	raining: boolean;
+	thundering: boolean;
+	timeOfDay: number;
 }
 
 interface Coordinate {
@@ -116,12 +135,10 @@ interface DynmapConfigurationResponse {
 }
 
 interface DynmapUpdateResponse {
+	worldState: DynmapWorldState;
 	configHash: number;
 	playerCount: number;
-	raining: boolean;
-	thundering: boolean;
-	timeOfDay: number;
-	players: Array<DynmapPlayer>;
+	players: Set<DynmapPlayer>;
 	timestamp: number;
 	//TODO: Tiles etc
 }
@@ -135,4 +152,61 @@ interface DynmapPlayer {
 	location: DynmapLocation;
 }
 
+interface DynmapMarkerSet {
+	label: string;
+	hidden: boolean;
+	priority: number;
+	minZoom?: number;
+	maxZoom?: number;
+	showLabels?: boolean;
+	markers: Map<string, DynmapMarker>;
+	areas: Map<string, DynmapArea>;
+	lines: Map<string, DynmapLine>;
+	circles: Map<string, DynmapCircle>;
+}
 
+interface DynmapMarker {
+	dimensions: PointTuple;
+	icon: string;
+	label: string;
+	isHTML: boolean;
+	location: Coordinate;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
+}
+
+interface DynmapArea {
+	style: PolylineOptions;
+	label: string;
+	isHTML: boolean;
+	x: Array<number>;
+	y: PointTuple;
+	z: Array<number>;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
+}
+
+interface DynmapLine {
+	x: Array<number>;
+	y: Array<number>;
+	z: Array<number>;
+	style: PolylineOptions;
+	label: string;
+	isHTML: boolean;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
+}
+
+interface DynmapCircle {
+	location: Coordinate;
+	radius: PointTuple;
+	style: CircleMarkerOptions;
+	label: string;
+	isHTML: boolean;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
+}

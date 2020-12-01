@@ -9,17 +9,30 @@ export interface DynmapTileLayerOptions extends TileLayerOptions {
 
 export interface DynmapTileLayer extends L.TileLayer {
 	options: DynmapTileLayerOptions;
-	_projection: any;
-	_mapSettings: any;
-	_cachedTileUrls: any;
-	_namedTiles: any;
+	_projection: DynmapProjection;
+	_mapSettings: DynmapMap;
+	_cachedTileUrls: Map<string, string>;
+	_namedTiles: Map<string, DynmapTileElement>;
+	_tileTemplate: DynmapTileElement;
+	_loadQueue: DynmapTileElement[];
+	_loadingTiles: Set<DynmapTileElement>;
 
 	locationToLatLng(location: Coordinate): L.LatLng;
 
 	latLngToLocation(latLng: L.LatLng): Coordinate;
 }
 
-export interface DynmapTile extends HTMLImageElement {
+export interface DynmapTile {
+	active?: boolean;
+	coords: Coords;
+	current: boolean;
+	el: DynmapTileElement;
+	loaded?: Date;
+	retain?: boolean;
+	complete: boolean;
+}
+
+export interface DynmapTileElement extends HTMLImageElement {
 	tileName: string;
 }
 
@@ -36,8 +49,10 @@ export interface TileInfo {
 }
 
 export class DynmapTileLayer extends L.TileLayer {
+
 	constructor(options: DynmapTileLayerOptions) {
 		super('', options);
+		L.Util.setOptions(this, options);
 
 		if (options.mapSettings === null) {
 			throw new TypeError("mapSettings missing");
@@ -45,9 +60,22 @@ export class DynmapTileLayer extends L.TileLayer {
 
 		this._projection = new DynmapProjection({});
 		this._mapSettings = options.mapSettings;
-		this._cachedTileUrls = {};
-		this._namedTiles = {};
-		L.Util.setOptions(this, options);
+		this._cachedTileUrls = Object.seal(new Map());
+		this._namedTiles = Object.seal(new Map());
+		this._loadQueue = [];
+		this._loadingTiles = Object.seal(new Set());
+
+		this._tileTemplate = L.DomUtil.create('img', 'leaflet-tile') as DynmapTileElement;
+		this._tileTemplate.style.width = this._tileTemplate.style.height = this.options.tileSize + 'px';
+		this._tileTemplate.alt = '';
+		this._tileTemplate.tileName = '';
+		this._tileTemplate.setAttribute('role', 'presentation');
+
+		Object.seal(this._tileTemplate);
+
+		if(this.options.crossOrigin || this.options.crossOrigin === '') {
+			this._tileTemplate.crossOrigin = this.options.crossOrigin === true ? '' : this.options.crossOrigin;
+		}
 	}
 
 	getTileName(coords: Coordinate): string {
@@ -56,20 +84,20 @@ export class DynmapTileLayer extends L.TileLayer {
 
 	getTileUrl(coords: Coordinate) {
 		const tileName = this.getTileName(coords);
-		let url = this._cachedTileUrls[tileName];
+		let url = this._cachedTileUrls.get(tileName);
 
 		if (!url) {
 			const path = escape(`${this._mapSettings.world.name}/${tileName}`);
 			url = `${window.config.url.tiles}${path}`;
-			this._cachedTileUrls[tileName] = url;
+			this._cachedTileUrls.set(tileName, url);
 		}
 
 		return url;
 	}
 
 	updateNamedTile(name: string) {
-		const tile = this._namedTiles[name];
-		delete this._cachedTileUrls[name];
+		const tile = this._namedTiles.get(name);
+		this._cachedTileUrls.delete(name);
 
 		if (tile) {
 			//tile.src = this._cachedTileUrls[name] = this.getTileUrl(name);
@@ -77,32 +105,68 @@ export class DynmapTileLayer extends L.TileLayer {
 	}
 
 	createTile(coords: Coords, done: DoneCallback) {
-		const tile = super.createTile.call(this, coords, done) as DynmapTile,
-			name = this.getTileName(coords);
+		//Clone template image instead of creating a new one
+		const tile = this._tileTemplate.cloneNode(false) as DynmapTileElement;
 
-		tile.tileName = name;
+		tile.tileName = this.getTileName(coords);
+		tile.dataset.src = this.getTileUrl(coords);
 
-		// console.log("Adding " + tile.tileName);
-		this._namedTiles[name] = tile;
+		this._namedTiles.set(tile.tileName, tile);
+		this._loadQueue.push(tile);
+
+		//Use addEventListener here
+		tile.onload = () => {
+			this._tileOnLoad(done, tile);
+			this._loadingTiles.delete(tile);
+			this._tickLoadQueue();
+		};
+		tile.onerror = () => {
+			this._tileOnError(done, tile, {name: 'Error', message: 'Error'});
+			this._loadingTiles.delete(tile);
+			this._tickLoadQueue();
+		};
+
+		this._tickLoadQueue();
 
 		return tile;
+	}
+
+	_tickLoadQueue() {
+		if (this._loadingTiles.size > 4) {
+			return;
+		}
+
+		const tile = this._loadQueue.shift();
+
+		if (!tile) {
+			return;
+		}
+
+		this._loadingTiles.add(tile);
+		tile.src = tile.dataset.src as string;
 	}
 
 	// stops loading all tiles in the background layer
 	_abortLoading() {
 		let tile;
+
 		for (const i in this._tiles) {
 			if (!Object.prototype.hasOwnProperty.call(this._tiles, i)) {
 				continue;
 			}
 
-			tile = this._tiles[i];
+			tile = this._tiles[i] as DynmapTile;
 
 			if (tile.coords.z !== this._tileZoom) {
-				if (tile.loaded && tile.el && (tile.el as DynmapTile).tileName) {
-					// console.log("Aborting " + (tile.el as DynmapTile).tileName);
-					delete this._namedTiles[(tile.el as DynmapTile).tileName];
+				if (tile.loaded && tile.el && tile.el.tileName) {
+					this._namedTiles.delete(tile.el.tileName);
 				}
+
+				if(this._loadQueue.includes(tile.el)) {
+					this._loadQueue.splice(this._loadQueue.indexOf(tile.el), 1);
+				}
+
+				this._loadingTiles.delete(tile.el);
 			}
 		}
 
@@ -110,18 +174,25 @@ export class DynmapTileLayer extends L.TileLayer {
 	}
 
 	_removeTile(key: string) {
-		const tile = this._tiles[key];
+		const tile = this._tiles[key] as DynmapTile;
 
 		if (!tile) {
 			return;
 		}
 
-		const tileName = (tile.el as DynmapTile).tileName;
+		const tileName = tile.el.tileName as string;
 
 		if (tileName) {
-			// console.log("Removing " + tileName);
-			delete this._namedTiles[tileName];
-			delete this._cachedTileUrls[tileName];
+			this._namedTiles.delete(tileName);
+			this._cachedTileUrls.delete(tileName);
+			this._loadingTiles.delete(tile.el);
+
+			if(this._loadQueue.includes(tile.el)) {
+				this._loadQueue.splice(this._loadQueue.indexOf(tile.el), 1);
+			}
+
+			tile.el.onerror = null;
+			tile.el.onload = null;
 		}
 
 		// @ts-ignore

@@ -1,0 +1,39 @@
+%button {
+	appearance: none;
+	border: none;
+	box-shadow: none;
+	background-color: $global-background;
+	color: $global-text-color;
+	border-radius: $global-border-radius;
+	cursor: pointer;
+	display: block;
+	
+	&:hover, &.active {
+		background-color: #cccccc;
+		color: #222222;
+	}
+
+	&:focus {
+		outline-color: #cccccc;
+		outline-width: 0.2rem;
+	}
+
+	&:active {
+		background-color: #eeeeee;
+		color: #121212;
+	}
+}
+
+%panel {
+	background-color: $global-background;
+	color: $global-text-color;
+	border-radius: $global-border-radius;
+	display: flex;
+	flex-direction: column;
+	padding: 1.5rem;
+	position: relative;
+
+	h2:first-child {
+		margin-top: 0;
+	}
+}

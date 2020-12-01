@@ -13,9 +13,10 @@ export class PlayerMarker extends L.Marker {
 	private _player: DynmapPlayer;
 
 	constructor(player: DynmapPlayer, options: PlayerMarkerOptions) {
-		super(new LatLng(0,0), options);
+		super(new LatLng(0, 0), options);
 		this._player = player;
 		options.draggable = false;
+
 		options.icon = new PlayerIcon(player, {
 			smallFace: options.smallFace,
 			showSkinFace: options.showSkinFace,
@@ -24,6 +25,24 @@ export class PlayerMarker extends L.Marker {
 		});
 
 		L.Util.setOptions(this, options);
-		//this._latlng = toLatLng(latlng); //TODO
+	}
+
+	getIcon(): PlayerIcon {
+		return this.options.icon as PlayerIcon;
+	}
+
+	panTo() {
+		if (!this._map) {
+			return;
+		}
+
+		this._map.panTo(this.getLatLng(), {
+			animate: false,
+			noMoveStart: true,
+		});
+	}
+
+	_resetZIndex() {
+		//Don't chnage the zindex
 	}
 }

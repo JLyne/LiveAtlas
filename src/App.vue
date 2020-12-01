@@ -1,11 +1,11 @@
 <template>
-	<Leaflet></Leaflet>
+	<Map></Map>
 	<Sidebar></Sidebar>
 </template>
 
 <script lang="ts">
 import {defineComponent, computed, ref} from 'vue';
-import Leaflet from './components/Leaflet.vue';
+import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
 import {useStore} from "./store";
 import {ActionTypes} from "@/store/action-types";
@@ -13,7 +13,7 @@ import {ActionTypes} from "@/store/action-types";
 export default defineComponent({
 	name: 'WorldList',
 	components: {
-		Leaflet,
+		Map,
 		Sidebar,
 	},
 
@@ -43,6 +43,7 @@ export default defineComponent({
 		loadConfiguration() {
 			useStore().dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
 				this.startUpdates();
+				window.hideSplash();
 			});
 		},
 

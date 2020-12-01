@@ -10,16 +10,16 @@ export interface DynmapProjection {
 
 export class DynmapProjection extends L.Class {
 
-	constructor(options: DynmapProjectionOptions) {
+	constructor(options?: DynmapProjectionOptions) {
 		super();
 		L.Util.setOptions(this, options);
 	}
 
 	locationToLatLng(location: Coordinate): L.LatLng {
-		throw new Error("fromLocationToLatLng not implemented");
+		return new L.LatLng(location.x, location.z);
 	}
 
 	latLngToLocation(latLng: L.LatLng, y: number): Coordinate {
-		throw new Error("fromLatLngToLocation not implemented");
+		return {x: latLng.lat, y, z: latLng.lng};
 	}
 }

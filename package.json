@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve ",
+    "build": "vue-cli-service build --modern --report",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -27,7 +27,9 @@
     "eslint": "^7.5.0",
     "eslint-plugin-vue": "^7.0.0-0",
     "leaflet": "^1.7.1",
+    "leaflet-pixi-overlay": "^1.8.1",
     "normalize-scss": "^7.0.1",
+    "pixi.js": "^5.3.3",
     "sass": "^1.29.0",
     "sass-loader": "^10.1.0",
     "typescript": "~3.9.3",
