@@ -1,5 +1,5 @@
 import L, {ControlOptions} from 'leaflet';
-import {useStore} from "@/store";
+import Util from '@/util';
 import {DynmapWorldState} from "@/dynmap";
 
 export interface ClockControlOptions extends ControlOptions {
@@ -73,7 +73,7 @@ export class ClockControl extends L.Control {
 			this._moon!.style.backgroundPosition = '-150px -150px';
 		}
 
-		const minecraftTime = this.getMinecraftTime(timeOfDay);
+		const minecraftTime = Util.getMinecraftTime(timeOfDay);
 
 		if(timeOfDay >= 0) {
 			this._clock!.classList.remove(minecraftTime.night ? 'day' : 'night');
@@ -102,22 +102,5 @@ export class ClockControl extends L.Control {
 			this._weather?.classList.remove('stormy_day', 'stormy_night', 'sunny_day', 'sunny_night', 'thunder_day', 'thunder_night');
 			this._weather?.classList.add(`${className}_${dayNight}`);
 		}
-	}
-
-	getMinecraftTime(serverTime: number) {
-		const day = serverTime >= 0 && serverTime < 13700;
-
-		return {
-			serverTime: serverTime,
-			days: Math.floor((serverTime + 8000) / 24000),
-
-			// Assuming it is day at 6:00
-			hours: (Math.floor(serverTime / 1000) + 6) % 24,
-			minutes: Math.floor(((serverTime / 1000) % 1) * 60),
-			seconds: Math.floor(((((serverTime / 1000) % 1) * 60) % 1) * 60),
-
-			day: day,
-			night: !day
-		};
 	}
 }

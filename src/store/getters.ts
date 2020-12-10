@@ -1,10 +1,13 @@
 import {GetterTree} from "vuex";
 import {State} from "@/store/state";
+import Util from "@/util";
 
 export type Getters = {
 	playerMarkersEnabled(state: State): boolean;
 	coordinatesControlEnabled(state: State): boolean;
 	clockControlEnabled(state: State): boolean;
+	night(state: State): boolean;
+	mapBackground(state: State): string;
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -18,5 +21,25 @@ export const getters: GetterTree<State, State> & Getters = {
 
 	clockControlEnabled(state: State): boolean {
 		return state.components.clockControl !== undefined;
+	},
+
+	night(state: State): boolean {
+		return Util.getMinecraftTime(state.currentWorldState.timeOfDay).night;
+	},
+
+	mapBackground(state: State): string {
+		if(!state.currentMap) {
+			return 'transparent';
+		}
+
+		if(state.currentMap.nightAndDay) {
+			if(this.night(state)) {
+				return state.currentMap.backgroundNight || state.currentMap.background || 'transparent';
+			}
+
+			return state.currentMap.backgroundDay || state.currentMap.background || 'transparent';
+		}
+
+		return state.currentMap.background || 'transparent';
 	}
 }

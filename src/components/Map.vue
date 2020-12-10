@@ -56,13 +56,7 @@ export default defineComponent({
 			currentMap = computed(() => store.state.currentMap),
 			currentProjection = computed(() => store.state.currentProjection),
 			following = computed(() => store.state.following),
-
-			mapBackground = computed((): string => {
-				//TODO: day/night
-				const currentMap = useStore().state.currentMap;
-
-				return currentMap && currentMap.background ? currentMap.background : 'transparent';
-			});
+			mapBackground = computed(() => store.getters.mapBackground);
 
 		return {
 			leaflet,
@@ -121,7 +115,7 @@ export default defineComponent({
 			attributionControl: false,
 			crs: L.CRS.Simple,
 			worldCopyJump: false,
-			markerZoomAnimation: false,
+			// markerZoomAnimation: false,
 		}));
 
 		this.leaflet.addControl(new L.Control.Layers({}, {},{
