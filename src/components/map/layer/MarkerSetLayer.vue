@@ -1,6 +1,8 @@
 <template>
 	<GenericMarker v-for="[id, marker] in markerSet.markers" :options="marker" :key="id" :layer-group="layerGroup"></GenericMarker>
 	<Areas :areas="markerSet.areas" :layer-group="layerGroup"></Areas>
+	<Circles :circles="markerSet.circles" :layer-group="layerGroup"></Circles>
+	<Lines :lines="markerSet.lines" :layer-group="layerGroup"></Lines>
 </template>
 
 <script lang="ts">
@@ -10,11 +12,15 @@ import L from 'leaflet';
 import {DynmapMarkerSet} from "@/dynmap";
 import GenericMarker from "@/components/map/marker/GenericMarker.vue";
 import Areas from "@/components/map/vector/Areas.vue";
+import Circles from "@/components/map/vector/Circles.vue";
+import Lines from "@/components/map/vector/Lines.vue";
 
 export default defineComponent({
 	components: {
 		GenericMarker,
-		Areas
+		Areas,
+		Circles,
+		Lines,
 	},
 
 	props: {

@@ -203,7 +203,7 @@ interface DynmapLine {
 interface DynmapCircle {
 	location: Coordinate;
 	radius: PointTuple;
-	style: CircleMarkerOptions;
+	style: PathOptions;
 	label: string;
 	isHTML: boolean;
 	minZoom?: number;

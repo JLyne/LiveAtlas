@@ -231,7 +231,7 @@ function buildLines(data: any): Map<string, DynmapLine> {
 
 		lines.set(key, {
 			x: line.x || [0, 0],
-			y: [line.ybottom || 0, line.ytop || 0],
+			y: line.y || [0, 0],
 			z: line.z || [0, 0],
 			style: {
 				color: line.color || '#ff0000',
@@ -322,7 +322,8 @@ export default {
 				});
 			});
 
-			for(let i = 0; i < 408; i++) {
+			//Extra fake players for testing
+			for(let i = 0; i < 150; i++) {
 				players.add({
 					account: "VIDEO GAMES " + i,
 					health: Math.round(Math.random() * 10),
