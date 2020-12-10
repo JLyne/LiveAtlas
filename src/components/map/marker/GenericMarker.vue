@@ -46,7 +46,7 @@ export default defineComponent({
 			icon: new DynmapIcon({
 				icon: this.options.icon,
 				label: this.options.label,
-				dimensions: this.options.dimensions,
+				iconSize: this.options.dimensions,
 				showLabel: true,
 				isHtml: this.options.isHTML,
 			}),

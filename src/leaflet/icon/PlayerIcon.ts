@@ -1,10 +1,25 @@
 import L, {MarkerOptions} from 'leaflet';
 import {DynmapPlayer} from "@/dynmap";
+import Util from '@/util';
 
 const noSkinImage: HTMLImageElement = document.createElement('img');
 noSkinImage.height = 16;
 noSkinImage.width = 16;
-noSkinImage.src = 'images/player.png';
+
+const smallImage: HTMLImageElement = document.createElement('img');
+smallImage.height = 16;
+smallImage.width = 16;
+
+const largeImage: HTMLImageElement = document.createElement('img');
+largeImage.height = 32;
+largeImage.width = 32;
+
+const bodyImage: HTMLImageElement = document.createElement('img');
+bodyImage.height = 32;
+bodyImage.width = 32;
+
+noSkinImage.src = smallImage.src = largeImage.src = bodyImage.src = 'images/player.png';
+noSkinImage.className = smallImage.className = largeImage.className = bodyImage.className = 'player__icon';
 
 export interface PlayerIconOptions extends MarkerOptions {
 	smallFace: boolean,
@@ -17,13 +32,13 @@ export class PlayerIcon extends L.DivIcon {
 	private readonly _player: DynmapPlayer;
 	private _container?: HTMLDivElement;
 	private _playerImage?: HTMLImageElement;
+	private _playerInfo?: HTMLSpanElement;
 	private _playerName?: HTMLSpanElement;
 
 	private _playerHealth?: HTMLDivElement;
-	private _playerHealthBg?: HTMLDivElement;
 	private _playerHealthBar?: HTMLDivElement;
-	private _playerArmourBg?: HTMLDivElement;
-	private _playerArmourBar?: HTMLDivElement;
+	private _playerArmor?: HTMLDivElement;
+	private _playerArmorBar?: HTMLDivElement;
 
 	// @ts-ignore
 	options: PlayerIconOptions;
@@ -42,62 +57,57 @@ export class PlayerIcon extends L.DivIcon {
 
 		this._container = document.createElement('div');
 
-		this._container.classList.add('Marker', 'playerMarker', 'leaflet-marker-icon');
+		this._container.classList.add('marker', 'marker--player', 'leaflet-marker-icon');
+
+		this._playerInfo = document.createElement('div');
+		this._playerInfo.className = 'marker__label';
 
 		this._playerName = document.createElement('span');
-		this._playerName.classList.add(this.options.smallFace ? 'playerNameSm' : 'playerName');
+		this._playerName.className = 'player__name';
 		this._playerName.innerText = player.name;
 
 		if (this.options.showSkinFace) {
-			this._playerImage = document.createElement('img');
-			this._playerImage.classList.add(this.options.smallFace ? 'playerIconSm' : 'playerIcon');
+			let size;
 
-			// if (this.options.smallFace) {
-			// 	getMinecraftHead(player.account, 16, head => {
-			// 		this._playerImage!.src = head.src;
-			// 	});
-			// } else if (this.options.showBody) {
-			// 	getMinecraftHead(player.account, 'body', head => {
-			// 		this._playerImage!.src = head.src;
-			// 	});
-			// } else {
-			// 	getMinecraftHead(player.account, 32, head => {
-			// 		this._playerImage!.src = head.src;
-			// 	});
-			// }
+			if (this.options.smallFace) {
+				this._playerImage = smallImage.cloneNode() as HTMLImageElement;
+				size = '16';
+			} else if(this.options.showBody) {
+				this._playerImage = bodyImage.cloneNode() as HTMLImageElement;
+				size = 'body';
+			} else {
+				this._playerImage = largeImage.cloneNode() as HTMLImageElement;
+				size = '32';
+			}
+
+			Util.getMinecraftHead(player, size).then(head => {
+				this._playerImage!.src = head.src;
+			});
 		} else {
 			this._playerImage = noSkinImage.cloneNode(false) as HTMLImageElement;
-			this._playerImage.classList.add(this.options.smallFace ? 'playerIconSm' : 'playerIcon');
 		}
 
 		this._container.appendChild(this._playerImage);
-		this._container.appendChild(this._playerName);
+		this._container.appendChild(this._playerInfo);
+		this._playerInfo.appendChild(this._playerName);
 
 		if (this.options.showHealth) {
 			this._playerHealth = document.createElement('div');
+			this._playerHealth.className = 'player__health';
 
-			this._playerHealth.classList.add(this.options.smallFace ? 'healthContainerSm' : 'healthContainer');
-			this._container.appendChild(this._playerHealth)
+			this._playerArmor = document.createElement('div');
+			this._playerArmor.className = 'player__armor';
+
+			this._playerInfo.appendChild(this._playerHealth);
+			this._playerInfo.appendChild(this._playerArmor);
 
 			this._playerHealthBar = document.createElement('div');
-			this._playerHealthBar.classList.add('playerHealth');
+			this._playerHealthBar.className = 'player__health-bar';
 
-			this._playerArmourBar = document.createElement('div');
-			this._playerArmourBar.classList.add('playerHealth');
+			this._playerArmorBar = document.createElement('div');
+			this._playerArmorBar.className = 'player__armor-bar';
 
-			this._playerHealthBg = document.createElement('div');
-			this._playerArmourBg = document.createElement('div');
-
-			this._playerHealthBg.classList.add('playerHealthBackground');
-			this._playerArmourBar.classList.add('playerArmorBackground');
-
-			this._playerHealthBg.appendChild(this._playerHealthBar);
-			this._playerArmourBg.appendChild(this._playerArmourBar);
-
-			this._playerHealth.appendChild(this._playerHealthBg);
-			this._playerHealth.appendChild(this._playerArmourBg);
-
-			this._playerHealth.hidden = true;
+			this._playerHealth.hidden = this._playerArmor.hidden = true;
 		} else {
 			this._playerName.classList.add('playerNameNoHealth');
 		}
@@ -115,10 +125,12 @@ export class PlayerIcon extends L.DivIcon {
 		if(this.options.showHealth) {
 			if (this._player.health !== undefined && this._player.armor !== undefined) {
 				this._playerHealth!.hidden = false;
+				this._playerArmor!.hidden = false;
 				this._playerHealthBar!.style.width = Math.ceil(this._player.health * 2.5) + 'px';
-				this._playerArmourBar!.style.width = Math.ceil(this._player.armor * 2.5) + 'px';
+				this._playerArmorBar!.style.width = Math.ceil(this._player.armor * 2.5) + 'px';
 			} else {
 				this._playerHealth!.hidden = true;
+				this._playerArmor!.hidden = true;
 			}
 		}
 	}

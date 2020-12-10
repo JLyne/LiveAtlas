@@ -1,24 +1,24 @@
-import L, {PointTuple} from 'leaflet';
+import L, {DivIconOptions, PointExpression, PointTuple} from 'leaflet';
 
-export interface DynmapIconOptions {
+export interface DynmapIconOptions extends DivIconOptions {
 	icon: string;
 	label: string;
-	dimensions: PointTuple;
 	showLabel: boolean;
 	isHtml?: boolean;
-	className?: string;
 }
 
-export class DynmapIcon extends L.Icon<DynmapIconOptions> {
+export class DynmapIcon extends L.DivIcon {
 	static defaultOptions: DynmapIconOptions = {
 		icon: 'default',
 		label: '',
-		dimensions: [16,16],
+		iconSize: [16, 16],
 		showLabel: false,
 		isHtml: false,
 		className: '',
 	};
-	private _container?: HTMLDivElement;
+
+	// @ts-ignore
+	options: DynmapIconOptions;
 
 	constructor(options: DynmapIconOptions) {
 		super(Object.assign(DynmapIcon.defaultOptions, options));
@@ -29,27 +29,19 @@ export class DynmapIcon extends L.Icon<DynmapIconOptions> {
 			L.DomUtil.remove(oldIcon);
 		}
 
-		const
+		const div = document.createElement('div'),
 			img = document.createElement('img'),
 			label = document.createElement('span'),
-			url = `${window.config.url.markers}_markers_/${this.options.icon}.png`;
+			url = `${window.config.url.markers}_markers_/${this.options.icon}.png`,
+			size = L.point(this.options.iconSize as PointExpression);
 
-		// this._container.classList.add('Marker', 'mapMarker');
-		this._container = document.createElement('div');
-		this._container.classList.add('leaflet-div-icon');
-		this._container.style.backgroundColor = 'pink';
-		this._container.style.width = '16px';
-		this._container.style.height = '16px';
+		const sizeClass = [size.x, size.y].join('x');
 
-		if(this.options.className) {
-			this._container.classList.add(this.options.className);
-		}
-
-		img.classList.add('markerIcon', `markerIcon${this.options.dimensions.join('x')}`);
+		img.className = `marker__icon marker__icon--${sizeClass}`;
 		img.src = url;
 
-		label.classList.add(this.options.showLabel ? 'markerName-show' : 'markerName');
-		label.classList.add(/*'markerName_' + set.id,*/ `markerName${this.options.dimensions.join('x')}`);
+		label.className = this.options.showLabel ? 'marker__label marker__label--show' : 'marker__label';
+		label.classList.add(/*'markerName_' + set.id,*/ `marker__label--${sizeClass}`);
 
 		if (this.options.isHtml) {
 			label.insertAdjacentHTML('afterbegin', this.options.label);
@@ -57,13 +49,20 @@ export class DynmapIcon extends L.Icon<DynmapIconOptions> {
 			label.textContent = this.options.label;
 		}
 
-		// this._container.insertAdjacentElement('beforeend', img);
-		// this._container.insertAdjacentElement('beforeend', label);
+		// @ts-ignore
+		L.Icon.prototype._setIconStyles.call(this, div, 'icon');
 
-		return this._container;
-	}
+		div.appendChild(img);
+		div.appendChild(label);
 
-	update() {
+		div.classList.add('marker');
 
+		if(this.options.className) {
+			div.classList.add(this.options.className);
+		}
+
+		console.log(div.className);
+
+		return div;
 	}
 }
