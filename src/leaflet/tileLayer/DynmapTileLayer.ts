@@ -132,7 +132,7 @@ export class DynmapTileLayer extends L.TileLayer {
 	}
 
 	_tickLoadQueue() {
-		if (this._loadingTiles.size > 4) {
+		if (this._loadingTiles.size > 6) {
 			return;
 		}
 
