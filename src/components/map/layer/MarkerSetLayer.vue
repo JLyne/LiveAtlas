@@ -14,6 +14,7 @@ import GenericMarker from "@/components/map/marker/GenericMarker.vue";
 import Areas from "@/components/map/vector/Areas.vue";
 import Circles from "@/components/map/vector/Circles.vue";
 import Lines from "@/components/map/vector/Lines.vue";
+import DynmapMap from "@/leaflet/DynmapMap";
 
 export default defineComponent({
 	components: {
@@ -25,7 +26,7 @@ export default defineComponent({
 
 	props: {
 		leaflet: {
-			type: Object as () => L.Map,
+			type: Object as () => DynmapMap,
 			required: true,
 		},
 
@@ -51,13 +52,13 @@ export default defineComponent({
 
 		if(!this.markerSet.hidden) {
 			// console.log('Adding markerSetLayer');
-			this.leaflet.addLayer(this.layerGroup);
+			this.leaflet.getLayerManager().addLayer(this.layerGroup, true, this.markerSet.label, 1);
 		}
 	},
 
 	unmounted() {
 		// console.log('Unmounted markerSetLayer');
-		this.leaflet.removeLayer(this.layerGroup);
+		this.leaflet.getLayerManager().removeLayer(this.layerGroup);
 	},
 
 	render() {

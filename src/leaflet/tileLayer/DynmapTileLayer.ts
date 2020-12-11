@@ -1,16 +1,16 @@
 import L, {Coords, DoneCallback, TileLayerOptions} from 'leaflet';
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import {Coordinate, DynmapMap} from "@/dynmap";
+import {Coordinate, DynmapWorldMap} from "@/dynmap";
 
 export interface DynmapTileLayerOptions extends TileLayerOptions {
-	mapSettings: DynmapMap;
+	mapSettings: DynmapWorldMap;
 	errorTileUrl: string;
 }
 
 export interface DynmapTileLayer extends L.TileLayer {
 	options: DynmapTileLayerOptions;
 	_projection: DynmapProjection;
-	_mapSettings: DynmapMap;
+	_mapSettings: DynmapWorldMap;
 	_cachedTileUrls: Map<string, string>;
 	_namedTiles: Map<string, DynmapTileElement>;
 	_tileTemplate: DynmapTileElement;

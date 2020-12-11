@@ -1,6 +1,6 @@
 <script lang="ts">
 import {defineComponent, onMounted, onUnmounted, computed, watch} from "@vue/runtime-core";
-import {DynmapMap} from "@/dynmap";
+import {DynmapWorldMap} from "@/dynmap";
 import {Map} from 'leaflet';
 import {useStore} from "@/store";
 import {HDMapType} from "@/leaflet/mapType/HDMapType";
@@ -14,7 +14,7 @@ export default defineComponent({
 			required: true
 		},
 		map: {
-			type: Object as () => DynmapMap,
+			type: Object as () => DynmapWorldMap,
 			required: true
 		},
 		leaflet: {

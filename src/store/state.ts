@@ -1,6 +1,6 @@
 import {
 	DynmapComponentConfig,
-	DynmapMap, DynmapMarkerSet, DynmapMarkerSetUpdates,
+	DynmapWorldMap, DynmapMarkerSet, DynmapMarkerSetUpdates,
 	DynmapMessageConfig,
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
@@ -14,7 +14,7 @@ export type State = {
 	components: DynmapComponentConfig;
 
 	worlds: Map<string, DynmapWorld>;
-	maps: Map<string, DynmapMap>;
+	maps: Map<string, DynmapWorldMap>;
 	players: Map<string, DynmapPlayer>;
 	markerSets: Map<string, DynmapMarkerSet>;
 
@@ -25,7 +25,7 @@ export type State = {
 
 	currentWorldState: DynmapWorldState;
 	currentWorld?: DynmapWorld;
-	currentMap?: DynmapMap;
+	currentMap?: DynmapWorldMap;
 	currentProjection: DynmapProjection;
 
 	updateRequestId: number;

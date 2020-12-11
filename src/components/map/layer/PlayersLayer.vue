@@ -7,6 +7,7 @@ import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
 import {defineComponent, computed} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import L from 'leaflet';
+import DynmapMap from "@/leaflet/DynmapMap";
 
 export default defineComponent({
 	components: {
@@ -15,7 +16,7 @@ export default defineComponent({
 
 	props: {
 		leaflet: {
-			type: Object as () => L.Map,
+			type: Object as () => DynmapMap,
 			required: true,
 		}
 	},
@@ -37,7 +38,7 @@ export default defineComponent({
 		// console.log('Mounted playersLayer');
 		if(!this.componentSettings!.hideByDefault) {
 			// console.log('Adding playersLayer');
-			this.leaflet.addLayer(this.layerGroup);
+			this.leaflet.getLayerManager().addLayer(this.layerGroup, true, useStore().state.messages.players, 1);
 		}
 	},
 

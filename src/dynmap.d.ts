@@ -85,10 +85,10 @@ interface DynmapWorld {
 	title: string;
 	height: number;
 	center: Coordinate;
-	maps: Map<String, DynmapMap>;
+	maps: Map<String, DynmapWorldMap>;
 }
 
-interface DynmapMap {
+interface DynmapWorldMap {
 	world: DynmapWorld;
 	background: string;
 	backgroundDay: string;

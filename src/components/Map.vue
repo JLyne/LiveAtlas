@@ -14,7 +14,6 @@
 <script lang="ts">
 import {defineComponent, computed} from "@vue/runtime-core";
 import L from 'leaflet';
-import '@/leaflet/map';
 import {useStore} from '@/store';
 import MapLayer from "@/components/map/layer/MapLayer.vue";
 import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
@@ -26,6 +25,7 @@ import LogoControl from "@/components/map/control/LogoControl.vue";
 import {MutationTypes} from "@/store/mutation-types";
 import {DynmapPlayer} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
+import DynmapMap from "@/leaflet/DynmapMap";
 
 export default defineComponent({
 	components: {
@@ -92,7 +92,6 @@ export default defineComponent({
 		},
 		configuration: {
 			handler(newValue) {
-				console.log(newValue.defaultZoom);
 				if(this.leaflet) {
 					this.leaflet.setZoom(newValue.defaultZoom, {
 						animate: false,
@@ -105,21 +104,18 @@ export default defineComponent({
 	},
 
 	mounted() {
-		this.leaflet = new L.Map(this.$el, Object.freeze({
+		this.leaflet = new DynmapMap(this.$el, Object.freeze({
 			zoom: this.configuration.defaultZoom,
 			center: new L.LatLng(0, 0),
 			fadeAnimation: false,
 			zoomAnimation: true,
 			zoomControl: true,
+			layerControl: true,
 			preferCanvas: true,
 			attributionControl: false,
 			crs: L.CRS.Simple,
 			worldCopyJump: false,
 			// markerZoomAnimation: false,
-		}));
-
-		this.leaflet.addControl(new L.Control.Layers({}, {},{
-			position: 'topleft',
 		}));
 
 		this.leaflet.on('moveend', () => {

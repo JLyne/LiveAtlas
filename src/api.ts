@@ -5,7 +5,7 @@ import {
 	DynmapComponentConfig,
 	DynmapConfigurationResponse,
 	DynmapLine,
-	DynmapMap,
+	DynmapWorldMap,
 	DynmapMarker,
 	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
@@ -60,7 +60,7 @@ function buildWorlds(response: AxiosResponse): Array<DynmapWorld> {
 		worlds: Array<DynmapWorld> = [];
 
 	(data.worlds || []).forEach((world: any) => {
-		const maps: Map<string, DynmapMap> = new Map();
+		const maps: Map<string, DynmapWorldMap> = new Map();
 
 		(world.maps || []).forEach((map: any) => {
 			maps.set(map.name, {

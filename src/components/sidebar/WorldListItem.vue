@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import {useStore} from "@/store";
-import {DynmapMap, DynmapWorld} from "@/dynmap";
+import {DynmapWorldMap, DynmapWorld} from "@/dynmap";
 import {defineComponent} from 'vue';
 import {MutationTypes} from "@/store/mutation-types";
 
@@ -26,13 +26,13 @@ export default defineComponent({
 	},
 
 	computed: {
-		currentMap(): DynmapMap | undefined {
+		currentMap(): DynmapWorldMap | undefined {
 			return useStore().state.currentMap;
 		}
 	},
 
 	methods: {
-		getMapIcon(map: DynmapMap): string {
+		getMapIcon(map: DynmapWorldMap): string {
 			let worldType: string,
 				mapType: string;
 
