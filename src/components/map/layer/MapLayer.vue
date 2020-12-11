@@ -1,7 +1,7 @@
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import {defineComponent, onMounted, onUnmounted, computed, watch} from "@vue/runtime-core";
 import {DynmapMap} from "@/dynmap";
-import L from 'leaflet';
+import {Map} from 'leaflet';
 import {useStore} from "@/store";
 import {HDMapType} from "@/leaflet/mapType/HDMapType";
 import {MutationTypes} from "@/store/mutation-types";
@@ -17,85 +17,43 @@ export default defineComponent({
 			required: true
 		},
 		leaflet: {
-			type: Object as () => L.Map,
+			type: Object as () => Map,
 			required: true,
 		}
 	},
 
-	setup() {
-		let layer = undefined as HDMapType | undefined;
+	setup(props) {
+		const store = useStore(),
+			layer = new HDMapType({
+				errorTileUrl: 'images/blank.png',
+				mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map))),
+			}),
+			active = computed(() => props.map === store.state.currentMap),
 
-		return {
-			layer,
-		}
-	},
+			enableLayer = () => {
+				useStore().commit(MutationTypes.SET_CURRENT_PROJECTION, layer.getProjection());
+				props.leaflet.addLayer(layer);
+				props.leaflet.panTo(layer.getProjection().locationToLatLng(props.map.world.center), {
+					noMoveStart: true,
+					animate: false,
+				});
+			},
 
-	computed: {
-		active(): boolean {
-			return this.map === useStore().state.currentMap;
-		}
-	},
+			disableLayer = () => layer.remove();
 
-	watch: {
-		active(newValue) {
-			console.warn(`Active for ${this.map.world.name} ${this.map.name} now ${newValue}`);
+		watch(active, (newValue) => newValue ? enableLayer() : disableLayer());
 
-			if(newValue) {
-				this.enableLayer();
-			} else {
-				this.disableLayer();
+		onMounted(() => {
+			if(active.value) {
+				enableLayer();
 			}
-		}
-	},
+		});
 
-	mounted() {
-		// console.log('mounted ' + this.name + ' ' + this.active);
-		this.layer = new HDMapType({
-			errorTileUrl: 'images/blank.png',
-			mapSettings: Object.freeze(JSON.parse(JSON.stringify(this.map))),
-		}) as HDMapType;
-
-		console.log(this.layer);
-
-		if(this.active) {
-			this.enableLayer();
-		}
-	},
-
-	unmounted() {
-		// console.log('unmounted '  + this.name);
-		this.disableLayer();
+		onUnmounted(() => disableLayer());
 	},
 
 	render() {
 		return null;
 	},
-
-	methods: {
-		enableLayer() {
-			if(!this.layer) {
-				return;
-			}
-
-			console.warn('Enabling layer ' + this.map.world.name + ' ' + this.map.name);
-
-			useStore().commit(MutationTypes.SET_CURRENT_PROJECTION, this.layer.getProjection());
-			this.leaflet.addLayer(this.layer);
-			this.leaflet.panTo(this.layer.getProjection().locationToLatLng(this.map.world.center), {
-				noMoveStart: true,
-				animate: false,
-			});
-		},
-		disableLayer() {
-			if(this.layer) {
-				console.warn('Disabling layer ' + this.map.world.name + ' ' + this.map.name);
-				this.layer.remove();
-			}
-		}
-	}
-})
+});
 </script>
-
-<style scoped>
-
-</style>
