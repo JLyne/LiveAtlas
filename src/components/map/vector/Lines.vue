@@ -1,122 +1,111 @@
 <script lang="ts">
-import {defineComponent, computed} from "@vue/runtime-core";
-import L, {LatLngExpression} from 'leaflet';
+import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
+import {Polyline, LayerGroup, Polygon} from 'leaflet';
 import {useStore} from "@/store";
-import {DynmapLine} from "@/dynmap";
+import {DynmapLine, DynmapMarkerSet} from "@/dynmap";
+import {ActionTypes} from "@/store/action-types";
+import {createLine, updateLine} from "@/util/lines";
+import Util from '@/util';
 
 export default defineComponent({
 	props: {
-		lines: {
-			type: Object as () => Map<string, DynmapLine>,
-			required: true
+		set: {
+			type: Object as () => DynmapMarkerSet,
+			required: true,
 		},
 		layerGroup: {
-			type: Object as () => L.LayerGroup,
+			type: Object as () => LayerGroup,
 			required: true
 		}
 	},
 
-	setup() {
+	setup(props) {
+		let updateFrame = 0;
+
 		const store = useStore(),
 			currentProjection = computed(() => store.state.currentProjection),
-			layers = Object.freeze(new Map()) as Map<string, L.Path>;
+			pendingUpdates = computed(() => {
+				const markerSetUpdates = store.state.pendingSetUpdates.get(props.set.id);
 
-		return {
-			layers,
-			currentProjection,
-		}
-	},
+				return markerSetUpdates && markerSetUpdates.lineUpdates.length;
+			}),
+			layers = Object.freeze(new Map<string, Polyline | Polygon>()),
 
-	watch: {
-		//FIXME: Prevent unnecessary repositioning when changing worlds
-		currentProjection() {
-			const projection = useStore().state.currentProjection,
-				latLng = (x: number, y: number, z: number) => {
-					return projection.locationToLatLng({x, y, z});
+			createLines = () => {
+				const converter = Util.getPointConverter();
+
+				props.set.lines.forEach((line: DynmapLine, id: string) => {
+					const layer = createLine(line, converter);
+
+					layers.set(id, layer);
+					props.layerGroup.addLayer(layer);
+				});
+			},
+
+			deleteLine = (id: string) => {
+				let line = layers.get(id) as Polyline;
+
+				if (!line) {
+					return;
 				}
 
-			// eslint-disable-next-line no-unused-vars
-			for (const [id, line] of this.lines) {
-				this.updateLine(id, line, latLng);
+				line.remove();
+				layers.delete(id);
+			},
+
+			handlePendingUpdates = () => {
+				useStore().dispatch(ActionTypes.POP_LINE_UPDATES, {
+					markerSet: props.set.id,
+					amount: 10,
+				}).then(updates => {
+					const converter = Util.getPointConverter();
+
+					for(const update of updates) {
+						if(update.removed) {
+							console.log(`Deleting line ${update.id}`);
+							deleteLine(update.id);
+						} else {
+							console.log(`Updating/creating line ${update.id}`);
+							const layer = updateLine(layers.get(update.id), update.payload as DynmapLine, converter)
+
+							if(!layers.has(update.id)) {
+								layers.set(update.id, layer);
+								props.layerGroup.addLayer(layer);
+							}
+						}
+					}
+
+					if(pendingUpdates.value) {
+						console.log('More updates left, scheduling frame');
+						// eslint-disable-next-line no-unused-vars
+						updateFrame = requestAnimationFrame(() => handlePendingUpdates());
+					} else {
+						updateFrame = 0;
+					}
+				});
+			};
+
+		//FIXME: Prevent unnecessary repositioning when changing worlds
+		watch(currentProjection, () => {
+			const converter = Util.getPointConverter();
+
+			for (const [id, line] of props.set.lines) {
+				updateLine(layers.get(id), line, converter);
 			}
-		}
-	},
+		});
 
-	mounted() {
-		this.createLines();
-	},
+		watch(pendingUpdates, (newValue, oldValue) => {
+			if(newValue && newValue > 0 && oldValue === 0 && !updateFrame) {
+				updateFrame = requestAnimationFrame(() => handlePendingUpdates());
+			}
+		});
 
-	unmounted() {
-
+		onMounted(() => createLines());
+		onUnmounted(() => updateFrame && cancelAnimationFrame(updateFrame));
 	},
 
 	render() {
 		return null;
-	},
-
-	methods: {
-		createLines() {
-			const projection = useStore().state.currentProjection,
-				latLng = (x: number, y: number, z: number) => {
-					return projection.locationToLatLng({x, y, z});
-				};
-
-			this.lines.forEach((line: DynmapLine, id: string) => {
-				this.createLine(id, line, latLng);
-			});
-		},
-
-		createLine(id: string, options: DynmapLine, latLng: Function) {
-			const points = this.getPoints(options, latLng),
-				line= new L.Polyline(points, options.style);
-
-			if(options.label) {
-				line.bindPopup(() => {
-					const popup = document.createElement('span');
-
-					if (options.popupContent) {
-						popup.classList.add('LinePopup');
-						popup.insertAdjacentHTML('afterbegin', options.popupContent);
-					} else if (options.isHTML) {
-						popup.classList.add('LinePopup');
-						popup.insertAdjacentHTML('afterbegin', options.label);
-					} else {
-						popup.textContent = options.label;
-					}
-
-					return popup;
-				});
-			}
-
-			this.layers.set(id, line);
-			this.layerGroup.addLayer(line);
-		},
-
-		getPoints(options: DynmapLine, latLng: Function): LatLngExpression[] {
-			const points = [];
-
-			for(let i = 0; i < options.x.length; i++) {
-				points.push(latLng(options.x[i], options.y[i], options.z[i]));
-			}
-
-			return points;
-		},
-
-		updateLine(id: string, options: DynmapLine, latLng: Function) {
-			let line = this.layers.get(id) as L.Polyline,
-				points = this.getPoints(options, latLng);
-
-			if (!line) {
-				return;
-			}
-
-			line.setLatLngs(points);
-			line.redraw();
-		},
 	}
-})
+});
 </script>
-
-<style scoped>
-
-</style>

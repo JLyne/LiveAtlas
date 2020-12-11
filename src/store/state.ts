@@ -1,6 +1,6 @@
 import {
 	DynmapComponentConfig,
-	DynmapMap, DynmapMarker, DynmapMarkerSet,
+	DynmapMap, DynmapMarkerSet, DynmapMarkerSetUpdates,
 	DynmapMessageConfig,
 	DynmapPlayer,
 	DynmapServerConfig,
@@ -18,9 +18,11 @@ export type State = {
 	players: Map<string, DynmapPlayer>;
 	markerSets: Map<string, DynmapMarkerSet>;
 
+	pendingSetUpdates: Map<string, DynmapMarkerSetUpdates>;
+	pendingTileUpdates: Array<string>;
+
 	following?: DynmapPlayer;
 
-	// currentServer?: string;
 	currentWorldState: DynmapWorldState;
 	currentWorld?: DynmapWorld;
 	currentMap?: DynmapMap;
@@ -65,7 +67,10 @@ export const state: State = {
 	worlds: new Map(), //Defined (loaded) worlds with maps from configuration.json
 	maps: new Map(), //Defined maps from configuration.json
 	players: new Map(), //Online players from world.json
+
 	markerSets: new Map(), //Markers from world_markers.json. Contents of each set isn't reactive for performance reasons.
+	pendingSetUpdates: new Map(), //Pending updates to markers/areas/etc for each marker set
+	pendingTileUpdates: [], //Pending updates to map tiles
 
 	//Dynmap optional components
 	components: {
@@ -73,6 +78,7 @@ export const state: State = {
 		markers: {
 			showLabels: false,
 		},
+
 		// Optional "playermarkers" component. Settings for online player markers.
 		// If not present, player markers will be disabled
 		playerMarkers: undefined,
@@ -83,22 +89,23 @@ export const state: State = {
 		//Optional clock component. Used for both "digitalclock" and "timeofdayclock". Shows world time/weather.
 		clockControl: undefined,
 
-		//Optional "link" component. Adds button to get url for current position
+		//Optional "link" component. Adds button to copy url for current position
 		linkControl: false,
 
+		//Optional "logo" controls.
 		logoControls: [],
 	},
 
 	following: undefined,
 
 	currentWorld: undefined,
+	currentMap: undefined,
+	currentProjection: new DynmapProjection(), //Projection for converting location <-> latlg. Object itself isn't reactive for performance reasons
 	currentWorldState: {
 		raining: false,
 		thundering: false,
 		timeOfDay: 0,
 	},
-	currentMap: undefined,
-	currentProjection: new DynmapProjection(), //Projection for converting location <-> latlg. Object itself isn't reactive for performance reasons
 
 	updateRequestId: 0,
 	updateTimestamp: new Date(),

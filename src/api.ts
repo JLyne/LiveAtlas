@@ -1,11 +1,18 @@
 import axios, {AxiosResponse} from 'axios';
 import {
-	DynmapArea, DynmapCircle,
+	DynmapArea,
+	DynmapCircle,
 	DynmapComponentConfig,
-	DynmapConfigurationResponse, DynmapLine, DynmapMap, DynmapMarker, DynmapMarkerSet, DynmapMessageConfig,
+	DynmapConfigurationResponse,
+	DynmapLine,
+	DynmapMap,
+	DynmapMarker,
+	DynmapMarkerSet,
+	DynmapMarkerSetUpdates,
+	DynmapMessageConfig,
 	DynmapPlayer,
-	DynmapServerConfig,
-	DynmapUpdateResponse,
+	DynmapServerConfig, DynmapUpdate,
+	DynmapUpdateResponse, DynmapUpdates,
 	DynmapWorld
 } from "@/dynmap";
 
@@ -166,25 +173,27 @@ function buildMarkers(data: any): Map<string, DynmapMarker> {
 			continue;
 		}
 
-		const marker = data[key];
-
-		markers.set(key, {
-			label: marker.label || '',
-			location: {
-				x: marker.x || 0,
-				y: marker.y || 0,
-				z: marker.z || 0,
-			},
-			dimensions: marker.dim ? marker.dim.split('x') : [16, 16],
-			icon: marker.icon || "default",
-			isHTML: marker.markup || false,
-			minZoom: marker.minzoom || undefined,
-			maxZoom: marker.maxZoom || undefined,
-			popupContent: marker.desc || undefined,
-		});
+		markers.set(key, buildMarker(data[key]));
 	}
 
 	return markers;
+}
+
+function buildMarker(marker: any): DynmapMarker {
+	return {
+		label: marker.label || '',
+		location: {
+			x: marker.x || 0,
+			y: marker.y || 0,
+			z: marker.z || 0,
+		},
+		dimensions: marker.dim ? marker.dim.split('x') : [16, 16],
+		icon: marker.icon || "default",
+		isHTML: marker.markup || false,
+		minZoom: marker.minzoom || undefined,
+		maxZoom: marker.maxZoom || undefined,
+		popupContent: marker.desc || undefined,
+	};
 }
 
 function buildAreas(data: any): Map<string, DynmapArea> {
@@ -195,28 +204,30 @@ function buildAreas(data: any): Map<string, DynmapArea> {
 			continue;
 		}
 
-		const area = data[key];
-
-		areas.set(key, {
-			style: {
-				color: area.color || '#ff0000',
-				opacity: area.opacity || 1,
-				weight: area.weight || 1,
-				fillColor: area.fillcolor || '#ff0000',
-				fillOpacity: area.fillopacity || 0,
-			},
-			label: area.label || '',
-			isHTML: area.markup || false,
-			x: area.x || [0, 0],
-			y: [area.ybottom || 0, area.ytop || 0],
-			z: area.z || [0, 0],
-			minZoom: area.minzoom || undefined,
-			maxZoom: area.maxZoom || undefined,
-			popupContent: area.desc || undefined,
-		});
+		areas.set(key, buildArea(data[key]));
 	}
 
 	return areas;
+}
+
+function buildArea(area: any): DynmapArea {
+	return  {
+		style: {
+			color: area.color || '#ff0000',
+			opacity: area.opacity || 1,
+			weight: area.weight || 1,
+			fillColor: area.fillcolor || '#ff0000',
+			fillOpacity: area.fillopacity || 0,
+		},
+		label: area.label || '',
+		isHTML: area.markup || false,
+		x: area.x || [0, 0],
+		y: [area.ybottom || 0, area.ytop || 0],
+		z: area.z || [0, 0],
+		minZoom: area.minzoom || undefined,
+		maxZoom: area.maxZoom || undefined,
+		popupContent: area.desc || undefined,
+	};
 }
 
 function buildLines(data: any): Map<string, DynmapLine> {
@@ -227,26 +238,28 @@ function buildLines(data: any): Map<string, DynmapLine> {
 			continue;
 		}
 
-		const line = data[key];
-
-		lines.set(key, {
-			x: line.x || [0, 0],
-			y: line.y || [0, 0],
-			z: line.z || [0, 0],
-			style: {
-				color: line.color || '#ff0000',
-				opacity: line.opacity || 1,
-				weight: line.weight || 1,
-			},
-			label: line.label || '',
-			isHTML: line.markup || false,
-			minZoom: line.minzoom || undefined,
-			maxZoom: line.maxZoom || undefined,
-			popupContent: line.desc || undefined,
-		});
+		lines.set(key, buildLine(data[key]));
 	}
 
 	return lines;
+}
+
+function buildLine(line: any): DynmapLine {
+	return {
+		x: line.x || [0, 0],
+		y: line.y || [0, 0],
+		z: line.z || [0, 0],
+		style: {
+			color: line.color || '#ff0000',
+			opacity: line.opacity || 1,
+			weight: line.weight || 1,
+		},
+		label: line.label || '',
+		isHTML: line.markup || false,
+		minZoom: line.minzoom || undefined,
+		maxZoom: line.maxZoom || undefined,
+		popupContent: line.desc || undefined,
+	};
 }
 
 function buildCircles(data: any): Map<string, DynmapCircle> {
@@ -257,32 +270,115 @@ function buildCircles(data: any): Map<string, DynmapCircle> {
 			continue;
 		}
 
-		const circle = data[key];
-
-		circles.set(key, {
-			location: {
-				x: circle.x || 0,
-				y: circle.y || 0,
-				z: circle.z || 0,
-			},
-			radius: [circle.xr || 0, circle.zr || 0],
-			style: {
-				fillColor: circle.fillcolor || '#ff0000',
-				fillOpacity: circle.fillopacity || 0,
-				color: circle.color || '#ff0000',
-				opacity: circle.opacity || 1,
-				weight: circle.weight || 1,
-			},
-			label: circle.label || '',
-			isHTML: circle.markup || false,
-
-			minZoom: circle.minzoom || undefined,
-			maxZoom: circle.maxZoom || undefined,
-			popupContent: circle.desc || undefined,
-		});
+		circles.set(key, buildCircle(data[key]));
 	}
 
 	return circles;
+}
+
+function buildCircle(circle: any): DynmapCircle {
+	return {
+		location: {
+			x: circle.x || 0,
+			y: circle.y || 0,
+			z: circle.z || 0,
+		},
+		radius: [circle.xr || 0, circle.zr || 0],
+		style: {
+			fillColor: circle.fillcolor || '#ff0000',
+			fillOpacity: circle.fillopacity || 0,
+			color: circle.color || '#ff0000',
+			opacity: circle.opacity || 1,
+			weight: circle.weight || 1,
+		},
+		label: circle.label || '',
+		isHTML: circle.markup || false,
+
+		minZoom: circle.minzoom || undefined,
+		maxZoom: circle.maxZoom || undefined,
+		popupContent: circle.desc || undefined,
+	};
+}
+
+function buildUpdates(data: Array<any>): DynmapUpdates {
+	const updates = {
+		markerSets: new Map<string, DynmapMarkerSetUpdates>(),
+		tiles: new Map(),
+		chat: [],
+	}
+
+	for(const entry of data) {
+		switch(entry.type) {
+			case 'component': {
+				if(!entry.id) {
+					console.warn(`Ignoring component update without an ID`);
+					continue;
+				}
+
+				if(!entry.set) {
+					console.warn(`Ignoring component update without a marker set`);
+					continue;
+				}
+
+				if(entry.ctype !== 'markers') {
+					console.warn(`Ignoring component with unknown ctype ${entry.ctype}`);
+					continue;
+				}
+
+				if(!updates.markerSets.has(entry.set)) {
+					updates.markerSets.set(entry.set, {
+						areaUpdates: [],
+						markerUpdates: [],
+						lineUpdates: [],
+						circleUpdates: [],
+					});
+				}
+
+				const markerSetUpdates = updates.markerSets.get(entry.set),
+					update: DynmapUpdate = {
+						id: entry.id,
+						removed: entry.msg.endsWith('deleted'),
+					};
+
+
+				if(entry.msg.startsWith("marker")) {
+					update.payload = update.removed ? undefined : buildMarker(entry);
+					markerSetUpdates!.markerUpdates.push(Object.freeze(update));
+				} else if(entry.msg.startsWith("area")) {
+					update.payload = update.removed ? undefined : buildArea(entry);
+					markerSetUpdates!.areaUpdates.push(Object.freeze(update));
+
+				} else if(entry.msg.startsWith("circle")) {
+					update.payload = update.removed ? undefined : buildCircle(entry);
+					markerSetUpdates!.circleUpdates.push(Object.freeze(update));
+
+				} else if(entry.msg.startsWith("line")) {
+					update.payload = update.removed ? undefined : buildLine(entry);
+					markerSetUpdates!.lineUpdates.push(Object.freeze(update));
+				}
+
+				break;
+			}
+
+			case 'chat':
+				//TODO
+				break;
+
+			case 'tile':
+				if(!entry.name || !entry.timestamp) {
+					console.warn(`Ignoring tile update without a name or timestamp`);
+					break;
+				}
+
+				updates.tiles.set(entry.name, entry.timestamp);
+				break;
+
+			default:
+				console.warn(`Ignoring unknown update type ${entry.type}`);
+		}
+	}
+
+	return updates;
 }
 
 export default {
@@ -349,6 +445,7 @@ export default {
 				configHash: data.configHash || 0,
 				timestamp: data.timestamp || 0,
 				players,
+				updates: buildUpdates(data.updates || []),
 			}
 		});
 	},
@@ -374,6 +471,7 @@ export default {
 					lines = buildLines(set.lines || {});
 
 				sets.set(key, {
+					id: key,
 					label: set.label || "Unnamed set",
 					hidden: set.hidden || false,
 					priority: set.layerprio || 0,

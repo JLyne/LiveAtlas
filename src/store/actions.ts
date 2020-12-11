@@ -4,7 +4,14 @@ import {State} from "@/store/state";
 import {ActionTypes} from "@/store/action-types";
 import API from '@/api';
 import {Mutations} from "@/store/mutations";
-import {DynmapConfigurationResponse, DynmapMarkerSet, DynmapPlayer, DynmapUpdateResponse} from "@/dynmap";
+import {
+	DynmapAreaUpdate, DynmapCircleUpdate,
+	DynmapConfigurationResponse, DynmapLineUpdate,
+	DynmapMarkerSet,
+	DynmapMarkerUpdate,
+	DynmapPlayer,
+	DynmapUpdateResponse
+} from "@/dynmap";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(
@@ -27,6 +34,22 @@ export interface Actions {
 		{commit}: AugmentedActionContext,
 		payload: Set<DynmapPlayer>
 	):Promise<Map<string, DynmapMarkerSet>>
+	[ActionTypes.POP_MARKER_UPDATES](
+		{commit}: AugmentedActionContext,
+		payload: {markerSet: string, amount: number}
+	): Promise<DynmapMarkerUpdate[]>
+	[ActionTypes.POP_AREA_UPDATES](
+		{commit}: AugmentedActionContext,
+		payload: {markerSet: string, amount: number}
+	): Promise<DynmapAreaUpdate[]>
+	[ActionTypes.POP_CIRCLE_UPDATES](
+		{commit}: AugmentedActionContext,
+		payload: {markerSet: string, amount: number}
+	): Promise<DynmapCircleUpdate[]>
+	[ActionTypes.POP_LINE_UPDATES](
+		{commit}: AugmentedActionContext,
+		payload: {markerSet: string, amount: number}
+	): Promise<DynmapLineUpdate[]>
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -52,10 +75,11 @@ export const actions: ActionTree<State, State> & Actions = {
 			return Promise.reject("No current world");
 		}
 
-		return API.getUpdate(state.updateRequestId, state.currentWorld.name, state.updateTimestamp.getUTCMilliseconds()).then(update => {
+		return API.getUpdate(state.updateRequestId, state.currentWorld.name, state.updateTimestamp.valueOf()).then(update => {
 			commit(MutationTypes.SET_WORLD_STATE, update.worldState);
 			commit(MutationTypes.SET_UPDATE_TIMESTAMP, new Date(update.timestamp));
 			commit(MutationTypes.INCREMENT_REQUEST_ID, undefined);
+			commit(MutationTypes.ADD_MARKER_SET_UPDATES, update.updates.markerSets);
 
 			return dispatch(ActionTypes.SET_PLAYERS, update.players).then(() => {
 				return update;
@@ -97,5 +121,58 @@ export const actions: ActionTree<State, State> & Actions = {
 
 			return markerSets;
 		});
-	}
+	},
+
+	[ActionTypes.POP_MARKER_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapMarkerUpdate[]> {
+		if(!state.markerSets.has(markerSet)) {
+			console.log(`Marker set ${markerSet} doesn't exist`);
+			return Promise.resolve([]);
+		}
+
+		const updates = state.pendingSetUpdates.get(markerSet)!.markerUpdates.slice(0, amount);
+
+		commit(MutationTypes.POP_MARKER_UPDATES, {markerSet, amount});
+
+		return Promise.resolve(updates);
+	},
+
+	[ActionTypes.POP_AREA_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapAreaUpdate[]> {
+		if(!state.markerSets.has(markerSet)) {
+			console.log(`Marker set ${markerSet} doesn't exist`);
+			return Promise.resolve([]);
+		}
+
+		const updates = state.pendingSetUpdates.get(markerSet)!.areaUpdates.slice(0, amount);
+
+		commit(MutationTypes.POP_AREA_UPDATES, {markerSet, amount});
+
+		return Promise.resolve(updates);
+	},
+
+	[ActionTypes.POP_CIRCLE_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapCircleUpdate[]> {
+		if(!state.markerSets.has(markerSet)) {
+			console.log(`Marker set ${markerSet} doesn't exist`);
+			return Promise.resolve([]);
+		}
+
+		const updates = state.pendingSetUpdates.get(markerSet)!.circleUpdates.slice(0, amount);
+
+		commit(MutationTypes.POP_CIRCLE_UPDATES, {markerSet, amount});
+
+		return Promise.resolve(updates);
+	},
+
+	[ActionTypes.POP_LINE_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapLineUpdate[]> {
+		if(!state.markerSets.has(markerSet)) {
+			console.log(`Marker set ${markerSet} doesn't exist`);
+			return Promise.resolve([]);
+		}
+
+		const updates = state.pendingSetUpdates.get(markerSet)!.lineUpdates.slice(0, amount);
+
+		commit(MutationTypes.POP_LINE_UPDATES, {markerSet, amount});
+
+		return Promise.resolve(updates);
+	},
+
 }

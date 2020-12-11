@@ -1,4 +1,5 @@
 import {DynmapPlayer} from "@/dynmap";
+import {useStore} from "@/store";
 
 const headCache = new Map<DynmapPlayer, HTMLImageElement>();
 
@@ -49,5 +50,13 @@ export default {
 		}
 
 		return base + addition;
+	},
+
+	getPointConverter() {
+		const projection = useStore().state.currentProjection;
+
+		return (x: number, y: number, z: number) => {
+			return projection.locationToLatLng({x, y, z});
+		};
 	}
 }

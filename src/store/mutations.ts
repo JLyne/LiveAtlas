@@ -2,7 +2,17 @@ import {MutationTree} from "vuex";
 import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
 import {
-	DynmapComponentConfig, DynmapMarkerSet,
+	DynmapArea,
+	DynmapAreaUpdate,
+	DynmapCircle,
+	DynmapCircleUpdate,
+	DynmapComponentConfig,
+	DynmapLine,
+	DynmapLineUpdate,
+	DynmapMarker,
+	DynmapMarkerSet,
+	DynmapMarkerSetUpdates,
+	DynmapMarkerUpdate,
 	DynmapMessageConfig,
 	DynmapPlayer,
 	DynmapServerConfig,
@@ -25,9 +35,15 @@ export type Mutations<S = State> = {
 	[MutationTypes.ADD_WORLD](state: S, world: DynmapWorld): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: DynmapWorldState): void
 	[MutationTypes.SET_UPDATE_TIMESTAMP](state: S, time: Date): void
+	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
+
+	[MutationTypes.POP_MARKER_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapMarkerUpdate>
+	[MutationTypes.POP_AREA_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapAreaUpdate>
+	[MutationTypes.POP_CIRCLE_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapCircleUpdate>
+	[MutationTypes.POP_LINE_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapLineUpdate>
+
 	[MutationTypes.INCREMENT_REQUEST_ID](state: S): void
-	// [MutationTypes.SET_PLAYERS](state: S, players: Array<DynmapPlayer>): void
-	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<DynmapPlayer>): void
+	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<DynmapPlayer>): Set<DynmapPlayer>
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
 	[MutationTypes.SET_CURRENT_MAP](state: S, payload: CurrentMapPayload): void
 	[MutationTypes.SET_CURRENT_PROJECTION](state: S, payload: DynmapProjection): void
@@ -73,6 +89,16 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Sets the existing marker sets from the last marker fetch
 	[MutationTypes.SET_MARKER_SETS](state: State, markerSets: Map<string, DynmapMarkerSet>) {
 		state.markerSets = markerSets;
+		state.pendingSetUpdates.clear();
+
+		for(const entry of markerSets) {
+			state.pendingSetUpdates.set(entry[0], {
+				markerUpdates: [],
+				areaUpdates: [],
+				circleUpdates: [],
+				lineUpdates: [],
+			});
+		}
 	},
 
 	[MutationTypes.ADD_WORLD](state: State, world: DynmapWorld) {
@@ -89,46 +115,101 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.updateTimestamp = timestamp;
 	},
 
+	//Sets the timestamp of the last update fetch
+	[MutationTypes.ADD_MARKER_SET_UPDATES](state: State, updates: Map<string, DynmapMarkerSetUpdates>) {
+		for(const entry of updates) {
+			if(!state.markerSets.has(entry[0])) {
+				console.log(`Marker set ${entry[0]} doesn't exist`);
+				continue;
+			}
+
+			const set = state.markerSets.get(entry[0]) as DynmapMarkerSet,
+				setUpdates = state.pendingSetUpdates.get(entry[0]) as DynmapMarkerSetUpdates;
+
+			//Update non-reactive lists
+			for(const update of entry[1].markerUpdates) {
+				if(update.removed) {
+					set.markers.delete(update.id);
+				} else {
+					set.markers.set(update.id, update.payload as DynmapMarker);
+				}
+			}
+
+			for(const update of entry[1].areaUpdates) {
+				if(update.removed) {
+					set.areas.delete(update.id);
+				} else {
+					set.areas.set(update.id, update.payload as DynmapArea);
+				}
+			}
+
+			for(const update of entry[1].circleUpdates) {
+				if(update.removed) {
+					set.circles.delete(update.id);
+				} else {
+					set.circles.set(update.id, update.payload as DynmapCircle);
+				}
+			}
+
+			for(const update of entry[1].lineUpdates) {
+				if(update.removed) {
+					set.lines.delete(update.id);
+				} else {
+					set.lines.set(update.id, update.payload as DynmapLine);
+				}
+			}
+
+			//Add to reactive pending updates lists
+			setUpdates.markerUpdates = setUpdates.markerUpdates.concat(entry[1].markerUpdates);
+			setUpdates.areaUpdates = setUpdates.areaUpdates.concat(entry[1].areaUpdates);
+			setUpdates.circleUpdates = setUpdates.circleUpdates.concat(entry[1].circleUpdates);
+			setUpdates.lineUpdates = setUpdates.lineUpdates.concat(entry[1].lineUpdates);
+		}
+	},
+
+	[MutationTypes.POP_MARKER_UPDATES](state: State, {markerSet, amount}): Array<DynmapMarkerUpdate> {
+		if(!state.markerSets.has(markerSet)) {
+			console.log(`Marker set ${markerSet} doesn't exist`);
+			return [];
+		}
+
+		return state.pendingSetUpdates.get(markerSet)!.markerUpdates.splice(0, amount);
+	},
+
+	[MutationTypes.POP_AREA_UPDATES](state: State, {markerSet, amount}): Array<DynmapAreaUpdate> {
+		if(!state.markerSets.has(markerSet)) {
+			console.log(`Marker set ${markerSet} doesn't exist`);
+			return [];
+		}
+
+		return state.pendingSetUpdates.get(markerSet)!.areaUpdates.splice(0, amount);
+	},
+
+	[MutationTypes.POP_CIRCLE_UPDATES](state: State, {markerSet, amount}): Array<DynmapCircleUpdate> {
+		if(!state.markerSets.has(markerSet)) {
+			console.log(`Marker set ${markerSet} doesn't exist`);
+			return [];
+		}
+
+		return state.pendingSetUpdates.get(markerSet)!.circleUpdates.splice(0, amount);
+	},
+
+	[MutationTypes.POP_LINE_UPDATES](state: State, {markerSet, amount}): Array<DynmapLineUpdate>  {
+		if(!state.markerSets.has(markerSet)) {
+			console.log(`Marker set ${markerSet} doesn't exist`);
+			return [];
+		}
+
+		return state.pendingSetUpdates.get(markerSet)!.lineUpdates.splice(0, amount);
+	},
+
 	//Increments the request id for the next update fetch
 	[MutationTypes.INCREMENT_REQUEST_ID](state: State) {
 		state.updateRequestId++;
 	},
 
-	// [MutationTypes.SET_PLAYERS](state: State, players: Array<DynmapPlayer>) {
-	// 	const existingPlayers: Set<string> = new Set();
-	//
-	// 	players.forEach(player => {
-	// 		existingPlayers.add(player.account);
-	//
-	// 		if (state.players.has(player.account)) {
-	// 			const existing = state.players.get(player.account);
-	//
-	// 			existing!.health = player.health;
-	// 			existing!.armor = player.armor;
-	// 			existing!.location = Object.assign(existing!.location, player.location);
-	// 			existing!.name = player.name;
-	// 			existing!.sort = player.sort;
-	// 		} else {
-	// 			state.players.set(player.account, {
-	// 				account: player.account,
-	// 				health: player.health,
-	// 				armor: player.armor,
-	// 				location: player.location,
-	// 				name: player.name,
-	// 				sort: player.sort,
-	// 			});
-	// 		}
-	// 	});
-	//
-	// 	for (const key of state.players.keys()) {
-	// 		if (!existingPlayers.has(key)) {
-	// 			state.players.delete(key);
-	// 		}
-	// 	}
-	// },
-
-	//Set up to 10 players at once, returning the rest for future setting
-	[MutationTypes.SET_PLAYERS_ASYNC](state: State, players: Set<DynmapPlayer>) {
+	// Set up to 10 players at once
+	[MutationTypes.SET_PLAYERS_ASYNC](state: State, players: Set<DynmapPlayer>): Set<DynmapPlayer> {
 		let count = 0;
 
 		for(const player of players) {
@@ -154,9 +235,11 @@ export const mutations: MutationTree<State> & Mutations = {
 			players.delete(player);
 
 			if(++count >= 10) {
-				return players;
+				break;
 			}
 		}
+
+		return players;
 	},
 
 	//Removes all players not found in the provided keep set
@@ -184,6 +267,8 @@ export const mutations: MutationTree<State> & Mutations = {
 		if(state.currentWorld !== newWorld) {
 			state.currentWorld = state.worlds.get(worldName);
 			state.markerSets.clear();
+			state.pendingSetUpdates.clear();
+			state.pendingTileUpdates = [];
 		}
 
 		state.currentMap = state.maps.get(mapName);

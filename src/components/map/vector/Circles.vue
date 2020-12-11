@@ -1,140 +1,111 @@
 <script lang="ts">
-import {defineComponent, computed} from "@vue/runtime-core";
-import L, {LatLngExpression} from 'leaflet';
+import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
+import {Polyline, LayerGroup, Polygon} from 'leaflet';
 import {useStore} from "@/store";
-import {DynmapCircle} from "@/dynmap";
+import {DynmapCircle, DynmapMarkerSet} from "@/dynmap";
+import {ActionTypes} from "@/store/action-types";
+import {createCircle, updateCircle} from "@/util/circles";
+import Util from '@/util';
 
 export default defineComponent({
 	props: {
-		circles: {
-			type: Object as () => Map<string, DynmapCircle>,
-			required: true
+		set: {
+			type: Object as () => DynmapMarkerSet,
+			required: true,
 		},
 		layerGroup: {
-			type: Object as () => L.LayerGroup,
+			type: Object as () => LayerGroup,
 			required: true
 		}
 	},
 
-	setup() {
+	setup(props) {
+		let updateFrame = 0;
+
 		const store = useStore(),
 			currentProjection = computed(() => store.state.currentProjection),
-			layers = Object.freeze(new Map()) as Map<string, L.Path>;
+			pendingUpdates = computed(() => {
+				const markerSetUpdates = store.state.pendingSetUpdates.get(props.set.id);
 
-		return {
-			layers,
-			currentProjection,
-		}
-	},
+				return markerSetUpdates && markerSetUpdates.circleUpdates.length;
+			}),
+			layers = Object.freeze(new Map<string, Polyline | Polygon>()),
 
-	watch: {
-		//FIXME: Prevent unnecessary repositioning when changing worlds
-		currentProjection() {
-			const projection = useStore().state.currentProjection,
-				latLng = (x: number, y: number, z: number) => {
-					return projection.locationToLatLng({x, y, z});
+			createCircles = () => {
+				const converter = Util.getPointConverter();
+
+				props.set.circles.forEach((circle: DynmapCircle, id: string) => {
+					const layer = createCircle(circle, converter);
+
+					layers.set(id, layer);
+					props.layerGroup.addLayer(layer);
+				});
+			},
+
+			deleteCircle = (id: string) => {
+				let circle = layers.get(id) as Polyline;
+
+				if (!circle) {
+					return;
 				}
 
-			// eslint-disable-next-line no-unused-vars
-			for (const [id, circle] of this.circles) {
-				this.updateCircle(id, circle, latLng);
+				circle.remove();
+				layers.delete(id);
+			},
+
+			handlePendingUpdates = () => {
+				useStore().dispatch(ActionTypes.POP_CIRCLE_UPDATES, {
+					markerSet: props.set.id,
+					amount: 10,
+				}).then(updates => {
+					const converter = Util.getPointConverter();
+
+					for(const update of updates) {
+						if(update.removed) {
+							console.log(`Deleting circle ${update.id}`);
+							deleteCircle(update.id);
+						} else {
+							console.log(`Updating/creating circle ${update.id}`);
+							const layer = updateCircle(layers.get(update.id), update.payload as DynmapCircle, converter)
+
+							if(!layers.has(update.id)) {
+								layers.set(update.id, layer);
+								props.layerGroup.addLayer(layer);
+							}
+						}
+					}
+
+					if(pendingUpdates.value) {
+						console.log('More updates left, scheduling frame');
+						// eslint-disable-next-line no-unused-vars
+						updateFrame = requestAnimationFrame(() => handlePendingUpdates());
+					} else {
+						updateFrame = 0;
+					}
+				});
+			};
+
+		//FIXME: Prevent unnecessary repositioning when changing worlds
+		watch(currentProjection, () => {
+			const converter = Util.getPointConverter();
+
+			for (const [id, circle] of props.set.circles) {
+				updateCircle(layers.get(id), circle, converter);
 			}
-		}
-	},
+		});
 
-	mounted() {
-		this.createCircles();
-	},
+		watch(pendingUpdates, (newValue, oldValue) => {
+			if(newValue && newValue > 0 && oldValue === 0 && !updateFrame) {
+				updateFrame = requestAnimationFrame(() => handlePendingUpdates());
+			}
+		});
 
-	unmounted() {
-
+		onMounted(() => createCircles());
+		onUnmounted(() => updateFrame && cancelAnimationFrame(updateFrame));
 	},
 
 	render() {
 		return null;
-	},
-
-	methods: {
-		createCircles() {
-			const projection = useStore().state.currentProjection,
-				latLng = (x: number, y: number, z: number) => {
-					return projection.locationToLatLng({x, y, z});
-				};
-
-			this.circles.forEach((circle: DynmapCircle, id: string) => {
-				this.createCircle(id, circle, latLng);
-			});
-		},
-
-		createCircle(id: string, options: DynmapCircle, latLng: Function) {
-			const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
-				points = this.getPoints(options, latLng, outline);
-			let circle;
-
-			if(outline) {
-				circle = new L.Polyline(points, options.style);
-			} else {
-				circle = new L.Polygon(points, options.style);
-			}
-
-			if(options.label) {
-				circle.bindPopup(() => {
-					const popup = document.createElement('span');
-
-					if (options.popupContent) {
-						popup.classList.add('CirclePopup');
-						popup.insertAdjacentHTML('afterbegin', options.popupContent);
-					} else if (options.isHTML) {
-						popup.classList.add('CirclePopup');
-						popup.insertAdjacentHTML('afterbegin', options.label);
-					} else {
-						popup.textContent = options.label;
-					}
-
-					return popup;
-				});
-			}
-
-			this.layers.set(id, circle);
-			this.layerGroup.addLayer(circle);
-		},
-
-		getPoints(options: DynmapCircle, latLng: Function, outline: boolean): LatLngExpression[] {
-			const points = [];
-
-			for(let i = 0; i < 360; i++) {
-				const rad = i * Math.PI / 180.0,
-					x = options.radius[0] * Math.sin(rad) + options.location.x,
-					z = options.radius[1] * Math.cos(rad) + options.location.z;
-
-				console.log(x,options.location.y,z, latLng(x, options.location.y, z));
-
-				points.push(latLng(x, options.location.y, z));
-			}
-
-			if(outline && points.length) {
-				points.push(points[0]);
-			}
-
-			return points;
-		},
-
-		updateCircle(id: string, options: DynmapCircle, latLng: Function) {
-			let circle = this.layers.get(id) as L.Polyline,
-				outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean,
-				points = this.getPoints(options, latLng, outline);
-
-			if (!circle) {
-				return;
-			}
-
-			circle.setLatLngs(points);
-			circle.redraw();
-		},
 	}
-})
+});
 </script>
-
-<style scoped>
-
-</style>

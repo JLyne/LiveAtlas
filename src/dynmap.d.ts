@@ -139,8 +139,8 @@ interface DynmapUpdateResponse {
 	configHash: number;
 	playerCount: number;
 	players: Set<DynmapPlayer>;
+	updates: DynmapUpdates;
 	timestamp: number;
-	//TODO: Tiles etc
 }
 
 interface DynmapPlayer {
@@ -153,6 +153,7 @@ interface DynmapPlayer {
 }
 
 interface DynmapMarkerSet {
+	id: string,
 	label: string;
 	hidden: boolean;
 	priority: number;
@@ -209,4 +210,39 @@ interface DynmapCircle {
 	minZoom?: number;
 	maxZoom?: number;
 	popupContent?: string;
+}
+
+interface DynmapUpdates {
+	markerSets: Map<string, DynmapMarkerSetUpdates>,
+	tiles: Map<string, number>,
+	chat: Array<any> //TODO
+}
+
+interface DynmapMarkerSetUpdates {
+	markerUpdates: Array<DynmapMarkerUpdate>
+	areaUpdates: Array<DynmapAreaUpdate>
+	circleUpdates: Array<DynmapCircleUpdate>
+	lineUpdates: Array<DynmapLineUpdate>
+}
+
+interface DynmapUpdate {
+	id: string,
+	removed: boolean,
+	payload?: any,
+}
+
+interface DynmapMarkerUpdate extends DynmapUpdate {
+	payload?: DynmapMarker
+}
+
+interface DynmapAreaUpdate extends DynmapUpdate {
+	payload?: DynmapArea
+}
+
+interface DynmapCircleUpdate extends DynmapUpdate {
+	payload?: DynmapCircle
+}
+
+interface DynmapLineUpdate extends DynmapUpdate {
+	payload?: DynmapLine
 }

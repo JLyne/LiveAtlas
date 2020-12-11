@@ -1,8 +1,8 @@
 <template>
 	<GenericMarker v-for="[id, marker] in markerSet.markers" :options="marker" :key="id" :layer-group="layerGroup"></GenericMarker>
-	<Areas :areas="markerSet.areas" :layer-group="layerGroup"></Areas>
-	<Circles :circles="markerSet.circles" :layer-group="layerGroup"></Circles>
-	<Lines :lines="markerSet.lines" :layer-group="layerGroup"></Lines>
+	<Areas :layer-group="layerGroup" :set="markerSet"></Areas>
+	<Circles :layer-group="layerGroup" :set="markerSet"></Circles>
+	<Lines :layer-group="layerGroup" :set="markerSet"></Lines>
 </template>
 
 <script lang="ts">
