@@ -1,4 +1,4 @@
-import {CircleMarkerOptions, PathOptions, PointTuple, PolylineOptions} from "leaflet";
+import {PathOptions, PointTuple, PolylineOptions} from "leaflet";
 import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
@@ -214,7 +214,7 @@ interface DynmapCircle {
 
 interface DynmapUpdates {
 	markerSets: Map<string, DynmapMarkerSetUpdates>,
-	tiles: Map<string, number>,
+	tiles: Array<DynmapTileUpdate>,
 	chat: Array<any> //TODO
 }
 
@@ -245,4 +245,9 @@ interface DynmapCircleUpdate extends DynmapUpdate {
 
 interface DynmapLineUpdate extends DynmapUpdate {
 	payload?: DynmapLine
+}
+
+interface DynmapTileUpdate {
+	name: string
+	timestamp: number
 }

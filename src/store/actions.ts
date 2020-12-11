@@ -9,7 +9,7 @@ import {
 	DynmapConfigurationResponse, DynmapLineUpdate,
 	DynmapMarkerSet,
 	DynmapMarkerUpdate,
-	DynmapPlayer,
+	DynmapPlayer, DynmapTileUpdate,
 	DynmapUpdateResponse
 } from "@/dynmap";
 
@@ -50,6 +50,10 @@ export interface Actions {
 		{commit}: AugmentedActionContext,
 		payload: {markerSet: string, amount: number}
 	): Promise<DynmapLineUpdate[]>
+	[ActionTypes.POP_TILE_UPDATES](
+		{commit}: AugmentedActionContext,
+		payload: number
+	): Promise<DynmapTileUpdate[]>
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -80,6 +84,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			commit(MutationTypes.SET_UPDATE_TIMESTAMP, new Date(update.timestamp));
 			commit(MutationTypes.INCREMENT_REQUEST_ID, undefined);
 			commit(MutationTypes.ADD_MARKER_SET_UPDATES, update.updates.markerSets);
+			commit(MutationTypes.ADD_TILE_UPDATES, update.updates.tiles);
 
 			return dispatch(ActionTypes.SET_PLAYERS, update.players).then(() => {
 				return update;
@@ -175,4 +180,11 @@ export const actions: ActionTree<State, State> & Actions = {
 		return Promise.resolve(updates);
 	},
 
+	[ActionTypes.POP_TILE_UPDATES]({commit, state}, amount: number): Promise<Array<DynmapTileUpdate>> {
+		const updates = state.pendingTileUpdates.slice(0, amount);
+
+		commit(MutationTypes.POP_TILE_UPDATES, amount);
+
+		return Promise.resolve(updates);
+	},
 }

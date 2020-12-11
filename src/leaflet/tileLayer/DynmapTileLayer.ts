@@ -83,24 +83,34 @@ export class DynmapTileLayer extends L.TileLayer {
 	}
 
 	getTileUrl(coords: Coordinate) {
-		const tileName = this.getTileName(coords);
-		let url = this._cachedTileUrls.get(tileName);
+		return this.getTileUrlFromName(this.getTileName(coords));
+	}
+
+	getTileUrlFromName(name: string, timestamp?: number) {
+		let url = this._cachedTileUrls.get(name);
 
 		if (!url) {
-			const path = escape(`${this._mapSettings.world.name}/${tileName}`);
+			const path = escape(`${this._mapSettings.world.name}/${name}`);
 			url = `${window.config.url.tiles}${path}`;
-			this._cachedTileUrls.set(tileName, url);
+
+			if(typeof timestamp !== 'undefined') {
+				url += `&timestamp=${timestamp}`;
+			}
+
+			this._cachedTileUrls.set(name, url);
 		}
 
 		return url;
 	}
 
-	updateNamedTile(name: string) {
+	updateNamedTile(name: string, timestamp: number) {
 		const tile = this._namedTiles.get(name);
 		this._cachedTileUrls.delete(name);
 
 		if (tile) {
-			//tile.src = this._cachedTileUrls[name] = this.getTileUrl(name);
+			tile.dataset.src = this.getTileUrlFromName(name, timestamp);
+			this._loadQueue.push(tile);
+			this._tickLoadQueue();
 		}
 	}
 

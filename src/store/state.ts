@@ -3,7 +3,7 @@ import {
 	DynmapMap, DynmapMarkerSet, DynmapMarkerSetUpdates,
 	DynmapMessageConfig,
 	DynmapPlayer,
-	DynmapServerConfig,
+	DynmapServerConfig, DynmapTileUpdate,
 	DynmapWorld, DynmapWorldState
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
@@ -19,7 +19,7 @@ export type State = {
 	markerSets: Map<string, DynmapMarkerSet>;
 
 	pendingSetUpdates: Map<string, DynmapMarkerSetUpdates>;
-	pendingTileUpdates: Array<string>;
+	pendingTileUpdates: Array<DynmapTileUpdate>;
 
 	following?: DynmapPlayer;
 

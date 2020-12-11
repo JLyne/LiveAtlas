@@ -7,4 +7,5 @@ export enum ActionTypes {
 	POP_AREA_UPDATES = "popAreaUpdates",
 	POP_CIRCLE_UPDATES = "popCircleUpdates",
 	POP_LINE_UPDATES = "popLineUpdates",
+	POP_TILE_UPDATES = "popTileUpdates",
 }

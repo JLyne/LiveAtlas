@@ -11,7 +11,7 @@ import {
 	DynmapMarkerSetUpdates,
 	DynmapMessageConfig,
 	DynmapPlayer,
-	DynmapServerConfig, DynmapUpdate,
+	DynmapServerConfig, DynmapTileUpdate, DynmapUpdate,
 	DynmapUpdateResponse, DynmapUpdates,
 	DynmapWorld
 } from "@/dynmap";
@@ -68,9 +68,9 @@ function buildWorlds(response: AxiosResponse): Array<DynmapWorld> {
 				background: '#121212', //map.background || '#000000',
 				backgroundDay: map.backgroundday || '#000000',
 				backgroundNight: map.backgroundnight || '#000000',
-				compassView: map.compassView || 'S',
+				compassView: map.compassview || 'S',
 				icon: map.icon || undefined,
-				imageFormat: map.imageFormat || 'png',
+				imageFormat: map['image-format'] || 'png',
 				name: map.name || '(Unnamed map)',
 				nightAndDay: map.nightandday || false,
 				prefix: map.prefix || '',
@@ -303,7 +303,7 @@ function buildCircle(circle: any): DynmapCircle {
 function buildUpdates(data: Array<any>): DynmapUpdates {
 	const updates = {
 		markerSets: new Map<string, DynmapMarkerSetUpdates>(),
-		tiles: new Map(),
+		tiles: [] as DynmapTileUpdate[],
 		chat: [],
 	}
 
@@ -370,7 +370,10 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 					break;
 				}
 
-				updates.tiles.set(entry.name, entry.timestamp);
+				updates.tiles.push({
+					name: entry.name,
+					timestamp: entry.timestamp,
+				});
 				break;
 
 			default:

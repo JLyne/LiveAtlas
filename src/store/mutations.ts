@@ -15,7 +15,7 @@ import {
 	DynmapMarkerUpdate,
 	DynmapMessageConfig,
 	DynmapPlayer,
-	DynmapServerConfig,
+	DynmapServerConfig, DynmapTileUpdate,
 	DynmapWorld,
 	DynmapWorldState
 } from "@/dynmap";
@@ -36,11 +36,13 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: DynmapWorldState): void
 	[MutationTypes.SET_UPDATE_TIMESTAMP](state: S, time: Date): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
+	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
 
 	[MutationTypes.POP_MARKER_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapMarkerUpdate>
 	[MutationTypes.POP_AREA_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapAreaUpdate>
 	[MutationTypes.POP_CIRCLE_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapCircleUpdate>
 	[MutationTypes.POP_LINE_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapLineUpdate>
+	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): Array<DynmapTileUpdate>
 
 	[MutationTypes.INCREMENT_REQUEST_ID](state: S): void
 	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<DynmapPlayer>): Set<DynmapPlayer>
@@ -167,6 +169,10 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 	},
 
+	[MutationTypes.ADD_TILE_UPDATES](state: State, updates: Array<DynmapTileUpdate>) {
+		state.pendingTileUpdates = state.pendingTileUpdates.concat(updates);
+	},
+
 	[MutationTypes.POP_MARKER_UPDATES](state: State, {markerSet, amount}): Array<DynmapMarkerUpdate> {
 		if(!state.markerSets.has(markerSet)) {
 			console.log(`Marker set ${markerSet} doesn't exist`);
@@ -201,6 +207,10 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 
 		return state.pendingSetUpdates.get(markerSet)!.lineUpdates.splice(0, amount);
+	},
+
+	[MutationTypes.POP_TILE_UPDATES](state: State, amount: number): Array<DynmapTileUpdate> {
+		return state.pendingTileUpdates.splice(0, amount);
 	},
 
 	//Increments the request id for the next update fetch
