@@ -7,7 +7,7 @@ export type Getters = {
 	coordinatesControlEnabled(state: State): boolean;
 	clockControlEnabled(state: State): boolean;
 	night(state: State): boolean;
-	mapBackground(state: State): string;
+	mapBackground(state: State, getters: GetterTree<State, State> & Getters): string;
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -33,7 +33,7 @@ export const getters: GetterTree<State, State> & Getters = {
 		}
 
 		if(state.currentMap.nightAndDay) {
-			if(this.night(state)) {
+			if(Util.getMinecraftTime(state.currentWorldState.timeOfDay).night) {
 				return state.currentMap.backgroundNight || state.currentMap.background || 'transparent';
 			}
 
