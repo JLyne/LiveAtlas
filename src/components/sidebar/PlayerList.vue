@@ -1,6 +1,6 @@
 <template>
 	<section class="sidebar__section">
-		<span class="section__heading">Players [{{ players.size }}/{{ maxPlayers }}]</span>
+		<span class="section__heading">{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</span>
 		<ul class="section__content">
 			<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
 		</ul>
@@ -18,6 +18,10 @@ export default defineComponent({
 	},
 
 	computed: {
+		heading() {
+			return useStore().state.messages.players;
+		},
+
 		players() {
 			return useStore().state.players;
 		},
