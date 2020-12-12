@@ -2,9 +2,17 @@
 	<aside class="sidebar">
 		<header class="sidebar__buttons">
 			<button :class="{'button--maps': true, 'active': mapsActive}"
-					@click="mapsActive = !mapsActive" title="Map list" aria-label="Map list"></button>
+					@click="mapsActive = !mapsActive" title="Map list" aria-label="Map list">
+				<SvgIcon name="maps"></SvgIcon>
+			</button>
 			<button :class="{'button--players': true, 'active': playersActive}"
-					@click="playersActive = !playersActive" title="Player list" aria-label="Player list"></button>
+					@click="playersActive = !playersActive" title="Player list" aria-label="Player list">
+				<SvgIcon name="players"></SvgIcon>
+			</button>
+			<button :class="{'button--settings': true, 'active': settingsActive}"
+					@click="settingsActive = !settingsActive" title="Settings" aria-label="Settings">
+				<SvgIcon name="settings"></SvgIcon>
+			</button>
 		</header>
 		<WorldList v-show="mapsActive"></WorldList>
 		<PlayerList v-show="playersActive"></PlayerList>
@@ -18,9 +26,11 @@ import PlayerList from './sidebar/PlayerList.vue';
 import WorldList from './sidebar/WorldList.vue';
 import FollowTarget from './sidebar/FollowTarget.vue';
 import {useStore} from "@/store";
+import SvgIcon from "@/components/SvgIcon.vue";
 
 export default defineComponent({
 	components: {
+		SvgIcon,
 		PlayerList,
 		FollowTarget,
 		WorldList,
@@ -30,11 +40,13 @@ export default defineComponent({
 		const store = useStore();
 		let mapsActive = ref(false),
 			playersActive = ref(false),
+			settingsActive = ref(false),
 			following = computed(() => store.state.following);
 
 		return {
 			mapsActive,
 			playersActive,
+			settingsActive,
 			following
 		}
 	}
@@ -76,21 +88,10 @@ export default defineComponent({
 		button {
 			width: 5rem;
 			height: 5rem;
-			background-size: 3.2rem;
-			background-position: center;
-			background-repeat: no-repeat;
 
 			& + button {
 				margin-left: 1rem;
 			}
-		}
-
-		.button--maps {
-			background-image: url('./../assets/images/world 1.png');
-		}
-
-		.button--players {
-			background-image: url('./../assets/images/people.png');
 		}
 	}
 
