@@ -127,26 +127,7 @@ button {
     padding: 8px;
 }
 
-
-/*******************
- * shared rules
- */
-
-.dynmap ul, .dynmap li {
-    list-style: none;
-
-    padding: 0;
-    margin: 0;
-}
-
-.maplist li a,
-.playerlist li a {
-    outline: none;
-    text-decoration: none;
-}
-
-.alertbox,
-.largeclock {
+.alertbox {
     border-style: solid;
     border-width: 0 1px 1px 1px;
 

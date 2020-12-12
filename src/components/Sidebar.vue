@@ -57,6 +57,13 @@ export default defineComponent({
 	padding: 1rem;
 	width: 23rem;
 	will-change: transform;
+	pointer-events: none;
+
+	ul, ol, li {
+		padding: 0;
+		list-style: none;
+		margin: 0;
+	}
 
 	.sidebar__buttons {
 		display: flex;
@@ -64,6 +71,7 @@ export default defineComponent({
 		align-items: center;
 		justify-content: flex-end;
 		margin-bottom: 1rem;
+		pointer-events: auto;
 
 		button {
 			width: 5rem;
@@ -91,6 +99,7 @@ export default defineComponent({
 		flex: 0 1 auto;
 		min-height: 15vh;
 		margin-bottom: 1rem;
+		pointer-events: auto;
 
 		&:last-child {
 			margin-bottom: 0;
