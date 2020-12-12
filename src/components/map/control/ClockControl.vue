@@ -1,48 +1,27 @@
 <script lang="ts">
-import {defineComponent, computed} from "@vue/runtime-core";
+import {defineComponent, computed, watch, onMounted, onUnmounted} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import L from 'leaflet';
 import {ClockControl, ClockControlOptions} from "@/leaflet/control/ClockControl";
+import DynmapMap from "@/leaflet/DynmapMap";
 
 export default defineComponent({
 	props: {
 		leaflet: {
-			type: Object as () => L.Map,
+			type: Object as () => DynmapMap,
 			required: true,
 		}
 	},
 
-	setup() {
+	setup(props) {
 		const store = useStore(),
 			componentSettings = store.state.components.clockControl,
 			worldState = computed(() => store.state.currentWorldState),
 			control = new ClockControl(componentSettings as ClockControlOptions) as ClockControl;
 
-		return {
-			control,
-			worldState
-		}
-	},
+		watch(worldState, (newValue) => control.update(newValue), { deep: true });
 
-	watch: {
-		worldState: {
-			handler(newValue) {
-				if (this.control) {
-					this.control.update(newValue);
-				}
-			},
-			deep: true,
-		}
-	},
-
-	mounted() {
-		this.leaflet.addControl(this.control);
-		// console.log('Mounted coordinatesControl');
-	},
-
-	unmounted() {
-		this.leaflet.removeControl(this.control);
-		// console.log('Unmounted coordinatesControl');
+		onMounted(() => props.leaflet.addControl(control));
+		onUnmounted(() => props.leaflet.removeControl(control));
 	},
 
 	render() {
@@ -50,7 +29,3 @@ export default defineComponent({
 	}
 })
 </script>
-
-<style scoped>
-
-</style>

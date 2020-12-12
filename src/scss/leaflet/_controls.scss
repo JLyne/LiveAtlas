@@ -160,6 +160,17 @@
 	}
 }
 
+.leaflet-center {
+	left: 0;
+	right: 0;
+	justify-content: center;
+	flex-direction: row;
+
+	.leaflet-control {
+		margin: 0;
+	}
+}
+
 .leaflet-control-layers-toggle {
 	width: 5rem;
 	height: 5rem;

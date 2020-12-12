@@ -19,9 +19,8 @@ export class ClockControl extends L.Control {
 	private _weather?: HTMLElement;
 
 	constructor(options: ClockControlOptions) {
-		super(options);
+		super(Object.assign(options, {position: 'topcenter'}));
 
-		options.position = 'topleft';
 		L.Util.setOptions(this, options);
 	}
 

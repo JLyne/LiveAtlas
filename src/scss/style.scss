@@ -138,125 +138,87 @@ button {
     border-radius: 0 0 3px 3px;
 }
 
-/*******************
- * sidebar panels
- */
-
-
-
-
-/*******************
- * Sidebar clock style
- */
-/*
-.dynmap .clock {
-    display: inline-block;
-    height: 16px;
-    z-index:50;
-
-    font-weight: bold;
-    background-repeat: no-repeat;
-
-   padding-left: 20px;
-    margin-left: 8px;
-}
-*/
-.largeclock.digitalclock {
-	text-align: center;
-	font-size: 50px;
-	font-weight: bold;
-}
-
-.digitalclock {
-	text-align: center;
-	font-size: 20px;
-	font-weight:bold;
-}
-
-.digitalclock.night {
-    /* background-image: url(../assets/images/clock_night.png); */
-    color: #dff;
-}
-
-.digitalclock.day {
-    /* background-image: url(../assets/images/clock_day.png); */
-    color: #fd3;
-}
-
-.digitalclock.night, .digitalclock.day {
-    transition: color 8s 8s linear;
-}
-
-
-/*******************
- * Large clock style
- */
-
 .largeclock {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    border-color: rgba(0,0,0,0.5);
-    width: 150px;
-    height: 60px;
-    background: rgba(0,0,0,0.6);
-    z-index:50;
-
-    margin: auto;
-}
-
-.timeofday {
-    background-repeat: no-repeat;
-}
-
-.timeofday.sun {
-    background-image: url(../assets/images/sun.png);
-}
-
-.timeofday.moon {
-    background-image: url(../assets/images/moon.png);
-}
-
-.timeofday.digitalclock {
+	@extend %panel;
 	position: relative;
-	bottom: 25px;
-}
+    width: 15rem;
+    height: 6rem;
+    z-index: 50;
 
-/*******************
- * Clock weather style
- */
+	.digitalclock {
+		text-align: center;
+		font-size: 2rem;
+		line-height: 2rem;
+		font-weight: bold;
 
-.weather {
-    position: absolute;
-    top: 5px;
-    right: 0;
-    width: 32px;
-    height: 32px;
-    display: block;
-    background-repeat: no-repeat;
-}
+		&.night {
+			color: #dff;
+		}
 
-.weather.sunny_day {
-    background-image: url(../assets/images/weather_sunny_day.png);
-}
+		&.day {
+			color: #fd3;
+		}
 
-.weather.stormy_day {
-    background-image: url(../assets/images/weather_stormy_day.png);
-}
-.weather.thunder_day {
-    background-image: url(../assets/images/weather_thunder_day.png);
-}
+		&.night, &.day {
+			transition: color 8s 8s linear;
+		}
+	}
 
-.weather.sunny_night {
-    background-image: url(../assets/images/weather_sunny_night.png);
-}
+	.timeofday {
+    	background-repeat: no-repeat;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
 
-.weather.stormy_night {
-    background-image: url(../assets/images/weather_stormy_night.png);
-}
-.weather.thunder_night {
-    background-image: url(../assets/images/weather_thunder_night.png);
+		&.digitalclock {
+			top: auto;
+			bottom: 0.5rem;
+		}
+
+		&.sun {
+			background-image: url(../assets/images/sun.png);
+		}
+
+		&.moon {
+			background-image: url(../assets/images/moon.png);
+		}
+	}
+
+	.weather {
+		position: absolute;
+		top: 5px;
+		right: 0;
+		width: 32px;
+		height: 32px;
+		display: block;
+		background-repeat: no-repeat;
+
+		&.sunny_day {
+			background-image: url(../assets/images/weather_sunny_day.png);
+		}
+
+		&.stormy_day {
+			background-image: url(../assets/images/weather_stormy_day.png);
+		}
+
+		&.thunder_day {
+			background-image: url(../assets/images/weather_thunder_day.png);
+		}
+
+		&.sunny_night {
+			background-image: url(../assets/images/weather_sunny_night.png);
+		}
+
+		&.stormy_night {
+			background-image: url(../assets/images/weather_stormy_night.png);
+		}
+
+		&.thunder_night {
+			background-image: url(../assets/images/weather_thunder_night.png);
+		}
+	}
 }
 
 /*******************
