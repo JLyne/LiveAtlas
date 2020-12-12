@@ -1,4 +1,3 @@
-import axios, {AxiosResponse} from 'axios';
 import {
 	DynmapArea,
 	DynmapCircle,
@@ -16,50 +15,45 @@ import {
 	DynmapWorld
 } from "@/dynmap";
 
-function buildServerConfig(response: AxiosResponse): DynmapServerConfig {
-	const data = response.data;
-
+function buildServerConfig(response: any): DynmapServerConfig {
 	return {
-		version: data.dynmapversion || '',
-		allowChat: data.allowwebchat || false,
-		chatRequiresLogin: data['webchat-requires-login'] || false,
-		chatInterval: data['webchat-interval'] || 5,
-		defaultMap: data.defaultmap || undefined,
-		defaultWorld: data.defaultworld || undefined,
-		defaultZoom: data.defaultzoom || 0,
-		followMap: data.followmap || undefined,
-		followZoom: data.followzoom || 0,
-		updateInterval: data.updaterate || 3000,
-		showLayerControl: data.showlayercontrol || true,
-		title: data.title || 'Dynmap',
-		loginEnabled: data['login-enabled'] || false,
-		loginRequired: data.loginrequired || false,
-		maxPlayers: data.maxcount || 0,
-		hash: data.confighash || 0,
+		version: response.dynmapversion || '',
+		allowChat: response.allowwebchat || false,
+		chatRequiresLogin: response['webchat-requires-login'] || false,
+		chatInterval: response['webchat-interval'] || 5,
+		defaultMap: response.defaultmap || undefined,
+		defaultWorld: response.defaultworld || undefined,
+		defaultZoom: response.defaultzoom || 0,
+		followMap: response.followmap || undefined,
+		followZoom: response.followzoom || 0,
+		updateInterval: response.updaterate || 3000,
+		showLayerControl: response.showlayercontrol || true,
+		title: response.title || 'Dynmap',
+		loginEnabled: response['login-enabled'] || false,
+		loginRequired: response.loginrequired || false,
+		maxPlayers: response.maxcount || 0,
+		hash: response.confighash || 0,
 	};
 }
 
-function buildMessagesConfig(response: AxiosResponse): DynmapMessageConfig {
-	const data = response.data;
-
+function buildMessagesConfig(response: any): DynmapMessageConfig {
 	return {
-		chatNotAllowed: data['msg-chatnotallowed'] || '',
-		chatRequiresLogin: data['msg-chatrequireslogin'] || '',
-		chatCooldown: data.spammessage || '',
-		mapTypes: data['msg-maptypes'] || '',
-		players: data['msg-players'] || '',
-		playerJoin: data.joinmessage || '',
-		playerQuit: data.quitmessage || '',
-		anonymousJoin: data['msg-hiddennamejoin'] || '',
-		anonymousQuit: data['msg-hiddennamequit'] || '',
+		chatNotAllowed: response['msg-chatnotallowed'] || '',
+		chatRequiresLogin: response['msg-chatrequireslogin'] || '',
+		chatCooldown: response.spammessage || '',
+		mapTypes: response['msg-maptypes'] || '',
+		players: response['msg-players'] || '',
+		playerJoin: response.joinmessage || '',
+		playerQuit: response.quitmessage || '',
+		anonymousJoin: response['msg-hiddennamejoin'] || '',
+		anonymousQuit: response['msg-hiddennamequit'] || '',
 	}
 }
 
-function buildWorlds(response: AxiosResponse): Array<DynmapWorld> {
-	const data = response.data,
-		worlds: Array<DynmapWorld> = [];
+function buildWorlds(response: any): Array<DynmapWorld> {
+	const worlds: Array<DynmapWorld> = [];
 
-	(data.worlds || []).forEach((world: any) => {
+	(response.worlds || []).forEach((world: any) => {
 		const maps: Map<string, DynmapWorldMap> = new Map();
 
 		(world.maps || []).forEach((map: any) => {
@@ -102,9 +96,8 @@ function buildWorlds(response: AxiosResponse): Array<DynmapWorld> {
 	return worlds;
 }
 
-function buildComponents(response: AxiosResponse): DynmapComponentConfig {
-	const data = response.data,
-		components: DynmapComponentConfig = {
+function buildComponents(response: any): DynmapComponentConfig {
+	const components: DynmapComponentConfig = {
 			markers: {
 				showLabels: false,
 			},
@@ -115,7 +108,7 @@ function buildComponents(response: AxiosResponse): DynmapComponentConfig {
 			logoControls: [],
 		};
 
-	(data.components || []).forEach((component: any) => {
+	(response.components || []).forEach((component: any) => {
 		const type = component.type || "unknown";
 
 		switch(type) {
@@ -386,7 +379,13 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 
 export default {
 	getConfiguration(): Promise<DynmapConfigurationResponse> {
-		return axios.get(window.config.url.configuration).then((response): DynmapConfigurationResponse => {
+		return fetch(window.config.url.configuration).then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+
+			return response.json();
+		}).then((response): DynmapConfigurationResponse => {
 			return {
 				config: buildServerConfig(response),
 				messages: buildMessagesConfig(response),
@@ -401,11 +400,16 @@ export default {
 		url = url.replace('{world}', world);
 		url = url.replace('{timestamp}', timestamp.toString());
 
-		return axios.get(url).then((response): DynmapUpdateResponse => {
-			const data = response.data,
-				players: Set<DynmapPlayer> = new Set();
+		return fetch(url).then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
 
-			(data.players || []).forEach((player: any) => {
+			return response.json();
+		}).then((response): DynmapUpdateResponse => {
+			const players: Set<DynmapPlayer> = new Set();
+
+			(response.players || []).forEach((player: any) => {
 				players.add({
 					account: player.account || "",
 					health: player.health || 0,
@@ -440,15 +444,15 @@ export default {
 
 			return {
 				worldState: {
-					timeOfDay: data.servertime || 0,
-					thundering: data.isThundering || false,
-					raining: data.hasStorm || false,
+					timeOfDay: response.servertime || 0,
+					thundering: response.isThundering || false,
+					raining: response.hasStorm || false,
 				},
-				playerCount: data.count || 0,
-				configHash: data.configHash || 0,
-				timestamp: data.timestamp || 0,
+				playerCount: response.count || 0,
+				configHash: response.configHash || 0,
+				timestamp: response.timestamp || 0,
 				players,
-				updates: buildUpdates(data.updates || []),
+				updates: buildUpdates(response.updates || []),
 			}
 		});
 	},
@@ -456,18 +460,23 @@ export default {
 	getMarkerSets(world: string): Promise<Map<string, DynmapMarkerSet>> {
 		const url = `${window.config.url.markers}_markers_/marker_${world}.json`;
 
-		return axios.get(url).then((response): Map<string, DynmapMarkerSet> => {
-			const data = response.data,
-				sets: Map<string, DynmapMarkerSet> = new Map();
+		return fetch(url).then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
 
-			data.sets = data.sets || {};
+			return response.json();
+		}).then((response): Map<string, DynmapMarkerSet> => {
+			const sets: Map<string, DynmapMarkerSet> = new Map();
 
-			for(const key in data.sets) {
-				if(!Object.prototype.hasOwnProperty.call(data.sets, key)) {
+			response.sets = response.sets || {};
+
+			for(const key in response.sets) {
+				if(!Object.prototype.hasOwnProperty.call(response.sets, key)) {
 					continue;
 				}
 
-				const set = data.sets[key],
+				const set = response.sets[key],
 					markers = buildMarkers(set.markers || {}),
 					circles = buildCircles(set.circles || {}),
 					areas = buildAreas(set.areas || {}),

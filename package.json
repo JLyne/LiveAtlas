@@ -21,7 +21,6 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
-    "axios": "^0.21.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.5.0",
     "eslint-plugin-vue": "^7.0.0-0",
