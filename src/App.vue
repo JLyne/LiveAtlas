@@ -4,75 +4,60 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, computed, ref} from 'vue';
+import {defineComponent, computed, ref, onMounted, onBeforeUnmount, watch} from 'vue';
 import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
 import {useStore} from "./store";
 import {ActionTypes} from "@/store/action-types";
 
 export default defineComponent({
-	name: 'WorldList',
+	name: 'App',
 	components: {
 		Map,
 		Sidebar,
 	},
 
 	setup() {
-		let store = useStore(),
+		const store = useStore(),
 			updateInterval = computed(() => store.state.configuration.updateInterval),
+			title = computed(() => store.state.configuration.title),
 			updatesEnabled = ref(false),
-			updateTimeout = ref(0);
+			updateTimeout = ref(0),
 
-		return {
-			store,
-			updateInterval,
-			updatesEnabled,
-			updateTimeout
-		}
-	},
+			loadConfiguration = () => {
+				store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
+					startUpdates();
+					window.hideSplash();
+				});
+			},
 
-	mounted() {
-		this.loadConfiguration();
-	},
+			startUpdates = () => {
+				updatesEnabled.value = true;
+				update();
+			},
 
-	beforeUnmount() {
-		this.stopUpdates();
-	},
+			update = () => {
+				store.dispatch(ActionTypes.GET_UPDATE, undefined).then(() => {
+					if(updatesEnabled.value) {
+						updateTimeout.value = setTimeout(() => update(), updateInterval.value);
+					}
+				});
+			},
 
-	methods: {
-		loadConfiguration() {
-			useStore().dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
-				this.startUpdates();
-				window.hideSplash();
-			});
-		},
+			stopUpdates = () => {
+				updatesEnabled.value = false;
 
-		startUpdates() {
-			this.updatesEnabled = true;
-			this.update();
-		},
-
-		update() {
-			useStore().dispatch(ActionTypes.GET_UPDATE, undefined).then(() => {
-				if(this.updatesEnabled) {
-					this.updateTimeout = setTimeout(() => this.update(), this.updateInterval);
+				if (updateTimeout.value) {
+					clearTimeout(updateTimeout.value);
 				}
-			});
-		},
 
-		stopUpdates() {
-			this.updatesEnabled = false;
+				updateTimeout.value = 0;
+			};
 
-			if (this.updateTimeout) {
-				clearTimeout(this.updateTimeout);
-			}
+		watch(title, (title) => document.title = title);
 
-			this.updateTimeout = 0;
-		}
-	}
+		onMounted(() => loadConfiguration());
+		onBeforeUnmount(() => stopUpdates());
+	},
 });
 </script>
-
-<style lang="scss">
-
-</style>

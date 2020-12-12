@@ -9,7 +9,7 @@ import {
 	DynmapConfigurationResponse, DynmapLineUpdate,
 	DynmapMarkerSet,
 	DynmapMarkerUpdate,
-	DynmapPlayer, DynmapTileUpdate,
+	DynmapPlayer, DynmapServerConfig, DynmapTileUpdate,
 	DynmapUpdateResponse
 } from "@/dynmap";
 
@@ -57,7 +57,7 @@ export interface Actions {
 }
 
 export const actions: ActionTree<State, State> & Actions = {
-	[ActionTypes.LOAD_CONFIGURATION]({commit}) {
+	[ActionTypes.LOAD_CONFIGURATION]({commit}): Promise<DynmapConfigurationResponse> {
 		return API.getConfiguration().then(config => {
 			commit(MutationTypes.SET_CONFIGURATION, config.config);
 			commit(MutationTypes.SET_MESSAGES, config.messages);
