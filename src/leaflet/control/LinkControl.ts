@@ -1,5 +1,6 @@
 import L, {ControlOptions} from 'leaflet';
 import {useStore} from "@/store";
+import linkIcon from '@/assets/icons/link.svg';
 
 export class LinkControl extends L.Control {
 	// @ts-ignore
@@ -16,6 +17,11 @@ export class LinkControl extends L.Control {
 
 		linkButton.type = 'button';
 		linkButton.title = 'Link';
+		linkButton.innerHTML = `
+		<svg class="svg-icon" viewBox="${linkIcon.viewBox}">
+		  <use xlink:href="${linkIcon.url}" />
+		</svg>`;
+
 		linkButton.addEventListener('click', () => {
 			const projection = useStore().state.currentProjection;
 			console.log(projection.latLngToLocation(this._map!.getCenter(), 64));
