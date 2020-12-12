@@ -7,6 +7,9 @@
 	border-radius: $global-border-radius;
 	cursor: pointer;
 	display: block;
+	text-align: center;
+	position: relative;
+	transition: color 0.2s ease-in, background-color 0.2s ease-in;
 
 	&:hover, &.active {
 		background-color: #cccccc;

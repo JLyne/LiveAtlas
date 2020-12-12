@@ -1,14 +1,15 @@
 import L from 'leaflet';
+import {DynmapLayerControl} from "@/leaflet/control/DynmapLayerControl";
 
 export default class LayerManager {
 	private showControl: boolean = false;
-	private readonly layerControl: L.Control.Layers;
+	private readonly layerControl: DynmapLayerControl;
 	private readonly map: L.Map;
 
 	constructor(map: L.Map, showControl?: boolean) {
 		this.showControl = showControl || this.showControl;
 		this.map = map;
-		this.layerControl = new L.Control.Layers({}, {},{
+		this.layerControl = new DynmapLayerControl({}, {},{
 			position: 'topleft',
 		});
 
