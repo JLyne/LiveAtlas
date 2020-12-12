@@ -6,16 +6,22 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
 
-	<meta name="keywords" content="minecraft, map, dynamic" />
+    <meta name="keywords" content="minecraft, map, dynamic" />
 	<meta name="description" content="Minecraft Dynamic Map" />
+    <meta name="theme-color" content="#222222">
 
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-	<link rel="icon" href="images/dynmap.ico" type="image/ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= BASE_URL %>favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="<%= BASE_URL %>favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="<%= BASE_URL %>favicons/favicon-16x16.png">
+	<link rel="manifest" href="<%= BASE_URL %>favicons/site.webmanifest">
+	<link rel="shortcut icon" href="<%= BASE_URL %>favicons/favicon.ico">
+
+    <title><%= htmlWebpackPlugin.options.title %></title>
+
     <style>
         html, body {
             background-color: #121212;
