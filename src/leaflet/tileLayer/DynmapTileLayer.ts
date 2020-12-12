@@ -1,4 +1,4 @@
-import L, {Coords, DoneCallback, TileLayerOptions} from 'leaflet';
+import {TileLayer, Coords, DoneCallback, TileLayerOptions, DomUtil, Util, LatLng} from 'leaflet';
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {Coordinate, DynmapWorldMap} from "@/dynmap";
 
@@ -7,7 +7,7 @@ export interface DynmapTileLayerOptions extends TileLayerOptions {
 	errorTileUrl: string;
 }
 
-export interface DynmapTileLayer extends L.TileLayer {
+export interface DynmapTileLayer extends TileLayer {
 	options: DynmapTileLayerOptions;
 	_projection: DynmapProjection;
 	_mapSettings: DynmapWorldMap;
@@ -17,9 +17,9 @@ export interface DynmapTileLayer extends L.TileLayer {
 	_loadQueue: DynmapTileElement[];
 	_loadingTiles: Set<DynmapTileElement>;
 
-	locationToLatLng(location: Coordinate): L.LatLng;
+	locationToLatLng(location: Coordinate): LatLng;
 
-	latLngToLocation(latLng: L.LatLng): Coordinate;
+	latLngToLocation(latLng: LatLng): Coordinate;
 }
 
 export interface DynmapTile {
@@ -48,11 +48,11 @@ export interface TileInfo {
 	fmt: string;
 }
 
-export class DynmapTileLayer extends L.TileLayer {
+export class DynmapTileLayer extends TileLayer {
 
 	constructor(options: DynmapTileLayerOptions) {
 		super('', options);
-		L.Util.setOptions(this, options);
+		Util.setOptions(this, options);
 
 		if (options.mapSettings === null) {
 			throw new TypeError("mapSettings missing");
@@ -65,7 +65,7 @@ export class DynmapTileLayer extends L.TileLayer {
 		this._loadQueue = [];
 		this._loadingTiles = Object.seal(new Set());
 
-		this._tileTemplate = L.DomUtil.create('img', 'leaflet-tile') as DynmapTileElement;
+		this._tileTemplate = DomUtil.create('img', 'leaflet-tile') as DynmapTileElement;
 		this._tileTemplate.style.width = this._tileTemplate.style.height = this.options.tileSize + 'px';
 		this._tileTemplate.alt = '';
 		this._tileTemplate.tileName = '';

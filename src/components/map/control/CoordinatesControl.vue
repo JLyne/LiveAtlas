@@ -1,13 +1,13 @@
 <script lang="ts">
 import {defineComponent} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import L from 'leaflet';
 import {CoordinatesControl, CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
+import DynmapMap from "@/leaflet/DynmapMap";
 
 export default defineComponent({
 	props: {
 		leaflet: {
-			type: Object as () => L.Map,
+			type: Object as () => DynmapMap,
 			required: true,
 		}
 	},

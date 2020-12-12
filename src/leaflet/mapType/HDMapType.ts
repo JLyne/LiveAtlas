@@ -1,4 +1,4 @@
-import L from 'leaflet';
+import {Util} from 'leaflet';
 import HDProjection from "@/leaflet/projection/HDProjection";
 import {Coordinate} from "@/dynmap";
 import {DynmapTileLayer, DynmapTileLayerOptions} from "@/leaflet/tileLayer/DynmapTileLayer";
@@ -18,7 +18,7 @@ export class HDMapType extends DynmapTileLayer {
 		options.tileSize = 128;
 		options.minZoom = 0;
 
-		L.Util.setOptions(this, options);
+		Util.setOptions(this, options);
 		this._projection = Object.freeze(new HDProjection({
 			mapToWorld: this._mapSettings.mapToWorld,
 			worldToMap: this._mapSettings.worldToMap,

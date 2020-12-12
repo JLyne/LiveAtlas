@@ -1,4 +1,4 @@
-import L, {MarkerOptions} from 'leaflet';
+import {MarkerOptions, DivIcon, DomUtil} from 'leaflet';
 import {DynmapPlayer} from "@/dynmap";
 import Util from '@/util';
 
@@ -28,7 +28,7 @@ export interface PlayerIconOptions extends MarkerOptions {
 	showHealth: boolean,
 }
 
-export class PlayerIcon extends L.DivIcon {
+export class PlayerIcon extends DivIcon {
 	private readonly _player: DynmapPlayer;
 	private _container?: HTMLDivElement;
 	private _playerImage?: HTMLImageElement;
@@ -50,7 +50,7 @@ export class PlayerIcon extends L.DivIcon {
 
 	createIcon(oldIcon: HTMLElement) {
 		if (oldIcon) {
-			L.DomUtil.remove(oldIcon);
+			DomUtil.remove(oldIcon);
 		}
 
 		const player = this._player;

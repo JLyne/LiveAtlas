@@ -1,17 +1,16 @@
-import L, {Control, ControlOptions} from 'leaflet';
-import {useStore} from "@/store";
+import {Control, Map} from 'leaflet';
 import layers from '@/assets/icons/layers.svg';
 import LayersObject = Control.LayersObject;
 import LayersOptions = Control.LayersOptions;
 
-export class DynmapLayerControl extends L.Control.Layers {
+export class DynmapLayerControl extends Control.Layers {
 	private _layersLink?: HTMLElement;
 
 	constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersOptions) {
 		super(baseLayers, overlays, options);
 	}
 
-	onAdd(map: L.Map) {
+	onAdd(map: Map) {
 		// @ts-ignore
 		const element = super.onAdd(map);
 

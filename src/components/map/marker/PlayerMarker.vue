@@ -1,6 +1,6 @@
 <script lang="ts">
 import {defineComponent, computed, ref} from "@vue/runtime-core";
-import L from 'leaflet';
+import {LayerGroup} from 'leaflet';
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {PlayerMarker} from "@/leaflet/marker/PlayerMarker";
@@ -12,7 +12,7 @@ export default defineComponent({
 			required: true
 		},
 		layerGroup: {
-			type: Object as () => L.LayerGroup,
+			type: Object as () => LayerGroup,
 			required: true
 		}
 	},

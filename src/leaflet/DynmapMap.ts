@@ -1,11 +1,11 @@
-import L, {MapOptions} from 'leaflet';
+import {Map, DomUtil, MapOptions} from 'leaflet';
 import LayerManager from "@/leaflet/layer/LayerManager";
 
 interface DynmapMapOptions extends MapOptions {
 	layerControl: boolean;
 }
 
-export default class DynmapMap extends L.Map {
+export default class DynmapMap extends Map {
 	private readonly _layerManager: LayerManager;
 	private _controlCorners: any;
 	private	_controlContainer?: HTMLElement;
@@ -25,12 +25,12 @@ export default class DynmapMap extends L.Map {
 		const corners: any = this._controlCorners = {},
 			l = 'leaflet-',
 			container = this._controlContainer =
-				L.DomUtil.create('div', l + 'control-container', this._container);
+				DomUtil.create('div', l + 'control-container', this._container);
 
 		function createCorner(vSide: string, hSide: string) {
 			const className = l + vSide + ' ' + l + hSide;
 
-			corners[`${vSide}${hSide}`] = L.DomUtil.create('div', className, container);
+			corners[`${vSide}${hSide}`] = DomUtil.create('div', className, container);
 		}
 
 		createCorner('top', 'left');

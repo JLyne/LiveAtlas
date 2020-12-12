@@ -8,7 +8,7 @@
 <script lang="ts">
 import {defineComponent, computed} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import L from 'leaflet';
+import {LayerGroup} from 'leaflet';
 import {DynmapMarkerSet} from "@/dynmap";
 import GenericMarker from "@/components/map/marker/GenericMarker.vue";
 import Areas from "@/components/map/vector/Areas.vue";
@@ -39,7 +39,7 @@ export default defineComponent({
 	setup() {
 		const store = useStore(),
 			markerSettings = computed(() => store.state.components.markers),
-			layerGroup = new L.LayerGroup() as L.LayerGroup;
+			layerGroup = new LayerGroup();
 
 		return {
 			markerSettings,

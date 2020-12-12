@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import {defineComponent, computed} from "@vue/runtime-core";
-import L from 'leaflet';
+import {LatLng, CRS} from 'leaflet';
 import {useStore} from '@/store';
 import MapLayer from "@/components/map/layer/MapLayer.vue";
 import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
@@ -40,7 +40,7 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			leaflet = undefined as L.Map | undefined,
+			leaflet = undefined as DynmapMap | undefined,
 
 			maps = computed(() => store.state.maps),
 			markerSets = computed(() => store.state.markerSets),
@@ -106,14 +106,14 @@ export default defineComponent({
 	mounted() {
 		this.leaflet = new DynmapMap(this.$el, Object.freeze({
 			zoom: this.configuration.defaultZoom,
-			center: new L.LatLng(0, 0),
+			center: new LatLng(0, 0),
 			fadeAnimation: false,
 			zoomAnimation: true,
 			zoomControl: true,
 			layerControl: true,
 			preferCanvas: true,
 			attributionControl: false,
-			crs: L.CRS.Simple,
+			crs: CRS.Simple,
 			worldCopyJump: false,
 			// markerZoomAnimation: false,
 		}));

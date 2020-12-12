@@ -1,4 +1,4 @@
-import L, {ControlOptions} from 'leaflet';
+import {Control, ControlOptions, DomUtil} from 'leaflet';
 
 export interface LogoControlOptions extends ControlOptions {
 	url?: string;
@@ -6,7 +6,7 @@ export interface LogoControlOptions extends ControlOptions {
 	text: string;
 }
 
-export class LogoControl extends L.Control {
+export class LogoControl extends Control {
 	// @ts-ignore
 	options: LogoControlOptions;
 
@@ -15,16 +15,16 @@ export class LogoControl extends L.Control {
 	}
 
 	onAdd(map: L.Map) {
-		const container = L.DomUtil.create('div', 'leaflet-control-logo');
+		const container = DomUtil.create('div', 'leaflet-control-logo');
 		let link;
 
 		if (this.options.url) {
-			link = L.DomUtil.create('a', '', container) as HTMLAnchorElement;
+			link = DomUtil.create('a', '', container) as HTMLAnchorElement;
 			link.href = this.options.url;
 		}
 
 		if (this.options.image) {
-			const image = L.DomUtil.create('img', '', link) as HTMLImageElement;
+			const image = DomUtil.create('img', '', link) as HTMLImageElement;
 			image.src = this.options.image;
 			image.alt = this.options.text;
 		} else {

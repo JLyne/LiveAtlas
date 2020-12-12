@@ -1,4 +1,4 @@
-import L, {DivIconOptions, PointExpression, PointTuple} from 'leaflet';
+import {DivIconOptions, PointExpression, Icon, DivIcon, DomUtil, point} from 'leaflet';
 
 export interface DynmapIconOptions extends DivIconOptions {
 	icon: string;
@@ -7,7 +7,7 @@ export interface DynmapIconOptions extends DivIconOptions {
 	isHtml?: boolean;
 }
 
-export class DynmapIcon extends L.DivIcon {
+export class DynmapIcon extends DivIcon {
 	static defaultOptions: DynmapIconOptions = {
 		icon: 'default',
 		label: '',
@@ -26,14 +26,14 @@ export class DynmapIcon extends L.DivIcon {
 
 	createIcon(oldIcon: HTMLElement) {
 		if (oldIcon) {
-			L.DomUtil.remove(oldIcon);
+			DomUtil.remove(oldIcon);
 		}
 
 		const div = document.createElement('div'),
 			img = document.createElement('img'),
 			label = document.createElement('span'),
 			url = `${window.config.url.markers}_markers_/${this.options.icon}.png`,
-			size = L.point(this.options.iconSize as PointExpression);
+			size = point(this.options.iconSize as PointExpression);
 
 		const sizeClass = [size.x, size.y].join('x');
 
@@ -50,7 +50,7 @@ export class DynmapIcon extends L.DivIcon {
 		}
 
 		// @ts-ignore
-		L.Icon.prototype._setIconStyles.call(this, div, 'icon');
+		Icon.prototype._setIconStyles.call(this, div, 'icon');
 
 		div.appendChild(img);
 		div.appendChild(label);

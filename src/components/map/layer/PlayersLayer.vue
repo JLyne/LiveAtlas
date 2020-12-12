@@ -6,7 +6,7 @@
 import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
 import {defineComponent, computed} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import L from 'leaflet';
+import {LayerGroup} from 'leaflet';
 import DynmapMap from "@/leaflet/DynmapMap";
 
 export default defineComponent({
@@ -25,7 +25,7 @@ export default defineComponent({
 		const store = useStore(),
 			players = computed(() => store.state.players),
 			componentSettings = store.state.components.playerMarkers,
-			layerGroup = new L.LayerGroup() as L.LayerGroup;
+			layerGroup = new LayerGroup();
 
 		return {
 			players,

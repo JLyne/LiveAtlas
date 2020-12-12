@@ -1,25 +1,25 @@
-import L from 'leaflet';
+import {Util, LatLng, Class} from 'leaflet';
 import {Coordinate} from "@/dynmap";
 
 export interface DynmapProjectionOptions {}
 
 export interface DynmapProjection {
-	locationToLatLng(location: Coordinate): L.LatLng;
-	latLngToLocation(latLng: L.LatLng, y: number): Coordinate;
+	locationToLatLng(location: Coordinate): LatLng;
+	latLngToLocation(latLng: LatLng, y: number): Coordinate;
 }
 
-export class DynmapProjection extends L.Class {
+export class DynmapProjection extends Class {
 
 	constructor(options?: DynmapProjectionOptions) {
 		super();
-		L.Util.setOptions(this, options);
+		Util.setOptions(this, options);
 	}
 
-	locationToLatLng(location: Coordinate): L.LatLng {
-		return new L.LatLng(location.x, location.z);
+	locationToLatLng(location: Coordinate): LatLng {
+		return new LatLng(location.x, location.z);
 	}
 
-	latLngToLocation(latLng: L.LatLng, y: number): Coordinate {
+	latLngToLocation(latLng: LatLng, y: number): Coordinate {
 		return {x: latLng.lat, y, z: latLng.lng};
 	}
 }

@@ -1,12 +1,12 @@
-import L from 'leaflet';
+import {Map, Layer} from 'leaflet';
 import {DynmapLayerControl} from "@/leaflet/control/DynmapLayerControl";
 
 export default class LayerManager {
 	private showControl: boolean = false;
 	private readonly layerControl: DynmapLayerControl;
-	private readonly map: L.Map;
+	private readonly map: Map;
 
-	constructor(map: L.Map, showControl?: boolean) {
+	constructor(map: Map, showControl?: boolean) {
 		this.showControl = showControl || this.showControl;
 		this.map = map;
 		this.layerControl = new DynmapLayerControl({}, {},{
@@ -18,7 +18,7 @@ export default class LayerManager {
 		}
 	}
 
-	addLayer(layer: L.Layer, showInControl: boolean, name: string, position: number) {
+	addLayer(layer: Layer, showInControl: boolean, name: string, position: number) {
 		this.map.addLayer(layer);
 
 		if(showInControl) {
@@ -26,7 +26,7 @@ export default class LayerManager {
 		}
 	}
 
-	removeLayer(layer: L.Layer) {
+	removeLayer(layer: Layer) {
 		this.map.removeLayer(layer);
 		this.layerControl.removeLayer(layer);
 	}

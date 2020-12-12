@@ -1,4 +1,4 @@
-import L, {ControlOptions, LeafletMouseEvent} from 'leaflet';
+import {ControlOptions, LeafletMouseEvent, Control, Map, DomUtil, Util} from 'leaflet';
 import {useStore} from "@/store";
 import {Coordinate} from "@/dynmap";
 
@@ -11,11 +11,11 @@ export interface CoordinatesControlOptions extends ControlOptions {
 	label: string;
 }
 
-export class CoordinatesControl extends L.Control {
+export class CoordinatesControl extends Control {
 	// @ts-ignore
 	options: CoordinatesControlOptions;
 
-	private _map ?: L.Map;
+	private _map ?: Map;
 	private _location?: Coordinate;
 	private _locationChanged: boolean = false;
 	private readonly _coordsContainer: HTMLSpanElement;
@@ -27,16 +27,16 @@ export class CoordinatesControl extends L.Control {
 
 		options.showRegion = true;
 		options.showChunk = true;
-		this._coordsContainer = L.DomUtil.create('span', 'value coordinates');
-		this._chunkContainer = L.DomUtil.create('span', 'value chunk');
-		this._regionContainer = L.DomUtil.create('span', 'value region');
+		this._coordsContainer = DomUtil.create('span', 'value coordinates');
+		this._chunkContainer = DomUtil.create('span', 'value chunk');
+		this._regionContainer = DomUtil.create('span', 'value region');
 
 		options.position = 'bottomleft';
-		L.Util.setOptions(this, options);
+		Util.setOptions(this, options);
 	}
 
-	onAdd(map: L.Map) {
-		const container = L.DomUtil.create('div', 'leaflet-control-coordinates');
+	onAdd(map: Map) {
+		const container = DomUtil.create('div', 'leaflet-control-coordinates');
 
 		this._coordsContainer.textContent = this.options.showY ? '-----, ----- , -----' : '-----, -----';
 		this._coordsContainer.dataset.label = this.options.label;
@@ -67,7 +67,7 @@ export class CoordinatesControl extends L.Control {
 
 		this._map.on('mousemove', this._onMouseMove, this);
 		this._map.on('mouseout', this._onMouseOut, this);
-		L.Control.prototype.remove.call(this);
+		Control.prototype.remove.call(this);
 
 		return this;
 	}

@@ -1,5 +1,5 @@
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import L from 'leaflet';
+import {Util, LatLng} from 'leaflet';
 import {Coordinate} from "@/dynmap";
 
 export interface HDProjectionOptions {
@@ -15,20 +15,20 @@ export interface HDProjection extends DynmapProjection {
 export class HDProjection extends DynmapProjection {
 	constructor(options: HDProjectionOptions) {
 		super(options);
-		L.Util.setOptions(this, options);
+		Util.setOptions(this, options);
 	}
 
-	locationToLatLng(location: Coordinate): L.LatLng {
+	locationToLatLng(location: Coordinate): LatLng {
 		const wtp = this.options.worldToMap,
 			lat = wtp[3] * location.x + wtp[4] * location.y + wtp[5] * location.z,
 			lng = wtp[0] * location.x + wtp[1] * location.y + wtp[2] * location.z;
 
-		return new L.LatLng(
+		return new LatLng(
 			-((128 - lat) / (1 << this.options.nativeZoomLevels)),
 			lng / (1 << this.options.nativeZoomLevels));
 	}
 
-	latLngToLocation(latLng: L.LatLng, y: number): Coordinate {
+	latLngToLocation(latLng: LatLng, y: number): Coordinate {
 		const ptw = this.options.mapToWorld,
 			lat = latLng.lng * (1 << this.options.nativeZoomLevels),
 			lon = 128 + latLng.lat * (1 << this.options.nativeZoomLevels),

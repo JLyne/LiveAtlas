@@ -1,5 +1,5 @@
-import L, {ControlOptions} from 'leaflet';
-import Util from '@/util';
+import {ControlOptions, DomUtil, Util, Map, Control} from 'leaflet';
+import Utils from '@/util';
 import {DynmapWorldState} from "@/dynmap";
 
 export interface ClockControlOptions extends ControlOptions {
@@ -7,11 +7,10 @@ export interface ClockControlOptions extends ControlOptions {
 	showWeather: boolean;
 }
 
-export class ClockControl extends L.Control {
+export class ClockControl extends Control {
 	// @ts-ignore
 	options: ClockControlOptions;
 
-	private _map ?: L.Map;
 	private _container?: HTMLElement;
 	private _sun?: HTMLElement;
 	private _moon?: HTMLElement;
@@ -21,23 +20,23 @@ export class ClockControl extends L.Control {
 	constructor(options: ClockControlOptions) {
 		super(Object.assign(options, {position: 'topcenter'}));
 
-		L.Util.setOptions(this, options);
+		Util.setOptions(this, options);
 	}
 
-	onAdd(map: L.Map) {
-		this._container = L.DomUtil.create('div', 'largeclock timeofday');
-		this._sun = L.DomUtil.create('div', 'timeofday sun', this._container);
-		this._moon = L.DomUtil.create('div', 'timeofday moon', this._sun);
+	onAdd(map: Map) {
+		this._container = DomUtil.create('div', 'largeclock timeofday');
+		this._sun = DomUtil.create('div', 'timeofday sun', this._container);
+		this._moon = DomUtil.create('div', 'timeofday moon', this._sun);
 
 		this._sun.style.backgroundPosition = (-150) + 'px ' + (-150) + 'px';
 		this._moon.style.backgroundPosition = (-150) + 'px ' + (-150) + 'px';
 
 		if (this.options.showDigitalClock) {
-			this._clock = L.DomUtil.create('div', 'timeofday digitalclock', this._container)
+			this._clock = DomUtil.create('div', 'timeofday digitalclock', this._container)
 		}
 
 		if (this.options.showWeather) {
-			this._weather = L.DomUtil.create('div', 'weather', this._container)
+			this._weather = DomUtil.create('div', 'weather', this._container)
 		}
 
 		return this._container;
@@ -72,7 +71,7 @@ export class ClockControl extends L.Control {
 			this._moon!.style.backgroundPosition = '-150px -150px';
 		}
 
-		const minecraftTime = Util.getMinecraftTime(timeOfDay);
+		const minecraftTime = Utils.getMinecraftTime(timeOfDay);
 
 		if(timeOfDay >= 0) {
 			this._clock!.classList.remove(minecraftTime.night ? 'day' : 'night');

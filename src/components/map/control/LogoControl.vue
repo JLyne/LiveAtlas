@@ -1,7 +1,7 @@
 <script lang="ts">
 import {defineComponent} from "@vue/runtime-core";
-import L from 'leaflet';
 import {LogoControl, LogoControlOptions} from "@/leaflet/control/LogoControl";
+import DynmapMap from "@/leaflet/DynmapMap";
 
 export default defineComponent({
 	props: {
@@ -10,7 +10,7 @@ export default defineComponent({
 			required: true,
 		},
 		leaflet: {
-			type: Object as () => L.Map,
+			type: Object as () => DynmapMap,
 			required: true,
 		}
 	},

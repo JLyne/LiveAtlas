@@ -1,4 +1,4 @@
-import L, {LatLng, MarkerOptions} from 'leaflet';
+import {LatLng, MarkerOptions, Marker, Util} from 'leaflet';
 import {DynmapPlayer} from "@/dynmap";
 import {PlayerIcon} from "@/leaflet/icon/PlayerIcon";
 
@@ -9,7 +9,7 @@ export interface PlayerMarkerOptions extends MarkerOptions {
 	showHealth: boolean,
 }
 
-export class PlayerMarker extends L.Marker {
+export class PlayerMarker extends Marker {
 	private _player: DynmapPlayer;
 
 	constructor(player: DynmapPlayer, options: PlayerMarkerOptions) {
@@ -24,7 +24,7 @@ export class PlayerMarker extends L.Marker {
 			showHealth: options.showHealth,
 		});
 
-		L.Util.setOptions(this, options);
+		Util.setOptions(this, options);
 	}
 
 	getIcon(): PlayerIcon {
@@ -43,6 +43,6 @@ export class PlayerMarker extends L.Marker {
 	}
 
 	_resetZIndex() {
-		//Don't chnage the zindex
+		//Don't change the zindex
 	}
 }

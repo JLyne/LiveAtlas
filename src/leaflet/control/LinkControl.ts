@@ -1,19 +1,19 @@
-import L, {ControlOptions} from 'leaflet';
+import {Control, ControlOptions, DomUtil, Map} from 'leaflet';
 import {useStore} from "@/store";
 import linkIcon from '@/assets/icons/link.svg';
 
-export class LinkControl extends L.Control {
+export class LinkControl extends Control {
 	// @ts-ignore
 	options: ControlOptions
 
-	private _map ?: L.Map;
+	private _map ?: Map;
 
 	constructor(options: ControlOptions) {
 		super(options);
 	}
 
-	onAdd(map: L.Map) {
-		const linkButton = L.DomUtil.create('button', 'leaflet-control-link') as HTMLButtonElement;
+	onAdd(map: Map) {
+		const linkButton = DomUtil.create('button', 'leaflet-control-link') as HTMLButtonElement;
 
 		linkButton.type = 'button';
 		linkButton.title = 'Link';

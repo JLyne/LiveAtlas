@@ -1,6 +1,6 @@
 <script lang="ts">
 import {defineComponent, computed, ref} from "@vue/runtime-core";
-import L from 'leaflet';
+import {LayerGroup, Marker} from 'leaflet';
 import {DynmapMarker} from "@/dynmap";
 import {useStore} from "@/store";
 import {DynmapIcon} from "@/leaflet/icon/DynmapIcon";
@@ -12,7 +12,7 @@ export default defineComponent({
 			required: true
 		},
 		layerGroup: {
-			type: Object as () => L.LayerGroup,
+			type: Object as () => LayerGroup,
 			required: true
 		}
 	},
@@ -24,7 +24,7 @@ export default defineComponent({
 			projectedPosition = computed(() => store.state.currentProjection.locationToLatLng(props.options.location)),
 			visible = ref(false),
 
-			marker = undefined as L.Marker | undefined;
+			marker = undefined as Marker | undefined;
 
 		return {
 			marker,
@@ -42,7 +42,7 @@ export default defineComponent({
 	},
 
 	mounted() {
-		this.marker = new L.Marker(this.currentProjection.locationToLatLng(this.options.location), {
+		this.marker = new Marker(this.currentProjection.locationToLatLng(this.options.location), {
 			icon: new DynmapIcon({
 				icon: this.options.icon,
 				label: this.options.label,
