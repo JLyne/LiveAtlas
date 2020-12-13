@@ -66,7 +66,7 @@ export default defineComponent({
 		}
 
 		.player__name {
-			padding: 0.5rem 0 0.4rem 3rem;
+			padding: 0.8rem 0 0.7rem 3.5rem;
 			text-align: left;
 			margin: 0;
 			width: 100%;
