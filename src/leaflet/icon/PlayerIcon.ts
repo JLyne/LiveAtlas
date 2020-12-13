@@ -2,6 +2,8 @@ import {MarkerOptions, DivIcon, DomUtil} from 'leaflet';
 import {DynmapPlayer} from "@/dynmap";
 import Util from '@/util';
 
+const playerImage = require('@/assets/images/player_face.png');
+
 const noSkinImage: HTMLImageElement = document.createElement('img');
 noSkinImage.height = 16;
 noSkinImage.width = 16;
@@ -18,7 +20,7 @@ const bodyImage: HTMLImageElement = document.createElement('img');
 bodyImage.height = 32;
 bodyImage.width = 32;
 
-noSkinImage.src = smallImage.src = largeImage.src = bodyImage.src = 'images/player.png';
+noSkinImage.src = smallImage.src = largeImage.src = bodyImage.src = playerImage;
 noSkinImage.className = smallImage.className = largeImage.className = bodyImage.className = 'player__icon';
 
 export interface PlayerIconOptions extends MarkerOptions {

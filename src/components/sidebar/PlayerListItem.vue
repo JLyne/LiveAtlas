@@ -1,6 +1,6 @@
 <template>
 	<li class="player">
-		<img width="16" height="16" class="player__icon" src="images/player_face.png" alt="" />
+		<img width="16" height="16" class="player__icon" :src="playerImage" alt="" />
 		<button class="player__name" type="button" title="Click to center on player&#10;Double-click to follow player"
 				@click.prevent="pan"
 				@keydown="onKeydown"
@@ -14,12 +14,19 @@ import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 
+const playerImage = require('@/assets/images/player_face.png');
+
 export default defineComponent({
 	name: 'PlayerListItem',
 	props: {
 		player: {
 			type: Object as () => DynmapPlayer,
 			required: true
+		}
+	},
+	data() {
+		return {
+			playerImage: playerImage,
 		}
 	},
 	methods: {
@@ -55,6 +62,7 @@ export default defineComponent({
 			left: 0.7rem;
 			pointer-events: none;
 			margin: auto;
+			z-index: 1;
 		}
 
 		.player__name {
