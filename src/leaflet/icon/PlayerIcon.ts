@@ -122,7 +122,7 @@ export class PlayerIcon extends DivIcon {
 			return;
 		}
 
-		this._playerName!.innerText = this._player!.name;
+		this._playerName!.innerHTML = this._player!.name;
 
 		if(this.options.showHealth) {
 			if (this._player.health !== undefined && this._player.armor !== undefined) {

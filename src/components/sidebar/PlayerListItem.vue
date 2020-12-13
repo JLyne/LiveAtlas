@@ -4,7 +4,7 @@
 		<button class="player__name" type="button" title="Click to center on player&#10;Double-click to follow player"
 				@click.prevent="pan"
 				@keydown="onKeydown"
-				@dblclick.prevent="follow">{{ player.name }}</button>
+				@dblclick.prevent="follow" v-html="player.name"></button>
 	</li>
 </template>
 

@@ -14,6 +14,9 @@ import {
 	DynmapUpdateResponse, DynmapUpdates,
 	DynmapWorld
 } from "@/dynmap";
+import { Sanitizer } from "@esri/arcgis-html-sanitizer";
+
+const sanitizer = new Sanitizer();
 
 function buildServerConfig(response: any): DynmapServerConfig {
 	return {
@@ -414,7 +417,7 @@ export default {
 					account: player.account || "",
 					health: player.health || 0,
 					armor: player.armor || 0,
-					name: player.name || "Steve",
+					name: player.name ? sanitizer.sanitize(player.name) : "Steve",
 					sort: player.sort || 0,
 					location: {
 						x: player.x || 0,

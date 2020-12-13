@@ -12,6 +12,7 @@
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@esri/arcgis-html-sanitizer": "^2.5.0",
     "@types/clipboard": "^2.0.1",
     "@types/leaflet": "^1.5.19",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
