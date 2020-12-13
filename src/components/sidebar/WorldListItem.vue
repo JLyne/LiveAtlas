@@ -3,8 +3,9 @@
 		<span class="world__name">{{ world.title }}</span>
 		<ul class="world__maps">
 			<li :class="{'map': true, 'map--selected': map === currentMap}" v-for="[name, map] in world.maps" :key="name">
-				<button type="button" :title="map.title" :style="{'background-image': `url(${getMapIcon(map)})`}"
-						@click="setCurrentMap(map.name)" :aria-label="map.title"></button>
+				<button type="button" :title="map.title" @click="setCurrentMap(map.name)" :aria-label="map.title">
+					<SvgIcon :name="getMapIcon(map)"></SvgIcon>
+				</button>
 			</li>
 		</ul>
 	</li>
@@ -15,9 +16,11 @@ import {useStore} from "@/store";
 import {DynmapWorldMap, DynmapWorld} from "@/dynmap";
 import {defineComponent} from 'vue';
 import {MutationTypes} from "@/store/mutation-types";
+import SvgIcon from "@/components/SvgIcon.vue";
 
 export default defineComponent({
 	name: 'WorldListItem',
+	components: {SvgIcon},
 	props: {
 		world: {
 			type: Object as () => DynmapWorld,
@@ -47,7 +50,7 @@ export default defineComponent({
 				mapType = ['surface', 'flat', 'biome', 'cave'].includes(map.name) ? map.name : 'flat';
 			}
 
-			return `images/block_${worldType}_${mapType}.png`;
+			return `block_${worldType}_${mapType}`;
 		},
 		setCurrentMap(mapName: string) {
 			useStore().commit(MutationTypes.SET_CURRENT_MAP, {
@@ -83,9 +86,6 @@ export default defineComponent({
 			height: 100%;
 			width: 100%;
 			border-radius: 0.5rem;
-			background-position: center;
-			background-repeat: no-repeat;
-			background-size: 2.4rem;
 		}
 
 		& + .map {
