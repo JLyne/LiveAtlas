@@ -9,6 +9,8 @@ import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
 import {useStore} from "./store";
 import {ActionTypes} from "@/store/action-types";
+import Util from '@/util';
+import {MutationTypes} from "@/store/mutation-types";
 
 export default defineComponent({
 	name: 'App',
@@ -18,9 +20,11 @@ export default defineComponent({
 	},
 
 	setup() {
-		const store = useStore(),
+		const initialUrl = window.location.hash.replace('#', ''),
+			store = useStore(),
 			updateInterval = computed(() => store.state.configuration.updateInterval),
 			title = computed(() => store.state.configuration.title),
+			currentUrl = computed(() => store.getters.url),
 			updatesEnabled = ref(false),
 			updateTimeout = ref(0),
 
@@ -52,12 +56,28 @@ export default defineComponent({
 				}
 
 				updateTimeout.value = 0;
+			},
+
+			parseUrl = () => {
+				if(!initialUrl) {
+					return;
+				}
+
+				try {
+					const result = Util.parseMapHash(initialUrl);
+					store.commit(MutationTypes.SET_PARSED_URL, result);
+				} catch(e) {
+					console.warn('Ignoring invalid url ' + e);
+				}
 			};
 
 		watch(title, (title) => document.title = title);
+		watch(currentUrl, (url) => window.history.replaceState({}, '', url));
 
 		onMounted(() => loadConfiguration());
 		onBeforeUnmount(() => stopUpdates());
+
+		parseUrl();
 	},
 });
 </script>

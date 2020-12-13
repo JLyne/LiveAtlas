@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted, computed, watch} from "@vue/runtime-core";
+import {defineComponent, onUnmounted, computed, watch} from "@vue/runtime-core";
 import {DynmapWorldMap} from "@/dynmap";
 import {Map} from 'leaflet';
 import {useStore} from "@/store";
@@ -36,12 +36,9 @@ export default defineComponent({
 			active = computed(() => props.map === store.state.currentMap),
 
 			enableLayer = () => {
+				console.log('Set current projection');
 				useStore().commit(MutationTypes.SET_CURRENT_PROJECTION, layer.getProjection());
 				props.leaflet.addLayer(layer);
-				props.leaflet.panTo(layer.getProjection().locationToLatLng(props.map.world.center), {
-					noMoveStart: true,
-					animate: false,
-				});
 
 				stopUpdateWatch = watch(pendingUpdates, (newValue, oldValue) => {
 					if(newValue && !oldValue && !updateFrame) {
@@ -75,13 +72,11 @@ export default defineComponent({
 				});
 			};
 
-		watch(active, (newValue) => newValue ? enableLayer() : disableLayer());
+		if(active.value) {
+			enableLayer();
+		}
 
-		onMounted(() => {
-			if(active.value) {
-				enableLayer();
-			}
-		});
+		watch(active, (newValue) => newValue ? enableLayer() : disableLayer());
 
 		onUnmounted(() => {
 			disableLayer();

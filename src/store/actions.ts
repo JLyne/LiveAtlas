@@ -9,8 +9,8 @@ import {
 	DynmapConfigurationResponse, DynmapLineUpdate,
 	DynmapMarkerSet,
 	DynmapMarkerUpdate,
-	DynmapPlayer, DynmapServerConfig, DynmapTileUpdate,
-	DynmapUpdateResponse
+	DynmapPlayer, DynmapTileUpdate,
+	DynmapUpdateResponse, DynmapWorld
 } from "@/dynmap";
 
 type AugmentedActionContext = {
@@ -57,17 +57,52 @@ export interface Actions {
 }
 
 export const actions: ActionTree<State, State> & Actions = {
-	[ActionTypes.LOAD_CONFIGURATION]({commit}): Promise<DynmapConfigurationResponse> {
+	[ActionTypes.LOAD_CONFIGURATION]({commit, state}): Promise<DynmapConfigurationResponse> {
 		return API.getConfiguration().then(config => {
 			commit(MutationTypes.SET_CONFIGURATION, config.config);
 			commit(MutationTypes.SET_MESSAGES, config.messages);
 			commit(MutationTypes.SET_WORLDS, config.worlds);
 			commit(MutationTypes.SET_COMPONENTS, config.components);
 
-			if(config.config.defaultWorld && config.config.defaultMap) {
+			let worldName, mapName;
+
+			// Use config default world if it exists
+			if(config.config.defaultWorld && state.worlds.has(config.config.defaultWorld)) {
+				worldName = config.config.defaultWorld;
+			}
+
+			// Prefer world from parsed url if present and it exists
+			if(state.parsedUrl.world && state.worlds.has(state.parsedUrl.world)) {
+				worldName = state.parsedUrl.world;
+			}
+
+			// Use first world, if any, if neither of the above exist
+			if(!worldName) {
+				worldName = state.worlds.size ? state.worlds.entries().next().value.name : undefined;
+			}
+
+			if(worldName) {
+				const world = state.worlds.get(worldName) as DynmapWorld;
+
+				// Use config default map if it exists
+				if(config.config.defaultMap && world.maps.has(config.config.defaultMap)) {
+					mapName = config.config.defaultMap;
+				}
+
+				// Prefer map from parsed url if present and it exists
+				if(state.parsedUrl.map && world.maps.has(state.parsedUrl.map)) {
+					mapName = state.parsedUrl.map;
+				}
+
+				// Use first map, if any, if neither of the above exist
+				if(!mapName) {
+					mapName = world.maps.size ? world.maps.entries().next().value.name : undefined;
+				}
+			}
+
+			if(worldName && mapName) {
 				commit(MutationTypes.SET_CURRENT_MAP, {
-					worldName: config.config.defaultWorld,
-					mapName: config.config.defaultMap
+					worldName, mapName
 				});
 			}
 

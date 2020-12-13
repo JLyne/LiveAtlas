@@ -8,6 +8,7 @@ export type Getters = {
 	clockControlEnabled(state: State): boolean;
 	night(state: State): boolean;
 	mapBackground(state: State, getters: GetterTree<State, State> & Getters): string;
+	url(state: State, getters: GetterTree<State, State> & Getters): string;
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -41,5 +42,19 @@ export const getters: GetterTree<State, State> & Getters = {
 		}
 
 		return state.currentMap.background || 'transparent';
+	},
+
+	url(state: State): string {
+		const x = Math.round(state.currentLocation.x),
+			y = Math.round(state.currentLocation.y),
+			z = Math.round(state.currentLocation.z),
+			locationString = `${x},${y},${z}`,
+			zoom = state.currentZoom;
+
+		if(!state.currentWorld || !state.currentMap) {
+			return '';
+		}
+
+		return `#${state.currentWorld.name};${state.currentMap.name};${locationString};${zoom}`;
 	}
 }

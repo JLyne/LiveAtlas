@@ -4,7 +4,7 @@ import {
 	DynmapMessageConfig,
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
-	DynmapWorld, DynmapWorldState
+	DynmapWorld, DynmapWorldState, Coordinate, DynmapParsedUrl
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 
@@ -26,10 +26,14 @@ export type State = {
 	currentWorldState: DynmapWorldState;
 	currentWorld?: DynmapWorld;
 	currentMap?: DynmapWorldMap;
+	currentLocation: Coordinate;
+	currentZoom: number;
 	currentProjection: DynmapProjection;
 
 	updateRequestId: number;
 	updateTimestamp: Date;
+
+	parsedUrl: DynmapParsedUrl;
 }
 
 export const state: State = {
@@ -100,6 +104,13 @@ export const state: State = {
 
 	currentWorld: undefined,
 	currentMap: undefined,
+	currentLocation: {
+		x: 0,
+		y: 0,
+		z: 0,
+	},
+	currentZoom: 0,
+
 	currentProjection: new DynmapProjection(), //Projection for converting location <-> latlg. Object itself isn't reactive for performance reasons
 	currentWorldState: {
 		raining: false,
@@ -109,4 +120,11 @@ export const state: State = {
 
 	updateRequestId: 0,
 	updateTimestamp: new Date(),
+
+	parsedUrl: {
+		world: undefined,
+		map: undefined,
+		location: undefined,
+		zoom: undefined,
+	}
 };

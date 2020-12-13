@@ -12,6 +12,7 @@
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@types/clipboard": "^2.0.1",
     "@types/leaflet": "^1.5.19",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
     "@typescript-eslint/parser": "^4.1.0",
@@ -22,6 +23,7 @@
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
     "babel-eslint": "^10.1.0",
+    "clipboard": "^2.0.6",
     "eslint": "^7.5.0",
     "eslint-plugin-vue": "^7.0.0-0",
     "leaflet": "^1.7.1",

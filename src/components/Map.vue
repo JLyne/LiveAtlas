@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, computed} from "@vue/runtime-core";
-import {LatLng, CRS} from 'leaflet';
+import {computed, defineComponent} from "@vue/runtime-core";
+import {CRS, LatLng} from 'leaflet';
 import {useStore} from '@/store';
 import MapLayer from "@/components/map/layer/MapLayer.vue";
 import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
@@ -23,7 +23,7 @@ import ClockControl from "@/components/map/control/ClockControl.vue";
 import LinkControl from "@/components/map/control/LinkControl.vue";
 import LogoControl from "@/components/map/control/LogoControl.vue";
 import {MutationTypes} from "@/store/mutation-types";
-import {DynmapPlayer} from "@/dynmap";
+import {Coordinate, DynmapPlayer} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import DynmapMap from "@/leaflet/DynmapMap";
 
@@ -85,9 +85,36 @@ export default defineComponent({
 			},
 			deep: true
 		},
-		currentWorld(newValue) {
+		currentWorld(newValue, oldValue) {
+			const store = useStore();
+
 			if(newValue) {
-				useStore().dispatch(ActionTypes.GET_MARKER_SETS, undefined);
+				let location: Coordinate;
+				let zoom: number;
+
+				store.dispatch(ActionTypes.GET_MARKER_SETS, undefined);
+
+				if(oldValue || !store.state.parsedUrl.location) {
+					location = newValue.center;
+				} else {
+					location = store.state.parsedUrl.location;
+				}
+
+				if(!oldValue) {
+					zoom = store.state.parsedUrl.zoom || store.state.configuration.defaultZoom;
+				}
+
+				//Delay the pan a frame, to allow the projection to be updated by the new world
+				requestAnimationFrame(() => {
+					this.leaflet!.panTo(this.currentProjection.locationToLatLng(location), {
+						animate: false,
+						noMoveStart: true,
+					});
+
+					this.leaflet!.setZoom(zoom, {
+						animate: false,
+					});
+				});
 			}
 		},
 		configuration: {
@@ -100,7 +127,7 @@ export default defineComponent({
 				}
 			},
 			deep: true,
-		}
+		},
 	},
 
 	mounted() {
@@ -119,16 +146,12 @@ export default defineComponent({
 		}));
 
 		this.leaflet.on('moveend', () => {
-			const location = this.currentProjection.latLngToLocation(this.leaflet!.getCenter(), 64),
-				locationString = `${Math.round(location.x)},${Math.round(location.y)},${Math.round(location.z)}`,
-				url = `#${this.currentWorld!.name};${this.currentMap!.name};${locationString}`;
+			useStore().commit(MutationTypes.SET_CURRENT_LOCATION, this.currentProjection.latLngToLocation(this.leaflet!.getCenter(), 64));
+		});
 
-			window.history.replaceState({
-				location,
-				world: this.currentWorld!.name,
-				map: this.currentMap!.name,
-			}, '', url);
-		})
+		this.leaflet.on('zoomend', () => {
+			useStore().commit(MutationTypes.SET_CURRENT_ZOOM, this.leaflet!.getZoom());
+		});
 	},
 
 	methods: {

@@ -1,6 +1,7 @@
 import {Control, ControlOptions, DomUtil, Map} from 'leaflet';
 import {useStore} from "@/store";
 import linkIcon from '@/assets/icons/link.svg';
+import ClipboardJS from 'clipboard';
 
 export class LinkControl extends Control {
 	// @ts-ignore
@@ -22,9 +23,8 @@ export class LinkControl extends Control {
 		  <use xlink:href="${linkIcon.url}" />
 		</svg>`;
 
-		linkButton.addEventListener('click', () => {
-			const projection = useStore().state.currentProjection;
-			console.log(projection.latLngToLocation(this._map!.getCenter(), 64));
+		new ClipboardJS(linkButton, {
+			text: () => window.location.href.split("#")[0] + useStore().getters.url,
 		});
 
 		return linkButton;

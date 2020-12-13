@@ -8,7 +8,7 @@ import {
 	DynmapCircleUpdate,
 	DynmapComponentConfig,
 	DynmapLine,
-	DynmapLineUpdate,
+	DynmapLineUpdate, Coordinate,
 	DynmapMarker,
 	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
@@ -17,7 +17,7 @@ import {
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapWorld,
-	DynmapWorldState
+	DynmapWorldState, DynmapParsedUrl
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 
@@ -49,6 +49,9 @@ export type Mutations<S = State> = {
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
 	[MutationTypes.SET_CURRENT_MAP](state: S, payload: CurrentMapPayload): void
 	[MutationTypes.SET_CURRENT_PROJECTION](state: S, payload: DynmapProjection): void
+	[MutationTypes.SET_CURRENT_LOCATION](state: S, payload: Coordinate): void
+	[MutationTypes.SET_CURRENT_ZOOM](state: S, payload: number): void
+	[MutationTypes.SET_PARSED_URL](state: S, payload: DynmapParsedUrl): void
 	[MutationTypes.FOLLOW_PLAYER](state: S, payload: DynmapPlayer): void
 	[MutationTypes.CLEAR_FOLLOW](state: S, a?: void): void
 }
@@ -286,6 +289,18 @@ export const mutations: MutationTree<State> & Mutations = {
 
 	[MutationTypes.SET_CURRENT_PROJECTION](state: State, projection) {
 		state.currentProjection = projection;
+	},
+
+	[MutationTypes.SET_CURRENT_LOCATION](state: State, payload: Coordinate) {
+		state.currentLocation = payload;
+	},
+
+	[MutationTypes.SET_CURRENT_ZOOM](state: State, payload: number) {
+		state.currentZoom = payload;
+	},
+
+	[MutationTypes.SET_PARSED_URL](state: State, payload: DynmapParsedUrl) {
+		state.parsedUrl = payload;
 	},
 
 	[MutationTypes.FOLLOW_PLAYER](state: State, player: DynmapPlayer) {

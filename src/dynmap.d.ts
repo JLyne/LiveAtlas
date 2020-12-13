@@ -251,3 +251,10 @@ interface DynmapTileUpdate {
 	name: string
 	timestamp: number
 }
+
+interface DynmapParsedUrl {
+	world?: string;
+	map?: string;
+	location?: Coordinate;
+	zoom?: number;
+}

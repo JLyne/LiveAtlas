@@ -20,6 +20,9 @@ export enum MutationTypes {
 	SYNC_PLAYERS = 'syncPlayers',
 	SET_CURRENT_MAP = 'setCurrentMap',
 	SET_CURRENT_PROJECTION = 'setCurrentProjection',
+	SET_CURRENT_LOCATION = 'setCurrentLocation',
+	SET_CURRENT_ZOOM = 'setCurrentZoom',
+	SET_PARSED_URL = 'setParsedUrl',
 	FOLLOW_PLAYER = 'followPlayer',
 	CLEAR_FOLLOW = 'clearFollow',
 }

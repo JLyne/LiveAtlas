@@ -58,5 +58,41 @@ export default {
 		return (x: number, y: number, z: number) => {
 			return projection.locationToLatLng({x, y, z});
 		};
+	},
+
+	parseMapHash(hash: string) {
+		const parts = hash.replace('#', '').split(';');
+
+		if(parts.length < 3) {
+			throw new TypeError('Not enough parts');
+		}
+
+		const world = parts[0],
+			map = parts[1],
+			location = parts[2].split(',').map(item => parseFloat(item)),
+			zoom = parts[3] ? parseInt(parts[3]) : undefined;
+
+		if(location.length !== 3) {
+			throw new TypeError('Location should contain exactly 3 numbers');
+		}
+
+		if(location.filter(item => isNaN(item) || !isFinite(item)).length) {
+			throw new TypeError('Invalid value in location');
+		}
+
+		if(typeof zoom !== 'undefined' && (isNaN(zoom) || zoom < 0 || !isFinite(zoom))) {
+			throw new TypeError('Invalid value for zoom');
+		}
+
+		return {
+			world,
+			map,
+			location: {
+				x: location[0],
+				y: location[1],
+				z: location[2],
+			},
+			zoom,
+		}
 	}
 }
