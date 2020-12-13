@@ -2,7 +2,15 @@ import {ControlOptions, DomUtil, Util, Map, Control} from 'leaflet';
 import Utils from '@/util';
 import {DynmapWorldState} from "@/dynmap";
 
+import sun from '@/assets/icons/clock_sun.svg';
+import sunRain from '@/assets/icons/clock_sun_rain.svg';
+import sunStorm from '@/assets/icons/clock_sun_storm.svg';
+import moon from '@/assets/icons/clock_moon.svg';
+import moonRain from '@/assets/icons/clock_moon_rain.svg';
+import moonStorm from '@/assets/icons/clock_moon_storm.svg';
+
 export interface ClockControlOptions extends ControlOptions {
+	showTimeOfDay: boolean;
 	showDigitalClock: boolean;
 	showWeather: boolean;
 }
@@ -15,7 +23,6 @@ export class ClockControl extends Control {
 	private _sun?: HTMLElement;
 	private _moon?: HTMLElement;
 	private _clock?: HTMLElement;
-	private _weather?: HTMLElement;
 
 	constructor(options: ClockControlOptions) {
 		super(Object.assign(options, {position: 'topcenter'}));
@@ -24,19 +31,28 @@ export class ClockControl extends Control {
 	}
 
 	onAdd(map: Map) {
-		this._container = DomUtil.create('div', 'largeclock timeofday');
-		this._sun = DomUtil.create('div', 'timeofday sun', this._container);
-		this._moon = DomUtil.create('div', 'timeofday moon', this._sun);
+		const digital = !this.options.showTimeOfDay && !this.options.showWeather && this.options.showDigitalClock;
 
-		this._sun.style.backgroundPosition = (-150) + 'px ' + (-150) + 'px';
-		this._moon.style.backgroundPosition = (-150) + 'px ' + (-150) + 'px';
+		this._container = DomUtil.create('div', 'clock' + (digital ? ' clock--digital' : ''));
+		this._sun = DomUtil.create('div', 'clock__sun', this._container);
+		this._moon = DomUtil.create('div', 'clock__moon', this._container);
+
+		this._sun.style.transform = 'translate(-150px, -150px)';
+		this._moon.style.transform = 'translate(-150px, -150px)';
+
+		console.log(sun);
+
+		this._sun!.innerHTML = `
+		<svg class="svg-icon" viewBox="${sun.viewBox}">
+	  		<use xlink:href="${sun.url}" />
+		</svg>`;
+		this._moon!.innerHTML = `
+		<svg class="svg-icon" viewBox="${moon.viewBox}">
+	  		<use xlink:href="${moon.url}" />
+		</svg>`;
 
 		if (this.options.showDigitalClock) {
-			this._clock = DomUtil.create('div', 'timeofday digitalclock', this._container)
-		}
-
-		if (this.options.showWeather) {
-			this._weather = DomUtil.create('div', 'weather', this._container)
+			this._clock = DomUtil.create('div', 'clock__time', this._container)
 		}
 
 		return this._container;
@@ -64,11 +80,11 @@ export class ClockControl extends Control {
 		const moonAngle = sunAngle + Math.PI;
 
 		if (timeOfDay >= 0) {
-			this._sun!.style.backgroundPosition = (-50 * Math.cos(sunAngle)) + 'px ' + (-50 * Math.sin(sunAngle)) + 'px';
-			this._moon!.style.backgroundPosition = (-50 * Math.cos(moonAngle)) + 'px ' + (-50 * Math.sin(moonAngle)) + 'px';
+			this._sun!.style.transform = 'translate(' + Math.round(-50 * Math.cos(sunAngle)) + 'px, ' + Math.round(-50 * Math.sin(sunAngle)) + 'px)';
+			this._moon!.style.transform = 'translate(' + Math.round(-50 * Math.cos(moonAngle)) + 'px, ' + Math.round(-50 * Math.sin(moonAngle)) + 'px)';
 		} else {
-			this._sun!.style.backgroundPosition = '-150px -150px';
-			this._moon!.style.backgroundPosition = '-150px -150px';
+			this._sun!.style.transform = 'translate(-150px, -150px)';
+			this._moon!.style.transform = 'translate(-150px, -150px)';
 		}
 
 		const minecraftTime = Utils.getMinecraftTime(timeOfDay);
@@ -85,20 +101,35 @@ export class ClockControl extends Control {
 			this._clock!.textContent = '';
 		}
 
-		if(this.options.showWeather) {
-			const dayNight = (timeOfDay > 23100 || timeOfDay < 12900) ? "day" : "night";
-			let className = 'sunny';
-
-			if (worldState.raining) {
-				className = 'stormy';
-
-				if (worldState.thundering) {
-					className = 'thunder';
-				}
+		if (this.options.showWeather) {
+			if (worldState.thundering) {
+				this._sun!.innerHTML = `
+					<svg class="svg-icon" viewBox="${sunStorm.viewBox}">
+						<use xlink:href="${sunStorm.url}" />
+					</svg>`;
+				this._moon!.innerHTML = `
+					<svg class="svg-icon" viewBox="${moonStorm.viewBox}">
+						<use xlink:href="${moonStorm.url}" />
+					</svg>`;
+			} else if (worldState.raining) {
+				this._sun!.innerHTML = `
+					<svg class="svg-icon" viewBox="${sunRain.viewBox}">
+						<use xlink:href="${sunRain.url}" />
+					</svg>`;
+				this._moon!.innerHTML = `
+					<svg class="svg-icon" viewBox="${moonRain.viewBox}">
+						<use xlink:href="${moonRain.url}" />
+					</svg>`;
+			} else {
+				this._sun!.innerHTML = `
+					<svg class="svg-icon" viewBox="${sun.viewBox}">
+						<use xlink:href="${sun.url}" />
+					</svg>`;
+				this._moon!.innerHTML = `
+					<svg class="svg-icon" viewBox="${moon.viewBox}">
+						<use xlink:href="${moon.url}" />
+					</svg>`;
 			}
-
-			this._weather?.classList.remove('stormy_day', 'stormy_night', 'sunny_day', 'sunny_night', 'thunder_day', 'thunder_night');
-			this._weather?.classList.add(`${className}_${dayNight}`);
 		}
 	}
 }

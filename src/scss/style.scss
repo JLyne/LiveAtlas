@@ -122,25 +122,34 @@ button {
     border-radius: 0 0 3px 3px;
 }
 
-.largeclock {
+.clock {
 	@extend %panel;
 	position: relative;
     width: 15rem;
     height: 6rem;
     z-index: 50;
+	font-family: monospace;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0.5rem 2rem;
 
-	.digitalclock {
+	.clock__time {
 		text-align: center;
 		font-size: 2rem;
 		line-height: 2rem;
-		font-weight: bold;
+		margin-top: auto;
+		background-color: #222;
+		z-index: 1;
+		padding: 0.1rem 0.1rem 0;
+		border-radius: 0.3rem;
 
 		&.night {
-			color: #dff;
+			color: #ddffff;
 		}
 
 		&.day {
-			color: #fd3;
+			color: #ffdd33;
 		}
 
 		&.night, &.day {
@@ -148,59 +157,33 @@ button {
 		}
 	}
 
-	.timeofday {
-    	background-repeat: no-repeat;
+	.clock__sun,
+	.clock__moon {
 		position: absolute;
 		top: 0;
 		bottom: 0;
 		left: 0;
 		right: 0;
 
-		&.digitalclock {
-			top: auto;
-			bottom: 0.5rem;
-		}
-
-		&.sun {
-			background-image: url(../assets/images/sun.png);
-		}
-
-		&.moon {
-			background-image: url(../assets/images/moon.png);
+		svg {
+			width: 15rem;
+			height: 12rem;
 		}
 	}
 
-	.weather {
-		position: absolute;
-		top: 5px;
-		right: 0;
-		width: 32px;
-		height: 32px;
-		display: block;
-		background-repeat: no-repeat;
+	&.clock--digital {
+		justify-content: center;
+		height: 5rem;
+		width: auto;
 
-		&.sunny_day {
-			background-image: url(../assets/images/weather_sunny_day.png);
+		.clock__sun,
+		.clock__moon {
+			display: none;
 		}
 
-		&.stormy_day {
-			background-image: url(../assets/images/weather_stormy_day.png);
-		}
-
-		&.thunder_day {
-			background-image: url(../assets/images/weather_thunder_day.png);
-		}
-
-		&.sunny_night {
-			background-image: url(../assets/images/weather_sunny_night.png);
-		}
-
-		&.stormy_night {
-			background-image: url(../assets/images/weather_stormy_night.png);
-		}
-
-		&.thunder_night {
-			background-image: url(../assets/images/weather_thunder_night.png);
+		.clock__time {
+			margin: 0;
+			font-size: 3rem;
 		}
 	}
 }

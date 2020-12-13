@@ -147,11 +147,13 @@ function buildComponents(response: any): DynmapComponentConfig {
 				components.clockControl = {
 					showDigitalClock: true,
 					showWeather: false,
+					showTimeOfDay: false,
 				}
 				break;
 
 			case "timeofdayclock":
 				components.clockControl = {
+					showTimeOfDay: true,
 					showDigitalClock: component.showdigitalclock || false,
 					showWeather: component.showweather || false,
 				}
