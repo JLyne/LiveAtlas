@@ -25,8 +25,6 @@ export class CoordinatesControl extends Control {
 	constructor(options: CoordinatesControlOptions) {
 		super(options);
 
-		options.showRegion = true;
-		options.showChunk = true;
 		this._coordsContainer = DomUtil.create('span', 'value coordinates');
 		this._chunkContainer = DomUtil.create('span', 'value chunk');
 		this._regionContainer = DomUtil.create('span', 'value region');
