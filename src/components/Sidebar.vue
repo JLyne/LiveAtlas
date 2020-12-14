@@ -1,7 +1,7 @@
 <template>
 	<aside class="sidebar">
 		<header class="sidebar__buttons">
-			<button :class="{'button--maps': true, 'active': mapsActive}"
+			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active': mapsActive}"
 					@click="mapsActive = !mapsActive" title="Map list" aria-label="Map list">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
@@ -14,7 +14,7 @@
 				<SvgIcon name="settings"></SvgIcon>
 			</button>
 		</header>
-		<WorldList v-show="mapsActive"></WorldList>
+		<WorldList v-if="mapCount > 1" v-show="mapsActive"></WorldList>
 		<PlayerList v-show="playersActive"></PlayerList>
 		<FollowTarget v-if="following" :target="following"></FollowTarget>
 	</aside>
@@ -41,9 +41,11 @@ export default defineComponent({
 		let mapsActive = ref(false),
 			playersActive = ref(false),
 			settingsActive = ref(false),
+			mapCount = computed(() => store.state.maps.size),
 			following = computed(() => store.state.following);
 
 		return {
+			mapCount,
 			mapsActive,
 			playersActive,
 			settingsActive,
