@@ -3,9 +3,9 @@
 		<h2>Following</h2>
 
 		<div class="following__target">
-			<img width="32" height="32" class="target__icon" src="images/player_face.png" alt="" />
-			<span class="target__name">{{ target.name }}</span>
-			<button class="target__unfollow" type="button" :title="`Unfollow ${target.name}`"
+			<img width="32" height="32" class="target__icon" :src="playerImage" alt="" />
+			<span class="target__name" v-html="target.name"></span>
+			<button class="target__unfollow" type="button" :title="`Stop following this player`"
 				@click.prevent="unfollow"
 				@keydown="onKeydown">Unfollow</button>
 		</div>
@@ -18,12 +18,19 @@ import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 
+const playerImage = require('@/assets/images/player_face.png');
+
 export default defineComponent({
 	name: 'FollowTarget',
 	props: {
 		target: {
 			type: Object as () => DynmapPlayer,
 			required: true
+		}
+	},
+	data() {
+		return {
+			playerImage,
 		}
 	},
 	methods: {
