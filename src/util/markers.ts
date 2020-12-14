@@ -2,9 +2,10 @@ import {Marker} from "leaflet";
 import {DynmapMarker} from "@/dynmap";
 import {DynmapIcon} from "@/leaflet/icon/DynmapIcon";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
+import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 
 export const createMarker = (options: DynmapMarker, projection: DynmapProjection): Marker => {
-	return new Marker(projection.locationToLatLng(options.location), {
+	return new GenericMarker(projection.locationToLatLng(options.location), {
 		icon: new DynmapIcon({
 			icon: options.icon,
 			label: options.label,
