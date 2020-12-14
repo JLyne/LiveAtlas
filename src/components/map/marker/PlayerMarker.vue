@@ -68,6 +68,8 @@ export default defineComponent({
 			showSkinFace: this.componentSettings!.showSkinFaces,
 			showBody: this.componentSettings!.showBodies,
 			showHealth: this.componentSettings!.showHealth,
+			interactive: false,
+			pane: 'players',
 		});
 
 		if(this.currentWorld && this.currentWorld.name === this.player.location.world) {

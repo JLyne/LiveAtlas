@@ -21,11 +21,15 @@ export default defineComponent({
 		}
 	},
 
-	setup() {
+	setup(props) {
+		props.leaflet.createPane('players');
+
 		const store = useStore(),
 			players = computed(() => store.state.players),
 			componentSettings = store.state.components.playerMarkers,
-			layerGroup = new LayerGroup();
+			layerGroup = new LayerGroup([],{
+				pane: 'players'
+			});
 
 		return {
 			players,
