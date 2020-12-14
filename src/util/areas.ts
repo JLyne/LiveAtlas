@@ -21,14 +21,43 @@ export const updateArea = (area: Polyline | Polygon | undefined, options: Dynmap
 		return createArea(options, converter);
 	}
 
+	const oldPoints = area.getLatLngs();
+	let dirty = false;
+
+	//Avoid pointless setStyle() redrawing by checking if styles have actually changed
+	if(!isStyleEqual(area.options, options.style)) {
+		area.setStyle(options.style); //FIXME: Maybe override setStyle to add an option for not redrawing
+		dirty = true;
+	}
+
+
+	if(!arePointsEqual(oldPoints.length === 1 ? oldPoints[0] : oldPoints, points)) {
+		area.setLatLngs(points);
+		dirty = true;
+	}
+
 	area.unbindPopup();
 	area.bindPopup(() => createPopup(options));
-	area.setStyle(options.style);
-	area.setLatLngs(points);
-	area.redraw();
+
+	if(dirty) {
+		area.redraw();
+	}
 
 	return area;
 };
+
+const arePointsEqual = (oldPoints: any, newPoints: any) => {
+	return JSON.stringify(oldPoints) === JSON.stringify(newPoints);
+}
+
+const isStyleEqual = (oldStyle: any, newStyle: any) => {
+	return oldStyle && newStyle
+		&& (oldStyle.color === newStyle.color)
+		&& (oldStyle.weight === newStyle.weight)
+		&& (oldStyle.opacity === newStyle.opacity)
+		&& (oldStyle.fillColor === newStyle.fillColor)
+		&& (oldStyle.fillOpacity === newStyle.fillOpacity)
+}
 
 export const createPopup = (options: DynmapArea): HTMLElement => {
 	const popup = document.createElement('span');
