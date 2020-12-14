@@ -15,6 +15,7 @@ import {
 	DynmapWorld
 } from "@/dynmap";
 import { Sanitizer } from "@esri/arcgis-html-sanitizer";
+import {useStore} from "@/store";
 
 const sanitizer = new Sanitizer();
 
@@ -303,23 +304,40 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 		markerSets: new Map<string, DynmapMarkerSetUpdates>(),
 		tiles: [] as DynmapTileUpdate[],
 		chat: [],
-	}
+	},
+		dropped = {
+			stale: 0,
+			noSet: 0,
+			noId: 0,
+			unknownType: 0,
+			unknownCType: 0,
+			incompleteTile: 0,
+			notImplemented: 0,
+		},
+		lastUpdate = useStore().state.updateTimestamp;
+
+	let accepted = 0;
 
 	for(const entry of data) {
 		switch(entry.type) {
 			case 'component': {
+				if(lastUpdate && entry.timestamp < lastUpdate) {
+					dropped.stale++;
+					continue;
+				}
+
 				if(!entry.id) {
-					console.warn(`Ignoring component update without an ID`);
+					dropped.noId++;
 					continue;
 				}
 
 				if(!entry.set) {
-					console.warn(`Ignoring component update without a marker set`);
+					dropped.noSet++;
 					continue;
 				}
 
 				if(entry.ctype !== 'markers') {
-					console.warn(`Ignoring component with unknown ctype ${entry.ctype}`);
+					dropped.unknownCType++;
 					continue;
 				}
 
@@ -338,7 +356,6 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 						removed: entry.msg.endsWith('deleted'),
 					};
 
-
 				if(entry.msg.startsWith("marker")) {
 					update.payload = update.removed ? undefined : buildMarker(entry);
 					markerSetUpdates!.markerUpdates.push(Object.freeze(update));
@@ -355,29 +372,41 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 					markerSetUpdates!.lineUpdates.push(Object.freeze(update));
 				}
 
+				accepted++;
+
 				break;
 			}
 
 			case 'chat':
 				//TODO
+				dropped.notImplemented++;
 				break;
 
 			case 'tile':
 				if(!entry.name || !entry.timestamp) {
-					console.warn(`Ignoring tile update without a name or timestamp`);
-					break;
+					dropped.incompleteTile++;
+					continue;
+				}
+
+				if(lastUpdate && entry.timestamp < lastUpdate) {
+					dropped.stale++;
+					continue;
 				}
 
 				updates.tiles.push({
 					name: entry.name,
 					timestamp: entry.timestamp,
 				});
+
+				accepted++;
 				break;
 
 			default:
-				console.warn(`Ignoring unknown update type ${entry.type}`);
+				dropped.unknownType++;
 		}
 	}
+
+	console.debug(`Updates: ${accepted} accepted. Rejected: `, dropped);
 
 	return updates;
 }
