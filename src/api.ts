@@ -490,7 +490,7 @@ export default {
 				sets.set(key, {
 					id: key,
 					label: set.label || "Unnamed set",
-					hidden: set.hidden || false,
+					hidden: set.hide || false,
 					priority: set.layerprio || 0,
 					showLabels: set.showlabels || undefined,
 					minZoom: set.minzoom || undefined,

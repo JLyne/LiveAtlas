@@ -26,6 +26,10 @@ export default class LayerManager {
 		}
 	}
 
+	addHiddenLayer(layer: Layer, name: string, position: number) {
+		this.layerControl.addOverlay(layer, name);
+	}
+
 	removeLayer(layer: Layer) {
 		this.map.removeLayer(layer);
 		this.layerControl.removeLayer(layer);

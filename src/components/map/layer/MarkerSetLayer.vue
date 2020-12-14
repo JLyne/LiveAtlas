@@ -48,10 +48,9 @@ export default defineComponent({
 	},
 
 	mounted() {
-		// console.log('Mounted markerSetLayer');
-
-		if(!this.markerSet.hidden) {
-			// console.log('Adding markerSetLayer');
+		if(this.markerSet.hidden) {
+			this.leaflet.getLayerManager().addHiddenLayer(this.layerGroup, this.markerSet.label, 1);
+		} else {
 			this.leaflet.getLayerManager().addLayer(this.layerGroup, true, this.markerSet.label, 1);
 		}
 	},
