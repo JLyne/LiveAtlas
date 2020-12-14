@@ -40,8 +40,6 @@ export class ClockControl extends Control {
 		this._sun.style.transform = 'translate(-150px, -150px)';
 		this._moon.style.transform = 'translate(-150px, -150px)';
 
-		console.log(sun);
-
 		this._sun!.innerHTML = `
 		<svg class="svg-icon" viewBox="${sun.viewBox}">
 	  		<use xlink:href="${sun.url}" />
@@ -89,16 +87,18 @@ export class ClockControl extends Control {
 
 		const minecraftTime = Utils.getMinecraftTime(timeOfDay);
 
-		if(timeOfDay >= 0) {
-			this._clock!.classList.remove(minecraftTime.night ? 'day' : 'night');
-			this._clock!.classList.add(minecraftTime.day ? 'day' : 'night');
-			this._clock!.textContent = [
-				minecraftTime.hours.toString().padStart(2, '0'),
-				minecraftTime.minutes.toString().padStart(2, '0')
-			].join(':');
-		} else {
-			this._clock!.classList.remove(minecraftTime.night ? 'day' : 'night');
-			this._clock!.textContent = '';
+		if (this.options.showDigitalClock) {
+			if (timeOfDay >= 0) {
+				this._clock!.classList.remove(minecraftTime.night ? 'day' : 'night');
+				this._clock!.classList.add(minecraftTime.day ? 'day' : 'night');
+				this._clock!.textContent = [
+					minecraftTime.hours.toString().padStart(2, '0'),
+					minecraftTime.minutes.toString().padStart(2, '0')
+				].join(':');
+			} else {
+				this._clock!.classList.remove(minecraftTime.night ? 'day' : 'night');
+				this._clock!.textContent = '';
+			}
 		}
 
 		if (this.options.showWeather) {
