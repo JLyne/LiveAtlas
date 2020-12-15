@@ -4,6 +4,7 @@
 	margin: 0;
 	box-sizing: border-box;
 	overflow: hidden;
+	font-size: 1.5rem;
 
 	a, button {
 		@extend %button;
@@ -65,17 +66,17 @@
 	padding: 0.5rem 1.5rem;
 
 	.value {
-		font-size: 1.6rem;
 		line-height: 1;
 		font-family: monospace;
 		white-space: pre;
+		font-size: 2rem;
 
 		&[data-label]:before {
 			content: attr(data-label);
 			display: block;
 			line-height: 1;
 			margin-bottom: 0.5rem;
-			font-size: 1.4rem;
+			font-size: 1.25rem;
 			font-family: Raleway, sans-serif;;
 		}
 
@@ -152,6 +153,7 @@
 
 .leaflet-bottom {
 	padding-bottom: 1rem;
+	align-items: stretch;
 
 	&.leaflet-left .leaflet-control + .leaflet-control {
 		margin-left: 1rem;

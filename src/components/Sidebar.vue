@@ -70,6 +70,7 @@ export default defineComponent({
 	flex-direction: column;
 	padding: 1rem;
 	width: 23rem;
+	font-size: 1.5rem;
 	will-change: transform;
 	pointer-events: none;
 

@@ -65,7 +65,8 @@
 }
 
 html {
-	font-size: .625em;
+	font-size: 62.5%;
+	font: -apple-system-body;
 }
 
 body {
@@ -73,7 +74,6 @@ body {
 	color: $global-text-color;
 	text-shadow: 0.1rem 0.1rem #000000;
 	letter-spacing: 0.02rem;
-	font-size: 1.2em;
 }
 
 html, body {
@@ -487,4 +487,15 @@ div.statusmessage {
 
 .pinnedloginbutton {
 	margin-right: 201px;
+}
+
+.leaflet-container {
+	font-family: inherit;
+	font-size: 1.5rem;
+	font-weight: inherit;
+	line-height: 1;
+}
+
+.leaflet-players-pane {
+	z-index: 600;
 }
