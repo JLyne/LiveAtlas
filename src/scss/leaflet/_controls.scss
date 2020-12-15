@@ -52,11 +52,11 @@
 	}
 }
 
-.leaflet-control-link {
+.leaflet-control-link,
+.leaflet-control-loading {
 	@extend %button;
 	width: 5rem;
 	height: 5rem;
-	background-size: 3.2rem 3.2rem;
 }
 
 .leaflet-control-coordinates {
@@ -172,4 +172,22 @@
 .leaflet-control-layers-toggle {
 	width: 5rem;
 	height: 5rem;
+}
+
+.leaflet-control-loading {
+	cursor: wait;
+	animation: fade 0.3s linear;
+	animation-fill-mode: forwards;
+	
+	&:focus, &:hover, &:active {
+		background-color: $global-background;
+	}
+
+	&[hidden] {
+		display: none;
+	}
+
+	svg {
+		animation: spin 1s linear infinite;
+	}
 }

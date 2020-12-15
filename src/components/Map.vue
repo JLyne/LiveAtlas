@@ -26,6 +26,7 @@ import {MutationTypes} from "@/store/mutation-types";
 import {Coordinate, DynmapPlayer} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import DynmapMap from "@/leaflet/DynmapMap";
+import {LoadingControl} from "@/leaflet/control/LoadingControl";
 
 export default defineComponent({
 	components: {
@@ -143,6 +144,11 @@ export default defineComponent({
 			crs: CRS.Simple,
 			worldCopyJump: false,
 			// markerZoomAnimation: false,
+		}));
+
+		this.leaflet.addControl(new LoadingControl({
+			position: 'topleft',
+			delayIndicator: 500,
 		}));
 
 		this.leaflet.on('moveend', () => {

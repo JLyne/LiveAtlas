@@ -8,6 +8,26 @@
 @import "leaflet/controls";
 @import "leaflet/popups";
 
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes fade {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
 @font-face {
 	font-family: 'Raleway';
 	font-style: normal;
