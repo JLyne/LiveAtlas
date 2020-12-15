@@ -100,6 +100,61 @@ button {
 	@extend %button;
 }
 
+.checkbox {
+	display: flex;
+	position: relative;
+	align-items: center;
+
+	&:before,
+	svg,
+	input[type=checkbox] {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		margin: auto 1rem auto 0;
+	}
+
+	&:before {
+		content: '';
+		width: 2.2rem;
+		height: 2.2rem;
+		border: 0.2rem solid #cccccc;
+		border-radius: 0.3rem;
+		background-color: transparent;
+		box-sizing: border-box;
+		z-index: 0;
+	}
+
+	input[type=checkbox] {
+		width: 2.4rem;
+		height: 2.4rem;
+		opacity: 0;
+		z-index: 2;
+
+		&:checked {
+			& ~ span {
+				color: #cccccc;
+			}
+
+			& + svg {
+				opacity: 1;
+			}
+		}
+	}
+
+	svg {
+		opacity: 0;
+		transition: opacity 0.2s ease-in;
+		z-index: 1;
+	}
+
+	span {
+		color: #aaaaaa;
+		padding-left: 3rem;
+	}
+}
+
 .dynmap {
     height: 100%;
 }

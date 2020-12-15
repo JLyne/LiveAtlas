@@ -87,8 +87,22 @@
 }
 
 .leaflet-control-layers {
-	width: 5rem;
+	width: auto;
 	border: none;
+	color: $global-text-color;
+
+	&.leaflet-control-layers-expanded {
+		padding: 0;
+	}
+
+	.leaflet-control-layers-list {
+		padding: 0.7rem 1.5rem;
+
+		.layer {
+			cursor: pointer;
+			padding: 0.8rem 0 0.7rem;
+		}
+	}
 }
 
 .leaflet-control-logo {
@@ -169,11 +183,6 @@
 	.leaflet-control {
 		margin: 0;
 	}
-}
-
-.leaflet-control-layers-toggle {
-	width: 5rem;
-	height: 5rem;
 }
 
 .leaflet-control-loading {
