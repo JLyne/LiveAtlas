@@ -1,6 +1,6 @@
 <template>
 	<section class="sidebar__section">
-		<span class="section__heading">Maps</span>
+		<span class="section__heading">{{ heading }}</span>
 		<ul class="section__content">
 			<WorldListItem :world="world" v-for="[name, world] in worlds" :key="name"></WorldListItem>
 		</ul>
@@ -19,6 +19,10 @@ export default defineComponent({
 	},
 
 	computed: {
+		heading() {
+			return useStore().state.messages.mapTypes;
+		},
+
 		worlds() {
 			return useStore().state.worlds;
 		}
