@@ -311,6 +311,8 @@ button {
 		flex: 0 0 auto;
 		margin-left: 2px;
 		z-index: 20;
+		font-size: 1.5rem;
+		line-height: 1;
 
 		white-space: nowrap;
 
@@ -327,8 +329,17 @@ button {
 		}
 	}
 
+	&:hover, &:focus {
+		z-index: 1000;
+	}
+
 	&:hover .marker__label {
 		display: block;
+	}
+
+	&:focus .marker__label {
+		display: block;
+		outline: auto;
 	}
 }
 
