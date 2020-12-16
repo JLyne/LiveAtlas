@@ -50,11 +50,9 @@ export default class DynmapMap extends Map {
 		}
 
 		createCorner('top', 'left');
-		createCorner('top', 'bar');
 		createCorner('top', 'right');
 		createCorner('top', 'center');
 		createCorner('bottom', 'center');
-		createCorner('bottom', 'bar');
 		createCorner('bottom', 'left');
 		createCorner('bottom', 'right');
 	}
