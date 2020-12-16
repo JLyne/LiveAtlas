@@ -55,15 +55,16 @@ export default defineComponent({
 		player: {
 			deep: true,
 			handler(newValue) {
-				if(this.visible) {
-					this.marker!.setLatLng(this.currentProjection.locationToLatLng(newValue.location));
-
-					// if(this.following) {
-					//
-					// }
+				if(this.currentWorld && newValue.location.world === this.currentWorld.name) {
+					if(!this.visible) {
+						this.enableLayer();
+					} else {
+						this.marker!.setLatLng(this.currentProjection.locationToLatLng(newValue.location));
+						this.marker!.getIcon().update();
+					}
+				} else if(this.visible) {
+					this.disableLayer();
 				}
-
-				this.marker!.getIcon().update();
 			},
 		},
 		currentWorld(newValue) {
@@ -88,6 +89,10 @@ export default defineComponent({
 			pane: 'players',
 		});
 
+		if(this.currentWorld) {
+			console.log(this.currentWorld.name, this.player.location.world);
+		}
+
 		if(this.currentWorld && this.currentWorld.name === this.player.location.world) {
 			this.enableLayer();
 		}
@@ -105,18 +110,14 @@ export default defineComponent({
 
 	methods: {
 		enableLayer() {
-			// console.log('Enabling marker for ' + this.player.name);
-
-			if(this.marker) {
+			if(this.marker && !this.visible) {
 				this.layerGroup.addLayer(this.marker);
 				this.marker.setLatLng(this.currentProjection.locationToLatLng(this.player.location));
 				this.visible = true;
 			}
 		},
 		disableLayer() {
-			// console.log('Disabling marker for ' + this.player.name);
-
-			if(this.marker) {
+			if(this.marker && this.visible) {
 				this.layerGroup.removeLayer(this.marker);
 				this.visible = false;
 			}
