@@ -1,4 +1,4 @@
-import {Marker} from "leaflet";
+import {LatLng, Marker} from "leaflet";
 import {DynmapMarker} from "@/dynmap";
 import {DynmapIcon} from "@/leaflet/icon/DynmapIcon";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
@@ -23,7 +23,12 @@ export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, 
 		return createMarker(options, projection);
 	}
 
-	//TODO
+	const oldLocation = marker.getLatLng(),
+		newLocation = projection.locationToLatLng(options.location);
+
+	if(!oldLocation.equals(newLocation)) {
+		marker.setLatLng(newLocation);
+	}
 
 	return marker;
 };
