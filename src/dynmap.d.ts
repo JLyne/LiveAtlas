@@ -23,6 +23,7 @@ declare global {
 	interface Window {
 		config: DynmapConfig;
 		hideSplash: Function;
+		showSplashError: Function;
 	}
 }
 

@@ -15,7 +15,7 @@
   -->
 
 <script lang="ts">
-import {defineComponent, onUnmounted, computed, watch} from "@vue/runtime-core";
+import {defineComponent, onMounted, onUnmounted, computed, watch} from "@vue/runtime-core";
 import {DynmapWorldMap} from "@/dynmap";
 import {Map} from 'leaflet';
 import {useStore} from "@/store";
@@ -88,12 +88,13 @@ export default defineComponent({
 				});
 			};
 
-		if(active.value) {
-			enableLayer();
-		}
-
 		watch(active, (newValue) => newValue ? enableLayer() : disableLayer());
 
+		onMounted(() => {
+			if(active.value) {
+				enableLayer();
+			}
+		});
 		onUnmounted(() => {
 			disableLayer();
 

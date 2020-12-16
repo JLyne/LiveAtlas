@@ -43,11 +43,17 @@ export default defineComponent({
 			currentUrl = computed(() => store.getters.url),
 			updatesEnabled = ref(false),
 			updateTimeout = ref(0),
+			configAttempts = ref(0),
 
 			loadConfiguration = () => {
 				store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
 					startUpdates();
 					window.hideSplash();
+				}).catch(e => {
+					console.error('Failed to load server configuration: ', e);
+					window.showSplashError(++configAttempts.value);
+
+					setTimeout(() => loadConfiguration(), 1000);
 				});
 			},
 

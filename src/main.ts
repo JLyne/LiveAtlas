@@ -21,7 +21,36 @@ import {store} from "@/store";
 import 'leaflet/dist/leaflet.css';
 import 'normalize-scss/sass/normalize/_import-now.scss';
 import '@/scss/style.scss';
-// import './assets/css/rtgame.css';
+
+const splash = document.getElementById('splash'),
+	splashError = document.getElementById('splash__error'),
+	splashAttempt = document.getElementById('splash__error-attempt');
+
+window.hideSplash = function() {
+	requestAnimationFrame(function() {
+		if(splash) {
+			splash.style.opacity = '0';
+		}
+	});
+};
+
+window.showSplashError = function(attempts: number) {
+	if(splashError) {
+		splashError.setAttribute('aria-hidden', 'false');
+	}
+
+	if(splashAttempt) {
+		splashAttempt.textContent = attempts.toString();
+	}
+};
+
+if(splash) {
+	splash.addEventListener('transitionend', function(e) {
+		if(e.target === splash) {
+			splash.hidden = true;
+		}
+	});
+}
 
 const app = createApp(App).use(store);
 
