@@ -49,7 +49,6 @@ export const updateArea = (area: Polyline | Polygon | undefined, options: Dynmap
 		dirty = true;
 	}
 
-
 	if(!arePointsEqual(oldPoints.length === 1 ? oldPoints[0] : oldPoints, points)) {
 		area.setLatLngs(points);
 		dirty = true;

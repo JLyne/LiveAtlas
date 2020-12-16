@@ -53,12 +53,3 @@ export class LogoControl extends Control {
 		return container;
 	}
 }
-
-//
-// dynmap.map.options.attributionControl = false;
-// if (dynmap.map.attributionControl) {
-// 	dynmap.map.removeControl(dynmap.map.attributionControl);
-// 	dynmap.map.attributionControl = null;
-// }
-// }
-// ;
