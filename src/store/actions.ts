@@ -136,6 +136,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			commit(MutationTypes.INCREMENT_REQUEST_ID, undefined);
 			commit(MutationTypes.ADD_MARKER_SET_UPDATES, update.updates.markerSets);
 			commit(MutationTypes.ADD_TILE_UPDATES, update.updates.tiles);
+			commit(MutationTypes.ADD_CHAT, update.updates.chat);
 
 			return dispatch(ActionTypes.SET_PLAYERS, update.players).then(() => {
 				return update;

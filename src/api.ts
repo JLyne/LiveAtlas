@@ -16,21 +16,25 @@
 
 import {
 	DynmapArea,
+	DynmapChat,
 	DynmapCircle,
 	DynmapComponentConfig,
 	DynmapConfigurationResponse,
 	DynmapLine,
-	DynmapWorldMap,
 	DynmapMarker,
 	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
 	DynmapMessageConfig,
 	DynmapPlayer,
-	DynmapServerConfig, DynmapTileUpdate, DynmapUpdate,
-	DynmapUpdateResponse, DynmapUpdates,
-	DynmapWorld
+	DynmapServerConfig,
+	DynmapTileUpdate,
+	DynmapUpdate,
+	DynmapUpdateResponse,
+	DynmapUpdates,
+	DynmapWorld,
+	DynmapWorldMap
 } from "@/dynmap";
-import { Sanitizer } from "@esri/arcgis-html-sanitizer";
+import {Sanitizer} from "@esri/arcgis-html-sanitizer";
 import {useStore} from "@/store";
 
 const sanitizer = new Sanitizer();
@@ -319,7 +323,7 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 	const updates = {
 		markerSets: new Map<string, DynmapMarkerSetUpdates>(),
 		tiles: [] as DynmapTileUpdate[],
-		chat: [],
+		chat: [] as DynmapChat[],
 	},
 		dropped = {
 			stale: 0,
@@ -327,7 +331,7 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 			noId: 0,
 			unknownType: 0,
 			unknownCType: 0,
-			incompleteTile: 0,
+			incomplete: 0,
 			notImplemented: 0,
 		},
 		lastUpdate = useStore().state.updateTimestamp;
@@ -394,13 +398,33 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 			}
 
 			case 'chat':
-				//TODO
-				dropped.notImplemented++;
+				if(!entry.account || !entry.message || !entry.timestamp) {
+					dropped.incomplete++;
+					continue;
+				}
+
+				if(entry.timestamp < lastUpdate) {
+					dropped.stale++;
+					continue;
+				}
+
+				if(entry.source !== 'player') {
+					dropped.notImplemented++;
+					continue;
+				}
+
+				updates.chat.push({
+					type: 'chat',
+					account: entry.account,
+					message: entry.message,
+					timestamp: entry.timestamp,
+					channel: entry.channel || undefined,
+				});
 				break;
 
 			case 'tile':
 				if(!entry.name || !entry.timestamp) {
-					dropped.incompleteTile++;
+					dropped.incomplete++;
 					continue;
 				}
 
@@ -421,6 +445,10 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 				dropped.unknownType++;
 		}
 	}
+
+	updates.chat = updates.chat.sort((one, two) => {
+		return one.timestamp - two.timestamp;
+	});
 
 	console.debug(`Updates: ${accepted} accepted. Rejected: `, dropped);
 

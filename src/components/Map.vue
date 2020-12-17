@@ -24,6 +24,7 @@
 		<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
 		<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
 		<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
+<!--		<ChatControl v-if="chatEnabled" :leaflet="leaflet"></ChatControl>-->
 	</div>
 </template>
 
@@ -37,6 +38,7 @@ import MarkerSetLayer from "@/components/map/layer/MarkerSetLayer.vue";
 import CoordinatesControl from "@/components/map/control/CoordinatesControl.vue";
 import ClockControl from "@/components/map/control/ClockControl.vue";
 import LinkControl from "@/components/map/control/LinkControl.vue";
+import ChatControl from "@/components/map/control/ChatControl.vue";
 import LogoControl from "@/components/map/control/LogoControl.vue";
 import {MutationTypes} from "@/store/mutation-types";
 import {Coordinate, DynmapPlayer} from "@/dynmap";
@@ -52,6 +54,7 @@ export default defineComponent({
 		CoordinatesControl,
 		ClockControl,
 		LinkControl,
+		ChatControl,
 		LogoControl
 	},
 
@@ -67,6 +70,7 @@ export default defineComponent({
 			coordinatesControlEnabled = computed(() => store.getters.coordinatesControlEnabled),
 			clockControlEnabled = computed(() => store.getters.clockControlEnabled),
 			linkControlEnabled = computed(() => store.state.components.linkControl),
+			chatEnabled = computed(() => store.state.components.chat),
 			logoControls = computed(() => store.state.components.logoControls),
 
 			currentWorld = computed(() => store.state.currentWorld),
@@ -86,6 +90,7 @@ export default defineComponent({
 			coordinatesControlEnabled,
 			clockControlEnabled,
 			linkControlEnabled,
+			chatEnabled,
 			logoControls,
 			followTarget,
 			panTarget,

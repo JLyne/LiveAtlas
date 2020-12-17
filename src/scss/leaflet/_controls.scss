@@ -70,7 +70,9 @@
 }
 
 .leaflet-control-link,
-.leaflet-control-loading {
+.leaflet-control-chat,
+.leaflet-control-loading,
+.leaflet-control-layers-toggle {
 	@extend %button;
 	width: 5rem;
 	height: 5rem;
@@ -150,13 +152,17 @@
 .leaflet-top {
 	padding-top: 1rem;
 	flex-direction: column;
+	top: 0;
+	bottom: 7rem;
+	align-items: flex-start;
 
 	.leaflet-control {
 		order: 2;
 		min-width: 5rem;
+		margin-top: 1rem;
 
-		& + .leaflet-control {
-			margin-top: 1rem;
+		&:first-child {
+			margin-top: 0;
 		}
 	}
 
@@ -178,6 +184,11 @@
 		& + .leaflet-control-logo {
 			margin-top: 1rem !important;
 		}
+	}
+
+	.leaflet-control-chat {
+		margin-top: auto;
+		order: 1000;
 	}
 }
 

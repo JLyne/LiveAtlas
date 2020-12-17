@@ -25,6 +25,7 @@ export enum MutationTypes {
 	SET_UPDATE_TIMESTAMP = 'setUpdateTimestamp',
 	ADD_MARKER_SET_UPDATES = 'addMarkerSetUpdates',
 	ADD_TILE_UPDATES = 'addTileUpdates',
+	ADD_CHAT = 'addChat',
 	POP_MARKER_UPDATES = 'popMarkerUpdates',
 	POP_AREA_UPDATES = 'popAreaUpdates',
 	POP_CIRCLE_UPDATES = 'popCircleUpdates',

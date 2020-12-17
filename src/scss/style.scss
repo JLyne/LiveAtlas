@@ -425,20 +425,29 @@ button {
  */
 
 .chat {
+	@extend %panel;
 	position: absolute;
-	bottom: 0;
-	left: 32px;
-    z-index:50;
+	bottom: 7rem;
+	left: 7rem;
+	width: 50rem;
+	max-width: calc(100% - 8rem);
+	max-height: 20rem;
+	display: flex;
+	box-sizing: border-box;
 
-    border-color: rgba(0,0,0,0.5);
-    background: rgba(0,0,0,0.6);
+	.chat__messages {
+		display: flex;
+		flex-direction: column-reverse;
+		list-style: none;
+		overflow: auto;
+		margin: 0;
+		padding: 0;
 
-    border-style: solid;
-    border-width: 1px 1px 0 1px;
-
-    border-radius: 3px 3px 0 0;
-
-    margin-left: 10px;
+		.message {
+			font-size: 1.6rem;
+			margin-bottom: 0.5rem
+		}
+	}
 }
 
 .chatinput {

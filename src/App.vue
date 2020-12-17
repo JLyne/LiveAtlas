@@ -17,12 +17,14 @@
 <template>
 	<Map></Map>
 	<Sidebar></Sidebar>
+<!--	<Chat v-if="chatEnabled"></Chat>-->
 </template>
 
 <script lang="ts">
 import {defineComponent, computed, ref, onMounted, onBeforeUnmount, watch} from 'vue';
 import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
+import Chat from './components/Chat.vue';
 import {useStore} from "./store";
 import {ActionTypes} from "@/store/action-types";
 import Util from '@/util';
@@ -33,6 +35,7 @@ export default defineComponent({
 	components: {
 		Map,
 		Sidebar,
+		Chat
 	},
 
 	setup() {
@@ -41,6 +44,7 @@ export default defineComponent({
 			updateInterval = computed(() => store.state.configuration.updateInterval),
 			title = computed(() => store.state.configuration.title),
 			currentUrl = computed(() => store.getters.url),
+			chatEnabled = computed(() => store.state.components.chat),
 			updatesEnabled = ref(false),
 			updateTimeout = ref(0),
 			configAttempts = ref(0),
@@ -100,6 +104,10 @@ export default defineComponent({
 		onBeforeUnmount(() => stopUpdates());
 
 		parseUrl();
+
+		return {
+			chatEnabled,
+		}
 	},
 });
 </script>

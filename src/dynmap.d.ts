@@ -79,6 +79,7 @@ interface DynmapComponentConfig {
 	clockControl ?: ClockControlOptions;
 	linkControl: boolean;
 	logoControls: Array<LogoControlOptions>;
+	chat?: DynmapChatConfig;
 }
 
 interface DynmapMarkersConfig {
@@ -93,6 +94,13 @@ interface DynmapPlayerMarkersConfig {
 	showSkinFaces: boolean;
 	showHealth: boolean;
 	smallFaces: boolean;
+}
+
+interface DynmapChatConfig {
+	allowUrlName: boolean;
+	showPlayerFaces: boolean;
+	messageLifetime: number;
+	messageHistory: number;
 }
 
 interface DynmapWorld {
@@ -274,4 +282,13 @@ interface DynmapParsedUrl {
 	map?: string;
 	location?: Coordinate;
 	zoom?: number;
+}
+
+interface DynmapChat {
+	type: 'chat' | 'playerjoin' | 'playerleave';
+	account: string;
+	channel?: string;
+	message?: string;
+	// source?: string;
+	timestamp: number;
 }

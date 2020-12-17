@@ -33,7 +33,7 @@ import {
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapWorld,
-	DynmapWorldState, DynmapParsedUrl
+	DynmapWorldState, DynmapParsedUrl, DynmapChat
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 
@@ -53,6 +53,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_UPDATE_TIMESTAMP](state: S, time: Date): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
 	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
+	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>): void
 
 	[MutationTypes.POP_MARKER_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapMarkerUpdate>
 	[MutationTypes.POP_AREA_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapAreaUpdate>
@@ -192,6 +193,10 @@ export const mutations: MutationTree<State> & Mutations = {
 
 	[MutationTypes.ADD_TILE_UPDATES](state: State, updates: Array<DynmapTileUpdate>) {
 		state.pendingTileUpdates = state.pendingTileUpdates.concat(updates);
+	},
+
+	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>) {
+		state.chat.unshift(...chat);
 	},
 
 	[MutationTypes.POP_MARKER_UPDATES](state: State, {markerSet, amount}): Array<DynmapMarkerUpdate> {
