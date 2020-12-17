@@ -1,3 +1,9 @@
+const
+	webpack = require('webpack'),
+	fs = require('fs'),
+	packageJson = fs.readFileSync('./package.json'),
+	version = JSON.parse(packageJson).version || 'Unknown';
+
 module.exports = {
 	publicPath: '',
 	assetsDir: 'live-atlas',
@@ -9,6 +15,16 @@ module.exports = {
                 spriteFilename: 'live-atlas/img/icons.[hash:8].svg'
             },
         }
+    },
+
+	configureWebpack: {
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    PACKAGE_VERSION: '"' + version + '"'
+                }
+            })
+        ]
     },
 
 	chainWebpack: config => {

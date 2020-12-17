@@ -25,6 +25,7 @@ import {
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 
 export type State = {
+	version: string;
 	configuration: DynmapServerConfig;
 	messages: DynmapMessageConfig;
 	components: DynmapComponentConfig;
@@ -55,6 +56,8 @@ export type State = {
 }
 
 export const state: State = {
+	version: process.env.PACKAGE_VERSION || 'Unknown',
+
 	configuration: {
 		version: '',
 		allowChat: false,

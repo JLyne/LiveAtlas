@@ -52,6 +52,8 @@ if(splash) {
 	});
 }
 
+console.info(`LiveAtlas version ${store.state.version}`);
+
 const app = createApp(App).use(store);
 
 // app.config.performance = true;
