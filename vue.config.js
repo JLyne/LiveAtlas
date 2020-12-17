@@ -1,5 +1,15 @@
 module.exports = {
 	publicPath: '',
+	assetsDir: 'live-atlas',
+
+	pluginOptions: {
+        svgSprite: {
+            loaderOptions: {
+                extract: true,
+                spriteFilename: 'live-atlas/img/icons.[hash:8].svg'
+            },
+        }
+    },
 
 	chainWebpack: config => {
 		config.plugin('html')
