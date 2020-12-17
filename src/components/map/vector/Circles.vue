@@ -78,10 +78,10 @@ export default defineComponent({
 
 					for(const update of updates) {
 						if(update.removed) {
-							console.log(`Deleting circle ${update.id}`);
+							// console.log(`Deleting circle ${update.id}`);
 							deleteCircle(update.id);
 						} else {
-							console.log(`Updating/creating circle ${update.id}`);
+							// console.log(`Updating/creating circle ${update.id}`);
 							const layer = updateCircle(layers.get(update.id), update.payload as DynmapCircle, converter)
 
 							if(!layers.has(update.id)) {

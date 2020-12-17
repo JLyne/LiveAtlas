@@ -74,7 +74,7 @@ export default defineComponent({
 			handlePendingUpdates = () => {
 				useStore().dispatch(ActionTypes.POP_TILE_UPDATES, 10).then(updates => {
 					for(const update of updates) {
-						console.log('Updating tile ' + update.name);
+						// console.log('Updating tile ' + update.name);
 						layer.updateNamedTile(update.name, update.timestamp);
 					}
 

@@ -78,10 +78,10 @@ export default defineComponent({
 
 					for(const update of updates) {
 						if(update.removed) {
-							console.log(`Deleting line ${update.id}`);
+							// console.log(`Deleting line ${update.id}`);
 							deleteLine(update.id);
 						} else {
-							console.log(`Updating/creating line ${update.id}`);
+							// console.log(`Updating/creating line ${update.id}`);
 							const layer = updateLine(layers.get(update.id), update.payload as DynmapLine, converter)
 
 							if(!layers.has(update.id)) {

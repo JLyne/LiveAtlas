@@ -78,10 +78,10 @@ export default defineComponent({
 
 					for(const update of updates) {
 						if(update.removed) {
-							console.log(`Deleting area ${update.id}`);
+							// console.log(`Deleting area ${update.id}`);
 							deleteArea(update.id);
 						} else {
-							console.log(`Updating/creating area ${update.id}`);
+							// console.log(`Updating/creating area ${update.id}`);
 							layers.set(update.id, updateArea(layers.get(update.id), update.payload as DynmapArea, converter));
 						}
 					}

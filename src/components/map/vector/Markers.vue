@@ -77,10 +77,10 @@ export default defineComponent({
 
 					for(const update of updates) {
 						if(update.removed) {
-							console.log(`Deleting marker ${update.id}`);
+							// console.log(`Deleting marker ${update.id}`);
 							deleteMarker(update.id);
 						} else {
-							console.log(`Updating/creating marker ${update.id}`);
+							// console.log(`Updating/creating marker ${update.id}`);
 							layers.set(update.id, updateMarker(layers.get(update.id), update.payload as DynmapMarker, projection));
 						}
 					}
