@@ -17,7 +17,7 @@
 <template>
 	<Map></Map>
 	<Sidebar></Sidebar>
-<!--	<Chat v-if="chatEnabled"></Chat>-->
+	<Chat v-if="false"></Chat>
 </template>
 
 <script lang="ts">
