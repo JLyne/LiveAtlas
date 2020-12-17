@@ -37,7 +37,8 @@ export type State = {
 	pendingSetUpdates: Map<string, DynmapMarkerSetUpdates>;
 	pendingTileUpdates: Array<DynmapTileUpdate>;
 
-	following?: DynmapPlayer;
+	followTarget?: DynmapPlayer;
+	panTarget?: DynmapPlayer;
 
 	currentWorldState: DynmapWorldState;
 	currentWorld?: DynmapWorld;
@@ -116,7 +117,8 @@ export const state: State = {
 		logoControls: [],
 	},
 
-	following: undefined,
+	followTarget: undefined,
+	panTarget: undefined,
 
 	currentWorld: undefined,
 	currentMap: undefined,

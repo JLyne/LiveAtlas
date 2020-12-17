@@ -58,7 +58,7 @@ export default defineComponent({
 			playersActive = ref(false),
 			settingsActive = ref(false),
 			mapCount = computed(() => store.state.maps.size),
-			following = computed(() => store.state.following);
+			following = computed(() => store.state.followTarget);
 
 		return {
 			mapCount,

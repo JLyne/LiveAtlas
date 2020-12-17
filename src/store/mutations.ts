@@ -68,8 +68,9 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_CURRENT_LOCATION](state: S, payload: Coordinate): void
 	[MutationTypes.SET_CURRENT_ZOOM](state: S, payload: number): void
 	[MutationTypes.SET_PARSED_URL](state: S, payload: DynmapParsedUrl): void
-	[MutationTypes.FOLLOW_PLAYER](state: S, payload: DynmapPlayer): void
-	[MutationTypes.CLEAR_FOLLOW](state: S, a?: void): void
+	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: DynmapPlayer): void
+	[MutationTypes.SET_PAN_TARGET](state: S, payload: DynmapPlayer): void
+	[MutationTypes.CLEAR_FOLLOW_TARGET](state: S, a?: void): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -90,7 +91,8 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		state.currentMap = undefined;
 		state.currentWorld = undefined;
-		state.following = undefined;
+		state.followTarget = undefined;
+		state.panTarget = undefined;
 
 		state.currentWorldState.timeOfDay = 0;
 		state.currentWorldState.raining = false;
@@ -319,11 +321,15 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.parsedUrl = payload;
 	},
 
-	[MutationTypes.FOLLOW_PLAYER](state: State, player: DynmapPlayer) {
-		state.following = player;
+	[MutationTypes.SET_FOLLOW_TARGET](state: State, player: DynmapPlayer) {
+		state.followTarget = player;
 	},
 
-	[MutationTypes.CLEAR_FOLLOW](state: State) {
-		state.following = undefined;
+	[MutationTypes.SET_PAN_TARGET](state: State, player: DynmapPlayer) {
+		state.panTarget = player;
+	},
+
+	[MutationTypes.CLEAR_FOLLOW_TARGET](state: State) {
+		state.followTarget = undefined;
 	}
 }

@@ -34,11 +34,16 @@ export enum MutationTypes {
 	SET_PLAYERS = 'setPlayers',
 	SET_PLAYERS_ASYNC = 'setPlayersAsync',
 	SYNC_PLAYERS = 'syncPlayers',
+
 	SET_CURRENT_MAP = 'setCurrentMap',
 	SET_CURRENT_PROJECTION = 'setCurrentProjection',
 	SET_CURRENT_LOCATION = 'setCurrentLocation',
 	SET_CURRENT_ZOOM = 'setCurrentZoom',
 	SET_PARSED_URL = 'setParsedUrl',
-	FOLLOW_PLAYER = 'followPlayer',
-	CLEAR_FOLLOW = 'clearFollow',
+
+	SET_FOLLOW_TARGET = 'setFollowTarget',
+	SET_PAN_TARGET = 'setPanTarget',
+
+	CLEAR_FOLLOW_TARGET = 'clearFollow',
+	CLEAR_PAN_TARGET = 'clearPanTarget'
 }

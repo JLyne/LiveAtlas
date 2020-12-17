@@ -51,7 +51,7 @@ export default defineComponent({
 	},
 	methods: {
 		unfollow() {
-			useStore().commit(MutationTypes.CLEAR_FOLLOW, undefined);
+			useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
 		},
 		onKeydown(e: KeyboardEvent) {
 			if(e.key !== ' ') {

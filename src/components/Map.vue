@@ -72,8 +72,10 @@ export default defineComponent({
 			currentWorld = computed(() => store.state.currentWorld),
 			currentMap = computed(() => store.state.currentMap),
 			currentProjection = computed(() => store.state.currentProjection),
-			following = computed(() => store.state.following),
-			mapBackground = computed(() => store.getters.mapBackground);
+			mapBackground = computed(() => store.getters.mapBackground),
+
+			followTarget = computed(() => store.state.followTarget),
+			panTarget = computed(() => store.state.panTarget);
 
 		return {
 			leaflet,
@@ -85,7 +87,8 @@ export default defineComponent({
 			clockControlEnabled,
 			linkControlEnabled,
 			logoControls,
-			following,
+			followTarget,
+			panTarget,
 			mapBackground,
 			currentWorld,
 			currentMap,
@@ -94,13 +97,18 @@ export default defineComponent({
 	},
 
 	watch: {
-		following: {
+		followTarget: {
 			handler(newValue, oldValue) {
 				if (newValue) {
 					this.updateFollow(newValue, !oldValue || newValue.account !== oldValue.account);
 				}
 			},
 			deep: true
+		},
+		panTarget(newValue) {
+			if(newValue) {
+				this.updateFollow(newValue, false);
+			}
 		},
 		currentWorld(newValue, oldValue) {
 			const store = useStore();

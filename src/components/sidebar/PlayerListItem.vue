@@ -47,11 +47,11 @@ export default defineComponent({
 	},
 	methods: {
 		follow() {
-			useStore().commit(MutationTypes.FOLLOW_PLAYER, this.player);
+			useStore().commit(MutationTypes.SET_FOLLOW_TARGET, this.player);
 		},
 		pan() {
-			useStore().commit(MutationTypes.FOLLOW_PLAYER, this.player);
-			useStore().commit(MutationTypes.CLEAR_FOLLOW, undefined);
+			useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
+			useStore().commit(MutationTypes.SET_PAN_TARGET, this.player);
 		},
 		onKeydown(e: KeyboardEvent) {
 			if(e.key !== ' ') {
