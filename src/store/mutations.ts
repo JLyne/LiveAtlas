@@ -19,16 +19,12 @@ import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
 import {
 	DynmapArea,
-	DynmapAreaUpdate,
 	DynmapCircle,
-	DynmapCircleUpdate,
 	DynmapComponentConfig,
-	DynmapLine,
-	DynmapLineUpdate, Coordinate,
+	DynmapLine, Coordinate,
 	DynmapMarker,
 	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
-	DynmapMarkerUpdate,
 	DynmapMessageConfig,
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
@@ -55,11 +51,11 @@ export type Mutations<S = State> = {
 	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>): void
 
-	[MutationTypes.POP_MARKER_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapMarkerUpdate>
-	[MutationTypes.POP_AREA_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapAreaUpdate>
-	[MutationTypes.POP_CIRCLE_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapCircleUpdate>
-	[MutationTypes.POP_LINE_UPDATES](state: S, payload: {markerSet: string, amount: number}): Array<DynmapLineUpdate>
-	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): Array<DynmapTileUpdate>
+	[MutationTypes.POP_MARKER_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
+	[MutationTypes.POP_AREA_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
+	[MutationTypes.POP_CIRCLE_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
+	[MutationTypes.POP_LINE_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
+	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): void
 
 	[MutationTypes.INCREMENT_REQUEST_ID](state: S): void
 	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<DynmapPlayer>): Set<DynmapPlayer>
@@ -199,44 +195,49 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.chat.unshift(...chat);
 	},
 
-	[MutationTypes.POP_MARKER_UPDATES](state: State, {markerSet, amount}): Array<DynmapMarkerUpdate> {
+	//Pops the specified number of marker updates from the pending updates list
+	[MutationTypes.POP_MARKER_UPDATES](state: State, {markerSet, amount}) {
 		if(!state.markerSets.has(markerSet)) {
 			console.log(`Marker set ${markerSet} doesn't exist`);
-			return [];
+			return;
 		}
 
-		return state.pendingSetUpdates.get(markerSet)!.markerUpdates.splice(0, amount);
+		state.pendingSetUpdates.get(markerSet)!.markerUpdates.splice(0, amount);
 	},
 
-	[MutationTypes.POP_AREA_UPDATES](state: State, {markerSet, amount}): Array<DynmapAreaUpdate> {
+	//Pops the specified number of area updates from the pending updates list
+	[MutationTypes.POP_AREA_UPDATES](state: State, {markerSet, amount}) {
 		if(!state.markerSets.has(markerSet)) {
 			console.log(`Marker set ${markerSet} doesn't exist`);
-			return [];
+			return;
 		}
 
-		return state.pendingSetUpdates.get(markerSet)!.areaUpdates.splice(0, amount);
+		state.pendingSetUpdates.get(markerSet)!.areaUpdates.splice(0, amount);
 	},
 
-	[MutationTypes.POP_CIRCLE_UPDATES](state: State, {markerSet, amount}): Array<DynmapCircleUpdate> {
+	//Pops the specified number of circle updates from the pending updates list
+	[MutationTypes.POP_CIRCLE_UPDATES](state: State, {markerSet, amount}) {
 		if(!state.markerSets.has(markerSet)) {
 			console.log(`Marker set ${markerSet} doesn't exist`);
-			return [];
+			return;
 		}
 
-		return state.pendingSetUpdates.get(markerSet)!.circleUpdates.splice(0, amount);
+		state.pendingSetUpdates.get(markerSet)!.circleUpdates.splice(0, amount);
 	},
 
-	[MutationTypes.POP_LINE_UPDATES](state: State, {markerSet, amount}): Array<DynmapLineUpdate>  {
+	//Pops the specified number of line updates from the pending updates list
+	[MutationTypes.POP_LINE_UPDATES](state: State, {markerSet, amount})  {
 		if(!state.markerSets.has(markerSet)) {
 			console.log(`Marker set ${markerSet} doesn't exist`);
-			return [];
+			return;
 		}
 
-		return state.pendingSetUpdates.get(markerSet)!.lineUpdates.splice(0, amount);
+		state.pendingSetUpdates.get(markerSet)!.lineUpdates.splice(0, amount);
 	},
 
-	[MutationTypes.POP_TILE_UPDATES](state: State, amount: number): Array<DynmapTileUpdate> {
-		return state.pendingTileUpdates.splice(0, amount);
+	//Pops the specified number of tile updates from the pending updates list
+	[MutationTypes.POP_TILE_UPDATES](state: State, amount: number) {
+		state.pendingTileUpdates.splice(0, amount);
 	},
 
 	//Increments the request id for the next update fetch
