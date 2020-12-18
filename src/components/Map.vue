@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent} from "@vue/runtime-core";
+import {computed, ref, defineComponent} from "@vue/runtime-core";
 import {CRS, LatLng} from 'leaflet';
 import {useStore} from '@/store';
 import MapLayer from "@/components/map/layer/MapLayer.vue";
@@ -79,7 +79,11 @@ export default defineComponent({
 			mapBackground = computed(() => store.getters.mapBackground),
 
 			followTarget = computed(() => store.state.followTarget),
-			panTarget = computed(() => store.state.panTarget);
+			panTarget = computed(() => store.state.panTarget),
+
+			//Animation frame callbacks for panning after projection change
+			followFrame = ref(0),
+			worldChangeFrame = ref(0);
 
 		return {
 			leaflet,
@@ -94,6 +98,8 @@ export default defineComponent({
 			logoControls,
 			followTarget,
 			panTarget,
+			followFrame,
+			worldChangeFrame,
 			mapBackground,
 			currentWorld,
 			currentMap,
@@ -123,6 +129,12 @@ export default defineComponent({
 		currentWorld(newValue, oldValue) {
 			const store = useStore();
 
+			//Cancel any pending pan frame
+			if(this.worldChangeFrame) {
+				cancelAnimationFrame(this.worldChangeFrame);
+				this.worldChangeFrame = 0;
+			}
+
 			if(newValue) {
 				let location: Coordinate;
 				let zoom: number;
@@ -149,8 +161,8 @@ export default defineComponent({
 					zoom = store.state.parsedUrl.zoom || store.state.configuration.defaultZoom;
 				}
 
-				//Delay the pan a frame, to allow the projection to be updated by the new world
-				requestAnimationFrame(() => {
+				//Delay the pan by a frame, to allow the projection to be updated by the new world
+				this.worldChangeFrame = requestAnimationFrame(() => {
 					this.leaflet!.panTo(this.currentProjection.locationToLatLng(location), {
 						animate: false,
 						noMoveStart: true,
@@ -209,12 +221,19 @@ export default defineComponent({
 			const store = useStore(),
 				currentWorld = store.state.currentWorld;
 
+			//Cancel any pending pan frame
+			if(this.followFrame) {
+				cancelAnimationFrame(this.followFrame);
+				this.followFrame = 0;
+			}
+
 			if(!this.leaflet) {
-				console.warn('Map isn\'t initialized yet. Ignoring follow');
+				console.warn(`Cannot follow ${player.name}. Map not yet initialized.`);
+				return;
 			}
 
 			if(!player.location.world) {
-				console.error('Player isn\'t in a world somehow');
+				console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
 				return;
 			}
 
@@ -223,7 +242,7 @@ export default defineComponent({
 					world = store.state.worlds.get(player.location.world);
 
 				if(!world) {
-					console.error('Player isn\'t in a known world somehow');
+					console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
 					return;
 				}
 
@@ -237,12 +256,15 @@ export default defineComponent({
 				}
 			}
 
-			this.leaflet!.panTo(store.state.currentProjection.locationToLatLng(player.location));
+			//Delay the pan by a frame, to allow the projection to be updated by the new world
+			this.followFrame = requestAnimationFrame(() => {
+				this.leaflet!.panTo(store.state.currentProjection.locationToLatLng(player.location));
 
-			if(newFollow) {
-				console.log(`Setting zoom for new follow ${store.state.configuration.followZoom}`);
-				this.leaflet!.setZoom(store.state.configuration.followZoom);
-			}
+				if(newFollow) {
+					console.log(`Setting zoom for new follow ${store.state.configuration.followZoom}`);
+					this.leaflet!.setZoom(store.state.configuration.followZoom);
+				}
+			})
 		}
 	}
 })
