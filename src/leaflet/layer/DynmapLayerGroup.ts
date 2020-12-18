@@ -50,6 +50,8 @@ export default class DynmapLayerGroup extends LayerGroup {
 		this._markerPane = map.createPane(`${this.options.id}-markers`);
 		this._vectorPane = map.createPane(`${this.options.id}-vectors`);
 
+		this._markerPane.classList.toggle('leaflet-pane--show-labels', this.options.showLabels);
+
 		this._markerPane.style.zIndex = (401 + this.options.priority).toString();
 		this._vectorPane.style.zIndex = (400 + this.options.priority).toString();
 
@@ -104,6 +106,30 @@ export default class DynmapLayerGroup extends LayerGroup {
 	removeLayer(layer: Layer): this {
 		this._zoomLimitedLayers.delete(layer);
 		return super.addLayer(layer);
+	}
+
+	update(options: DynmapLayerGroupOptions) {
+		this.options.showLabels = options.showLabels;
+
+		if(this._markerPane) {
+			this._markerPane.classList.toggle('leaflet-pane--show-labels', options.showLabels);
+		}
+
+		if(options.minZoom !== this.options.minZoom || options.maxZoom !== this.options.maxZoom) {
+			this.options.minZoom = options.minZoom;
+			this.options.maxZoom = options.maxZoom;
+
+			this._updateLayerVisibility();
+		}
+
+		if(options.priority !== this.options.priority) {
+			this.options.priority = options.priority;
+
+			if(this._markerPane) {
+				this._markerPane.style.zIndex = (401 + this.options.priority).toString();
+				this._vectorPane!.style.zIndex = (400 + this.options.priority).toString();
+			}
+		}
 	}
 
 	_updateLayerVisibility(onAdd?: boolean) {

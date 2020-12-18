@@ -338,7 +338,7 @@ button {
 		text-overflow: ellipsis;
 		overflow: hidden;
 
-		&.marker__label--show {
+		@at-root .leaflet-pane--show-labels .marker__label {
 			display: block;
 		}
 	}

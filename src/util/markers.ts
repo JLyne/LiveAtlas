@@ -29,7 +29,6 @@ export const createMarker = (options: DynmapMarker, projection: DynmapProjection
 			icon: options.icon,
 			label: options.label,
 			iconSize: options.dimensions,
-			showLabel: false,
 			isHtml: options.isHTML,
 		}),
 		maxZoom: options.maxZoom,
@@ -57,7 +56,6 @@ export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, 
 				icon: options.icon,
 				label: options.label,
 				iconSize: options.dimensions,
-				showLabel: false,
 				isHtml: options.isHTML,
 			});
 		}

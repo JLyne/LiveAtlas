@@ -69,6 +69,24 @@ export default defineComponent({
 		}
 	},
 
+	watch: {
+		markerSet: {
+			handler(newValue) {
+				if(newValue && this.layerGroup) {
+					console.log('Updating layer group');
+					this.layerGroup.update({
+						id: this.markerSet.id,
+						minZoom: this.markerSet.minZoom,
+						maxZoom: this.markerSet.maxZoom,
+						showLabels: this.markerSet.showLabels || useStore().state.components.markers.showLabels,
+						priority: this.markerSet.priority,
+					});
+				}
+			},
+			deep: true,
+		}
+	},
+
 	mounted() {
 		if(this.markerSet.hidden) {
 			this.leaflet.getLayerManager().addHiddenLayer(this.layerGroup, this.markerSet.label, 1);

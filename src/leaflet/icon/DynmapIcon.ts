@@ -22,7 +22,6 @@ import {DivIconOptions, PointExpression, Icon, DivIcon, DomUtil, point} from 'le
 export interface DynmapIconOptions extends DivIconOptions {
 	icon: string;
 	label: string;
-	showLabel: boolean;
 	isHtml?: boolean;
 }
 
@@ -40,7 +39,6 @@ export class DynmapIcon extends DivIcon {
 		icon: 'default',
 		label: '',
 		iconSize: [16, 16],
-		showLabel: false,
 		isHtml: false,
 		className: '',
 	};
@@ -72,10 +70,6 @@ export class DynmapIcon extends DivIcon {
 		this._image.height = size.y;
 		this._image.src = url;
 
-		if(this.options.showLabel) {
-			this._label.classList.add('marker__label--show');
-		}
-
 		this._label.classList.add(/*'markerName_' + set.id,*/ `marker__label--${sizeClass}`);
 
 		if (this.options.isHtml) {
@@ -99,11 +93,6 @@ export class DynmapIcon extends DivIcon {
 	}
 
 	update(options: DynmapIconOptions) {
-		if(options.showLabel !== this.options.showLabel) {
-			this._label!.classList.toggle('marker__label--show', this.options.showLabel);
-			this.options.showLabel = options.showLabel;
-		}
-
 		if(options.icon !== this.options.icon) {
 			this._image!.src = `${window.config.url.markers}_markers_/${options.icon}.png`;
 			this.options.icon = options.icon;
