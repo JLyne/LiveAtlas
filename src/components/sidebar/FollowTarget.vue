@@ -18,9 +18,12 @@
 	<section class="sidebar__section following">
 		<h2>Following</h2>
 
-		<div class="following__target">
+		<div :class="{'following__target': true, 'following__target--hidden': target.hidden}">
 			<img width="32" height="32" class="target__icon" :src="playerImage" alt="" />
-			<span class="target__name" v-html="target.name"></span>
+			<span class="target__info">
+				<span class="target__name" v-html="target.name"></span>
+				<span class="target__status" v-show="target.hidden">Currently hidden</span>
+			</span>
 			<button class="target__unfollow" type="button" :title="`Stop following this player`"
 				@click.prevent="unfollow"
 				@keydown="onKeydown">Unfollow</button>
@@ -80,8 +83,22 @@ export default defineComponent({
 				right: 1.5rem;
 			}
 
-			.target__name {
+			.target__info {
 				margin-left: 2rem;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+
+				.target__status {
+					font-size: 1.3rem;
+				}
+			}
+
+			&.following__target--hidden {
+				.target__icon {
+					filter: grayscale(1);
+					opacity: 0.5;
+				}
 			}
 		}
 	}

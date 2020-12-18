@@ -15,9 +15,10 @@
   -->
 
 <template>
-	<li class="player">
+	<li :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}">
 		<img width="16" height="16" class="player__icon" :src="playerImage" alt="" />
-		<button class="player__name" type="button" title="Click to center on player&#10;Double-click to follow player"
+		<button class="player__name" type="button" :title="title"
+				:disbled="player.hidden"
 				@click.prevent="pan"
 				@keydown="onKeydown"
 				@dblclick.prevent="follow" v-html="player.name"></button>
@@ -45,20 +46,44 @@ export default defineComponent({
 			playerImage: playerImage,
 		}
 	},
+	computed: {
+		otherWorld(): boolean {
+			const store = useStore();
+			return store.state.configuration.grayHiddenPlayers
+				&& (!store.state.currentWorld || store.state.currentWorld.name !== this.player.location.world);
+		},
+		title(): string {
+			if(this.player.hidden) {
+				return 'This player is currently hidden from the map\nDouble-click to follow player when they become visible';
+			} else if(this.otherWorld) {
+				return 'This player is in another world.\nClick to center on player\nDouble-click to follow player';
+			} else {
+				return 'Click to center on player\nDouble-click to follow player';
+			}
+		}
+	},
 	methods: {
 		follow() {
 			useStore().commit(MutationTypes.SET_FOLLOW_TARGET, this.player);
 		},
 		pan() {
-			useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
-			useStore().commit(MutationTypes.SET_PAN_TARGET, this.player);
+			if(!this.player.hidden) {
+				useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
+				useStore().commit(MutationTypes.SET_PAN_TARGET, this.player);
+			}
 		},
 		onKeydown(e: KeyboardEvent) {
-			if(e.key !== ' ') {
+			if(e.key !== ' ' && e.key !== 'Enter') {
 				return;
 			}
 
-			e.shiftKey ? this.follow() : this.pan();
+			if(e.shiftKey) {
+				this.follow();
+			} else {
+				if(!this.player.hidden) {
+					this.pan();
+				}
+			}
 		}
 	}
 });
@@ -87,6 +112,27 @@ export default defineComponent({
 			margin: 0;
 			width: 100%;
 			height: 100%;
+		}
+
+		&.player--hidden {
+			.player__icon {
+				filter: grayscale(1);
+				opacity: 0.5;
+			}
+
+			.player__name {
+				cursor: not-allowed;
+			}
+
+			color: #999999;
+		}
+
+		&.player--other-world {
+			.player__icon {
+				opacity: 0.5;
+			}
+
+			color: #999999;
 		}
 	}
 </style>

@@ -232,6 +232,11 @@ export default defineComponent({
 				return;
 			}
 
+			if(player.hidden) {
+				console.warn(`Cannot follow ${player.name}. Player is hidden from the map.`);
+				return;
+			}
+
 			if(!player.location.world) {
 				console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
 				return;

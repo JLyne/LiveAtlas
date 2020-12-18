@@ -43,6 +43,7 @@ function buildServerConfig(response: any): DynmapServerConfig {
 	return {
 		version: response.dynmapversion || '',
 		allowChat: response.allowwebchat || false,
+		grayHiddenPlayers: response.grayplayerswhenhidden || false,
 		chatRequiresLogin: response['webchat-requires-login'] || false,
 		chatInterval: response['webchat-interval'] || 5,
 		defaultMap: response.defaultmap || undefined,
@@ -488,17 +489,20 @@ export default {
 			const players: Set<DynmapPlayer> = new Set();
 
 			(response.players || []).forEach((player: any) => {
+				const world = player.world && player.world !== '-some-other-bogus-world-' ? player.world : undefined;
+
 				players.add({
 					account: player.account || "",
 					health: player.health || 0,
 					armor: player.armor || 0,
 					name: player.name ? sanitizer.sanitize(player.name) : "Steve",
 					sort: player.sort || 0,
+					hidden: !world,
 					location: {
 						x: player.x || 0,
 						y: player.y || 0,
 						z: player.z || 0,
-						world: player.world || undefined,
+						world: world,
 					}
 				});
 			});

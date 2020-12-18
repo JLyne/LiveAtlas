@@ -57,6 +57,7 @@ interface DynmapServerConfig {
 	loginEnabled: boolean;
 	loginRequired: boolean;
 	maxPlayers: number;
+	grayHiddenPlayers: boolean;
 	hash: number;
 }
 
@@ -169,11 +170,12 @@ interface DynmapUpdateResponse {
 }
 
 interface DynmapPlayer {
-	account: string
-	armor: number
-	health: number
-	name: string
-	sort: number
+	account: string;
+	armor: number;
+	health: number;
+	name: string;
+	sort: number;
+	hidden: boolean;
 	location: DynmapLocation;
 }
 
