@@ -79,7 +79,13 @@ export default defineComponent({
 						if(update.removed) {
 							deleteMarker(update.id);
 						} else {
-							layers.set(update.id, updateMarker(layers.get(update.id), update.payload as DynmapMarker, projection));
+							const layer = updateMarker(layers.get(update.id), update.payload as DynmapMarker, projection);
+
+							if(!layers.has(update.id)) {
+								props.layerGroup.addLayer(layer);
+							}
+
+							layers.set(update.id, layer);
 						}
 					}
 

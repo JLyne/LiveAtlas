@@ -80,7 +80,13 @@ export default defineComponent({
 						if(update.removed) {
 							deleteArea(update.id);
 						} else {
-							layers.set(update.id, updateArea(layers.get(update.id), update.payload as DynmapArea, converter));
+							const layer = updateArea(layers.get(update.id), update.payload as DynmapArea, converter)
+
+							if(!layers.has(update.id)) {
+								props.layerGroup.addLayer(layer);
+							}
+
+							layers.set(update.id, layer);
 						}
 					}
 

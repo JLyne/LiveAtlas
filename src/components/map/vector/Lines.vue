@@ -83,9 +83,10 @@ export default defineComponent({
 							const layer = updateLine(layers.get(update.id), update.payload as DynmapLine, converter)
 
 							if(!layers.has(update.id)) {
-								layers.set(update.id, layer);
 								props.layerGroup.addLayer(layer);
 							}
+
+							layers.set(update.id, layer);
 						}
 					}
 
