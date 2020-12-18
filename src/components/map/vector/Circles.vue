@@ -78,10 +78,8 @@ export default defineComponent({
 
 					for(const update of updates) {
 						if(update.removed) {
-							// console.log(`Deleting circle ${update.id}`);
 							deleteCircle(update.id);
 						} else {
-							// console.log(`Updating/creating circle ${update.id}`);
 							const layer = updateCircle(layers.get(update.id), update.payload as DynmapCircle, converter)
 
 							if(!layers.has(update.id)) {
@@ -92,7 +90,6 @@ export default defineComponent({
 					}
 
 					if(pendingUpdates.value) {
-						console.log('More updates left, scheduling frame');
 						// eslint-disable-next-line no-unused-vars
 						updateFrame = requestAnimationFrame(() => handlePendingUpdates());
 					} else {

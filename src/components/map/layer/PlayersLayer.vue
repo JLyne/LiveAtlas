@@ -55,15 +55,12 @@ export default defineComponent({
 	},
 
 	mounted() {
-		// console.log('Mounted playersLayer');
 		if(!this.componentSettings!.hideByDefault) {
-			// console.log('Adding playersLayer');
 			this.leaflet.getLayerManager().addLayer(this.layerGroup, true, useStore().state.messages.players, 1);
 		}
 	},
 
 	unmounted() {
-		// console.log('Unmounted playersLayer');
 		this.leaflet.removeLayer(this.layerGroup);
 	},
 

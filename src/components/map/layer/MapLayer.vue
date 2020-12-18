@@ -52,7 +52,6 @@ export default defineComponent({
 			active = computed(() => props.map === store.state.currentMap),
 
 			enableLayer = () => {
-				console.log('Set current projection');
 				useStore().commit(MutationTypes.SET_CURRENT_PROJECTION, layer.getProjection());
 				props.leaflet.addLayer(layer);
 
@@ -74,12 +73,10 @@ export default defineComponent({
 			handlePendingUpdates = () => {
 				useStore().dispatch(ActionTypes.POP_TILE_UPDATES, 10).then(updates => {
 					for(const update of updates) {
-						// console.log('Updating tile ' + update.name);
 						layer.updateNamedTile(update.name, update.timestamp);
 					}
 
 					if(pendingUpdates.value) {
-						console.log('More updates left, scheduling frame');
 						// eslint-disable-next-line no-unused-vars
 						updateFrame = requestAnimationFrame(() => handlePendingUpdates());
 					} else {

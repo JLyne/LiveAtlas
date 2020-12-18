@@ -182,7 +182,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
 	[ActionTypes.POP_MARKER_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapMarkerUpdate[]> {
 		if(!state.markerSets.has(markerSet)) {
-			console.log(`Marker set ${markerSet} doesn't exist`);
+			console.warn(`POP_MARKER_UPDATES: Marker set ${markerSet} doesn't exist`);
 			return Promise.resolve([]);
 		}
 
@@ -195,7 +195,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
 	[ActionTypes.POP_AREA_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapAreaUpdate[]> {
 		if(!state.markerSets.has(markerSet)) {
-			console.log(`Marker set ${markerSet} doesn't exist`);
+			console.warn(`POP_AREA_UPDATES: Marker set ${markerSet} doesn't exist`);
 			return Promise.resolve([]);
 		}
 
@@ -208,7 +208,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
 	[ActionTypes.POP_CIRCLE_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapCircleUpdate[]> {
 		if(!state.markerSets.has(markerSet)) {
-			console.log(`Marker set ${markerSet} doesn't exist`);
+			console.warn(`POP_CIRCLE_UPDATES: Marker set ${markerSet} doesn't exist`);
 			return Promise.resolve([]);
 		}
 
@@ -221,7 +221,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
 	[ActionTypes.POP_LINE_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapLineUpdate[]> {
 		if(!state.markerSets.has(markerSet)) {
-			console.log(`Marker set ${markerSet} doesn't exist`);
+			console.warn(`POP_LINE_UPDATES: Marker set ${markerSet} doesn't exist`);
 			return Promise.resolve([]);
 		}
 

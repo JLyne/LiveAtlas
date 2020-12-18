@@ -40,12 +40,10 @@ export default defineComponent({
 
 	mounted() {
 		this.leaflet.addControl(this.control);
-		// console.log('Mounted coordinatesControl');
 	},
 
 	unmounted() {
 		this.leaflet.removeControl(this.control);
-		// console.log('Unmounted coordinatesControl');
 	},
 
 	render() {

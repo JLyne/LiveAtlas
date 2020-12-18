@@ -77,16 +77,13 @@ export default defineComponent({
 
 					for(const update of updates) {
 						if(update.removed) {
-							// console.log(`Deleting marker ${update.id}`);
 							deleteMarker(update.id);
 						} else {
-							// console.log(`Updating/creating marker ${update.id}`);
 							layers.set(update.id, updateMarker(layers.get(update.id), update.payload as DynmapMarker, projection));
 						}
 					}
 
 					if(pendingUpdates.value) {
-						console.log('More updates left, scheduling frame');
 						// eslint-disable-next-line no-unused-vars
 						updateFrame = requestAnimationFrame(() => handlePendingUpdates());
 					} else {

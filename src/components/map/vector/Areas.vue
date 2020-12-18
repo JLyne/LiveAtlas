@@ -78,16 +78,13 @@ export default defineComponent({
 
 					for(const update of updates) {
 						if(update.removed) {
-							// console.log(`Deleting area ${update.id}`);
 							deleteArea(update.id);
 						} else {
-							// console.log(`Updating/creating area ${update.id}`);
 							layers.set(update.id, updateArea(layers.get(update.id), update.payload as DynmapArea, converter));
 						}
 					}
 
 					if(pendingUpdates.value) {
-						console.log('More updates left, scheduling frame');
 						// eslint-disable-next-line no-unused-vars
 						updateFrame = requestAnimationFrame(() => handlePendingUpdates());
 					} else {

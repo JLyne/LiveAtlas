@@ -72,7 +72,6 @@ export default defineComponent({
 	},
 
 	unmounted() {
-		// console.log('Unmounted markerSetLayer');
 		this.leaflet.getLayerManager().removeLayer(this.layerGroup);
 	},
 

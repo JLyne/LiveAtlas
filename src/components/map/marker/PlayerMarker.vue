@@ -89,10 +89,6 @@ export default defineComponent({
 			pane: 'players',
 		});
 
-		if(this.currentWorld) {
-			console.log(this.currentWorld.name, this.player.location.world);
-		}
-
 		if(this.currentWorld && this.currentWorld.name === this.player.location.world) {
 			this.enableLayer();
 		}

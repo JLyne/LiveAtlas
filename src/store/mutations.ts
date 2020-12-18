@@ -140,7 +140,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: State, updates: Map<string, DynmapMarkerSetUpdates>) {
 		for(const entry of updates) {
 			if(!state.markerSets.has(entry[0])) {
-				console.log(`Marker set ${entry[0]} doesn't exist`);
+				console.warn(`ADD_MARKER_SET_UPDATES: Marker set ${entry[0]} doesn't exist`);
 				continue;
 			}
 
@@ -201,7 +201,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Pops the specified number of marker updates from the pending updates list
 	[MutationTypes.POP_MARKER_UPDATES](state: State, {markerSet, amount}) {
 		if(!state.markerSets.has(markerSet)) {
-			console.log(`Marker set ${markerSet} doesn't exist`);
+			console.warn(`POP_MARKER_UPDATES: Marker set ${markerSet} doesn't exist`);
 			return;
 		}
 
@@ -211,7 +211,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Pops the specified number of area updates from the pending updates list
 	[MutationTypes.POP_AREA_UPDATES](state: State, {markerSet, amount}) {
 		if(!state.markerSets.has(markerSet)) {
-			console.log(`Marker set ${markerSet} doesn't exist`);
+			console.warn(`POP_AREA_UPDATES: Marker set ${markerSet} doesn't exist`);
 			return;
 		}
 
@@ -221,7 +221,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Pops the specified number of circle updates from the pending updates list
 	[MutationTypes.POP_CIRCLE_UPDATES](state: State, {markerSet, amount}) {
 		if(!state.markerSets.has(markerSet)) {
-			console.log(`Marker set ${markerSet} doesn't exist`);
+			console.warn(`POP_CIRCLE_UPDATES: Marker set ${markerSet} doesn't exist`);
 			return;
 		}
 
@@ -231,7 +231,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Pops the specified number of line updates from the pending updates list
 	[MutationTypes.POP_LINE_UPDATES](state: State, {markerSet, amount})  {
 		if(!state.markerSets.has(markerSet)) {
-			console.log(`Marker set ${markerSet} doesn't exist`);
+			console.warn(`POP_LINE_UPDATES: Marker set ${markerSet} doesn't exist`);
 			return;
 		}
 

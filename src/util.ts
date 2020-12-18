@@ -51,7 +51,7 @@ export default {
 			};
 
 			faceImage.onerror = function() {
-				console.error('Failed to retrieve face of "', player, '" with size "', size, '"!');
+				console.warn('Failed to retrieve face of "', player, '" with size "', size, '"!');
 				reject();
 			};
 
