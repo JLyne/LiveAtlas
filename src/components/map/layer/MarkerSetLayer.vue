@@ -52,10 +52,16 @@ export default defineComponent({
 		}
 	},
 
-	setup() {
+	setup(props) {
 		const store = useStore(),
 			markerSettings = computed(() => store.state.components.markers),
-			layerGroup = new DynmapLayerGroup();
+			layerGroup = new DynmapLayerGroup({
+				id: props.markerSet.id,
+				minZoom: props.markerSet.minZoom,
+				maxZoom: props.markerSet.maxZoom,
+				showLabels: props.markerSet.showLabels || store.state.components.markers.showLabels,
+				priority: props.markerSet.priority,
+			});
 
 		return {
 			markerSettings,
