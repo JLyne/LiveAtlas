@@ -18,18 +18,22 @@
  */
 
 import {DynmapCircle} from "@/dynmap";
-import {Polyline, Polygon, LatLngExpression} from "leaflet";
+import {LatLngExpression} from "leaflet";
+import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
+import DynmapPolygon from "@/leaflet/vector/DynmapPolygon";
 
-export const createCircle = (options: DynmapCircle, converter: Function): Polyline | Polygon => {
+export const createCircle = (options: DynmapCircle, converter: Function): DynmapPolyline | DynmapPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
-		points = getCirclePoints(options, converter, outline);
-	let circle;
-
-	if(outline) {
-		circle = new Polyline(points, options.style);
-	} else {
-		circle = new Polygon(points, options.style);
-	}
+		points = getCirclePoints(options, converter, outline),
+		circle = outline ? new DynmapPolyline(points, {
+			...options.style,
+			minZoom: options.minZoom,
+			maxZoom: options.maxZoom,
+		}) : new DynmapPolygon(points, {
+			...options.style,
+			minZoom: options.minZoom,
+			maxZoom: options.maxZoom,
+		});
 
 	if(options.label) {
 		circle.bindPopup(() => createPopup(options));
@@ -38,7 +42,7 @@ export const createCircle = (options: DynmapCircle, converter: Function): Polyli
 	return circle;
 };
 
-export const updateCircle = (circle: Polyline | Polygon | undefined, options: DynmapCircle, converter: Function): Polyline | Polygon => {
+export const updateCircle = (circle: DynmapPolyline | DynmapPolygon | undefined, options: DynmapCircle, converter: Function): DynmapPolyline | DynmapPolygon => {
 	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean,
 		points = getCirclePoints(options, converter, outline);
 

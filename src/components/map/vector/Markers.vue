@@ -16,11 +16,12 @@
 
 <script lang="ts">
 import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
-import {LayerGroup, Marker} from 'leaflet';
+import {Marker} from 'leaflet';
 import {useStore} from "@/store";
 import {DynmapMarker, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createMarker, updateMarker} from "@/util/markers";
+import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
 
 export default defineComponent({
 	props: {
@@ -29,7 +30,7 @@ export default defineComponent({
 			required: true,
 		},
 		layerGroup: {
-			type: Object as () => LayerGroup,
+			type: Object as () => DynmapLayerGroup,
 			required: true
 		}
 	},

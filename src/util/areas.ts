@@ -17,13 +17,23 @@
  *    limitations under the License.
  */
 
-import {LatLngExpression, Polygon, Polyline} from "leaflet";
+import {LatLngExpression} from "leaflet";
 import {DynmapArea} from "@/dynmap";
+import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
+import DynmapPolygon from "@/leaflet/vector/DynmapPolygon";
 
-export const createArea = (options: DynmapArea, converter: Function): Polyline | Polygon => {
+export const createArea = (options: DynmapArea, converter: Function): DynmapPolyline | DynmapPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getPoints(options, converter, outline),
-		area = outline ? new Polyline(points, options.style) : new Polygon(points, options.style);
+		area = outline ? new DynmapPolyline(points, {
+			...options.style,
+			minZoom: options.minZoom,
+			maxZoom: options.maxZoom,
+		}) : new DynmapPolygon(points, {
+			...options.style,
+			minZoom: options.minZoom,
+			maxZoom: options.maxZoom,
+		});
 
 	if (options.label) {
 		area.bindPopup(() => createPopup(options));
@@ -32,7 +42,7 @@ export const createArea = (options: DynmapArea, converter: Function): Polyline |
 	return area;
 };
 
-export const updateArea = (area: Polyline | Polygon | undefined, options: DynmapArea, converter: Function): Polyline | Polygon => {
+export const updateArea = (area: DynmapPolyline | DynmapPolygon | undefined, options: DynmapArea, converter: Function): DynmapPolyline | DynmapPolygon => {
 	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean,
 		points = getPoints(options, converter, outline);
 

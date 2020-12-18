@@ -16,12 +16,14 @@
 
 <script lang="ts">
 import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
-import {Polyline, LayerGroup, Polygon} from 'leaflet';
 import {useStore} from "@/store";
 import {DynmapCircle, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createCircle, updateCircle} from "@/util/circles";
 import Util from '@/util';
+import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
+import DynmapPolygon from "@/leaflet/vector/DynmapPolygon";
+import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
 
 export default defineComponent({
 	props: {
@@ -30,7 +32,7 @@ export default defineComponent({
 			required: true,
 		},
 		layerGroup: {
-			type: Object as () => LayerGroup,
+			type: Object as () => DynmapLayerGroup,
 			required: true
 		}
 	},
@@ -45,7 +47,7 @@ export default defineComponent({
 
 				return markerSetUpdates && markerSetUpdates.circleUpdates.length;
 			}),
-			layers = Object.freeze(new Map<string, Polyline | Polygon>()),
+			layers = Object.freeze(new Map<string, DynmapPolyline | DynmapPolygon>()),
 
 			createCircles = () => {
 				const converter = Util.getPointConverter();
@@ -59,7 +61,7 @@ export default defineComponent({
 			},
 
 			deleteCircle = (id: string) => {
-				let circle = layers.get(id) as Polyline;
+				let circle = layers.get(id) as DynmapPolyline;
 
 				if (!circle) {
 					return;

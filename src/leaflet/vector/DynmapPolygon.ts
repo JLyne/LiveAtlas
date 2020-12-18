@@ -14,24 +14,16 @@
  *    limitations under the License.
  */
 
-import {MarkerOptions, Marker, Util, LatLngExpression, Icon} from 'leaflet';
+import {LatLngExpression, Polygon, PolylineOptions, Util} from "leaflet";
 
-export interface GenericMarkerOptions extends MarkerOptions {
+export interface DynmapPolygonOptions extends PolylineOptions {
 	minZoom?: number;
 	maxZoom?: number;
 }
 
-export class GenericMarker extends Marker {
-	constructor(latLng: LatLngExpression, options: GenericMarkerOptions) {
-		super(latLng, options);
+export default class DynmapPolygon extends Polygon {
+	constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: DynmapPolygonOptions) {
+		super(latlngs, options);
 		Util.setOptions(this, options);
-	}
-
-	_resetZIndex() {
-		//Don't change the zindex
-	}
-
-	getIcon(): Icon.Default {
-		return this.options.icon as Icon.Default;
 	}
 }

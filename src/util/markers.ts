@@ -32,8 +32,8 @@ export const createMarker = (options: DynmapMarker, projection: DynmapProjection
 			showLabel: false,
 			isHtml: options.isHTML,
 		}),
-		// maxZoom: this.options.maxZoom,
-		// minZoom: this.options.minZoom,
+		maxZoom: options.maxZoom,
+		minZoom: options.minZoom,
 	});
 };
 

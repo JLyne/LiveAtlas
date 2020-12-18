@@ -24,13 +24,13 @@
 <script lang="ts">
 import {defineComponent, computed} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import {LayerGroup} from 'leaflet';
 import {DynmapMarkerSet} from "@/dynmap";
 import Areas from "@/components/map/vector/Areas.vue";
 import Circles from "@/components/map/vector/Circles.vue";
 import Lines from "@/components/map/vector/Lines.vue";
 import Markers from "@/components/map/vector/Markers.vue";
 import DynmapMap from "@/leaflet/DynmapMap";
+import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
 
 export default defineComponent({
 	components: {
@@ -55,7 +55,7 @@ export default defineComponent({
 	setup() {
 		const store = useStore(),
 			markerSettings = computed(() => store.state.components.markers),
-			layerGroup = new LayerGroup();
+			layerGroup = new DynmapLayerGroup();
 
 		return {
 			markerSettings,

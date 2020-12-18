@@ -210,8 +210,8 @@ function buildMarker(marker: any): DynmapMarker {
 		dimensions: marker.dim ? marker.dim.split('x') : [16, 16],
 		icon: marker.icon || "default",
 		isHTML: marker.markup || false,
-		minZoom: marker.minzoom || undefined,
-		maxZoom: marker.maxZoom || undefined,
+		minZoom: typeof marker.minzoom !== 'undefined' && marker.minzoom > -1 ? marker.minzoom : undefined,
+		maxZoom: typeof marker.maxzoom !== 'undefined' && marker.maxzoom > -1 ? marker.maxzoom : undefined,
 		popupContent: marker.desc || undefined,
 	};
 }
@@ -244,8 +244,8 @@ function buildArea(area: any): DynmapArea {
 		x: area.x || [0, 0],
 		y: [area.ybottom || 0, area.ytop || 0],
 		z: area.z || [0, 0],
-		minZoom: area.minzoom || undefined,
-		maxZoom: area.maxZoom || undefined,
+		minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
+		maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
 		popupContent: area.desc || undefined,
 	};
 }
@@ -276,8 +276,8 @@ function buildLine(line: any): DynmapLine {
 		},
 		label: line.label || '',
 		isHTML: line.markup || false,
-		minZoom: line.minzoom || undefined,
-		maxZoom: line.maxZoom || undefined,
+		minZoom: typeof line.minzoom !== 'undefined' && line.minzoom > -1 ? line.minzoom : undefined,
+		maxZoom: typeof line.maxzoom !== 'undefined' && line.maxzoom > -1 ? line.maxzoom : undefined,
 		popupContent: line.desc || undefined,
 	};
 }
@@ -314,8 +314,8 @@ function buildCircle(circle: any): DynmapCircle {
 		label: circle.label || '',
 		isHTML: circle.markup || false,
 
-		minZoom: circle.minzoom || undefined,
-		maxZoom: circle.maxZoom || undefined,
+		minZoom: typeof circle.minzoom !== 'undefined' && circle.minzoom > -1 ? circle.minzoom : undefined,
+		maxZoom: typeof circle.maxzoom !== 'undefined' && circle.maxzoom > -1 ? circle.maxzoom : undefined,
 		popupContent: circle.desc || undefined,
 	};
 }
@@ -570,8 +570,8 @@ export default {
 					hidden: set.hide || false,
 					priority: set.layerprio || 0,
 					showLabels: set.showlabels || undefined,
-					minZoom: set.minzoom || undefined,
-					maxZoom: set.maxzoom || undefined,
+					minZoom: typeof set.minzoom !== 'undefined' && set.minzoom > -1 ? set.minzoom : undefined,
+					maxZoom: typeof set.maxzoom !== 'undefined' && set.maxzoom > -1 ? set.maxzoom : undefined,
 					markers,
 					areas,
 					lines,

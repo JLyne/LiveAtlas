@@ -18,11 +18,16 @@
  */
 
 import {DynmapLine} from "@/dynmap";
-import {Polyline, Polygon, LatLngExpression} from "leaflet";
+import {LatLngExpression} from "leaflet";
+import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
 
-export const createLine = (options: DynmapLine, converter: Function): Polyline | Polygon => {
+export const createLine = (options: DynmapLine, converter: Function): DynmapPolyline => {
 	const points = getLinePoints(options, converter),
-		line = new Polyline(points, options.style);
+		line = new DynmapPolyline(points, {
+			...options.style,
+			minZoom: options.minZoom,
+			maxZoom: options.maxZoom,
+		});
 
 	if(options.label) {
 		line.bindPopup(() => createPopup(options));
@@ -31,7 +36,7 @@ export const createLine = (options: DynmapLine, converter: Function): Polyline |
 	return line;
 };
 
-export const updateLine = (line: Polyline | Polygon | undefined, options: DynmapLine, converter: Function): Polyline | Polygon => {
+export const updateLine = (line: DynmapPolyline | undefined, options: DynmapLine, converter: Function): DynmapPolyline => {
 	const points = getLinePoints(options, converter);
 
 	if (!line) {

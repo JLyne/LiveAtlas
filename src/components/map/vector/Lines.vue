@@ -16,12 +16,13 @@
 
 <script lang="ts">
 import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
-import {Polyline, LayerGroup, Polygon} from 'leaflet';
 import {useStore} from "@/store";
 import {DynmapLine, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createLine, updateLine} from "@/util/lines";
 import Util from '@/util';
+import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
+import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
 
 export default defineComponent({
 	props: {
@@ -30,7 +31,7 @@ export default defineComponent({
 			required: true,
 		},
 		layerGroup: {
-			type: Object as () => LayerGroup,
+			type: Object as () => DynmapLayerGroup,
 			required: true
 		}
 	},
@@ -45,7 +46,7 @@ export default defineComponent({
 
 				return markerSetUpdates && markerSetUpdates.lineUpdates.length;
 			}),
-			layers = Object.freeze(new Map<string, Polyline | Polygon>()),
+			layers = Object.freeze(new Map<string, DynmapPolyline>()),
 
 			createLines = () => {
 				const converter = Util.getPointConverter();
@@ -59,7 +60,7 @@ export default defineComponent({
 			},
 
 			deleteLine = (id: string) => {
-				let line = layers.get(id) as Polyline;
+				let line = layers.get(id) as DynmapPolyline;
 
 				if (!line) {
 					return;
