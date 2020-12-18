@@ -125,7 +125,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.worlds.set(world.name, world);
 	},
 
-	//Sets the current world state from the last update fetch
+	//Sets the current world state an update fetch
 	[MutationTypes.SET_WORLD_STATE](state: State, worldState: DynmapWorldState) {
 		state.currentWorldState = Object.assign(state.currentWorldState, worldState);
 	},
@@ -135,7 +135,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.updateTimestamp = timestamp;
 	},
 
-	//Sets the timestamp of the last update fetch
+	//Adds markerset related updates from an update fetch to the pending updates list
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: State, updates: Map<string, DynmapMarkerSetUpdates>) {
 		for(const entry of updates) {
 			if(!state.markerSets.has(entry[0])) {
@@ -187,10 +187,12 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 	},
 
+	//Adds tile updates from an update fetch to the pending updates list
 	[MutationTypes.ADD_TILE_UPDATES](state: State, updates: Array<DynmapTileUpdate>) {
 		state.pendingTileUpdates = state.pendingTileUpdates.concat(updates);
 	},
 
+	//Adds chat messages from an update fetch to the chat history
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>) {
 		state.chat.unshift(...chat);
 	},
@@ -288,6 +290,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 	},
 
+	//Sets the currently active map/world
 	[MutationTypes.SET_CURRENT_MAP](state: State, {worldName, mapName}) {
 		mapName = [worldName, mapName].join('_');
 
@@ -311,30 +314,37 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentMap = state.maps.get(mapName);
 	},
 
+	//Sets the projection to use for coordinate conversion in the current map
 	[MutationTypes.SET_CURRENT_PROJECTION](state: State, projection) {
 		state.currentProjection = projection;
 	},
 
+	//Sets the current location the map is showing. This is called by the map itself, and calling elsewhere will not update the map.
 	[MutationTypes.SET_CURRENT_LOCATION](state: State, payload: Coordinate) {
 		state.currentLocation = payload;
 	},
 
+	//Sets the current zoom level of the map. This is called by the map itself, and calling elsewhere will not update the map.
 	[MutationTypes.SET_CURRENT_ZOOM](state: State, payload: number) {
 		state.currentZoom = payload;
 	},
 
+	//Sets the result of parsing the current map url, if present and valid
 	[MutationTypes.SET_PARSED_URL](state: State, payload: DynmapParsedUrl) {
 		state.parsedUrl = payload;
 	},
 
+	//Set the follow target, which the map will automatically pan to keep in view
 	[MutationTypes.SET_FOLLOW_TARGET](state: State, player: DynmapPlayer) {
 		state.followTarget = player;
 	},
 
+	//Set the pan target, which the map will immediately pan to once
 	[MutationTypes.SET_PAN_TARGET](state: State, player: DynmapPlayer) {
 		state.panTarget = player;
 	},
 
+	//Clear the follow target
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: State) {
 		state.followTarget = undefined;
 	}
