@@ -52,7 +52,7 @@ if(splash) {
 	});
 }
 
-console.info(`LiveAtlas version ${store.state.version}`);
+console.info(`LiveAtlas version ${store.state.version} - https://github.com/JLyne/LiveAtlas`);
 
 const app = createApp(App).use(store);
 
