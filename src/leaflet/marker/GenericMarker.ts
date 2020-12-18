@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-import {MarkerOptions, Marker, Util, LatLngExpression} from 'leaflet';
+import {MarkerOptions, Marker, Util, LatLngExpression, Icon} from 'leaflet';
 
 export class GenericMarker extends Marker {
 	constructor(latLng: LatLngExpression, options: MarkerOptions) {
@@ -24,5 +24,9 @@ export class GenericMarker extends Marker {
 
 	_resetZIndex() {
 		//Don't change the zindex
+	}
+
+	getIcon(): Icon.Default {
+		return this.options.icon as Icon.Default;
 	}
 }

@@ -47,6 +47,8 @@ export class DynmapIcon extends DivIcon {
 
 	// @ts-ignore
 	options: DynmapIconOptions;
+	_image?: HTMLImageElement;
+	_label?: HTMLSpanElement;
 
 	constructor(options: DynmapIconOptions) {
 		super(Object.assign(DynmapIcon.defaultOptions, options));
@@ -58,35 +60,35 @@ export class DynmapIcon extends DivIcon {
 		}
 
 		const div = markerContainer.cloneNode(false) as HTMLDivElement,
-			img = markerIcon.cloneNode(false) as HTMLImageElement,
-			label = markerLabel.cloneNode(false) as HTMLSpanElement,
-
 			url = `${window.config.url.markers}_markers_/${this.options.icon}.png`,
 			size = point(this.options.iconSize as PointExpression);
 
+		this._image = markerIcon.cloneNode(false) as HTMLImageElement;
+		this._label = markerLabel.cloneNode(false) as HTMLSpanElement;
+
 		const sizeClass = [size.x, size.y].join('x');
 
-		img.width = size.x;
-		img.height = size.y;
-		img.src = url;
+		this._image.width = size.x;
+		this._image.height = size.y;
+		this._image.src = url;
 
 		if(this.options.showLabel) {
-			label.classList.add('marker__label--show');
+			this._label.classList.add('marker__label--show');
 		}
 
-		label.classList.add(/*'markerName_' + set.id,*/ `marker__label--${sizeClass}`);
+		this._label.classList.add(/*'markerName_' + set.id,*/ `marker__label--${sizeClass}`);
 
 		if (this.options.isHtml) {
-			label.insertAdjacentHTML('afterbegin', this.options.label);
+			this._label.innerHTML = this.options.label;
 		} else {
-			label.textContent = this.options.label;
+			this._label.textContent = this.options.label;
 		}
 
 		// @ts-ignore
 		Icon.prototype._setIconStyles.call(this, div, 'icon');
 
-		div.appendChild(img);
-		div.appendChild(label);
+		div.appendChild(this._image);
+		div.appendChild(this._label);
 		div.classList.add('marker');
 
 		if(this.options.className) {
@@ -94,5 +96,37 @@ export class DynmapIcon extends DivIcon {
 		}
 
 		return div;
+	}
+
+	update(options: DynmapIconOptions) {
+		if(options.showLabel !== this.options.showLabel) {
+			this._label!.classList.toggle('marker__label--show', this.options.showLabel);
+			this.options.showLabel = options.showLabel;
+		}
+
+		if(options.icon !== this.options.icon) {
+			this._image!.src = `${window.config.url.markers}_markers_/${options.icon}.png`;
+			this.options.icon = options.icon;
+		}
+
+		const iconSize = point(options.iconSize || [16, 16] as PointExpression),
+			oldSize = point(this.options.iconSize as PointExpression);
+
+		if(iconSize.x !== oldSize.x || iconSize.y !== oldSize.y) {
+			this._image!.width = iconSize.x;
+			this._image!.height = iconSize.y;
+			this.options.iconSize = options.iconSize;
+		}
+
+		if(options.label !== this.options.label || options.isHtml !== this.options.isHtml) {
+			if (options.isHtml) {
+				this._label!.innerHTML = options.label;
+			} else {
+				this._label!.textContent = options.label;
+			}
+
+			this.options.isHtml = options.isHtml;
+			this.options.label = options.label;
+		}
 	}
 }

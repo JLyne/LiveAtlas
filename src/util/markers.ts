@@ -17,7 +17,7 @@
  *    limitations under the License.
  */
 
-import {LatLng, Marker} from "leaflet";
+import {Marker} from "leaflet";
 import {DynmapMarker} from "@/dynmap";
 import {DynmapIcon} from "@/leaflet/icon/DynmapIcon";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
@@ -47,6 +47,20 @@ export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, 
 
 	if(!oldLocation.equals(newLocation)) {
 		marker.setLatLng(newLocation);
+	}
+
+	if(marker instanceof GenericMarker) {
+		const icon = marker.getIcon();
+
+		if(icon && icon instanceof DynmapIcon) {
+			icon.update({
+				icon: options.icon,
+				label: options.label,
+				iconSize: options.dimensions,
+				showLabel: false,
+				isHtml: options.isHTML,
+			});
+		}
 	}
 
 	return marker;
