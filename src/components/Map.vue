@@ -112,6 +112,11 @@ export default defineComponent({
 		},
 		panTarget(newValue) {
 			if(newValue) {
+				//Immediately clear if on the correct world, to allow repeated panning
+				if(this.currentWorld && newValue.location.world === this.currentWorld.name) {
+					useStore().commit(MutationTypes.CLEAR_PAN_TARGET, undefined);
+				}
+
 				this.updateFollow(newValue, false);
 			}
 		},
@@ -124,10 +129,20 @@ export default defineComponent({
 
 				store.dispatch(ActionTypes.GET_MARKER_SETS, undefined);
 
-				if(oldValue || !store.state.parsedUrl.location) {
-					location = newValue.center;
-				} else {
+				//Abort if follow target is present, to avoid panning twice
+				if(store.state.followTarget && store.state.followTarget.location.world === newValue.name) {
+					return;
+				//Abort if pan target is present, to avoid panning to the wrong place.
+				// Also clear it to allow repeated panning.
+				} else if(store.state.panTarget && store.state.panTarget.location.world === newValue.name) {
+					store.commit(MutationTypes.CLEAR_PAN_TARGET, undefined);
+					return;
+				//Otherwise pan to url location, if present and if we have just loaded
+				} else if(!oldValue && store.state.parsedUrl.location) {
 					location = store.state.parsedUrl.location;
+				//Otherwise pan to world center
+				} else {
+					location = newValue.center;
 				}
 
 				if(!oldValue) {

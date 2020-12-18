@@ -68,6 +68,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: DynmapPlayer): void
 	[MutationTypes.SET_PAN_TARGET](state: S, payload: DynmapPlayer): void
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: S, a?: void): void
+	[MutationTypes.CLEAR_PAN_TARGET](state: S, a?: void): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -347,5 +348,10 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Clear the follow target
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: State) {
 		state.followTarget = undefined;
+	},
+
+	//Clear the pan target
+	[MutationTypes.CLEAR_PAN_TARGET](state: State) {
+		state.panTarget = undefined;
 	}
 }
