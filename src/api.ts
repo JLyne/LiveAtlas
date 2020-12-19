@@ -179,6 +179,15 @@ function buildComponents(response: any): DynmapComponentConfig {
 					showDigitalClock: component.showdigitalclock || false,
 					showWeather: component.showweather || false,
 				}
+				break;
+
+			case "logo":
+				components.logoControls.push({
+					text: component.text || '',
+					url: component.linkurl || undefined,
+					position: component.position.replace('-', '') || 'topleft',
+					image: component.logourl || undefined,
+				});
 		}
 	});
 
