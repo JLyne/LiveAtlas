@@ -250,6 +250,15 @@ interface DynmapMarkerSetUpdates {
 	areaUpdates: Array<DynmapAreaUpdate>
 	circleUpdates: Array<DynmapCircleUpdate>
 	lineUpdates: Array<DynmapLineUpdate>
+	removed?: boolean
+	payload?: {
+		showLabels: boolean;
+		hidden: boolean;
+		minZoom: number;
+		maxZoom: number;
+		priority: number;
+		label: string;
+	}
 }
 
 interface DynmapUpdate {

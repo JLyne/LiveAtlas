@@ -17,7 +17,7 @@
  *    limitations under the License.
  */
 
-import {Util, Control, DomEvent, LeafletEvent, Map} from 'leaflet';
+import {Util, Control, DomEvent, LeafletEvent, Map, Layer} from 'leaflet';
 import layers from '@/assets/icons/layers.svg';
 import LayersObject = Control.LayersObject;
 import LayersOptions = Control.LayersOptions;
@@ -46,6 +46,11 @@ export class DynmapLayerControl extends Control.Layers {
 		</svg>`;
 
 		return element;
+	}
+
+	hasLayer(layer: Layer): boolean {
+		// @ts-ignore
+		return !!super._getLayer(Util.stamp(layer));
 	}
 
 	_addItem(obj: any) {

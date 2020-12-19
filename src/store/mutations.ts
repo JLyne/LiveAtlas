@@ -102,7 +102,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		});
 	},
 
-	//Sets the state and settings of optional compontents, from the initial config fetch
+	//Sets the state and settings of optional components, from the initial config fetch
 	[MutationTypes.SET_COMPONENTS](state: State, components: DynmapComponentConfig) {
 		state.components = components;
 	},
@@ -140,12 +140,54 @@ export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: State, updates: Map<string, DynmapMarkerSetUpdates>) {
 		for(const entry of updates) {
 			if(!state.markerSets.has(entry[0])) {
-				console.warn(`ADD_MARKER_SET_UPDATES: Marker set ${entry[0]} doesn't exist`);
-				continue;
+
+				//Create marker set if it doesn't exist
+				if(entry[1].payload) {
+					state.markerSets.set(entry[0], {
+						id: entry[0],
+						showLabels: entry[1].payload.showLabels,
+						minZoom: entry[1].payload.minZoom,
+						maxZoom: entry[1].payload.maxZoom,
+						priority: entry[1].payload.priority,
+						label: entry[1].payload.label,
+						hidden: entry[1].payload.hidden,
+						markers: Object.freeze(new Map()) as Map<string, DynmapMarker>,
+						areas: Object.freeze(new Map()) as Map<string, DynmapArea>,
+						circles: Object.freeze(new Map()) as Map<string, DynmapCircle>,
+						lines: Object.freeze(new Map()) as Map<string, DynmapLine>,
+					});
+
+					state.pendingSetUpdates.set(entry[0], {
+						markerUpdates: [],
+						areaUpdates: [],
+						circleUpdates: [],
+						lineUpdates: [],
+					});
+				} else {
+					console.warn(`ADD_MARKER_SET_UPDATES: Marker set ${entry[0]} doesn't exist`);
+					continue;
+				}
 			}
 
 			const set = state.markerSets.get(entry[0]) as DynmapMarkerSet,
 				setUpdates = state.pendingSetUpdates.get(entry[0]) as DynmapMarkerSetUpdates;
+
+			//Delete the set if it has been deleted
+			if(entry[1].removed) {
+				state.markerSets.delete(entry[0]);
+				state.pendingSetUpdates.delete(entry[0]);
+				continue;
+			}
+
+			//Update the set itself if a payload exists
+			if(entry[1].payload) {
+				set.showLabels = entry[1].payload.showLabels;
+				set.minZoom = entry[1].payload.minZoom;
+				set.maxZoom = entry[1].payload.maxZoom;
+				set.priority = entry[1].payload.priority;
+				set.label = entry[1].payload.label;
+				set.hidden = entry[1].payload.hidden;
+			}
 
 			//Update non-reactive lists
 			for(const update of entry[1].markerUpdates) {

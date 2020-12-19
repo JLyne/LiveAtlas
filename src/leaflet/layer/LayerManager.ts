@@ -34,10 +34,15 @@ export default class LayerManager {
 		}
 	}
 
+	//TODO: Respect position
 	addLayer(layer: Layer, showInControl: boolean, name: string, position: number) {
 		this.map.addLayer(layer);
 
 		if(showInControl) {
+			if(this.layerControl.hasLayer(layer)) {
+				this.layerControl.removeLayer(layer);
+			}
+
 			this.layerControl.addOverlay(layer, name);
 		}
 	}

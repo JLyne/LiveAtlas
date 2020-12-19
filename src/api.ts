@@ -185,6 +185,18 @@ function buildComponents(response: any): DynmapComponentConfig {
 	return components;
 }
 
+function buildMarkerSet(id: string, data: any): any {
+	return {
+		id,
+		label: data.label || "Unnamed set",
+		hidden: data.hide || false,
+		priority: data.layerprio || 0,
+		showLabels: data.showlabels || undefined,
+		minZoom: typeof data.minzoom !== 'undefined' && data.minzoom > -1 ? data.minzoom : undefined,
+		maxZoom: typeof data.maxzoom !== 'undefined' && data.maxzoom > -1 ? data.maxzoom : undefined,
+	}
+}
+
 function buildMarkers(data: any): Map<string, DynmapMarker> {
 	const markers = Object.freeze(new Map()) as Map<string, DynmapMarker>;
 
@@ -352,7 +364,10 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 					continue;
 				}
 
-				if(!entry.set) {
+				//Set updates don't have a set field, the id is the set
+				const set = entry.msg.startsWith("set") ? entry.id : entry.set;
+
+				if(!set) {
 					dropped.noSet++;
 					continue;
 				}
@@ -362,22 +377,26 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 					continue;
 				}
 
-				if(!updates.markerSets.has(entry.set)) {
-					updates.markerSets.set(entry.set, {
+				if(!updates.markerSets.has(set)) {
+					updates.markerSets.set(set, {
 						areaUpdates: [],
 						markerUpdates: [],
 						lineUpdates: [],
 						circleUpdates: [],
+						removed: false,
 					});
 				}
 
-				const markerSetUpdates = updates.markerSets.get(entry.set),
+				const markerSetUpdates = updates.markerSets.get(set),
 					update: DynmapUpdate = {
 						id: entry.id,
 						removed: entry.msg.endsWith('deleted'),
 					};
 
-				if(entry.msg.startsWith("marker")) {
+				if(entry.msg.startsWith("set")) {
+					markerSetUpdates!.removed = update.removed;
+					markerSetUpdates!.payload = update.removed ? undefined : buildMarkerSet(set, entry);
+				} else if(entry.msg.startsWith("marker")) {
 					update.payload = update.removed ? undefined : buildMarker(entry);
 					markerSetUpdates!.markerUpdates.push(Object.freeze(update));
 				} else if(entry.msg.startsWith("area")) {
@@ -565,17 +584,11 @@ export default {
 					lines = buildLines(set.lines || {});
 
 				sets.set(key, {
-					id: key,
-					label: set.label || "Unnamed set",
-					hidden: set.hide || false,
-					priority: set.layerprio || 0,
-					showLabels: set.showlabels || undefined,
-					minZoom: typeof set.minzoom !== 'undefined' && set.minzoom > -1 ? set.minzoom : undefined,
-					maxZoom: typeof set.maxzoom !== 'undefined' && set.maxzoom > -1 ? set.maxzoom : undefined,
+					...buildMarkerSet(key, set),
 					markers,
+					circles,
 					areas,
 					lines,
-					circles,
 				});
 			}
 

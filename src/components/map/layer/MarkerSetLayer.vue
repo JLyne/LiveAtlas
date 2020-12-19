@@ -73,7 +73,6 @@ export default defineComponent({
 		markerSet: {
 			handler(newValue) {
 				if(newValue && this.layerGroup) {
-					console.log('Updating layer group');
 					this.layerGroup.update({
 						id: this.markerSet.id,
 						minZoom: this.markerSet.minZoom,
@@ -81,6 +80,12 @@ export default defineComponent({
 						showLabels: this.markerSet.showLabels || useStore().state.components.markers.showLabels,
 						priority: this.markerSet.priority,
 					});
+
+					if(newValue.hidden) {
+						this.leaflet.getLayerManager().addHiddenLayer(this.layerGroup, newValue.label, 1);
+					} else {
+						this.leaflet.getLayerManager().addLayer(this.layerGroup, true, newValue.label, 1);
+					}
 				}
 			},
 			deep: true,
