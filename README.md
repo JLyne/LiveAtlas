@@ -15,7 +15,7 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Player markers
 - Custom markers, areas, circles and lines
 - Popups
-- Tile/some marker updates
+- Tile/marker updates
 - Following players
 - Location control
 - Link control
@@ -27,7 +27,6 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Chat
 - Chat balloons
 - Login/register
-- Marker settings (show labels/min and max zoom)
 - Legacy urls (`?worldname=world&mapname=map&z=1&y=1&z=1`)
 - Inactivity timeout
 
@@ -48,7 +47,7 @@ Using an [external webserver](https://github.com/webbukkit/dynmap/wiki/External-
 5. Done.
 
 ## Customisation
-The index.html file can be edited to add custom favicons, just like the original Dynmap.
+The index.html file can be edited to add custom favicons, styles or analytics, just like the original Dynmap.
 You are also free to build LiveAtlas yourself to make further changes.
 
 ## Building
@@ -62,4 +61,4 @@ Please do not contact the Dynmap team regarding any issue with LiveAtlas. They w
 ## Donate
 If you appreciate my work, feel free to:
 
-<a href='https://ko-fi.com/supportkofi' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+<a href='https://ko-fi.com/jlyne' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
