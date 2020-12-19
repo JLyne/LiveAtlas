@@ -84,7 +84,7 @@ function buildWorlds(response: any): Array<DynmapWorld> {
 		(world.maps || []).forEach((map: any) => {
 			maps.set(map.name, {
 				world: world,
-				background: '#121212', //map.background || '#000000',
+				background: map.background || '#000000',
 				backgroundDay: map.backgroundday || '#000000',
 				backgroundNight: map.backgroundnight || '#000000',
 				compassView: map.compassview || 'S',
