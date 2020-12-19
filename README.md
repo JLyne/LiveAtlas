@@ -1,4 +1,4 @@
-# LiveAtlas
+# LiveAtlas 
 A [Dynmap](https://github.com/webbukkit/dynmap) frontend for the modern web, built with [Vue.js](https://github.com/vuejs/vue) and typescript.
 
 ![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas.jpg)
@@ -58,3 +58,8 @@ First run `npm install` to install LiveAtlas dependencies. You can then either r
 If you find a bug, please create an issue with as must detail as possible. I'm working on this in my spare time, so fixes are on a best effort basis, but I'll eventually find time for them.
 
 Please do not contact the Dynmap team regarding any issue with LiveAtlas. They will be very upset.
+
+## Donate
+If you appreciate my work, feel free to:
+
+<a href='https://ko-fi.com/supportkofi' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
