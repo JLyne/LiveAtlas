@@ -47,7 +47,7 @@ Using an [external webserver](https://github.com/webbukkit/dynmap/wiki/External-
 5. Done.
 
 ## Customisation
-The index.html file can be edited to add custom favicons, just like the original Dynmap.
+The index.html file can be edited to add custom favicons, styles or analytics, just like the original Dynmap.
 You are also free to build LiveAtlas yourself to make further changes.
 
 ## Building
