@@ -15,7 +15,7 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Player markers
 - Custom markers, areas, circles and lines
 - Popups
-- Tile/some marker updates
+- Tile/marker updates
 - Following players
 - Location control
 - Link control
@@ -27,7 +27,6 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Chat
 - Chat balloons
 - Login/register
-- Marker settings (show labels/min and max zoom)
 - Legacy urls (`?worldname=world&mapname=map&z=1&y=1&z=1`)
 - Inactivity timeout
 
