@@ -48,12 +48,10 @@ export default class DynmapLayerGroup extends LayerGroup {
 
 		this._map = map;
 		this._markerPane = map.createPane(`${this.options.id}-markers`);
-		this._vectorPane = map.createPane(`${this.options.id}-vectors`);
 
 		this._markerPane.classList.toggle('leaflet-pane--show-labels', this.options.showLabels);
 
 		this._markerPane.style.zIndex = (401 + this.options.priority).toString();
-		this._vectorPane.style.zIndex = (400 + this.options.priority).toString();
 
 		this._updateLayerVisibility(true);
 
@@ -80,7 +78,7 @@ export default class DynmapLayerGroup extends LayerGroup {
 		if (layer instanceof Marker) {
 			layer.options.pane = `${this.options.id}-markers`;
 		} else if (layer instanceof Path) {
-			layer.options.pane = `${this.options.id}-vectors`;
+			layer.options.pane = `vectors`;
 		}
 
 		const zoomLimited = this._isLayerZoomLimited(layer);
@@ -127,7 +125,6 @@ export default class DynmapLayerGroup extends LayerGroup {
 
 			if(this._markerPane) {
 				this._markerPane.style.zIndex = (401 + this.options.priority).toString();
-				this._vectorPane!.style.zIndex = (400 + this.options.priority).toString();
 			}
 		}
 	}

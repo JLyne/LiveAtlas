@@ -202,6 +202,8 @@ export default defineComponent({
 			// markerZoomAnimation: false,
 		}));
 
+		this.leaflet.createPane('vectors');
+
 		this.leaflet.addControl(new LoadingControl({
 			position: 'topleft',
 			delayIndicator: 500,
