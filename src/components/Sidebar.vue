@@ -17,27 +17,27 @@
 <template>
 	<aside class="sidebar">
 		<header class="sidebar__buttons">
-			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active': mapsActive}"
-					@click="mapsActive = !mapsActive" title="Map list" aria-label="Map list">
+			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active': menusActive.has('maps')}"
+					@click="toggleMenu('maps')" title="Map list" aria-label="Map list">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
-			<button :class="{'button--players': true, 'active': playersActive}"
-					@click="playersActive = !playersActive" title="Player list" aria-label="Player list">
+			<button :class="{'button--players': true, 'active': menusActive.has('players')}"
+					@click="toggleMenu('players')" title="Player list" aria-label="Player list">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
-<!--			<button :class="{'button&#45;&#45;settings': true, 'active': settingsActive}"-->
-<!--					@click="settingsActive = !settingsActive" title="Settings" aria-label="Settings">-->
+<!--			<button :class="{'button&#45;&#45;settings': true, 'active': menusActive.has('settings')}"-->
+<!--					@click="toggleMenu('settings')" title="Settings" aria-label="Settings">-->
 <!--				<SvgIcon name="settings"></SvgIcon>-->
 <!--			</button>-->
 		</header>
-		<WorldList v-if="mapCount > 1" v-show="mapsActive"></WorldList>
-		<PlayerList v-show="playersActive"></PlayerList>
+		<WorldList v-if="mapCount > 1" v-show="menusActive.has('maps')"></WorldList>
+		<PlayerList v-show="menusActive.has('players')"></PlayerList>
 		<FollowTarget v-if="following" :target="following"></FollowTarget>
 	</aside>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, computed} from "@vue/runtime-core";
+import {defineComponent, ref, reactive, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import PlayerList from './sidebar/PlayerList.vue';
 import WorldList from './sidebar/WorldList.vue';
 import FollowTarget from './sidebar/FollowTarget.vue';
@@ -53,18 +53,42 @@ export default defineComponent({
 	},
 
 	setup() {
-		const store = useStore();
-		let mapsActive = ref(false),
-			playersActive = ref(false),
-			settingsActive = ref(false),
+		const store = useStore(),
+			onResize = () => {
+				smallScreen.value = window.innerWidth < 480 || window.innerHeight < 500;
+			},
+			toggleMenu = (menu: string) => {
+				if(menusActive.has(menu)) {
+					menusActive.delete(menu);
+				} else {
+					if(smallScreen.value) {
+						menusActive.clear();
+					}
+
+					menusActive.add(menu);
+				}
+			};
+
+		let menusActive = reactive(new Set<string>()),
+			smallScreen = ref(false),
 			mapCount = computed(() => store.state.maps.size),
 			following = computed(() => store.state.followTarget);
 
+		onResize();
+
+		onMounted(() => window.addEventListener('resize', onResize));
+		onUnmounted(() => window.addEventListener('resize', onResize));
+
+		watch(smallScreen, (newValue) => {
+			if(newValue && menusActive.size > 1) {
+				menusActive.clear();
+			}
+		})
+
 		return {
 			mapCount,
-			mapsActive,
-			playersActive,
-			settingsActive,
+			menusActive,
+			toggleMenu,
 			following
 		}
 	}
