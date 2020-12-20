@@ -40,7 +40,15 @@
             padding: 0;
         }
 
-        #splash {
+        noscript {
+            color: #cccccc;
+            font-size: 1rem;
+            font-family: sans-serif;
+            text-align: center;
+            line-height: 1.25;
+        }
+
+        #splash, noscript {
             position: fixed;
             top: 0;
             left: 0;
@@ -119,11 +127,11 @@
         <div id="splash__error" role="alert" aria-hidden="true">
             Failed to load server configuration. Retrying<span id="splash__error-attempt"></span>...
         </div>
-
-        <noscript>
-            <strong>Dynmap requires JavaScript to work. Please enable it to continue.</strong>
-        </noscript>
     </div>
+
+    <noscript>
+        <strong>LiveAtlas requires JavaScript to work.<br />Please enable it to continue.</strong>
+    </noscript>
 
     <div id="mcmap" class="dynmap"></div>
     <script src="standalone/config.js"></script>
