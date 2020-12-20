@@ -131,7 +131,7 @@ export default defineComponent({
 	.sidebar__section {
 		@extend %panel;
 		flex: 0 1 auto;
-		min-height: 15vh;
+		min-height: 10rem;
 		margin-bottom: 1rem;
 		pointer-events: auto;
 

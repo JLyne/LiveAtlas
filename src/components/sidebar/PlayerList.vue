@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<section class="sidebar__section">
+	<section class="sidebar__section sidebar__section--players">
 		<span class="section__heading">{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</span>
 		<ul class="section__content">
 			<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
@@ -49,6 +49,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+	.sidebar__section.sidebar__section--players {
+		flex-shrink: 10;
+	}
 </style>
