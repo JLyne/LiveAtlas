@@ -79,6 +79,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+	@import '../../scss/variables';
+
 	.world {
 		display: flex;
 		align-items: center;
@@ -102,10 +104,22 @@ export default defineComponent({
 			height: 100%;
 			width: 100%;
 			border-radius: 0.5rem;
+
+			.svg-icon {
+				top: 0.2rem;
+				right: 0.2rem;
+				bottom: 0.2rem;
+				left: 0.2rem;
+				width: calc(100% - 0.4rem);
+			}
 		}
 
 		& + .map {
 			margin-left: 0.5rem;
+		}
+
+		&.map--selected button {
+			background-color: $global-focus-color;
 		}
 	}
 </style>
