@@ -28,18 +28,29 @@
 	transition: color 0.2s ease-in, background-color 0.2s ease-in;
 
 	&:hover, &.active {
-		background-color: #cccccc;
+		background-color: $global-focus-color;
 		color: #222222;
 	}
 
 	&:focus {
-		outline-color: #cccccc;
+		outline-color: $global-focus-color;
 		outline-width: 0.2rem;
 	}
 
 	&:active {
 		background-color: #eeeeee;
 		color: #121212;
+	}
+
+	&[disabled], &.disabled {
+		background-color: $global-disabled-background;
+		color: $global-disabled-text-color;
+		cursor: not-allowed;
+
+		&:hover, &:focus, &:active {
+			background-color: $global-disabled-background;
+			color: $global-disabled-text-color;
+		}
 	}
 
 	.svg-icon {
