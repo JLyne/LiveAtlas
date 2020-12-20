@@ -142,13 +142,18 @@ export default defineComponent({
 			align-items: flex-end;
 			margin: 0;
 			position: absolute;
-			right: 0.5rem;
-			top: 0.5rem;
+			right: 1rem;
+			top: 1rem;
 
 			button + button {
 				margin-left: 0;
 				margin-top: 1rem;
 			}
+		}
+
+		@media (max-width: 25rem) {
+			right: 0.5rem;
+			top: 0.5rem;
 		}
 	}
 
@@ -176,11 +181,15 @@ export default defineComponent({
 		}
 	}
 
-	@media (max-width: 30rem), (max-height: 30rem) {
+	@media (max-width: 30rem) {
+		padding-right: 7rem;
+	}
+
+	@media (max-width: 25rem), (max-height: 30rem) {
 		padding: 0.5rem;
 	}
 
-	@media (max-width: 30rem) {
+	@media (max-width: 25rem) {
 		padding-right: 6.5rem;
 	}
 
