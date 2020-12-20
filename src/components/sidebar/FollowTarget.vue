@@ -101,5 +101,9 @@ export default defineComponent({
 				}
 			}
 		}
+
+		@media (max-width: 30rem), (max-height: 30rem) {
+			margin-top: 0;
+		}
 	}
 </style>

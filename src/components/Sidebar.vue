@@ -32,7 +32,7 @@
 		</header>
 		<WorldList v-if="mapCount > 1" v-show="menusActive.has('maps')"></WorldList>
 		<PlayerList v-show="menusActive.has('players')"></PlayerList>
-		<FollowTarget v-if="following" :target="following"></FollowTarget>
+		<FollowTarget v-if="following" v-show="followActive" :target="following"></FollowTarget>
 	</aside>
 </template>
 
@@ -67,7 +67,11 @@ export default defineComponent({
 
 					menusActive.add(menu);
 				}
-			};
+			},
+			followActive = computed(() => {
+				//Show following alongside playerlist on small screens
+				return (!smallScreen.value && following) || (smallScreen.value && menusActive.has('players'));
+			});
 
 		let menusActive = reactive(new Set<string>()),
 			smallScreen = ref(false),
@@ -83,11 +87,12 @@ export default defineComponent({
 			if(newValue && menusActive.size > 1) {
 				menusActive.clear();
 			}
-		})
+		});
 
 		return {
 			mapCount,
 			menusActive,
+			followActive,
 			toggleMenu,
 			following
 		}
@@ -186,7 +191,9 @@ export default defineComponent({
 	}
 
 	@media (max-width: 25rem), (max-height: 30rem) {
-		padding: 0.5rem;
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
+		padding-left: 0.5rem;
 	}
 
 	@media (max-width: 25rem) {
