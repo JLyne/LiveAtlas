@@ -42,6 +42,8 @@ export class ClockControl extends Control {
 	private _sun?: HTMLElement;
 	private _moon?: HTMLElement;
 	private _clock?: HTMLElement;
+	private _currentMoonIcon?: BrowserSpriteSymbol;
+	private _currentSunIcon?: BrowserSpriteSymbol;
 
 	constructor(options: ClockControlOptions) {
 		super(Object.assign(options, {position: 'topcenter'}));
@@ -122,33 +124,35 @@ export class ClockControl extends Control {
 
 		if (this.options.showWeather) {
 			if (worldState.thundering) {
-				this._sun!.innerHTML = `
-					<svg class="svg-icon" viewBox="${sunStorm.viewBox}">
-						<use xlink:href="${sunStorm.url}" />
-					</svg>`;
-				this._moon!.innerHTML = `
-					<svg class="svg-icon" viewBox="${moonStorm.viewBox}">
-						<use xlink:href="${moonStorm.url}" />
-					</svg>`;
+				this._setSunIcon(sunStorm);
+				this._setMoonIcon(moonStorm);
 			} else if (worldState.raining) {
-				this._sun!.innerHTML = `
-					<svg class="svg-icon" viewBox="${sunRain.viewBox}">
-						<use xlink:href="${sunRain.url}" />
-					</svg>`;
-				this._moon!.innerHTML = `
-					<svg class="svg-icon" viewBox="${moonRain.viewBox}">
-						<use xlink:href="${moonRain.url}" />
-					</svg>`;
+				this._setSunIcon(sunRain);
+				this._setMoonIcon(moonRain);
 			} else {
-				this._sun!.innerHTML = `
-					<svg class="svg-icon" viewBox="${sun.viewBox}">
-						<use xlink:href="${sun.url}" />
-					</svg>`;
-				this._moon!.innerHTML = `
-					<svg class="svg-icon" viewBox="${moon.viewBox}">
-						<use xlink:href="${moon.url}" />
-					</svg>`;
+				this._setSunIcon(sun);
+				this._setMoonIcon(moon);
 			}
+		}
+	}
+
+	_setSunIcon(icon: BrowserSpriteSymbol) {
+		if(this._sun && this._currentSunIcon !== icon) {
+			this._sun!.innerHTML = `
+				<svg class="svg-icon" viewBox="${icon.viewBox}">
+					<use xlink:href="${icon.url}" />
+				</svg>`;
+			this._currentSunIcon = icon;
+		}
+	}
+
+	_setMoonIcon(icon: BrowserSpriteSymbol) {
+		if(this._moon && this._currentMoonIcon !== icon) {
+			this._moon!.innerHTML = `
+				<svg class="svg-icon" viewBox="${icon.viewBox}">
+					<use xlink:href="${icon.url}" />
+				</svg>`;
+			this._currentMoonIcon = icon;
 		}
 	}
 }
