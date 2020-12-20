@@ -112,6 +112,20 @@ export default defineComponent({
 				margin-left: 1rem;
 			}
 		}
+
+		@media (max-width: 30rem) {
+			flex-direction: column;
+			align-items: flex-end;
+			margin: 0;
+			position: absolute;
+			right: 0.5rem;
+			top: 0.5rem;
+
+			button + button {
+				margin-left: 0;
+				margin-top: 1rem;
+			}
+		}
 	}
 
 	.sidebar__section {
@@ -136,6 +150,19 @@ export default defineComponent({
 			overflow: auto;
 			will-change: transform;
 		}
+	}
+
+	@media (max-width: 30rem), (max-height: 30rem) {
+		padding: 0.5rem;
+	}
+
+	@media (max-width: 30rem) {
+		padding-right: 6.5rem;
+	}
+
+	@media (max-width: 20rem) {
+		box-sizing: border-box;
+		width: 100%;
 	}
 }
 </style>

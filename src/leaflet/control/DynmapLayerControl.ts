@@ -17,7 +17,7 @@
  *    limitations under the License.
  */
 
-import {Util, Control, DomEvent, LeafletEvent, Map, Layer} from 'leaflet';
+import {Util, Control, DomEvent, LeafletEvent, Map, Layer, DomUtil} from 'leaflet';
 import layers from '@/assets/icons/layers.svg';
 import LayersObject = Control.LayersObject;
 import LayersOptions = Control.LayersOptions;
@@ -51,6 +51,15 @@ export class DynmapLayerControl extends Control.Layers {
 	hasLayer(layer: Layer): boolean {
 		// @ts-ignore
 		return !!super._getLayer(Util.stamp(layer));
+	}
+
+	expand() {
+		// @ts-ignore
+		DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
+
+		// @ts-ignore
+		super._checkDisabledLayers();
+		return this;
 	}
 
 	_addItem(obj: any) {

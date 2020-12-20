@@ -276,6 +276,11 @@ button {
 			font-size: 3rem;
 		}
 	}
+
+	@media (max-width: 30rem), (max-height: 30rem) {
+		transform: scale(calc((1/6)*5));
+    	transform-origin: top center
+	}
 }
 
 /*******************

@@ -102,6 +102,18 @@
 			margin-left: 2rem;
 		}
 	}
+
+	@media (max-width: 37.5rem) {
+		.region {
+			display: none;
+		}
+	}
+
+	@media (max-width: 24rem) {
+		.chunk {
+			display: none;
+		}
+	}
 }
 
 .leaflet-control-layers {
@@ -115,6 +127,9 @@
 
 	.leaflet-control-layers-list {
 		padding: 0.7rem 1.5rem;
+		height: 100%;
+    	box-sizing: border-box;
+		overflow: auto;
 
 		.layer {
 			cursor: pointer;
@@ -126,6 +141,7 @@
 .leaflet-control-logo {
 	width: 5rem;
 	height: 5rem;
+	flex-shrink: 0;
 
 	a {
 		height: 100%;
@@ -146,6 +162,10 @@
 
 	.leaflet-control {
 		margin: 0;
+	}
+
+	@media (max-width: 25rem), (max-height: 30rem) {
+		padding-left: 0.5rem;
 	}
 }
 
@@ -190,6 +210,23 @@
 		margin-top: auto;
 		order: 1000;
 	}
+
+	.leaflet-control-zoom {
+		flex-shrink: 0;
+
+		@media (max-width: 30rem) and (pointer: coarse), (max-height: 30rem) and (pointer: coarse), (max-height: 25rem) {
+			display: none;
+
+			& + .leaflet-control {
+				margin-top: 0;
+			}
+		}
+	}
+
+	@media (max-width: 25rem), (max-height: 30rem) {
+		padding-top: 0.5rem;
+		bottom: 6.5rem;
+	}
 }
 
 .leaflet-bottom {
@@ -198,6 +235,10 @@
 
 	&.leaflet-left .leaflet-control + .leaflet-control {
 		margin-left: 1rem;
+	}
+
+	@media (max-width: 25rem), (max-height: 30rem) {
+		padding-bottom: 0.5rem;
 	}
 }
 
