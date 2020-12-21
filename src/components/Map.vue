@@ -126,6 +126,14 @@ export default defineComponent({
 				this.updateFollow(newValue, false);
 			}
 		},
+		currentProjection(newValue, oldValue) {
+			if(this.leaflet && newValue && oldValue) {
+				this.leaflet.panTo(newValue.locationToLatLng(oldValue.latLngToLocation(this.leaflet.getCenter(), 64)), {
+					animate: false,
+					noMoveStart: true,
+				});
+			}
+		},
 		currentWorld(newValue, oldValue) {
 			const store = useStore();
 
