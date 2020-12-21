@@ -150,5 +150,6 @@ export const state: State = {
 		map: undefined,
 		location: undefined,
 		zoom: undefined,
+		legacy: false,
 	}
 };
