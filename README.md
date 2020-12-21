@@ -22,12 +22,12 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Digital/time of day clock control
 - Logo controls
 - New urls (`#world;map;1,1,1,1`)
+- Legacy urls (`?worldname=world&mapname=map&z=1&y=1&z=1`)
 
 ## Not supported right now
 - Chat
 - Chat balloons
 - Login/register
-- Legacy urls (`?worldname=world&mapname=map&z=1&y=1&z=1`)
 - Inactivity timeout
 
 ## Installation
