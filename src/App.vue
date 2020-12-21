@@ -39,8 +39,7 @@ export default defineComponent({
 	},
 
 	setup() {
-		const initialUrl = window.location.hash.replace('#', ''),
-			store = useStore(),
+		const store = useStore(),
 			updateInterval = computed(() => store.state.configuration.updateInterval),
 			title = computed(() => store.state.configuration.title),
 			currentUrl = computed(() => store.getters.url),
@@ -85,15 +84,10 @@ export default defineComponent({
 			},
 
 			parseUrl = () => {
-				if(!initialUrl) {
-					return;
-				}
+				const parsedUrl = Util.parseUrl();
 
-				try {
-					const result = Util.parseMapHash(initialUrl);
-					store.commit(MutationTypes.SET_PARSED_URL, result);
-				} catch(e) {
-					console.warn('Ignoring invalid url ' + e);
+				if(parsedUrl) {
+					store.commit(MutationTypes.SET_PARSED_URL, parsedUrl);
 				}
 			};
 

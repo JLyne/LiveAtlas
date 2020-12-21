@@ -293,6 +293,7 @@ interface DynmapParsedUrl {
 	map?: string;
 	location?: Coordinate;
 	zoom?: number;
+	legacy: boolean;
 }
 
 interface DynmapChat {

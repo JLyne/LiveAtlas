@@ -76,24 +76,39 @@ export default {
 		};
 	},
 
+	parseUrl() {
+		const query = new URLSearchParams(window.location.search),
+			hash = window.location.hash.replace('#', '');
+
+		if(hash) {
+			try {
+				return this.parseMapHash(hash);
+			} catch (e) {
+				console.warn('Ignoring invalid url ' + e);
+			}
+		}
+
+		try {
+			return this.parseMapSearchParams(query);
+		} catch(e) {
+			console.warn('Ignoring invalid legacy url ' + e);
+		}
+
+		return null;
+	},
+
 	parseMapHash(hash: string) {
 		const parts = hash.replace('#', '').split(';');
 
-		if(parts.length < 3) {
-			throw new TypeError('Not enough parts');
-		}
+		const world = parts[0] || undefined,
+			map = parts[1] || undefined,
+			location = (parts[2] || '').split(',')
+				.map(item => parseFloat(item))
+				.filter(item => !isNaN(item) && isFinite(item)),
+			zoom = typeof parts[3] !== 'undefined' ? parseInt(parts[3]) : undefined;
 
-		const world = parts[0],
-			map = parts[1],
-			location = parts[2].split(',').map(item => parseFloat(item)),
-			zoom = parts[3] ? parseInt(parts[3]) : undefined;
-
-		if(location.length !== 3) {
-			throw new TypeError('Location should contain exactly 3 numbers');
-		}
-
-		if(location.filter(item => isNaN(item) || !isFinite(item)).length) {
-			throw new TypeError('Invalid value in location');
+		if(location.length && location.length !== 3) {
+			throw new TypeError('Location should contain exactly 3 valid numbers');
 		}
 
 		if(typeof zoom !== 'undefined' && (isNaN(zoom) || zoom < 0 || !isFinite(zoom))) {
@@ -103,12 +118,44 @@ export default {
 		return {
 			world,
 			map,
-			location: {
+			location: location.length ? {
 				x: location[0],
 				y: location[1],
 				z: location[2],
-			},
+			} : undefined,
 			zoom,
+			legacy: false,
+		}
+	},
+
+	parseMapSearchParams(query: URLSearchParams) {
+		const world = query.get('worldname') || undefined,
+			map = query.get('mapname') || undefined,
+			location = [
+				query.get('x') || '',
+				query.get('y') || '',
+				query.get('z') || ''
+			].map(item => parseFloat(item)).filter(item => !isNaN(item) && isFinite(item)),
+			zoom = query.has('zoom') ? parseInt(query.get('zoom') as string) : undefined;
+
+		if(location.length && location.length !== 3) {
+			throw new TypeError('Location should contain exactly 3 valid numbers');
+		}
+
+		if(typeof zoom !== 'undefined' && (isNaN(zoom) || zoom < 0 || !isFinite(zoom))) {
+			throw new TypeError('Invalid value for zoom');
+		}
+
+		return {
+			world,
+			map,
+			location: location.length ? {
+				x: location[0],
+				y: location[1],
+				z: location[2],
+			} : undefined,
+			zoom,
+			legacy: true,
 		}
 	}
 }
