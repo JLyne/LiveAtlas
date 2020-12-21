@@ -166,7 +166,8 @@ export default defineComponent({
 				}
 
 				if(!oldValue) {
-					zoom = store.state.parsedUrl.zoom || store.state.configuration.defaultZoom;
+					zoom = typeof store.state.parsedUrl.zoom !== 'undefined' ?
+						store.state.parsedUrl.zoom : store.state.configuration.defaultZoom;
 				}
 
 				//Delay the pan by a frame, to allow the projection to be updated by the new world
