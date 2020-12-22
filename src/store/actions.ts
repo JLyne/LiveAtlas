@@ -94,7 +94,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
 			// Use first world, if any, if neither of the above exist
 			if(!worldName) {
-				worldName = state.worlds.size ? state.worlds.entries().next().value.name : undefined;
+				worldName = state.worlds.size ? state.worlds.entries().next().value[1].name : undefined;
 			}
 
 			if(worldName) {
