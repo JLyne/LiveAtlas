@@ -103,7 +103,7 @@ export class PlayerIcon extends DivIcon {
 
 			Util.getMinecraftHead(player, size).then(head => {
 				this._playerImage!.src = head.src;
-			});
+			}).catch(() => {});
 		} else {
 			this._playerImage = noSkinImage.cloneNode(false) as HTMLImageElement;
 		}

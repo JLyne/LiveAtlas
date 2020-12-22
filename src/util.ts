@@ -50,12 +50,12 @@ export default {
 				resolve(faceImage);
 			};
 
-			faceImage.onerror = function() {
-				console.warn('Failed to retrieve face of "', player, '" with size "', size, '"!');
-				reject();
+			faceImage.onerror = function(e) {
+				console.warn(`Failed to retrieve face of ${player.account} with size ${size}!`);
+				reject(e);
 			};
 
-			const src = (size === 'body') ? `faces/body/${player.name}.png` :`faces/${size}x${size}/${player.name}.png`;
+			const src = (size === 'body') ? `faces/body/${player.account}.png` :`faces/${size}x${size}/${player.account}.png`;
 			faceImage.src = this.concatURL(window.config.url.markers, src);
 		});
 	},
