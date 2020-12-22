@@ -46,6 +46,10 @@
 				border-bottom-color: $global-border-color;
 			}
 		}
+
+		&:hover {
+			border-bottom-color: $global-border-color;
+		}
 	}
 }
 
