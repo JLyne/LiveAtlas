@@ -113,7 +113,7 @@ export class DynmapTileLayer extends TileLayer {
 			url = `${window.config.url.tiles}${path}`;
 
 			if(typeof timestamp !== 'undefined') {
-				url += `&timestamp=${timestamp}`;
+				url += (url.indexOf('?') === -1 ? `?timestamp=${timestamp}` : `&timestamp=${timestamp}`);
 			}
 
 			this._cachedTileUrls.set(name, url);
