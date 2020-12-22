@@ -112,7 +112,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
 				// Use first map, if any, if neither of the above exist
 				if(!mapName) {
-					mapName = world.maps.size ? world.maps.entries().next().value.name : undefined;
+					mapName = world.maps.size ? world.maps.entries().next().value[1].name : undefined;
 				}
 			}
 
