@@ -126,6 +126,7 @@ export default defineComponent({
 			margin: 0;
 			width: 100%;
 			height: 100%;
+			min-height: 3.2rem;
 		}
 
 		&.player--hidden {

@@ -523,7 +523,7 @@ export default {
 					account: player.account || "",
 					health: player.health || 0,
 					armor: player.armor || 0,
-					name: player.name ? sanitizer.sanitize(player.name) : "Steve",
+					name: player.name ? sanitizer.sanitize(player.name) : "",
 					sort: player.sort || 0,
 					hidden: !world,
 					location: {
