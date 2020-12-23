@@ -103,7 +103,7 @@ export default class DynmapLayerGroup extends LayerGroup {
 
 	removeLayer(layer: Layer): this {
 		this._zoomLimitedLayers.delete(layer);
-		return super.addLayer(layer);
+		return super.removeLayer(layer);
 	}
 
 	update(options: DynmapLayerGroupOptions) {

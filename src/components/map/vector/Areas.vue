@@ -67,7 +67,7 @@ export default defineComponent({
 					return;
 				}
 
-				area.remove();
+				props.layerGroup.removeLayer(area);
 				layers.delete(id);
 			},
 

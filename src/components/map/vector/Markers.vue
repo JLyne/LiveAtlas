@@ -65,7 +65,7 @@ export default defineComponent({
 					return;
 				}
 
-				marker.remove();
+				props.layerGroup.removeLayer(marker);
 				layers.delete(id);
 			},
 

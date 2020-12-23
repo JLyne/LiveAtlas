@@ -67,7 +67,7 @@ export default defineComponent({
 					return;
 				}
 
-				circle.remove();
+				props.layerGroup.removeLayer(circle);
 				layers.delete(id);
 			},
 
