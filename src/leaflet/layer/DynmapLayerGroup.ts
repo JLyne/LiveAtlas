@@ -32,7 +32,6 @@ export default class DynmapLayerGroup extends LayerGroup {
 	_zoomLimitedLayers: Set<Layer>; //Layers which are zoom limited and should be checked on zoom
 	_layers: any;
 	_markerPane?: HTMLElement;
-	_vectorPane?: HTMLElement;
 
 	_zoomEndCallback = () => this._updateLayerVisibility();
 
@@ -47,7 +46,7 @@ export default class DynmapLayerGroup extends LayerGroup {
 		map.on('zoomend', this._zoomEndCallback, this);
 
 		this._map = map;
-		this._markerPane = map.createPane(`${this.options.id}-markers`);
+		this._markerPane = map.getPane(`${this.options.id}-markers`) || map.createPane(`${this.options.id}-markers`);
 
 		this._markerPane.classList.toggle('leaflet-pane--show-labels', this.options.showLabels);
 
