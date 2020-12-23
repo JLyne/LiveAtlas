@@ -26,10 +26,11 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, computed, ref} from 'vue';
+import {defineComponent, computed, ref, onMounted} from 'vue';
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
+import Util from '@/util';
 
 const defaultImage = require('@/assets/images/player_face.png');
 
@@ -82,6 +83,12 @@ export default defineComponent({
 			};
 
 		let image = ref(defaultImage);
+
+		onMounted(() => {
+			if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkinFaces) {
+				Util.getMinecraftHead(props.player, '16').then((result) => image.value = result.src).catch(() => {});
+			}
+		});
 
 		return {
 			image,

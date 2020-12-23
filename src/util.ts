@@ -17,7 +17,8 @@
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 
-const headCache = new Map<DynmapPlayer, HTMLImageElement>();
+const headCache = new Map<DynmapPlayer, HTMLImageElement>(),
+	headUnresolvedCache = new Map<DynmapPlayer, Promise<HTMLImageElement>>();
 
 export default {
 	getMinecraftTime(serverTime: number) {
@@ -42,7 +43,11 @@ export default {
 			return Promise.resolve(headCache.get(player) as HTMLImageElement);
 		}
 
-		return new Promise((resolve, reject) => {
+		if(headUnresolvedCache.has(player)) {
+			return headUnresolvedCache.get(player) as Promise<HTMLImageElement>;
+		}
+
+		const promise = new Promise((resolve, reject) => {
 			const faceImage = new Image();
 
 			faceImage.onload = function() {
@@ -57,7 +62,11 @@ export default {
 
 			const src = (size === 'body') ? `faces/body/${player.account}.png` :`faces/${size}x${size}/${player.account}.png`;
 			faceImage.src = this.concatURL(window.config.url.markers, src);
-		});
+		}).finally(() => headUnresolvedCache.delete(player)) as Promise<HTMLImageElement>;
+
+		headUnresolvedCache.set(player, promise);
+
+		return promise;
 	},
 
 	concatURL(base: string, addition: string) {
