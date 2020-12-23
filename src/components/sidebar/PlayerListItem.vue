@@ -16,7 +16,7 @@
 
 <template>
 	<li :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}">
-		<img width="16" height="16" class="player__icon" :src="playerImage" alt="" />
+		<img width="16" height="16" class="player__icon" :src="image" alt="" />
 		<button class="player__name" type="button" :title="title"
 				:disbled="player.hidden"
 				@click.prevent="pan"
@@ -26,12 +26,12 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent, computed, ref} from 'vue';
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 
-const playerImage = require('@/assets/images/player_face.png');
+const defaultImage = require('@/assets/images/player_face.png');
 
 export default defineComponent({
 	name: 'PlayerListItem',
@@ -41,51 +41,58 @@ export default defineComponent({
 			required: true
 		}
 	},
-	data() {
-		return {
-			playerImage: playerImage,
-		}
-	},
-	computed: {
-		otherWorld(): boolean {
-			const store = useStore();
-			return store.state.configuration.grayHiddenPlayers
-				&& (!store.state.currentWorld || store.state.currentWorld.name !== this.player.location.world);
-		},
-		title(): string {
-			if(this.player.hidden) {
-				return 'This player is currently hidden from the map\nDouble-click to follow player when they become visible';
-			} else if(this.otherWorld) {
-				return 'This player is in another world.\nClick to center on player\nDouble-click to follow player';
-			} else {
-				return 'Click to center on player\nDouble-click to follow player';
-			}
-		}
-	},
-	methods: {
-		follow() {
-			useStore().commit(MutationTypes.SET_FOLLOW_TARGET, this.player);
-		},
-		pan() {
-			if(!this.player.hidden) {
-				useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
-				useStore().commit(MutationTypes.SET_PAN_TARGET, this.player);
-			}
-		},
-		onKeydown(e: KeyboardEvent) {
-			if(e.key !== ' ' && e.key !== 'Enter') {
-				return;
-			}
+	setup(props) {
+		const store = useStore(),
+			otherWorld = computed(() => {
+				return store.state.configuration.grayHiddenPlayers
+					&& (!store.state.currentWorld || store.state.currentWorld.name !== props.player.location.world);
+			}),
 
-			if(e.shiftKey) {
-				this.follow();
-			} else {
-				if(!this.player.hidden) {
-					this.pan();
+			title = computed(() => {
+				if(props.player.hidden) {
+					return 'This player is currently hidden from the map\nDouble-click to follow player when they become visible';
+				} else if(otherWorld.value) {
+					return 'This player is in another world.\nClick to center on player\nDouble-click to follow player';
+				} else {
+					return 'Click to center on player\nDouble-click to follow player';
 				}
-			}
+			}),
+
+			pan = () => {
+				if(!props.player.hidden) {
+					store.commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
+					store.commit(MutationTypes.SET_PAN_TARGET, props.player);
+				}
+			},
+
+			follow = () => store.commit(MutationTypes.SET_FOLLOW_TARGET, props.player),
+
+			onKeydown = (e: KeyboardEvent) => {
+				if(e.key !== ' ' && e.key !== 'Enter') {
+					return;
+				}
+
+				if(e.shiftKey) {
+					follow();
+				} else {
+					if(!props.player.hidden) {
+						pan();
+					}
+				}
+			};
+
+		let image = ref(defaultImage);
+
+		return {
+			image,
+			title,
+			otherWorld,
+			pan,
+			follow,
+			onKeydown
 		}
-	}
+	},
+
 });
 </script>
 
