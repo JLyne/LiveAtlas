@@ -42,7 +42,7 @@ Using an [external webserver](https://github.com/webbukkit/dynmap/wiki/External-
 ### Default internal webserver
 1. Download the latest release.
 2. Extract into `plugins/dynmap/web`. The existing index.html should be overwritten.
-3. (Optional) Set index.html as readonly. This will prevent Dynmap overwriting it after every update.
+3. (Recommended) Set index.html as readonly. This will prevent Dynmap overwriting it after every update.
 4. Clear any CDN caches you may have.
 5. Done.
 
