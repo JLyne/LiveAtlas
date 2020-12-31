@@ -93,7 +93,7 @@ export class DynmapIcon extends DivIcon {
 	}
 
 	update(options: DynmapIconOptions) {
-		if(options.icon !== this.options.icon) {
+		if(this._image && options.icon !== this.options.icon) {
 			this._image!.src = `${window.config.url.markers}_markers_/${options.icon}.png`;
 			this.options.icon = options.icon;
 		}
@@ -101,13 +101,13 @@ export class DynmapIcon extends DivIcon {
 		const iconSize = point(options.iconSize || [16, 16] as PointExpression),
 			oldSize = point(this.options.iconSize as PointExpression);
 
-		if(iconSize.x !== oldSize.x || iconSize.y !== oldSize.y) {
+		if(this._image && (iconSize.x !== oldSize.x || iconSize.y !== oldSize.y)) {
 			this._image!.width = iconSize.x;
 			this._image!.height = iconSize.y;
 			this.options.iconSize = options.iconSize;
 		}
 
-		if(options.label !== this.options.label || options.isHtml !== this.options.isHtml) {
+		if(this._label && (options.label !== this.options.label || options.isHtml !== this.options.isHtml)) {
 			if (options.isHtml) {
 				this._label!.innerHTML = options.label;
 			} else {
