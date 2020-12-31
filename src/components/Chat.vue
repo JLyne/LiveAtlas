@@ -17,7 +17,8 @@
 <template>
 	<section class="chat">
 		<ul class="chat__messages">
-			<ChatMessage v-for="message in chat" :key="message.timestamp" :message="message"></ChatMessage>
+			<ChatMessage v-for="message in messages" :key="message.timestamp" :message="message"></ChatMessage>
+			<li v-if="!messages.length" class="message message--skeleton">No chat messages yet...</li>
 		</ul>
 	</section>
 </template>
@@ -33,10 +34,10 @@
 		},
 		setup() {
 			const store = useStore(),
-				chat = computed(() => store.state.chat);
+				messages = computed(() => store.state.chat.messages);
 
 			return {
-				chat,
+				messages,
 			}
 		}
 	})
@@ -67,9 +68,15 @@
 
 			.message {
 				font-size: 1.6rem;
+				line-height: 1.9rem;
 
 				& + .message {
 					margin-bottom: 0.5rem
+				}
+
+				&.message--skeleton {
+					font-style: italic;
+					color: #aaaaaa;
 				}
 			}
 		}

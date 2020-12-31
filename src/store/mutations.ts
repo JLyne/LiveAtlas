@@ -241,10 +241,10 @@ export const mutations: MutationTree<State> & Mutations = {
 
 	//Adds chat messages from an update fetch to the chat history
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>) {
-		state.chat.unshift(...chat);
+		state.chat.messages.unshift(...chat);
 
 		if(state.components.chat && isFinite(state.components.chat.messageHistory)) {
-			state.chat.splice(state.components.chat.messageHistory);
+			state.chat.messages.splice(state.components.chat.messageHistory);
 		}
 	},
 

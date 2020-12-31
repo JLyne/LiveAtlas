@@ -34,7 +34,11 @@ export type State = {
 	maps: Map<string, DynmapWorldMap>;
 	players: Map<string, DynmapPlayer>;
 	markerSets: Map<string, DynmapMarkerSet>;
-	chat: DynmapChat[];
+
+	chat: {
+		unread: number;
+		messages: DynmapChat[];
+	};
 
 	pendingSetUpdates: Map<string, DynmapMarkerSetUpdates>;
 	pendingTileUpdates: Array<DynmapTileUpdate>;
@@ -98,7 +102,11 @@ export const state: State = {
 	worlds: new Map(), //Defined (loaded) worlds with maps from configuration.json
 	maps: new Map(), //Defined maps from configuration.json
 	players: new Map(), //Online players from world.json
-	chat: [],
+
+	chat: {
+		unread: 0,
+		messages: [],
+	},
 
 	markerSets: new Map(), //Markers from world_markers.json. Contents of each set isn't reactive for performance reasons.
 	pendingSetUpdates: new Map(), //Pending updates to markers/areas/etc for each marker set
