@@ -396,31 +396,7 @@ button {
  * Chat
  */
 
-.chat {
-	@extend %panel;
-	position: absolute;
-	bottom: 7rem;
-	left: 7rem;
-	width: 50rem;
-	max-width: calc(100% - 8rem);
-	max-height: 20rem;
-	display: flex;
-	box-sizing: border-box;
 
-	.chat__messages {
-		display: flex;
-		flex-direction: column-reverse;
-		list-style: none;
-		overflow: auto;
-		margin: 0;
-		padding: 0;
-
-		.message {
-			font-size: 1.6rem;
-			margin-bottom: 0.5rem
-		}
-	}
-}
 
 .chatinput {
 

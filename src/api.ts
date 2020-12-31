@@ -126,6 +126,7 @@ function buildComponents(response: any): DynmapComponentConfig {
 			markers: {
 				showLabels: false,
 			},
+			chat: undefined,
 			playerMarkers: undefined,
 			coordinatesControl: undefined,
 			linkControl: false,
@@ -188,6 +189,15 @@ function buildComponents(response: any): DynmapComponentConfig {
 					position: component.position.replace('-', '') || 'topleft',
 					image: component.logourl || undefined,
 				});
+				break;
+
+			case "chatbox":
+				components.chat = {
+					allowUrlName: component.allowurlname || false,
+					showPlayerFaces: component.showplayerfaces || false,
+					messageLifetime: component.messagettl || Infinity,
+					messageHistory: component.scrollback || Infinity,
+				}
 		}
 	});
 
@@ -444,10 +454,49 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 
 				updates.chat.push({
 					type: 'chat',
-					account: entry.account,
-					message: entry.message,
+					playerAccount: entry.account,
+					playerName: entry.playerName ? sanitizer.sanitize(entry.playerName) : "",
+					message: entry.message ? sanitizer.sanitize(entry.message) : "",
 					timestamp: entry.timestamp,
 					channel: entry.channel || undefined,
+				});
+				break;
+
+			case 'playerjoin':
+				if(!entry.account || !entry.timestamp) {
+					dropped.incomplete++;
+					continue;
+				}
+
+				if(entry.timestamp < lastUpdate) {
+					dropped.stale++;
+					continue;
+				}
+
+				updates.chat.push({
+					type: 'playerjoin',
+					playerAccount: entry.account,
+					playerName: entry.playerName ? sanitizer.sanitize(entry.playerName) : "",
+					timestamp: entry.timestamp || undefined,
+				});
+				break;
+
+			case 'playerquit':
+				if(!entry.account || !entry.timestamp) {
+					dropped.incomplete++;
+					continue;
+				}
+
+				if(entry.timestamp < lastUpdate) {
+					dropped.stale++;
+					continue;
+				}
+
+				updates.chat.push({
+					type: 'playerleave',
+					playerAccount: entry.account,
+					playerName: entry.playerName ? sanitizer.sanitize(entry.playerName) : "",
+					timestamp: entry.timestamp || undefined,
 				});
 				break;
 

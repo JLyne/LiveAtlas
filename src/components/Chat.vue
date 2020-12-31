@@ -17,7 +17,7 @@
 <template>
 	<section class="chat">
 		<ul class="chat__messages">
-			<li class="message" v-for="message in chat" :key="message.timestamp">{{ message.message || 'aaaa' }}</li>
+			<ChatMessage v-for="message in chat" :key="message.timestamp" :message="message"></ChatMessage>
 		</ul>
 	</section>
 </template>
@@ -25,8 +25,12 @@
 <script lang="ts">
 	import {defineComponent, computed} from "@vue/runtime-core";
 	import {useStore} from "@/store";
+	import ChatMessage from "@/components/chat/ChatMessage.vue";
 
 	export default defineComponent({
+		components: {
+			ChatMessage
+		},
 		setup() {
 			const store = useStore(),
 				chat = computed(() => store.state.chat);
@@ -39,5 +43,47 @@
 </script>
 
 <style lang="scss">
+	@import '../scss/variables';
+	@import '../scss/placeholders';
 
+	.chat {
+		@extend %panel;
+		position: absolute;
+		bottom: 7rem;
+		left: 7rem;
+		width: 50rem;
+		max-width: calc(100% - 8rem);
+		max-height: 20rem;
+		display: flex;
+		box-sizing: border-box;
+
+		.chat__messages {
+			display: flex;
+			flex-direction: column-reverse;
+			list-style: none;
+			overflow: auto;
+			margin: 0;
+			padding: 0;
+
+			.message {
+				font-size: 1.6rem;
+
+				& + .message {
+					margin-bottom: 0.5rem
+				}
+			}
+		}
+
+		@media (max-width: 25rem), (max-height: 30rem) {
+			bottom: 6.5rem;
+			left: 6.5rem;
+			max-width: calc(100% - 7rem);
+		}
+
+		@media (max-width: 20rem) {
+			.chat__messages .message + .message {
+				margin-bottom: 0.7rem;
+			}
+		}
+	}
 </style>

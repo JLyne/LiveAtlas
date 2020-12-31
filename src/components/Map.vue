@@ -24,7 +24,7 @@
 		<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
 		<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
 		<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
-		<ChatControl v-if="false" :leaflet="leaflet"></ChatControl>
+		<ChatControl v-if="chatEnabled" :leaflet="leaflet"></ChatControl>
 	</div>
 </template>
 

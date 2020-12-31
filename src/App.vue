@@ -17,11 +17,11 @@
 <template>
 	<Map></Map>
 	<Sidebar></Sidebar>
-	<Chat v-if="false"></Chat>
+	<Chat v-if="chatEnabled" v-show="chatEnabled && chatVisible"></Chat>
 </template>
 
 <script lang="ts">
-import {defineComponent, computed, ref, onMounted, onBeforeUnmount, watch} from 'vue';
+import {computed, defineComponent, onBeforeUnmount, onMounted, onUnmounted, ref, watch} from 'vue';
 import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
 import Chat from './components/Chat.vue';
@@ -44,6 +44,7 @@ export default defineComponent({
 			title = computed(() => store.state.configuration.title),
 			currentUrl = computed(() => store.getters.url),
 			chatEnabled = computed(() => store.state.components.chat),
+			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
 			updatesEnabled = ref(false),
 			updateTimeout = ref(0),
 			configAttempts = ref(0),
@@ -101,6 +102,10 @@ export default defineComponent({
 
 					store.commit(MutationTypes.SET_PARSED_URL, parsedUrl);
 				}
+			},
+
+			onResize = () => {
+				store.commit(MutationTypes.SET_SMALL_SCREEN, window.innerWidth < 480 || window.innerHeight < 500);
 			};
 
 		watch(title, (title) => document.title = title);
@@ -110,9 +115,14 @@ export default defineComponent({
 		onBeforeUnmount(() => stopUpdates());
 
 		parseUrl();
+		onResize();
+
+		onMounted(() => window.addEventListener('resize', onResize));
+		onUnmounted(() => window.addEventListener('resize', onResize));
 
 		return {
 			chatEnabled,
+			chatVisible,
 		}
 	},
 });

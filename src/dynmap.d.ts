@@ -298,7 +298,8 @@ interface DynmapParsedUrl {
 
 interface DynmapChat {
 	type: 'chat' | 'playerjoin' | 'playerleave';
-	account: string;
+	playerAccount: string;
+	playerName: string;
 	channel?: string;
 	message?: string;
 	// source?: string;

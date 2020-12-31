@@ -16,6 +16,9 @@
 
 import {Control, ControlOptions, DomUtil, Map} from 'leaflet';
 import chat from '@/assets/icons/chat.svg';
+import {useStore} from "@/store";
+import {MutationTypes} from "@/store/mutation-types";
+import {watch} from "@vue/runtime-core";
 
 export class ChatControl extends Control {
 	// @ts-ignore
@@ -34,6 +37,16 @@ export class ChatControl extends Control {
 		<svg class="svg-icon" viewBox="${chat.viewBox}">
 		  <use xlink:href="${chat.url}" />
 		</svg>`;
+
+		chatButton.addEventListener('click', e => {
+			useStore().commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'chat');
+			e.stopPropagation();
+			e.preventDefault();
+		});
+
+		watch(useStore().state.ui.visibleElements, (newValue) => {
+			chatButton.classList.toggle('active', newValue.has('chat'));
+		});
 
 		return chatButton;
 	}
