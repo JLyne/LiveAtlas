@@ -20,7 +20,7 @@ import {
 	DynmapMessageConfig,
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
-	DynmapWorld, DynmapWorldState, Coordinate, DynmapParsedUrl, DynmapChat
+	DynmapWorld, DynmapWorldState, Coordinate, DynmapParsedUrl, DynmapChat, DynmapUIElement
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 
@@ -51,6 +51,11 @@ export type State = {
 
 	updateRequestId: number;
 	updateTimestamp: Date;
+
+	ui: {
+		smallScreen: boolean;
+		visibleElements: Set<DynmapUIElement>;
+	};
 
 	parsedUrl: DynmapParsedUrl;
 }
@@ -144,6 +149,11 @@ export const state: State = {
 
 	updateRequestId: 0,
 	updateTimestamp: new Date(),
+
+	ui: {
+		smallScreen: false,
+		visibleElements:new Set(),
+	},
 
 	parsedUrl: {
 		world: undefined,

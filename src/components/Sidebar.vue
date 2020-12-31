@@ -17,32 +17,34 @@
 <template>
 	<aside class="sidebar">
 		<header class="sidebar__buttons">
-			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active': menusActive.has('maps')}"
-					@click="toggleMenu('maps')" title="Map list" aria-label="Map list">
+			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active':visibleUIElements.has('maps')}"
+					@click="toggleElement('maps')" title="Map list" aria-label="Map list">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
-			<button :class="{'button--players': true, 'active': menusActive.has('players')}"
-					@click="toggleMenu('players')" title="Player list" aria-label="Player list">
+			<button :class="{'button--players': true, 'active': visibleUIElements.has('players')}"
+					@click="toggleElement('players')" title="Player list" aria-label="Player list">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
-<!--			<button :class="{'button&#45;&#45;settings': true, 'active': menusActive.has('settings')}"-->
-<!--					@click="toggleMenu('settings')" title="Settings" aria-label="Settings">-->
+<!--			<button :class="{'button&#45;&#45;settings': true, 'active': visibleUIElements.has('settings'))}"-->
+<!--					@click="toggleElement('settings')" title="Settings" aria-label="Settings">-->
 <!--				<SvgIcon name="settings"></SvgIcon>-->
 <!--			</button>-->
 		</header>
-		<WorldList v-if="mapCount > 1" v-show="menusActive.has('maps')"></WorldList>
-		<PlayerList v-show="menusActive.has('players')"></PlayerList>
+		<WorldList v-if="mapCount > 1" v-show="visibleUIElements.has('maps')"></WorldList>
+		<PlayerList v-show="visibleUIElements.has('players')"></PlayerList>
 		<FollowTarget v-if="following" v-show="followActive" :target="following"></FollowTarget>
 	</aside>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, reactive, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
+import {defineComponent, computed} from "@vue/runtime-core";
 import PlayerList from './sidebar/PlayerList.vue';
 import WorldList from './sidebar/WorldList.vue';
 import FollowTarget from './sidebar/FollowTarget.vue';
 import {useStore} from "@/store";
 import SvgIcon from "@/components/SvgIcon.vue";
+import {MutationTypes} from "@/store/mutation-types";
+import {DynmapUIElement} from "@/dynmap";
 
 export default defineComponent({
 	components: {
@@ -54,47 +56,27 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			onResize = () => {
-				smallScreen.value = window.innerWidth < 480 || window.innerHeight < 500;
-			},
-			toggleMenu = (menu: string) => {
-				if(menusActive.has(menu)) {
-					menusActive.delete(menu);
-				} else {
-					if(smallScreen.value) {
-						menusActive.clear();
-					}
+			visibleUIElements = computed(() => store.state.ui.visibleElements),
+			smallScreen = computed(() => store.state.ui.smallScreen),
+			mapCount = computed(() => store.state.maps.size),
+			following = computed(() => store.state.followTarget),
 
-					menusActive.add(menu);
-				}
+			toggleElement = (element: DynmapUIElement) => {
+				store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, element);
 			},
+
 			followActive = computed(() => {
 				//Show following alongside playerlist on small screens
-				return (!smallScreen.value && following) || (smallScreen.value && menusActive.has('players'));
+				return (!smallScreen.value && following)
+					|| (smallScreen.value && visibleUIElements.value.has('players'));
 			});
-
-		let menusActive = reactive(new Set<string>()),
-			smallScreen = ref(false),
-			mapCount = computed(() => store.state.maps.size),
-			following = computed(() => store.state.followTarget);
-
-		onResize();
-
-		onMounted(() => window.addEventListener('resize', onResize));
-		onUnmounted(() => window.addEventListener('resize', onResize));
-
-		watch(smallScreen, (newValue) => {
-			if(newValue && menusActive.size > 1) {
-				menusActive.clear();
-			}
-		});
 
 		return {
 			mapCount,
-			menusActive,
+			visibleUIElements,
+			toggleElement,
 			followActive,
-			toggleMenu,
-			following
+			following,
 		}
 	}
 })

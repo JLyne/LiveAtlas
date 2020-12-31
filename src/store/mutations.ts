@@ -29,7 +29,7 @@ import {
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapWorld,
-	DynmapWorldState, DynmapParsedUrl, DynmapChat
+	DynmapWorldState, DynmapParsedUrl, DynmapChat, DynmapUIElement
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 
@@ -69,6 +69,10 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_PAN_TARGET](state: S, payload: DynmapPlayer): void
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: S, a?: void): void
 	[MutationTypes.CLEAR_PAN_TARGET](state: S, a?: void): void
+
+	[MutationTypes.SET_SMALL_SCREEN](state: S, payload: boolean): void
+	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: S, payload: DynmapUIElement): void
+	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: S, payload: {element: DynmapUIElement, state: boolean}): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -238,6 +242,10 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Adds chat messages from an update fetch to the chat history
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>) {
 		state.chat.unshift(...chat);
+
+		if(state.components.chat && isFinite(state.components.chat.messageHistory)) {
+			state.chat.splice(state.components.chat.messageHistory);
+		}
 	},
 
 	//Pops the specified number of marker updates from the pending updates list
@@ -397,5 +405,31 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Clear the pan target
 	[MutationTypes.CLEAR_PAN_TARGET](state: State) {
 		state.panTarget = undefined;
+	},
+
+	[MutationTypes.SET_SMALL_SCREEN](state: State, smallScreen: boolean): void {
+		if(!state.ui.smallScreen && smallScreen && state.ui.visibleElements.size > 1) {
+			state.ui.visibleElements.clear();
+		}
+
+		state.ui.smallScreen = smallScreen;
+	},
+
+	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: State, element: DynmapUIElement): void {
+		const newState = !state.ui.visibleElements.has(element);
+
+		if(newState && state.ui.smallScreen) {
+			state.ui.visibleElements.clear();
+		}
+
+		newState ? state.ui.visibleElements.add(element) : state.ui.visibleElements.delete(element);
+	},
+
+	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: State, payload: {element: DynmapUIElement, state: boolean}): void {
+		if(payload.state && state.ui.smallScreen) {
+			state.ui.visibleElements.clear();
+		}
+
+		payload.state ? state.ui.visibleElements.add(payload.element) : state.ui.visibleElements.delete(payload.element);
 	}
 }

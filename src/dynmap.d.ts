@@ -304,3 +304,5 @@ interface DynmapChat {
 	// source?: string;
 	timestamp: number;
 }
+
+export type DynmapUIElement = 'chat' | 'players' | 'maps' | 'settings';
