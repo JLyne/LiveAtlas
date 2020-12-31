@@ -27,6 +27,8 @@ import sunStorm from '@/assets/icons/clock_sun_storm.svg';
 import moon from '@/assets/icons/clock_moon.svg';
 import moonRain from '@/assets/icons/clock_moon_rain.svg';
 import moonStorm from '@/assets/icons/clock_moon_storm.svg';
+import {watch} from "@vue/runtime-core";
+import {useStore} from "@/store";
 
 export interface ClockControlOptions extends ControlOptions {
 	showTimeOfDay: boolean;
@@ -44,6 +46,7 @@ export class ClockControl extends Control {
 	private _clock?: HTMLElement;
 	private _currentMoonIcon?: BrowserSpriteSymbol;
 	private _currentSunIcon?: BrowserSpriteSymbol;
+	private _unwatchHandler?: Function;
 
 	constructor(options: ClockControlOptions) {
 		super(Object.assign(options, {position: 'topcenter'}));
@@ -52,7 +55,8 @@ export class ClockControl extends Control {
 	}
 
 	onAdd(map: Map) {
-		const digital = !this.options.showTimeOfDay && !this.options.showWeather && this.options.showDigitalClock;
+		const digital = !this.options.showTimeOfDay && !this.options.showWeather && this.options.showDigitalClock,
+			worldState = useStore().state.currentWorldState;
 
 		this._container = DomUtil.create('div', 'clock' + (digital ? ' clock--digital' : ''));
 		this._sun = DomUtil.create('div', 'clock__sun', this._container);
@@ -74,10 +78,20 @@ export class ClockControl extends Control {
 			this._clock = DomUtil.create('div', 'clock__time', this._container)
 		}
 
+		this._unwatchHandler = watch(worldState, (newValue) => {
+			this._update(newValue);
+		}, { deep: true });
+
 		return this._container;
 	}
 
-	update(worldState: DynmapWorldState) {
+	onRemove(map: Map) {
+		if(this._unwatchHandler) {
+			this._unwatchHandler();
+		}
+	}
+
+	_update(worldState: DynmapWorldState) {
 		const timeOfDay = worldState.timeOfDay;
 		let sunAngle;
 
