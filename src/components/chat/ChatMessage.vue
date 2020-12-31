@@ -41,7 +41,7 @@
 			const store = useStore();
 			let image = ref(defaultImage),
 				facesEnabled = computed(() => store.state.components.chat?.showPlayerFaces),
-				showSender = computed(() => props.message.type === 'chat'),
+				showSender = computed(() => props.message.playerName && props.message.type === 'chat'),
 				messageContent = computed(() => {
 					switch(props.message.type) {
 						case 'chat':
@@ -92,7 +92,7 @@
 			margin-right: 0.5rem;
 			word-wrap: break-word;
 
-			&:after {
+			&:not(:empty):after {
 				content: ': ';
 			}
 		}
@@ -101,11 +101,9 @@
 			word-wrap: break-word;
 		}
 
-		&.message--join,
-		&.message--leave {
-			.message__sender:after {
-				content: none;
-			}
+		&.message--playerjoin,
+		&.message--playerleave {
+			font-style: italic;
 		}
 
 		@media (max-width: 20rem) {
