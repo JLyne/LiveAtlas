@@ -17,8 +17,8 @@
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 
-const headCache = new Map<DynmapPlayer, HTMLImageElement>(),
-	headUnresolvedCache = new Map<DynmapPlayer, Promise<HTMLImageElement>>();
+const headCache = new Map<string, HTMLImageElement>(),
+	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>();
 
 export default {
 	getMinecraftTime(serverTime: number) {
@@ -38,33 +38,35 @@ export default {
 		};
 	},
 
-	getMinecraftHead(player: DynmapPlayer, size: string): Promise<HTMLImageElement> {
-		if(headCache.has(player)) {
-			return Promise.resolve(headCache.get(player) as HTMLImageElement);
+	getMinecraftHead(player: DynmapPlayer | string, size: string): Promise<HTMLImageElement> {
+		const account = typeof  player === 'string' ? player : player.account;
+
+		if(headCache.has(account)) {
+			return Promise.resolve(headCache.get(account) as HTMLImageElement);
 		}
 
-		if(headUnresolvedCache.has(player)) {
-			return headUnresolvedCache.get(player) as Promise<HTMLImageElement>;
+		if(headUnresolvedCache.has(account)) {
+			return headUnresolvedCache.get(account) as Promise<HTMLImageElement>;
 		}
 
 		const promise = new Promise((resolve, reject) => {
 			const faceImage = new Image();
 
 			faceImage.onload = function() {
-				headCache.set(player, faceImage);
+				headCache.set(account, faceImage);
 				resolve(faceImage);
 			};
 
 			faceImage.onerror = function(e) {
-				console.warn(`Failed to retrieve face of ${player.account} with size ${size}!`);
+				console.warn(`Failed to retrieve face of ${account} with size ${size}!`);
 				reject(e);
 			};
 
-			const src = (size === 'body') ? `faces/body/${player.account}.png` :`faces/${size}x${size}/${player.account}.png`;
+			const src = (size === 'body') ? `faces/body/${account}.png` :`faces/${size}x${size}/${account}.png`;
 			faceImage.src = this.concatURL(window.config.url.markers, src);
-		}).finally(() => headUnresolvedCache.delete(player)) as Promise<HTMLImageElement>;
+		}).finally(() => headUnresolvedCache.delete(account)) as Promise<HTMLImageElement>;
 
-		headUnresolvedCache.set(player, promise);
+		headUnresolvedCache.set(account, promise);
 
 		return promise;
 	},
