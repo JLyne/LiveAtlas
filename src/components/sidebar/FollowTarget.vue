@@ -19,7 +19,7 @@
 		<h2>Following</h2>
 
 		<div :class="{'following__target': true, 'following__target--hidden': target.hidden}">
-			<img width="32" height="32" class="target__icon" :src="playerImage" alt="" />
+			<img width="32" height="32" class="target__icon" :src="image" alt="" />
 			<span class="target__info">
 				<span class="target__name" v-html="target.name"></span>
 				<span class="target__status" v-show="target.hidden">Currently hidden</span>
@@ -32,12 +32,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
+import {defineComponent, onMounted, ref, watch} from "@vue/runtime-core";
+import Util from '@/util';
 
-const playerImage = require('@/assets/images/player_face.png');
+const defaultImage = require('@/assets/images/player_face.png');
 
 export default defineComponent({
 	name: 'FollowTarget',
@@ -47,23 +48,38 @@ export default defineComponent({
 			required: true
 		}
 	},
-	data() {
+	setup(props) {
+		const store = useStore(),
+			image = ref(defaultImage),
+			account = ref(props.target.account),
+
+			unfollow = () => {
+				useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
+			},
+			onKeydown = (e: KeyboardEvent) => {
+				if(e.key !== ' ') {
+					return;
+				}
+
+				unfollow();
+			},
+			updatePlayerImage = () => {
+				image.value = defaultImage;
+
+				if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkinFaces) {
+					Util.getMinecraftHead(props.target, '16').then((result) => image.value = result.src).catch(() => {});
+				}
+			};
+
+		watch(account, () => updatePlayerImage());
+		onMounted(() => updatePlayerImage());
+
 		return {
-			playerImage,
+			image,
+			onKeydown,
+			unfollow
 		}
 	},
-	methods: {
-		unfollow() {
-			useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
-		},
-		onKeydown(e: KeyboardEvent) {
-			if(e.key !== ' ') {
-				return;
-			}
-
-			this.unfollow();
-		}
-	}
 });
 </script>
 

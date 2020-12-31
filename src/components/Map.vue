@@ -239,17 +239,17 @@ export default defineComponent({
 			}
 
 			if(!this.leaflet) {
-				console.warn(`Cannot follow ${player.name}. Map not yet initialized.`);
+				console.warn(`Cannot follow ${player.account}. Map not yet initialized.`);
 				return;
 			}
 
 			if(player.hidden) {
-				console.warn(`Cannot follow ${player.name}. Player is hidden from the map.`);
+				console.warn(`Cannot follow ${player.account}. Player is hidden from the map.`);
 				return;
 			}
 
 			if(!player.location.world) {
-				console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
+				console.warn(`Cannot follow ${player.account}. Player isn't in a known world.`);
 				return;
 			}
 
@@ -258,7 +258,7 @@ export default defineComponent({
 					world = store.state.worlds.get(player.location.world);
 
 				if(!world) {
-					console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
+					console.warn(`Cannot follow ${player.account}. Player isn't in a known world.`);
 					return;
 				}
 
