@@ -23,9 +23,10 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build) and [h
 - Logo controls
 - New urls (`#world;map;1,1,1,1`)
 - Legacy urls (`?worldname=world&mapname=map&z=1&y=1&z=1`)
+- Viewing chat messages
 
 ## Not supported right now
-- Chat
+- Sending chat messages
 - Chat balloons
 - Login/register
 - Inactivity timeout
