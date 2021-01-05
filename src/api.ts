@@ -576,9 +576,10 @@ export default {
 					sort: player.sort || 0,
 					hidden: !world,
 					location: {
-						x: player.x || 0,
-						y: player.y || 0,
-						z: player.z || 0,
+						//Add 0.5 to position in the middle of a block
+						x: !isNaN(player.x) ? player.x + 0.5 : 0,
+						y: !isNaN(player.y) ? player.y : 0,
+						z: !isNaN(player.z) ? player.z + 0.5 : 0,
 						world: world,
 					}
 				});

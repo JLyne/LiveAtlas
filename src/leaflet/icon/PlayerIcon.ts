@@ -75,6 +75,7 @@ export class PlayerIcon extends DivIcon {
 		}
 
 		const player = this._player;
+		let offset = 8;
 
 		this._container = document.createElement('div');
 
@@ -93,12 +94,15 @@ export class PlayerIcon extends DivIcon {
 			if (this.options.smallFace) {
 				this._playerImage = smallImage.cloneNode() as HTMLImageElement;
 				size = '16';
+				offset = 8;
 			} else if(this.options.showBody) {
 				this._playerImage = bodyImage.cloneNode() as HTMLImageElement;
 				size = 'body';
+				offset = 16;
 			} else {
 				this._playerImage = largeImage.cloneNode() as HTMLImageElement;
 				size = '32';
+				offset = 16;
 			}
 
 			Util.getMinecraftHead(player, size).then(head => {
@@ -132,6 +136,9 @@ export class PlayerIcon extends DivIcon {
 		} else {
 			this._playerName.classList.add('playerNameNoHealth');
 		}
+
+		this._container.style.marginTop = `-${offset}px`;
+		this._container.style.marginLeft = `-${offset}px`;
 
 		return this._container;
 	}
