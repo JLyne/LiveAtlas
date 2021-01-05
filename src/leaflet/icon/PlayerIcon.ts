@@ -56,6 +56,8 @@ export class PlayerIcon extends DivIcon {
 	private _playerInfo?: HTMLSpanElement;
 	private _playerName?: HTMLSpanElement;
 
+	private _currentName?: string;
+
 	private _playerHealth?: HTMLDivElement;
 	private _playerHealthBar?: HTMLDivElement;
 	private _playerArmor?: HTMLDivElement;
@@ -148,7 +150,9 @@ export class PlayerIcon extends DivIcon {
 			return;
 		}
 
-		this._playerName!.innerHTML = this._player!.name;
+		if(this._player!.name !== this._currentName) {
+			this._playerName!.innerHTML = this._currentName = this._player!.name;
+		}
 
 		if(this.options.showHealth) {
 			if (this._player.health !== undefined && this._player.armor !== undefined) {
