@@ -327,6 +327,12 @@ button {
 		display: block;
 		outline: auto;
 	}
+
+	@at-root {
+		.no-animations .marker.marker--player {
+			transition: none;
+		}
+	}
 }
 
 /*******************

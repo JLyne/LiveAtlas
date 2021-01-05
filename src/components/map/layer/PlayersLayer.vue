@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
-import {defineComponent, computed} from "@vue/runtime-core";
+import {defineComponent, computed, watch} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import {LayerGroup} from 'leaflet';
 import DynmapMap from "@/leaflet/DynmapMap";
@@ -38,14 +38,16 @@ export default defineComponent({
 	},
 
 	setup(props) {
-		props.leaflet.createPane('players');
-
 		const store = useStore(),
+			playerPane = props.leaflet.createPane('players'),
 			players = computed(() => store.state.players),
+			playerCount = computed(() => store.state.players.size),
 			componentSettings = store.state.components.playerMarkers,
 			layerGroup = new LayerGroup([],{
 				pane: 'players'
 			});
+
+		watch(playerCount, (newValue) => playerPane.classList.toggle('no-animations', newValue > 150))
 
 		return {
 			players,
