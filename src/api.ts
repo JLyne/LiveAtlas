@@ -524,8 +524,9 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 		}
 	}
 
+	//Sort chat by newest first
 	updates.chat = updates.chat.sort((one, two) => {
-		return one.timestamp - two.timestamp;
+		return two.timestamp - one.timestamp;
 	});
 
 	console.debug(`Updates: ${accepted} accepted. Rejected: `, dropped);
