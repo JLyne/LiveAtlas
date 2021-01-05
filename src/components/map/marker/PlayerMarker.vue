@@ -15,11 +15,12 @@
   -->
 
 <script lang="ts">
-import {defineComponent, computed, ref} from "@vue/runtime-core";
+import {defineComponent, computed, ref, onMounted, onUnmounted} from "@vue/runtime-core";
 import {LayerGroup} from 'leaflet';
-import {DynmapPlayer} from "@/dynmap";
+import {DynmapChat, DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {PlayerMarker} from "@/leaflet/marker/PlayerMarker";
+import {Popup} from "leaflet";
 
 export default defineComponent({
 	props: {
@@ -33,21 +34,168 @@ export default defineComponent({
 		}
 	},
 
-	setup() {
+	setup(props) {
+		let chatBalloonCutoff = 0; //Not reactive to avoid unnecessary playerChat recalculations
+
 		const store = useStore(),
 			componentSettings = computed(() => store.state.components.playerMarkers),
 			currentProjection = computed(() => store.state.currentProjection),
 			currentWorld = computed(() => store.state.currentWorld),
-			visible = ref(false),
+			chatBalloonsEnabled = computed(() => store.state.components.chatBalloons),
 
-			marker = undefined as PlayerMarker | undefined;
+			//Whether the marker is currently visible
+			markerVisible = ref(false),
+
+			//The player marker
+			marker = new PlayerMarker(props.player, {
+				smallFace: componentSettings.value!.smallFaces,
+				showSkinFace: componentSettings.value!.showSkinFaces,
+				showBody: componentSettings.value!.showBodies,
+				showHealth: componentSettings.value!.showHealth,
+				interactive: false,
+				pane: 'players',
+			}),
+
+			//Popup for chat messages, if chat balloons are enabled
+			chatBalloon = new Popup({
+				autoClose: false,
+				autoPan: false,
+				keepInView: false,
+				closeButton: false,
+				closeOnEscapeKey: false,
+				closeOnClick: false,
+				className: 'leaflet-popup--chat',
+				minWidth: 0,
+			}),
+
+			chatBalloonVisible = ref(false),
+
+			//Timeout for closing the chat balloon
+			chatBalloonTimeout = ref(0),
+
+			//Cutoff time for chat messages
+			//Only messages newer than this time will be shown in the chat balloon
+			//Used to prevent old seen messages reappearing in some situations
+
+			//Chat messages to show in the popup
+			playerChat = computed(() => {
+				const messages: DynmapChat[] = [];
+
+				if(!chatBalloonsEnabled.value) {
+					return messages;
+				}
+
+				for(const message of store.state.chat.messages) {
+					//Stop looking if we reach messages we've already seen
+					if(message.timestamp <= chatBalloonCutoff) {
+						break;
+					}
+
+					//Limit to 5 messages
+					if(messages.length === 5) {
+						break;
+					}
+
+					if(message.type === 'chat' && message.playerAccount === props.player.account) {
+						messages.push(message);
+					}
+				}
+
+				//If no suitable messages are found, set the cutoff to the newest messages timestamp
+				//This prevents searching the whole message list again for players who don't chat
+				if(!messages.length && store.state.chat.messages.length) {
+					chatBalloonCutoff = store.state.chat.messages[0].timestamp;
+				}
+
+				return messages;
+			}),
+
+			updateChatBalloon = () => {
+				const content = playerChat.value.reduceRight<string>((previousValue, currentValue) => {
+					return previousValue + `<span>${currentValue.message}</span>`;
+				}, '');
+
+				//Update balloon if content has changed
+				if(content != chatBalloon.getContent() || !chatBalloonVisible.value) {
+					chatBalloon.setContent(content);
+
+					if(!chatBalloonVisible.value) {
+						props.layerGroup.addLayer(chatBalloon);
+						chatBalloonVisible.value = true;
+
+						//Set cutoff to oldest visible message
+						chatBalloonCutoff = playerChat.value[playerChat.value.length - 1].timestamp - 1;
+					}
+
+					//Reset close timer
+					if(chatBalloonTimeout.value) {
+						clearTimeout(chatBalloonTimeout.value);
+					}
+
+					chatBalloonTimeout.value = setTimeout(() => closeChatBalloon(), 8000);
+				}
+			},
+
+			closeChatBalloon = () => {
+				props.layerGroup.removeLayer(chatBalloon);
+				chatBalloonVisible.value = false;
+
+				//Prevent showing any currently visible chat messages again
+				if(playerChat.value[0]) {
+					chatBalloonCutoff = playerChat.value[0].timestamp;
+				}
+			},
+
+			enableLayer = () => {
+				if(!markerVisible.value) {
+					const latLng = currentProjection.value.locationToLatLng(props.player.location);
+
+					props.layerGroup.addLayer(marker);
+					marker.setLatLng(latLng);
+					chatBalloon.setLatLng(latLng);
+					markerVisible.value = true;
+
+					//Prevent showing chat messages which were sent while the player was hidden
+					chatBalloonCutoff = new Date().getTime();
+				}
+			},
+			disableLayer = () => {
+				if(markerVisible.value) {
+					props.layerGroup.removeLayer(marker);
+					props.layerGroup.removeLayer(chatBalloon);
+					markerVisible.value = false;
+
+					closeChatBalloon();
+
+					if(chatBalloonTimeout.value) {
+						clearTimeout(chatBalloonTimeout.value);
+					}
+				}
+			};
+
+		onMounted(() => {
+			if(currentWorld.value && currentWorld.value.name === props.player.location.world) {
+				enableLayer();
+			}
+		});
+
+		onUnmounted(() => disableLayer());
 
 		return {
-			marker,
-			visible,
 			componentSettings,
 			currentProjection,
 			currentWorld,
+			chatBalloonsEnabled,
+
+			marker,
+			markerVisible,
+
+			chatBalloon,
+			playerChat,
+			updateChatBalloon,
+
+			enableLayer,
+			disableLayer
 		}
 	},
 
@@ -56,72 +204,41 @@ export default defineComponent({
 			deep: true,
 			handler(newValue) {
 				if(this.currentWorld && newValue.location.world === this.currentWorld.name) {
-					if(!this.visible) {
+					if(!this.markerVisible) {
 						this.enableLayer();
 					} else {
-						this.marker!.setLatLng(this.currentProjection.locationToLatLng(newValue.location));
-						this.marker!.getIcon().update();
+						const latLng = this.currentProjection.locationToLatLng(newValue.location);
+
+						this.marker.setLatLng(latLng);
+						this.chatBalloon.setLatLng(latLng);
+						this.marker.getIcon().update();
 					}
-				} else if(this.visible) {
+				} else if(this.markerVisible) {
 					this.disableLayer();
 				}
 			},
 		},
+		playerChat(newValue: DynmapChat[]) {
+			if(!this.chatBalloonsEnabled || !this.markerVisible || !newValue.length) {
+				return;
+			}
+
+			this.updateChatBalloon();
+		},
 		currentWorld(newValue) {
 			if(newValue.name === this.player.location.world) {
 				this.enableLayer();
-			} else if(this.visible) {
+			} else if(this.markerVisible) {
 				this.disableLayer();
 			}
 		},
 		currentProjection() {
-			this.marker!.setLatLng(this.currentProjection.locationToLatLng(this.player.location));
-		}
-	},
-
-	mounted() {
-		this.marker = new PlayerMarker(this.player, {
-			smallFace: this.componentSettings!.smallFaces,
-			showSkinFace: this.componentSettings!.showSkinFaces,
-			showBody: this.componentSettings!.showBodies,
-			showHealth: this.componentSettings!.showHealth,
-			interactive: false,
-			pane: 'players',
-		});
-
-		if(this.currentWorld && this.currentWorld.name === this.player.location.world) {
-			this.enableLayer();
-		}
-	},
-
-	unmounted() {
-		if(this.marker) {
-			this.layerGroup.removeLayer(this.marker);
+			this.marker.setLatLng(this.currentProjection.locationToLatLng(this.player.location));
 		}
 	},
 
 	render() {
 		return null;
 	},
-
-	methods: {
-		enableLayer() {
-			if(this.marker && !this.visible) {
-				this.layerGroup.addLayer(this.marker);
-				this.marker.setLatLng(this.currentProjection.locationToLatLng(this.player.location));
-				this.visible = true;
-			}
-		},
-		disableLayer() {
-			if(this.marker && this.visible) {
-				this.layerGroup.removeLayer(this.marker);
-				this.visible = false;
-			}
-		},
-	}
 })
 </script>
-
-<style scoped>
-
-</style>

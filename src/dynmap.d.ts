@@ -81,6 +81,7 @@ interface DynmapComponentConfig {
 	linkControl: boolean;
 	logoControls: Array<LogoControlOptions>;
 	chat?: DynmapChatConfig;
+	chatBalloons: boolean;
 }
 
 interface DynmapMarkersConfig {

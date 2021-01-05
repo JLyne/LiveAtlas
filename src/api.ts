@@ -127,6 +127,7 @@ function buildComponents(response: any): DynmapComponentConfig {
 				showLabels: false,
 			},
 			chat: undefined,
+			chatBalloons: false,
 			playerMarkers: undefined,
 			coordinatesControl: undefined,
 			linkControl: false,
@@ -198,6 +199,10 @@ function buildComponents(response: any): DynmapComponentConfig {
 					messageLifetime: component.messagettl || Infinity,
 					messageHistory: component.scrollback || Infinity,
 				}
+				break;
+
+			case "chatballoon":
+				components.chatBalloons = true;
 		}
 	});
 
