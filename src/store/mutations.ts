@@ -242,10 +242,6 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Adds chat messages from an update fetch to the chat history
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>) {
 		state.chat.messages.unshift(...chat);
-
-		if(state.components.chatBox && isFinite(state.components.chatBox.messageHistory)) {
-			state.chat.messages.splice(state.components.chatBox.messageHistory);
-		}
 	},
 
 	//Pops the specified number of marker updates from the pending updates list

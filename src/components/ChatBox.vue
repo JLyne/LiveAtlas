@@ -34,7 +34,14 @@
 		},
 		setup() {
 			const store = useStore(),
-				messages = computed(() => store.state.chat.messages);
+				componentSettings = computed(() => store.state.components.chatBox),
+				messages = computed(() => {
+					if(componentSettings.value!.messageHistory) {
+						return store.state.chat.messages.slice(componentSettings.value!.messageHistory);
+					} else {
+						return store.state.chat.messages;
+					}
+				});
 
 			return {
 				messages,
