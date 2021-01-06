@@ -34,10 +34,7 @@ import {
 	DynmapWorld,
 	DynmapWorldMap
 } from "@/dynmap";
-import {Sanitizer} from "@esri/arcgis-html-sanitizer";
 import {useStore} from "@/store";
-
-const sanitizer = new Sanitizer();
 
 function buildServerConfig(response: any): DynmapServerConfig {
 	return {
@@ -460,8 +457,8 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 				updates.chat.push({
 					type: 'chat',
 					playerAccount: entry.account,
-					playerName: entry.playerName ? sanitizer.sanitize(entry.playerName) : "",
-					message: entry.message ? sanitizer.sanitize(entry.message) : "",
+					playerName: entry.playerName || "",
+					message: entry.message || "",
 					timestamp: entry.timestamp,
 					channel: entry.channel || undefined,
 				});
@@ -481,7 +478,7 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 				updates.chat.push({
 					type: 'playerjoin',
 					playerAccount: entry.account,
-					playerName: entry.playerName ? sanitizer.sanitize(entry.playerName) : "",
+					playerName: entry.playerName || "",
 					timestamp: entry.timestamp || undefined,
 				});
 				break;
@@ -500,7 +497,7 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 				updates.chat.push({
 					type: 'playerleave',
 					playerAccount: entry.account,
-					playerName: entry.playerName ? sanitizer.sanitize(entry.playerName) : "",
+					playerName: entry.playerName || "",
 					timestamp: entry.timestamp || undefined,
 				});
 				break;
@@ -578,7 +575,7 @@ export default {
 					account: player.account || "",
 					health: player.health || 0,
 					armor: player.armor || 0,
-					name: player.name ? sanitizer.sanitize(player.name) : "",
+					name: player.name || "",
 					sort: player.sort || 0,
 					hidden: !world,
 					location: {
