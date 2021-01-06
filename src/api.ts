@@ -540,11 +540,17 @@ export default {
 	getConfiguration(): Promise<DynmapConfigurationResponse> {
 		return fetch(window.config.url.configuration).then(response => {
 			if (!response.ok) {
-				throw new Error('Network response was not ok');
+				throw new Error('Network request failed');
 			}
 
 			return response.json();
 		}).then((response): DynmapConfigurationResponse => {
+			if(response.error === 'login-required') {
+				throw new Error("Login required");
+			} else if (response.error) {
+				throw new Error(response.error);
+			}
+
 			return {
 				config: buildServerConfig(response),
 				messages: buildMessagesConfig(response),
