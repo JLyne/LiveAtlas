@@ -123,7 +123,7 @@ function buildComponents(response: any): DynmapComponentConfig {
 			markers: {
 				showLabels: false,
 			},
-			chat: undefined,
+			chatBox: undefined,
 			chatBalloons: false,
 			playerMarkers: undefined,
 			coordinatesControl: undefined,
@@ -190,7 +190,7 @@ function buildComponents(response: any): DynmapComponentConfig {
 				break;
 
 			case "chatbox":
-				components.chat = {
+				components.chatBox = {
 					allowUrlName: component.allowurlname || false,
 					showPlayerFaces: component.showplayerfaces || false,
 					messageLifetime: component.messagettl || Infinity,

@@ -243,8 +243,8 @@ export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>) {
 		state.chat.messages.unshift(...chat);
 
-		if(state.components.chat && isFinite(state.components.chat.messageHistory)) {
-			state.chat.messages.splice(state.components.chat.messageHistory);
+		if(state.components.chatBox && isFinite(state.components.chatBox.messageHistory)) {
+			state.chat.messages.splice(state.components.chatBox.messageHistory);
 		}
 	},
 

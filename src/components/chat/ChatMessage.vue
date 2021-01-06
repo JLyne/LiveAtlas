@@ -40,7 +40,7 @@
 		setup(props) {
 			const store = useStore();
 			let image = ref(defaultImage),
-				facesEnabled = computed(() => store.state.components.chat?.showPlayerFaces),
+				facesEnabled = computed(() => store.state.components.chatBox?.showPlayerFaces),
 				showSender = computed(() => props.message.playerName && props.message.type === 'chat'),
 				messageContent = computed(() => {
 					switch(props.message.type) {

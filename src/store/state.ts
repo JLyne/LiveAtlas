@@ -135,10 +135,10 @@ export const state: State = {
 		//Optional "logo" controls.
 		logoControls: [],
 
-		//Chat
-		chat: undefined,
+		//Chat box
+		chatBox: undefined,
 
-		//Show chat messages above player markers
+		//Chat balloons showing messages above player markers
 		chatBalloons: false
 	},
 

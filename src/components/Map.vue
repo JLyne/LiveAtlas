@@ -24,7 +24,7 @@
 		<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
 		<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
 		<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
-		<ChatControl v-if="chatEnabled" :leaflet="leaflet"></ChatControl>
+		<ChatControl v-if="chatBoxEnabled" :leaflet="leaflet"></ChatControl>
 	</div>
 </template>
 
@@ -70,7 +70,7 @@ export default defineComponent({
 			coordinatesControlEnabled = computed(() => store.getters.coordinatesControlEnabled),
 			clockControlEnabled = computed(() => store.getters.clockControlEnabled),
 			linkControlEnabled = computed(() => store.state.components.linkControl),
-			chatEnabled = computed(() => store.state.components.chat),
+			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			logoControls = computed(() => store.state.components.logoControls),
 
 			currentWorld = computed(() => store.state.currentWorld),
@@ -94,7 +94,7 @@ export default defineComponent({
 			coordinatesControlEnabled,
 			clockControlEnabled,
 			linkControlEnabled,
-			chatEnabled,
+			chatBoxEnabled,
 			logoControls,
 			followTarget,
 			panTarget,

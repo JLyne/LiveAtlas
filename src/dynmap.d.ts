@@ -80,7 +80,7 @@ interface DynmapComponentConfig {
 	clockControl ?: ClockControlOptions;
 	linkControl: boolean;
 	logoControls: Array<LogoControlOptions>;
-	chat?: DynmapChatConfig;
+	chatBox?: DynmapChatConfig;
 	chatBalloons: boolean;
 }
 

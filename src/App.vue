@@ -17,14 +17,14 @@
 <template>
 	<Map></Map>
 	<Sidebar></Sidebar>
-	<Chat v-if="chatEnabled" v-show="chatEnabled && chatVisible"></Chat>
+	<ChatBox v-if="chatBoxEnabled" v-show="chatBoxEnabled && chatVisible"></ChatBox>
 </template>
 
 <script lang="ts">
 import {computed, defineComponent, onBeforeUnmount, onMounted, onUnmounted, ref, watch} from 'vue';
 import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
-import Chat from './components/Chat.vue';
+import ChatBox from './components/ChatBox.vue';
 import {useStore} from "./store";
 import {ActionTypes} from "@/store/action-types";
 import Util from '@/util';
@@ -35,7 +35,7 @@ export default defineComponent({
 	components: {
 		Map,
 		Sidebar,
-		Chat
+		ChatBox
 	},
 
 	setup() {
@@ -43,7 +43,7 @@ export default defineComponent({
 			updateInterval = computed(() => store.state.configuration.updateInterval),
 			title = computed(() => store.state.configuration.title),
 			currentUrl = computed(() => store.getters.url),
-			chatEnabled = computed(() => store.state.components.chat),
+			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
 			updatesEnabled = ref(false),
 			updateTimeout = ref(0),
@@ -121,7 +121,7 @@ export default defineComponent({
 		onUnmounted(() => window.addEventListener('resize', onResize));
 
 		return {
-			chatEnabled,
+			chatBoxEnabled,
 			chatVisible,
 		}
 	},
