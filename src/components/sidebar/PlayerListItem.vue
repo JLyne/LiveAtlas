@@ -108,6 +108,9 @@ export default defineComponent({
 		position: relative;
 		display: block;
 		line-height: 3rem;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
 
 		.player__icon {
 			position: absolute;
