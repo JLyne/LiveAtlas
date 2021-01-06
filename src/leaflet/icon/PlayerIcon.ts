@@ -88,7 +88,7 @@ export class PlayerIcon extends DivIcon {
 
 		this._playerName = document.createElement('span');
 		this._playerName.className = 'player__name';
-		this._playerName.innerHTML = player.name;
+		this._playerName.innerHTML = this._currentName = player.name;
 
 		if (this.options.showSkinFace) {
 			let size;
