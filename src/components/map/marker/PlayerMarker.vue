@@ -233,7 +233,10 @@ export default defineComponent({
 			}
 		},
 		currentProjection() {
-			this.marker.setLatLng(this.currentProjection.locationToLatLng(this.player.location));
+			const latLng = this.currentProjection.locationToLatLng(this.player.location);
+
+			this.marker.setLatLng(latLng);
+			this.chatBalloon.setLatLng(latLng);
 		}
 	},
 
