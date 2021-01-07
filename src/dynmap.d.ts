@@ -43,9 +43,6 @@ type DynmapUrlConfig = {
 
 interface DynmapServerConfig {
 	version: string;
-	allowChat: boolean;
-	chatRequiresLogin: boolean;
-	chatInterval: number;
 	defaultMap?: string;
 	defaultWorld?: string;
 	defaultZoom: number;
@@ -55,7 +52,6 @@ interface DynmapServerConfig {
 	showLayerControl: boolean;
 	title: string;
 	loginEnabled: boolean;
-	loginRequired: boolean;
 	maxPlayers: number;
 	grayHiddenPlayers: boolean;
 	hash: number;
@@ -80,7 +76,8 @@ interface DynmapComponentConfig {
 	clockControl ?: ClockControlOptions;
 	linkControl: boolean;
 	logoControls: Array<LogoControlOptions>;
-	chatBox?: DynmapChatConfig;
+	chatBox?: DynmapChatBoxConfig;
+	chatSending?: DynmapChatSendingConfig;
 	chatBalloons: boolean;
 }
 
@@ -98,11 +95,17 @@ interface DynmapPlayerMarkersConfig {
 	smallFaces: boolean;
 }
 
-interface DynmapChatConfig {
+interface DynmapChatBoxConfig {
 	allowUrlName: boolean;
 	showPlayerFaces: boolean;
 	messageLifetime: number;
 	messageHistory: number;
+}
+
+interface DynmapChatSendingConfig {
+	loginRequired: boolean;
+	maxLength: number;
+	cooldown: number;
 }
 
 interface DynmapWorld {

@@ -69,9 +69,6 @@ export const state: State = {
 
 	configuration: {
 		version: '',
-		allowChat: false,
-		chatRequiresLogin: false,
-		chatInterval: 5000,
 		defaultMap: '',
 		defaultWorld: '',
 		defaultZoom: 0,
@@ -81,7 +78,6 @@ export const state: State = {
 		showLayerControl: true,
 		title: '',
 		loginEnabled: false,
-		loginRequired: false,
 		maxPlayers: 0,
 		grayHiddenPlayers: false,
 		hash: 0,
@@ -134,6 +130,9 @@ export const state: State = {
 
 		//Optional "logo" controls.
 		logoControls: [],
+
+		//Chat message sending functionality
+		chatSending: undefined,
 
 		//Chat box
 		chatBox: undefined,

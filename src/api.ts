@@ -39,10 +39,7 @@ import {useStore} from "@/store";
 function buildServerConfig(response: any): DynmapServerConfig {
 	return {
 		version: response.dynmapversion || '',
-		allowChat: response.allowwebchat || false,
 		grayHiddenPlayers: response.grayplayerswhenhidden || false,
-		chatRequiresLogin: response['webchat-requires-login'] || false,
-		chatInterval: response['webchat-interval'] || 5,
 		defaultMap: response.defaultmap || undefined,
 		defaultWorld: response.defaultworld || undefined,
 		defaultZoom: response.defaultzoom || 0,
@@ -52,7 +49,6 @@ function buildServerConfig(response: any): DynmapServerConfig {
 		showLayerControl: response.showlayercontrol || true,
 		title: response.title || 'Dynmap',
 		loginEnabled: response['login-enabled'] || false,
-		loginRequired: response.loginrequired || false,
 		maxPlayers: response.maxcount || 0,
 		hash: response.confighash || 0,
 	};
@@ -187,6 +183,16 @@ function buildComponents(response: any): DynmapComponentConfig {
 					position: component.position.replace('-', '') || 'topleft',
 					image: component.logourl || undefined,
 				});
+				break;
+
+			case "chat":
+				if(response.allowwebchat) {
+					components.chatSending = {
+						loginRequired: response['webchat-requires-login'] || false,
+						maxLength: response['chatlengthlimit'] || 256,
+						cooldown: response['webchat-interval'] || 5,
+					}
+				}
 				break;
 
 			case "chatbox":
