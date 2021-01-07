@@ -186,5 +186,9 @@ export default defineComponent({
 		box-sizing: border-box;
 		width: 100%;
 	}
+
+	@media print {
+		display: none;
+	}
 }
 </style>

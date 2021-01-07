@@ -333,6 +333,10 @@ button {
 			transition: none;
 		}
 	}
+
+	@media print {
+		display: none !important;
+	}
 }
 
 /*******************
@@ -541,4 +545,10 @@ div.statusmessage {
 
 .leaflet-players-pane {
 	z-index: 600;
+}
+
+@media print {
+	@page {
+		size: 297mm 210mm;
+	}
 }

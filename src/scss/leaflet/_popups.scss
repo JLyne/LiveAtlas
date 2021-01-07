@@ -36,5 +36,9 @@
 			flex-direction: column;
 		}
 	}
+
+	@media print {
+		display: none;
+	}
 }
 
