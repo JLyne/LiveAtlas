@@ -70,6 +70,10 @@ export interface Actions {
 		{commit}: AugmentedActionContext,
 		payload: number
 	): Promise<DynmapTileUpdate[]>
+	[ActionTypes.SEND_CHAT_MESSAGE](
+		{commit}: AugmentedActionContext,
+		payload: string
+	): Promise<void>
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -238,5 +242,9 @@ export const actions: ActionTree<State, State> & Actions = {
 		commit(MutationTypes.POP_TILE_UPDATES, amount);
 
 		return Promise.resolve(updates);
+	},
+
+	[ActionTypes.SEND_CHAT_MESSAGE]({commit, state}, message: string): Promise<void> {
+		return API.sendChatMessage(message);
 	},
 }

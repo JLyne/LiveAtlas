@@ -35,6 +35,7 @@ import {
 	DynmapWorldMap
 } from "@/dynmap";
 import {useStore} from "@/store";
+import ChatError from "@/errors/ChatError";
 
 function buildServerConfig(response: any): DynmapServerConfig {
 	return {
@@ -668,6 +669,44 @@ export default {
 			}
 
 			return sets;
+		});
+	},
+
+	sendChatMessage(message: string) {
+		const store = useStore();
+
+		if(!store.state.components.chatSending) {
+			return Promise.reject(new ChatError("Chat is not enabled"));
+		}
+
+		return fetch(window.config.url.sendmessage, {
+			method: 'POST',
+			body: JSON.stringify({
+				name: null,
+				message: message,
+			})
+		}).then((response) => {
+			if(response.status === 403) { //Rate limited
+				throw new ChatError(store.state.messages.chatCooldown
+					.replace('%interval%', store.state.components.chatSending!.cooldown.toString()));
+			}
+
+			if (!response.ok) {
+				throw new Error('Network request failed');
+			}
+
+			return response.json();
+		}).then(response => {
+			if (response.error !== 'none') {
+				throw new ChatError(store.state.messages.chatNotAllowed);
+			}
+		}).catch(e => {
+			if(!(e instanceof ChatError)) {
+				console.error('Unexpected error while sending chat message');
+				console.trace(e);
+			}
+
+			throw e;
 		});
 	}
 }

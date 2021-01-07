@@ -20,13 +20,21 @@
 			<ChatMessage v-for="message in messages" :key="message.timestamp" :message="message"></ChatMessage>
 			<li v-if="!messages.length" class="message message--skeleton">No chat messages yet...</li>
 		</ul>
+		<form v-if="sendingEnabled" class="chat__form" @submit.prevent="sendMessage">
+			<div v-if="sendingError" class="chat__error">{{ sendingError }}</div>
+			<input ref="chatInput" v-model="enteredMessage" class="chat__input" type="text" :maxlength="messageMaxLength"
+					placeholder="Type your chat message here..."  :disabled="sendingMessage">
+			<button class="chat__send" :disabled="!enteredMessage || sendingMessage">Send</button>
+		</form>
 	</section>
 </template>
 
 <script lang="ts">
-	import {defineComponent, computed} from "@vue/runtime-core";
+	import {defineComponent, ref, computed, watch} from "@vue/runtime-core";
 	import {useStore} from "@/store";
 	import ChatMessage from "@/components/chat/ChatMessage.vue";
+	import {ActionTypes} from "@/store/action-types";
+	import ChatError from "@/errors/ChatError";
 
 	export default defineComponent({
 		components: {
@@ -35,16 +43,68 @@
 		setup() {
 			const store = useStore(),
 				componentSettings = computed(() => store.state.components.chatBox),
+				chatBoxVisible = computed(() => store.state.ui.visibleElements.has('chat')),
+
+				sendingEnabled = computed(() => {
+					return store.state.components.chatSending &&
+						(!store.state.components.chatSending.loginRequired || store.state.loggedIn);
+				}),
+				messageMaxLength = computed(() => store.state.components.chatSending?.maxLength),
+
+				chatInput = ref<HTMLInputElement | null>(null),
+				enteredMessage = ref<string>(""),
+				sendingMessage = ref<boolean>(false),
+				sendingError = ref<string | null>(null),
+
 				messages = computed(() => {
 					if(componentSettings.value!.messageHistory) {
 						return store.state.chat.messages.slice(0, componentSettings.value!.messageHistory);
 					} else {
 						return store.state.chat.messages;
 					}
-				});
+				}),
+
+				sendMessage = () => {
+					const message = enteredMessage.value.trim().substring(0, messageMaxLength.value);
+
+					if(!message) {
+						return;
+					}
+
+					sendingMessage.value = true;
+					sendingError.value = null;
+
+					store.dispatch(ActionTypes.SEND_CHAT_MESSAGE, message).then(() => {
+						enteredMessage.value = "";
+						sendingError.value = null;
+					}).catch(e => {
+						if(e instanceof ChatError) {
+							sendingError.value = e.message;
+						} else {
+							sendingError.value = `An unexpected error occurred. See console for details.`;
+						}
+					}).finally(() => {
+						sendingMessage.value = false;
+
+						requestAnimationFrame(() => chatInput.value!.focus());
+					});
+				};
+
+			watch(chatBoxVisible, newValue => {
+				if(newValue && sendingEnabled.value) {
+					requestAnimationFrame(() => chatInput.value!.focus());
+				}
+			});
 
 			return {
+				chatInput,
+				enteredMessage,
+				sendMessage,
 				messages,
+				sendingEnabled,
+				sendingMessage,
+				sendingError,
+				messageMaxLength
 			}
 		}
 	})
@@ -85,6 +145,33 @@
 					font-style: italic;
 					color: #aaaaaa;
 				}
+			}
+		}
+
+		.chat__form {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: stretch;
+			margin: 1.5rem -1.5rem -1.5rem;
+
+			.chat__input {
+				border-bottom-left-radius: $global-border-radius;
+				flex-grow: 1;
+			}
+
+			.chat__send {
+				padding-left: 1rem;
+				padding-right: 1rem;
+				border-radius: 0 0 $global-border-radius 0;
+			}
+
+			.chat__error {
+				background-color: #771616;
+				color: #eeeeee;
+				font-size: 1.6rem;
+				padding: 0.5rem 1rem;
+				line-height: 2rem;
+				width: 100%;
 			}
 		}
 

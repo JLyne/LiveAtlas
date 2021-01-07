@@ -115,6 +115,28 @@ button {
 	@extend %button;
 }
 
+input {
+	appearance: none;
+	background-color: #333333;
+	box-shadow: none;
+	color: #cccccc;
+	font-size: 1.6rem;
+	padding: 1rem;
+	border: 0.2rem solid #333333;
+	border-radius: 0;
+
+	&:focus {
+		color: #eeeeee;
+		outline-color: #eeeeee;
+	}
+
+	&[disabled] {
+		background-color: #333333;
+		border-color: #333333;
+		cursor: not-allowed;
+	}
+}
+
 .checkbox {
 	display: flex;
 	position: relative;
@@ -406,26 +428,6 @@ button {
  * Chat
  */
 
-
-
-.chatinput {
-
-	width: 608px;
-	height: 16px;
-
-	outline: none;
-	color: #fff;
-    border: 0;
-    //background: rgba(0, 0, 0, 0.6) url(../assets/images/chat_cursor.png) no-repeat 1px center;
-
-    margin: 4px;
-	padding: 1px 1px 1px 15px;
-}
-
-.chatsendbutton {
-    background-color: #bbb;
-}
-
 .loginbutton {
 	color: #000;
 	font-family: sans-serif;
@@ -436,48 +438,6 @@ button {
 	border-radius: 5px;
 	cursor: pointer;
 	margin: 0;
-}
-
-.messagelist {
-	color: white;
-	overflow: hidden;
-
-	width: 622px;
-	max-height: 6em;
-
-	margin: 4px 4px 0 4px;
-	padding: 1px;
-}
-
-.scrollback:hover {
-	overflow-y: auto !important;
-}
-
-.messagerow {
-	position: relative;
-	max-height: 200px;
-
-	left: 0;
-	bottom: 0;
-
-	color: #fff;
-	font-weight: bold;
-}
-
-.messageicon {
-	position: relative;
-	top: 1px;
-	left: 0;
-}
-
-.messagetext {
-	position: relative;
-	top: -3px;
-	left: 0;
-}
-
-.balloonmessage {
-	word-wrap: break-word;
 }
 
 .dynmap .mapMarker .markerName_offline_players {

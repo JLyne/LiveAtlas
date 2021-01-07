@@ -30,6 +30,8 @@ export type State = {
 	messages: DynmapMessageConfig;
 	components: DynmapComponentConfig;
 
+	loggedIn: boolean;
+
 	worlds: Map<string, DynmapWorld>;
 	maps: Map<string, DynmapWorldMap>;
 	players: Map<string, DynmapPlayer>;
@@ -94,6 +96,8 @@ export const state: State = {
 		anonymousJoin: '',
 		anonymousQuit: '',
 	},
+
+	loggedIn: false,
 
 	worlds: new Map(), //Defined (loaded) worlds with maps from configuration.json
 	maps: new Map(), //Defined maps from configuration.json

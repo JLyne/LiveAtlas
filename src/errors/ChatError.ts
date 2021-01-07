@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,15 +14,9 @@
  *    limitations under the License.
  */
 
-export enum ActionTypes {
-	LOAD_CONFIGURATION = "loadConfiguration",
-	GET_UPDATE = "getUpdate",
-	GET_MARKER_SETS = "getMarkerSets",
-	SET_PLAYERS = "setPlayers",
-	POP_MARKER_UPDATES = "popMarkerUpdates",
-	POP_AREA_UPDATES = "popAreaUpdates",
-	POP_CIRCLE_UPDATES = "popCircleUpdates",
-	POP_LINE_UPDATES = "popLineUpdates",
-	POP_TILE_UPDATES = "popTileUpdates",
-	SEND_CHAT_MESSAGE = "sendChatMessage",
+export default class ChatError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "ChatError";
+	}
 }
