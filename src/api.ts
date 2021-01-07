@@ -445,7 +445,7 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 			}
 
 			case 'chat':
-				if(!entry.account || !entry.message || !entry.timestamp) {
+				if(!entry.message || !entry.timestamp) {
 					dropped.incomplete++;
 					continue;
 				}
@@ -455,15 +455,16 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 					continue;
 				}
 
-				if(entry.source !== 'player') {
+				if(entry.source !== 'player' && entry.source !== 'web') {
 					dropped.notImplemented++;
 					continue;
 				}
 
 				updates.chat.push({
 					type: 'chat',
-					playerAccount: entry.account,
-					playerName: entry.playerName || "",
+					source: entry.source || undefined,
+					playerAccount: entry.account || undefined,
+					playerName: entry.playerName || undefined,
 					message: entry.message || "",
 					timestamp: entry.timestamp,
 					channel: entry.channel || undefined,

@@ -302,11 +302,11 @@ interface DynmapParsedUrl {
 
 interface DynmapChat {
 	type: 'chat' | 'playerjoin' | 'playerleave';
-	playerAccount: string;
-	playerName: string;
+	playerAccount?: string;
+	playerName?: string;
 	channel?: string;
 	message?: string;
-	// source?: string;
+	source?: string;
 	timestamp: number;
 }
 

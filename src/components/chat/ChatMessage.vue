@@ -16,7 +16,7 @@
 
 <template>
 	<li :class="`message message--${message.type}`">
-		<img v-if="facesEnabled" width="16" height="16" class="message__face" :src="image" alt="" />
+		<img v-if="showFace" width="16" height="16" class="message__face" :src="image" alt="" />
 		<span v-if="showSender" class="message__sender" v-html="message.playerName"></span>
 		<span class="message__content" v-html="messageContent"></span>
 	</li>
@@ -40,7 +40,7 @@
 		setup(props) {
 			const store = useStore();
 			let image = ref(defaultImage),
-				facesEnabled = computed(() => store.state.components.chatBox?.showPlayerFaces),
+				showFace = computed(() => store.state.components.chatBox?.showPlayerFaces && props.message.playerAccount),
 				showSender = computed(() => props.message.playerName && props.message.type === 'chat'),
 				messageContent = computed(() => {
 					switch(props.message.type) {
@@ -64,15 +64,15 @@
 				})
 
 			onMounted(() => {
-				if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkinFaces) {
-					Util.getMinecraftHead(props.message.playerAccount, '16')
+				if(showFace.value) {
+					Util.getMinecraftHead(props.message.playerAccount as string, '16')
 						.then((result) => image.value = result.src).catch(() => {});
 				}
 			});
 
 			return {
 				image,
-				facesEnabled,
+				showFace,
 				showSender,
 				messageContent
 			}
