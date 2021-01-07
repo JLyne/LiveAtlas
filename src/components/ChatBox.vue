@@ -37,7 +37,7 @@
 				componentSettings = computed(() => store.state.components.chatBox),
 				messages = computed(() => {
 					if(componentSettings.value!.messageHistory) {
-						return store.state.chat.messages.slice(componentSettings.value!.messageHistory);
+						return store.state.chat.messages.slice(0, componentSettings.value!.messageHistory);
 					} else {
 						return store.state.chat.messages;
 					}
