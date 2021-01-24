@@ -67,7 +67,8 @@ export default defineComponent({
 			},
 
 			update = () => {
-				store.dispatch(ActionTypes.GET_UPDATE, undefined).then(() => {
+				//TODO: Error notification for repeated failures?
+				store.dispatch(ActionTypes.GET_UPDATE, undefined).finally(() => {
 					if(updatesEnabled.value) {
 						updateTimeout.value = setTimeout(() => update(), updateInterval.value);
 					}
