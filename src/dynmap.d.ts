@@ -54,6 +54,7 @@ interface DynmapServerConfig {
 	loginEnabled: boolean;
 	maxPlayers: number;
 	grayHiddenPlayers: boolean;
+	expandUI: boolean;
 	hash: number;
 }
 

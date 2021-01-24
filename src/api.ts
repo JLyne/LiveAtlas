@@ -51,6 +51,7 @@ function buildServerConfig(response: any): DynmapServerConfig {
 		title: response.title || 'Dynmap',
 		loginEnabled: response['login-enabled'] || false,
 		maxPlayers: response.maxcount || 0,
+		expandUI: response.sidebaropened && response.sidebaropened !== 'false',
 		hash: response.confighash || 0,
 	};
 }

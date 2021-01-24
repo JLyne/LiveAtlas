@@ -82,6 +82,7 @@ export const state: State = {
 		loginEnabled: false,
 		maxPlayers: 0,
 		grayHiddenPlayers: false,
+		expandUI: false,
 		hash: 0,
 	},
 

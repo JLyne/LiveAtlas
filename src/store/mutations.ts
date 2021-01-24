@@ -79,6 +79,11 @@ export const mutations: MutationTree<State> & Mutations = {
 	// Sets configuration options from the initial config fetch
 	[MutationTypes.SET_CONFIGURATION](state: State, config: DynmapServerConfig) {
 		state.configuration = Object.assign(state.configuration, config);
+
+		if(state.configuration.expandUI && !state.ui.smallScreen) {
+			state.ui.visibleElements.add('players');
+			state.ui.visibleElements.add('maps');
+		}
 	},
 
 	//Set messsages from the initial config fetch
