@@ -111,6 +111,10 @@ h2 {
 	margin-bottom: 1rem;
 }
 
+a {
+	color: $global-text-color;
+}
+
 button {
 	@extend %button;
 }

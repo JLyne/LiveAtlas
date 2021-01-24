@@ -26,6 +26,9 @@
 					placeholder="Type your chat message here..."  :disabled="sendingMessage">
 			<button class="chat__send" :disabled="!enteredMessage || sendingMessage">Send</button>
 		</form>
+		<div v-if="loginRequired" class="chat__login">
+			Please <a href="login.html">login</a> to send chat messages
+		</div>
 	</section>
 </template>
 
@@ -45,10 +48,11 @@
 				componentSettings = computed(() => store.state.components.chatBox),
 				chatBoxVisible = computed(() => store.state.ui.visibleElements.has('chat')),
 
-				sendingEnabled = computed(() => {
-					return store.state.components.chatSending &&
-						(!store.state.components.chatSending.loginRequired || store.state.loggedIn);
+				loginRequired = computed(() => {
+					return store.state.components.chatSending && store.state.components.chatSending.loginRequired
+						&& !store.state.loggedIn;
 				}),
+				sendingEnabled = computed(() => store.state.components.chatSending && !loginRequired.value),
 				messageMaxLength = computed(() => store.state.components.chatSending?.maxLength),
 
 				chatInput = ref<HTMLInputElement | null>(null),
@@ -101,6 +105,7 @@
 				enteredMessage,
 				sendMessage,
 				messages,
+				loginRequired,
 				sendingEnabled,
 				sendingMessage,
 				sendingError,
@@ -173,6 +178,16 @@
 				line-height: 2rem;
 				width: 100%;
 			}
+		}
+
+		.chat__login {
+			font-size: 1.6rem;
+			padding: 1.2rem;
+			background-color: #333333;
+			color: #aaaaaa;
+			margin: 1.5rem -1.5rem -1.5rem;
+			border-bottom-left-radius: $global-border-radius;
+			border-bottom-right-radius: $global-border-radius;
 		}
 
 		@media (max-width: 25rem), (max-height: 30rem) {
