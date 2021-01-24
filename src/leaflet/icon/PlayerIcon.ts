@@ -125,14 +125,16 @@ export class PlayerIcon extends DivIcon {
 			this._playerArmor = document.createElement('div');
 			this._playerArmor.className = 'player__armor';
 
-			this._playerInfo.appendChild(this._playerHealth);
-			this._playerInfo.appendChild(this._playerArmor);
-
 			this._playerHealthBar = document.createElement('div');
 			this._playerHealthBar.className = 'player__health-bar';
 
 			this._playerArmorBar = document.createElement('div');
 			this._playerArmorBar.className = 'player__armor-bar';
+
+			this._playerHealth.appendChild(this._playerHealthBar);
+			this._playerArmor.appendChild(this._playerArmorBar);
+			this._playerInfo.appendChild(this._playerHealth);
+			this._playerInfo.appendChild(this._playerArmor);
 
 			this._playerHealth.hidden = this._playerArmor.hidden = true;
 		} else {

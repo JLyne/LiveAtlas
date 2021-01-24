@@ -293,25 +293,25 @@ input {
 
 		.player__health,
 		.player__armor,
-		.player__health-bg,
-		.player__armor-bg {
+		.player__health-bar,
+		.player__armor-bar {
 			height: 7px;
 		}
 
 		.player__health {
-			background: url(../assets/images/heart.png) repeat-x left center;
-		}
-
-		.player__health-bg {
 			background: url(../assets/images/heart_depleted.png) repeat-x left center;
 		}
 
-		.player__armor {
-			background: url(../assets/images/armor.png) repeat-x left center;
+		.player__health-bar {
+			background: url(../assets/images/heart.png) repeat-x left center;
 		}
 
-		.player__armor-bg {
+		.player__armor {
 			background: url(../assets/images/armor_depleted.png) repeat-x left center;
+		}
+
+		.player__armor-bar {
+			background: url(../assets/images/armor.png) repeat-x left center;
 		}
 	}
 
