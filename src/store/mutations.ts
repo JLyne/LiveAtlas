@@ -73,6 +73,8 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_SMALL_SCREEN](state: S, payload: boolean): void
 	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: S, payload: DynmapUIElement): void
 	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: S, payload: {element: DynmapUIElement, state: boolean}): void
+
+	[MutationTypes.SET_LOGGED_IN](state: S, payload: boolean): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -432,5 +434,9 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 
 		payload.state ? state.ui.visibleElements.add(payload.element) : state.ui.visibleElements.delete(payload.element);
+	},
+
+	[MutationTypes.SET_LOGGED_IN](state: State, payload: boolean): void {
+		state.loggedIn = payload;
 	}
 }

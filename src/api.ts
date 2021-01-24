@@ -565,6 +565,7 @@ export default {
 				messages: buildMessagesConfig(response),
 				worlds: buildWorlds(response),
 				components: buildComponents(response),
+				loggedIn: response.loggedin || false,
 			}
 		});
 	},

@@ -163,6 +163,7 @@ interface DynmapConfigurationResponse {
 	messages: DynmapMessageConfig,
 	worlds: Array<DynmapWorld>,
 	components: DynmapComponentConfig,
+	loggedIn: boolean,
 }
 
 interface DynmapUpdateResponse {

@@ -83,6 +83,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			commit(MutationTypes.SET_MESSAGES, config.messages);
 			commit(MutationTypes.SET_WORLDS, config.worlds);
 			commit(MutationTypes.SET_COMPONENTS, config.components);
+			commit(MutationTypes.SET_LOGGED_IN, config.loggedIn);
 
 			let worldName, mapName;
 

@@ -51,4 +51,6 @@ export enum MutationTypes {
 	SET_SMALL_SCREEN = 'setSmallScreen',
 	TOGGLE_UI_ELEMENT_VISIBILITY = 'toggleUIElementVisibility',
 	SET_UI_ELEMENT_VISIBILITY = 'setUIElementVisibility',
+
+	SET_LOGGED_IN = 'setLoggedIn',
 }
