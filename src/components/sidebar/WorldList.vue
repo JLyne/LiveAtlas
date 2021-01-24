@@ -19,6 +19,9 @@
 		<span class="section__heading">{{ heading }}</span>
 		<ul class="section__content">
 			<WorldListItem :world="world" v-for="[name, world] in worlds" :key="name"></WorldListItem>
+			<li v-if="!worlds.size" class="section__skeleton">
+				No maps have been configured
+			</li>
 		</ul>
 	</section>
 </template>

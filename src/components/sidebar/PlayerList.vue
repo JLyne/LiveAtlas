@@ -19,6 +19,9 @@
 		<span class="section__heading">{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</span>
 		<ul class="section__content">
 			<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
+			<li v-if="!players.size" class="section__skeleton">
+				No players are currently online
+			</li>
 		</ul>
 	</section>
 </template>

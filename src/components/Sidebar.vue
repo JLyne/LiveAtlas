@@ -166,6 +166,14 @@ export default defineComponent({
 			overflow: auto;
 			will-change: transform;
 		}
+
+		.section__skeleton {
+			font-style: italic;
+			color: #aaa;
+			text-align: center;
+			align-self: center;
+			margin-top: 1rem;
+		}
 	}
 
 	@media (max-width: 30rem) {
