@@ -25,9 +25,9 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build) and [h
 - Legacy urls (`?worldname=world&mapname=map&z=1&y=1&z=1`)
 - Viewing chat messages
 - Chat balloons
+- Sending chat messages
 
 ## Not supported right now
-- Sending chat messages
 - Login/register
 - Inactivity timeout
 
