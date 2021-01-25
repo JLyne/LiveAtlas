@@ -106,7 +106,7 @@
 			font-style: italic;
 		}
 
-		@media (max-width: 20rem) {
+		@media (max-width: 320px) {
 			&.message--chat {
 				.message__sender:after {
 					content: none;

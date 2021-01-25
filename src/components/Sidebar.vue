@@ -124,7 +124,7 @@ export default defineComponent({
 			}
 		}
 
-		@media (max-width: 30rem) {
+		@media (max-width: 480px) {
 			flex-direction: column;
 			align-items: flex-end;
 			margin: 0;
@@ -138,7 +138,7 @@ export default defineComponent({
 			}
 		}
 
-		@media (max-width: 25rem) {
+		@media (max-width: 400px) {
 			right: 0.5rem;
 			top: 0.5rem;
 		}
@@ -176,21 +176,21 @@ export default defineComponent({
 		}
 	}
 
-	@media (max-width: 30rem) {
+	@media (max-width: 480px) {
 		padding-right: 7rem;
 	}
 
-	@media (max-width: 25rem), (max-height: 30rem) {
+	@media (max-width: 400px), (max-height: 480px) {
 		padding-top: 0.5rem;
 		padding-bottom: 0.5rem;
 		padding-left: 0.5rem;
 	}
 
-	@media (max-width: 25rem) {
+	@media (max-width: 400px) {
 		padding-right: 6.5rem;
 	}
 
-	@media (max-width: 20rem) {
+	@media (max-width: 320px) {
 		box-sizing: border-box;
 		width: 100%;
 	}

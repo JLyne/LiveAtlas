@@ -118,7 +118,7 @@ export default defineComponent({
 			}
 		}
 
-		@media (max-width: 30rem), (max-height: 30rem) {
+		@media (max-width: 480px), (max-height: 480px) {
 			margin-top: 0;
 		}
 	}

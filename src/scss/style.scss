@@ -268,7 +268,7 @@ input {
 		}
 	}
 
-	@media (max-width: 30rem), (max-height: 30rem) {
+	@media (max-width: 480px), (max-height: 480px) {
 		transform: scale(calc((1/6)*5));
     	transform-origin: top center
 	}

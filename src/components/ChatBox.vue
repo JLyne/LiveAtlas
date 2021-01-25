@@ -190,13 +190,13 @@
 			border-bottom-right-radius: $global-border-radius;
 		}
 
-		@media (max-width: 25rem), (max-height: 30rem) {
+		@media (max-width: 400px), (max-height: 480px) {
 			bottom: 6.5rem;
 			left: 6.5rem;
 			max-width: calc(100% - 7rem);
 		}
 
-		@media (max-width: 20rem) {
+		@media (max-width: 320px) {
 			.chat__messages .message + .message {
 				margin-bottom: 0.7rem;
 			}
