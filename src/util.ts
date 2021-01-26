@@ -39,21 +39,22 @@ export default {
 	},
 
 	getMinecraftHead(player: DynmapPlayer | string, size: string): Promise<HTMLImageElement> {
-		const account = typeof  player === 'string' ? player : player.account;
+		const account = typeof  player === 'string' ? player : player.account,
+			cacheKey = `${account}-${size}`;
 
-		if(headCache.has(account)) {
-			return Promise.resolve(headCache.get(account) as HTMLImageElement);
+		if(headCache.has(cacheKey)) {
+			return Promise.resolve(headCache.get(cacheKey) as HTMLImageElement);
 		}
 
-		if(headUnresolvedCache.has(account)) {
-			return headUnresolvedCache.get(account) as Promise<HTMLImageElement>;
+		if(headUnresolvedCache.has(cacheKey)) {
+			return headUnresolvedCache.get(cacheKey) as Promise<HTMLImageElement>;
 		}
 
 		const promise = new Promise((resolve, reject) => {
 			const faceImage = new Image();
 
 			faceImage.onload = function() {
-				headCache.set(account, faceImage);
+				headCache.set(cacheKey, faceImage);
 				resolve(faceImage);
 			};
 
@@ -64,9 +65,9 @@ export default {
 
 			const src = (size === 'body') ? `faces/body/${account}.png` :`faces/${size}x${size}/${account}.png`;
 			faceImage.src = this.concatURL(window.config.url.markers, src);
-		}).finally(() => headUnresolvedCache.delete(account)) as Promise<HTMLImageElement>;
+		}).finally(() => headUnresolvedCache.delete(cacheKey)) as Promise<HTMLImageElement>;
 
-		headUnresolvedCache.set(account, promise);
+		headUnresolvedCache.set(cacheKey, promise);
 
 		return promise;
 	},
