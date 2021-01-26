@@ -17,8 +17,18 @@
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 
+interface HeadQueueEntry {
+	cacheKey: string;
+	account: string;
+	size: string;
+	image: HTMLImageElement;
+}
+
 const headCache = new Map<string, HTMLImageElement>(),
-	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>();
+	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>(),
+	headsLoading = new Set<string>(),
+
+	headQueue: HeadQueueEntry[] = [];
 
 export const getMinecraftTime = (serverTime: number) => {
 	const day = serverTime >= 0 && serverTime < 13700;
@@ -54,21 +64,44 @@ export const getMinecraftHead = (player: DynmapPlayer | string, size: string): P
 
 		faceImage.onload = function() {
 			headCache.set(cacheKey, faceImage);
+			headsLoading.delete(cacheKey);
+			tickHeadQueue();
 			resolve(faceImage);
 		};
 
 		faceImage.onerror = function(e) {
 			console.warn(`Failed to retrieve face of ${account} with size ${size}!`);
+			headsLoading.delete(cacheKey);
+			tickHeadQueue();
 			reject(e);
 		};
 
-		const src = (size === 'body') ? `faces/body/${account}.png` :`faces/${size}x${size}/${account}.png`;
-		faceImage.src = concatURL(window.config.url.markers, src);
+		headQueue.push({
+			account,
+			size,
+			cacheKey,
+			image: faceImage,
+		});
 	}).finally(() => headUnresolvedCache.delete(cacheKey)) as Promise<HTMLImageElement>;
 
 	headUnresolvedCache.set(cacheKey, promise);
+	tickHeadQueue();
 
 	return promise;
+}
+
+const tickHeadQueue = () => {
+	if(headsLoading.size > 8 || !headQueue.length) {
+		return;
+	}
+
+	const head = headQueue.pop() as HeadQueueEntry,
+		src = (head.size === 'body') ? `faces/body/${head.account}.png` :`faces/${head.size}x${head.size}/${head.account}.png`;
+
+	headsLoading.add(head.cacheKey);
+	head.image.src = concatURL(window.config.url.markers, src);
+
+	tickHeadQueue();
 }
 
 export const concatURL = (base: string, addition: string) => {
