@@ -21,11 +21,14 @@
 	}
 
 	.leaflet-popup-content-wrapper {
+		max-height: 50vh;
+		display: flex;
 		border-radius: $global-border-radius;
 	}
 
 	.leaflet-popup-content {
-		margin: 1.5rem;
+		margin: 1rem;
+		overflow: auto;
 		word-break: break-word;
 	}
 
@@ -34,6 +37,20 @@
 			margin: 0.5rem 1rem;
 			display: flex;
 			flex-direction: column;
+		}
+	}
+
+	@at-root  {
+		.leaflet-container a.leaflet-popup-close-button {
+			background-color: $global-background;
+			border-radius: $global-border-radius;
+			width: 2rem;
+			height: 2rem;
+			top: -1rem;
+			right: -1rem;
+			text-align: center;
+			padding: 0;
+			line-height: 2rem;
 		}
 	}
 
