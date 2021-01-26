@@ -18,7 +18,7 @@
  */
 
 import {ControlOptions, DomUtil, Util, Map, Control} from 'leaflet';
-import Utils from '@/util';
+import {getMinecraftTime} from '@/util';
 import {DynmapWorldState} from "@/dynmap";
 
 import sun from '@/assets/icons/clock_sun.svg';
@@ -120,7 +120,7 @@ export class ClockControl extends Control {
 			this._moon!.style.transform = 'translate(-150px, -150px)';
 		}
 
-		const minecraftTime = Utils.getMinecraftTime(timeOfDay);
+		const minecraftTime = getMinecraftTime(timeOfDay);
 
 		if (this.options.showDigitalClock) {
 			if (timeOfDay >= 0) {

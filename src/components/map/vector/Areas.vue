@@ -20,7 +20,7 @@ import {useStore} from "@/store";
 import {DynmapArea, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createArea, updateArea} from "@/util/areas";
-import Util from '@/util';
+import {getPointConverter} from '@/util';
 import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
 import DynmapPolygon from "@/leaflet/vector/DynmapPolygon";
 import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
@@ -50,7 +50,7 @@ export default defineComponent({
 			layers = Object.freeze(new Map()) as Map<string, DynmapPolygon | DynmapPolyline>,
 
 			createAreas = () => {
-				const converter = Util.getPointConverter();
+				const converter = getPointConverter();
 
 				props.set.areas.forEach((area: DynmapArea, id: string) => {
 					const layer = createArea(area, converter);
@@ -76,7 +76,7 @@ export default defineComponent({
 					markerSet: props.set.id,
 					amount: 10,
 				}).then(updates => {
-					const converter = Util.getPointConverter();
+					const converter = getPointConverter();
 
 					for(const update of updates) {
 						if(update.removed) {
@@ -103,7 +103,7 @@ export default defineComponent({
 
 		//FIXME: Prevent unnecessary repositioning when changing worlds
 		watch(currentProjection, () => {
-			const converter = Util.getPointConverter();
+			const converter = getPointConverter();
 
 			for (const [id, area] of props.set.areas) {
 				updateArea(layers.get(id), area, converter);

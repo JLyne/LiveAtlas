@@ -19,7 +19,7 @@
 
 import {MarkerOptions, DivIcon, DomUtil} from 'leaflet';
 import {DynmapPlayer} from "@/dynmap";
-import Util from '@/util';
+import {getMinecraftHead} from '@/util';
 
 const playerImage = require('@/assets/images/player_face.png');
 
@@ -107,7 +107,7 @@ export class PlayerIcon extends DivIcon {
 				offset = 16;
 			}
 
-			Util.getMinecraftHead(player, size).then(head => {
+			getMinecraftHead(player, size).then(head => {
 				this._playerImage!.src = head.src;
 			}).catch(() => {});
 		} else {

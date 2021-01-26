@@ -16,7 +16,7 @@
 
 import {GetterTree} from "vuex";
 import {State} from "@/store/state";
-import Util from "@/util";
+import {getMinecraftTime} from "@/util";
 
 export type Getters = {
 	playerMarkersEnabled(state: State): boolean;
@@ -41,7 +41,7 @@ export const getters: GetterTree<State, State> & Getters = {
 	},
 
 	night(state: State): boolean {
-		return Util.getMinecraftTime(state.currentWorldState.timeOfDay).night;
+		return getMinecraftTime(state.currentWorldState.timeOfDay).night;
 	},
 
 	mapBackground(state: State): string {
@@ -50,7 +50,7 @@ export const getters: GetterTree<State, State> & Getters = {
 		}
 
 		if(state.currentMap.nightAndDay) {
-			if(Util.getMinecraftTime(state.currentWorldState.timeOfDay).night) {
+			if(getMinecraftTime(state.currentWorldState.timeOfDay).night) {
 				return state.currentMap.backgroundNight || state.currentMap.background || 'transparent';
 			}
 

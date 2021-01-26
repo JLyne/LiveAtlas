@@ -25,7 +25,7 @@
 <script lang="ts">
 	import {defineComponent, ref, onMounted, computed} from "@vue/runtime-core";
 	import {DynmapChat} from "@/dynmap";
-	import Util from '@/util';
+	import {getMinecraftHead} from '@/util';
 	import {useStore} from "@/store";
 
 	const defaultImage = require('@/assets/images/player_face.png');
@@ -65,7 +65,7 @@
 
 			onMounted(() => {
 				if(showFace.value) {
-					Util.getMinecraftHead(props.message.playerAccount as string, '16')
+					getMinecraftHead(props.message.playerAccount as string, '16')
 						.then((result) => image.value = result.src).catch(() => {});
 				}
 			});

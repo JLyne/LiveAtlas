@@ -27,7 +27,7 @@ import Sidebar from './components/Sidebar.vue';
 import ChatBox from './components/ChatBox.vue';
 import {useStore} from "./store";
 import {ActionTypes} from "@/store/action-types";
-import Util from '@/util';
+import {parseUrl} from '@/util';
 import {MutationTypes} from "@/store/mutation-types";
 
 export default defineComponent({
@@ -85,8 +85,8 @@ export default defineComponent({
 				updateTimeout.value = 0;
 			},
 
-			parseUrl = () => {
-				const parsedUrl = Util.parseUrl();
+			handleUrl = () => {
+				const parsedUrl = parseUrl();
 
 				if(parsedUrl) {
 					//Remove legacy url if one was parsed
@@ -115,7 +115,7 @@ export default defineComponent({
 		onMounted(() => loadConfiguration());
 		onBeforeUnmount(() => stopUpdates());
 
-		parseUrl();
+		handleUrl();
 		onResize();
 
 		onMounted(() => window.addEventListener('resize', onResize));

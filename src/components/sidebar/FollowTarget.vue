@@ -36,7 +36,7 @@ import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {defineComponent, onMounted, ref, watch} from "@vue/runtime-core";
-import Util from '@/util';
+import {getMinecraftHead} from '@/util';
 
 const defaultImage = require('@/assets/images/player_face.png');
 
@@ -67,7 +67,7 @@ export default defineComponent({
 				image.value = defaultImage;
 
 				if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkinFaces) {
-					Util.getMinecraftHead(props.target, '16').then((result) => image.value = result.src).catch(() => {});
+					getMinecraftHead(props.target, '16').then((result) => image.value = result.src).catch(() => {});
 				}
 			};
 
