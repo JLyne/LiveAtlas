@@ -61,6 +61,7 @@ export type State = {
 	ui: {
 		smallScreen: boolean;
 		visibleElements: Set<DynmapUIElement>;
+		previouslyVisibleElements: Set<DynmapUIElement>;
 	};
 
 	parsedUrl: DynmapParsedUrl;
@@ -171,6 +172,7 @@ export const state: State = {
 	ui: {
 		smallScreen: false,
 		visibleElements:new Set(),
+		previouslyVisibleElements: new Set(),
 	},
 
 	parsedUrl: {

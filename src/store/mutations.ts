@@ -425,12 +425,17 @@ export const mutations: MutationTree<State> & Mutations = {
 			state.ui.visibleElements.clear();
 		}
 
+		state.ui.previouslyVisibleElements.add(element);
 		newState ? state.ui.visibleElements.add(element) : state.ui.visibleElements.delete(element);
 	},
 
 	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: State, payload: {element: DynmapUIElement, state: boolean}): void {
 		if(payload.state && state.ui.smallScreen) {
 			state.ui.visibleElements.clear();
+		}
+
+		if(payload.state || state.ui.visibleElements.has(payload.element)) {
+			state.ui.previouslyVisibleElements.add(payload.element);
 		}
 
 		payload.state ? state.ui.visibleElements.add(payload.element) : state.ui.visibleElements.delete(payload.element);

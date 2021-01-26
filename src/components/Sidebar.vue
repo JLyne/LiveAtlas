@@ -17,21 +17,21 @@
 <template>
 	<aside class="sidebar">
 		<header class="sidebar__buttons">
-			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active':visibleUIElements.has('maps')}"
+			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active':currentlyVisible.has('maps')}"
 					@click="toggleElement('maps')" title="Map list" aria-label="Map list">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
-			<button :class="{'button--players': true, 'active': visibleUIElements.has('players')}"
+			<button :class="{'button--players': true, 'active': currentlyVisible.has('players')}"
 					@click="toggleElement('players')" title="Player list" aria-label="Player list">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
-<!--			<button :class="{'button&#45;&#45;settings': true, 'active': visibleUIElements.has('settings'))}"-->
+<!--			<button :class="{'button&#45;&#45;settings': true, 'active': currentlyVisible.has('settings'))}"-->
 <!--					@click="toggleElement('settings')" title="Settings" aria-label="Settings">-->
 <!--				<SvgIcon name="settings"></SvgIcon>-->
 <!--			</button>-->
 		</header>
-		<WorldList v-if="mapCount > 1" v-show="visibleUIElements.has('maps')"></WorldList>
-		<PlayerList v-show="visibleUIElements.has('players')"></PlayerList>
+		<WorldList v-if="mapCount > 1" v-show="currentlyVisible.has('maps')"></WorldList>
+		<PlayerList v-if="previouslyVisible.has('players')" v-show="currentlyVisible.has('players')"></PlayerList>
 		<FollowTarget v-if="following" v-show="followActive" :target="following"></FollowTarget>
 	</aside>
 </template>
@@ -56,7 +56,8 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			visibleUIElements = computed(() => store.state.ui.visibleElements),
+			currentlyVisible = computed(() => store.state.ui.visibleElements),
+			previouslyVisible = computed(() => store.state.ui.previouslyVisibleElements),
 			smallScreen = computed(() => store.state.ui.smallScreen),
 			mapCount = computed(() => store.state.maps.size),
 			following = computed(() => store.state.followTarget),
@@ -68,12 +69,13 @@ export default defineComponent({
 			followActive = computed(() => {
 				//Show following alongside playerlist on small screens
 				return (!smallScreen.value && following)
-					|| (smallScreen.value && visibleUIElements.value.has('players'));
+					|| (smallScreen.value && currentlyVisible.value.has('players'));
 			});
 
 		return {
 			mapCount,
-			visibleUIElements,
+			currentlyVisible,
+			previouslyVisible,
 			toggleElement,
 			followActive,
 			following,
