@@ -64,6 +64,7 @@ export const updateArea = (area: DynmapPolyline | DynmapPolygon | undefined, opt
 		dirty = true;
 	}
 
+	area.closePopup();
 	area.unbindPopup();
 	area.bindPopup(() => createPopup(options));
 

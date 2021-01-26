@@ -43,6 +43,7 @@ export const updateLine = (line: DynmapPolyline | undefined, options: DynmapLine
 		return createLine(options, converter);
 	}
 
+	line.closePopup();
 	line.unbindPopup();
 	line.bindPopup(() => createPopup(options));
 	line.setStyle(options.style);

@@ -50,6 +50,7 @@ export const updateCircle = (circle: DynmapPolyline | DynmapPolygon | undefined,
 		return createCircle(options, converter);
 	}
 
+	circle.closePopup();
 	circle.unbindPopup();
 	circle.bindPopup(() => createPopup(options));
 	circle.setStyle(options.style);

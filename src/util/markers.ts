@@ -67,6 +67,7 @@ export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, 
 		}
 	}
 
+	marker.closePopup();
 	marker.unbindPopup();
 
 	if(options.popupContent) {
