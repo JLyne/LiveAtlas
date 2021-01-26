@@ -134,6 +134,13 @@ function buildComponents(response: any): DynmapComponentConfig {
 		const type = component.type || "unknown";
 
 		switch(type) {
+			case "markers":
+				components.markers = {
+					showLabels: component.showlabel || false,
+				}
+
+				break;
+
 			case "playermarkers":
 				components.playerMarkers = {
 					hideByDefault: component.hidebydefault || false,
