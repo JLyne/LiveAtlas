@@ -24,7 +24,7 @@ import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 
 export const createMarker = (options: DynmapMarker, projection: DynmapProjection): Marker => {
-	return new GenericMarker(projection.locationToLatLng(options.location), {
+	const marker = new GenericMarker(projection.locationToLatLng(options.location), {
 		icon: new DynmapIcon({
 			icon: options.icon,
 			label: options.label,
@@ -34,6 +34,12 @@ export const createMarker = (options: DynmapMarker, projection: DynmapProjection
 		maxZoom: options.maxZoom,
 		minZoom: options.minZoom,
 	});
+
+	if(options.popupContent) {
+		marker.bindPopup(() => createPopup(options));
+	}
+
+	return marker;
 };
 
 export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, projection: DynmapProjection): Marker => {
@@ -61,5 +67,27 @@ export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, 
 		}
 	}
 
+	marker.unbindPopup();
+
+	if(options.popupContent) {
+		marker.bindPopup(() => createPopup(options));
+	}
+
 	return marker;
 };
+
+export const createPopup = (options: DynmapMarker) => {
+	const popup = document.createElement('span');
+
+	if (options.popupContent) {
+		popup.classList.add('MarkerPopup');
+		popup.insertAdjacentHTML('afterbegin', options.popupContent);
+	} else if (options.isHTML) {
+		popup.classList.add('MarkerPopup');
+		popup.insertAdjacentHTML('afterbegin', options.label);
+	} else {
+		popup.textContent = options.label;
+	}
+
+	return popup;
+}
