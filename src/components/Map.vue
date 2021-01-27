@@ -249,7 +249,7 @@ export default defineComponent({
 				? targetWorld.maps.get(followMapName)
 				: targetWorld.maps.entries().next().value[1]
 
-			if(map !== store.state.currentMap) {
+			if(map !== store.state.currentMap && (targetWorld !== currentWorld || newFollow)) {
 				this.scheduledPan = player.location;
 
 				if(newFollow) {
