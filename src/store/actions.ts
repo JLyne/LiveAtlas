@@ -85,6 +85,11 @@ export const actions: ActionTree<State, State> & Actions = {
 			commit(MutationTypes.SET_COMPONENTS, config.components);
 			commit(MutationTypes.SET_LOGGED_IN, config.loggedIn);
 
+			if(state.configuration.expandUI && !state.ui.smallScreen) {
+				commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'players', state: true});
+				commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'maps', state: true});
+			}
+
 			let worldName, mapName;
 
 			// Use config default world if it exists
