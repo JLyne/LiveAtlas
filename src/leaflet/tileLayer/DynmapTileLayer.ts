@@ -24,6 +24,7 @@ import {Coordinate, DynmapWorldMap} from "@/dynmap";
 export interface DynmapTileLayerOptions extends TileLayerOptions {
 	mapSettings: DynmapWorldMap;
 	errorTileUrl: string;
+	night?: boolean;
 }
 
 export interface DynmapTileLayer extends TileLayer {
@@ -245,7 +246,7 @@ export class DynmapTileLayer extends TileLayer {
 
 		return {
 			prefix: this._mapSettings.prefix,
-			nightday: /*(this._mapSettings.nightAndDay && this.options.dynmap.serverday) ? '_day' :*/ '',
+			nightday: (this._mapSettings.nightAndDay && !this.options.night) ? '_day' : '',
 			scaledx: x >> 5,
 			scaledy: y >> 5,
 			zoom: this.zoomprefix(zoomoutlevel),
@@ -258,5 +259,12 @@ export class DynmapTileLayer extends TileLayer {
 
 	getProjection(): DynmapProjection {
 		return this._projection;
+	}
+
+	setNight(night: boolean) {
+		if(this.options.night !== night) {
+			this.options.night = night;
+			this.redraw();
+		}
 	}
 }

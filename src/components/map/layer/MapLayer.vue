@@ -22,6 +22,7 @@ import {useStore} from "@/store";
 import {HDMapType} from "@/leaflet/mapType/HDMapType";
 import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
+import {getMinecraftTime} from "@/util";
 
 export default defineComponent({
 	props: {
@@ -44,9 +45,11 @@ export default defineComponent({
 			stopUpdateWatch: Function;
 
 		const store = useStore(),
+			night = computed(() => getMinecraftTime(store.state.currentWorldState.timeOfDay).night),
 			layer = new HDMapType({
 				errorTileUrl: 'images/blank.png',
 				mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map))),
+				night: night.value,
 			}),
 			pendingUpdates = computed(() => !!store.state.pendingTileUpdates.length),
 			active = computed(() => props.map === store.state.currentMap),
@@ -86,6 +89,11 @@ export default defineComponent({
 			};
 
 		watch(active, (newValue) => newValue ? enableLayer() : disableLayer());
+		watch(night, (newValue) =>  {
+			if(props.map.nightAndDay && active.value) {
+				layer.setNight(newValue);
+			}
+		});
 
 		if(active.value) {
 			enableLayer();
