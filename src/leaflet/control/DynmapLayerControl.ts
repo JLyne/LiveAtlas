@@ -17,7 +17,7 @@
  *    limitations under the License.
  */
 
-import {Util, Control, DomEvent, LeafletEvent, Map, Layer, DomUtil} from 'leaflet';
+import {Util, Control, DomEvent, LeafletEvent, Map as LeafletMap, Layer, DomUtil} from 'leaflet';
 import layers from '@/assets/icons/layers.svg';
 import LayersObject = Control.LayersObject;
 import LayersOptions = Control.LayersOptions;
@@ -27,16 +27,30 @@ import checkbox from '@/assets/icons/checkbox.svg';
 
 export class DynmapLayerControl extends Control.Layers {
 	private _layersLink?: HTMLElement;
-	private _map ?: Map;
+	private _map ?: LeafletMap;
 	private _overlaysList?: HTMLElement;
 	private _baseLayersList?: HTMLElement;
 	private _layerControlInputs?: HTMLElement[];
+	private _layerPositions: Map<Layer, number>;
 
 	constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersOptions) {
-		super(baseLayers, overlays, options);
+		super(baseLayers, overlays, Object.assign(options, {
+			sortLayers: true,
+			sortFunction: (layer1: Layer, layer2: Layer, name1: string, name2: string) => {
+				const priority1 = this._layerPositions.get(layer1) || 0,
+					priority2 = this._layerPositions.get(layer2) || 0;
+
+				if(priority1 !== priority2) {
+					return priority1 - priority2;
+				}
+
+				return ((name1 < name2) ? -1 : ((name1 > name2) ? 1 : 0));
+			}
+		}));
+		this._layerPositions = new Map<Layer, number>();
 	}
 
-	onAdd(map: Map) {
+	onAdd(map: LeafletMap) {
 		// @ts-ignore
 		const element = super.onAdd(map);
 
@@ -60,6 +74,21 @@ export class DynmapLayerControl extends Control.Layers {
 		// @ts-ignore
 		super._checkDisabledLayers();
 		return this;
+	}
+
+	addOverlayAtPosition(layer: Layer, name: string, position: number): this {
+		this._layerPositions.set(layer, position);
+		return super.addOverlay(layer, name);
+	}
+
+	addOverlay(layer: Layer, name: string): this {
+		this._layerPositions.set(layer, 0);
+		return super.addOverlay(layer, name);
+	}
+
+	removeLayer(layer: Layer): this {
+		this._layerPositions.delete(layer);
+		return super.removeLayer(layer);
 	}
 
 	_addItem(obj: any) {

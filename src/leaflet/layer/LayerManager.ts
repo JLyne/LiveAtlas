@@ -34,7 +34,6 @@ export default class LayerManager {
 		}
 	}
 
-	//TODO: Respect position
 	addLayer(layer: Layer, showInControl: boolean, name: string, position: number) {
 		this.map.addLayer(layer);
 
@@ -43,12 +42,20 @@ export default class LayerManager {
 				this.layerControl.removeLayer(layer);
 			}
 
-			this.layerControl.addOverlay(layer, name);
+			if(typeof position !== 'undefined') {
+				this.layerControl.addOverlayAtPosition(layer, name, position);
+			} else {
+				this.layerControl.addOverlay(layer, name);
+			}
 		}
 	}
 
 	addHiddenLayer(layer: Layer, name: string, position: number) {
-		this.layerControl.addOverlay(layer, name);
+		if(typeof position !== 'undefined') {
+			this.layerControl.addOverlayAtPosition(layer, name, position);
+		} else {
+			this.layerControl.addOverlay(layer, name);
+		}
 	}
 
 	removeLayer(layer: Layer) {

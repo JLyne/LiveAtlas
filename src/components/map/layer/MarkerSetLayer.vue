@@ -82,9 +82,11 @@ export default defineComponent({
 					});
 
 					if(newValue.hidden) {
-						this.leaflet.getLayerManager().addHiddenLayer(this.layerGroup, newValue.label, 1);
+						this.leaflet.getLayerManager()
+							.addHiddenLayer(this.layerGroup, newValue.label, this.markerSet.priority);
 					} else {
-						this.leaflet.getLayerManager().addLayer(this.layerGroup, true, newValue.label, 1);
+						this.leaflet.getLayerManager()
+							.addLayer(this.layerGroup, true, newValue.label, this.markerSet.priority);
 					}
 				}
 			},
@@ -94,9 +96,11 @@ export default defineComponent({
 
 	mounted() {
 		if(this.markerSet.hidden) {
-			this.leaflet.getLayerManager().addHiddenLayer(this.layerGroup, this.markerSet.label, 1);
+			this.leaflet.getLayerManager()
+				.addHiddenLayer(this.layerGroup, this.markerSet.label, this.markerSet.priority);
 		} else {
-			this.leaflet.getLayerManager().addLayer(this.layerGroup, true, this.markerSet.label, 1);
+			this.leaflet.getLayerManager()
+				.addLayer(this.layerGroup, true, this.markerSet.label, this.markerSet.priority);
 		}
 	},
 

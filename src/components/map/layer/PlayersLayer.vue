@@ -58,7 +58,11 @@ export default defineComponent({
 
 	mounted() {
 		if(!this.componentSettings!.hideByDefault) {
-			this.leaflet.getLayerManager().addLayer(this.layerGroup, true, useStore().state.messages.players, 1);
+			this.leaflet.getLayerManager().addLayer(
+				this.layerGroup,
+				true,
+				useStore().state.messages.players,
+				this.componentSettings!.layerPriority);
 		}
 	},
 
