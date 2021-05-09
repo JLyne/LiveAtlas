@@ -7,7 +7,7 @@ LiveAtlas is a drop-in replacement for the original Dynmap frontend, which aims 
 
 Development is ongoing, and there are some rough edges, but most of the Dynmap features used by a typical Minecraft server have been implemented.
 
-You can see it in action [here](https://minecraft.rtgame.co.uk/map/build) and [here](https://minecraft.rtgame.co.uk/map/survival)
+You can see it in action [here](https://minecraft.rtgame.co.uk/map/build/) and [here](https://minecraft.rtgame.co.uk/map/survival/)
 
 ## Supported Dynmap features
 - Viewing maps
