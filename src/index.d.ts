@@ -1,12 +1,20 @@
-declare module '*.svg' {
-  const content: any;
-  export default content;
+import { ComponentCustomProperties } from 'vue'
+import {State, Store} from "@/store";
+
+declare module "*.png" {
+   const value: any;
+   export = value;
 }
 
-interface BrowserSpriteSymbol {
-  id: string;
-  viewBox: string;
-  content: string;
-  node: SVGSymbolElement;
-  url: string;
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue'
+  const component: DefineComponent<{}, {}, any>
+  export default component
+}
+
+declare module '@vue/runtime-core' {
+	// provide typings for `this.$store`
+	interface ComponentCustomProperties {
+		$store: Store<State>
+	}
 }

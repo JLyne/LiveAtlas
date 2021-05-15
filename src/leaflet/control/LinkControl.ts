@@ -19,7 +19,7 @@
 
 import {Control, ControlOptions, DomUtil, Map} from 'leaflet';
 import {useStore} from "@/store";
-import linkIcon from '@/assets/icons/link.svg';
+import '@/assets/icons/link.svg';
 import ClipboardJS from 'clipboard';
 
 export class LinkControl extends Control {
@@ -38,8 +38,8 @@ export class LinkControl extends Control {
 		linkButton.type = 'button';
 		linkButton.title = 'Copy link to current location';
 		linkButton.innerHTML = `
-		<svg class="svg-icon" viewBox="${linkIcon.viewBox}" aria-hidden="true">
-		  <use xlink:href="${linkIcon.url}" />
+		<svg class="svg-icon" aria-hidden="true">
+		  <use xlink:href="#link" />
 		</svg>`;
 
 		new ClipboardJS(linkButton, {

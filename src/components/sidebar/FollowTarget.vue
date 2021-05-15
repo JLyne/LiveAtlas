@@ -37,8 +37,7 @@ import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {defineComponent, onMounted, ref, watch} from "@vue/runtime-core";
 import {getMinecraftHead} from '@/util';
-
-const defaultImage = require('@/assets/images/player_face.png');
+import defaultImage from '@/assets/images/player_face.png';
 
 export default defineComponent({
 	name: 'FollowTarget',

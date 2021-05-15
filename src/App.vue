@@ -25,7 +25,7 @@ import {computed, defineComponent, onBeforeUnmount, onMounted, onUnmounted, ref,
 import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
 import ChatBox from './components/ChatBox.vue';
-import {useStore} from "./store";
+import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
 import {parseUrl} from '@/util';
 import {MutationTypes} from "@/store/mutation-types";

@@ -33,6 +33,17 @@ import {DynmapWorldMap, DynmapWorld} from "@/dynmap";
 import {defineComponent} from 'vue';
 import {MutationTypes} from "@/store/mutation-types";
 import SvgIcon from "@/components/SvgIcon.vue";
+import "@/assets/icons/block_world_surface.svg";
+import "@/assets/icons/block_world_cave.svg";
+import "@/assets/icons/block_world_biome.svg";
+import "@/assets/icons/block_world_flat.svg";
+import "@/assets/icons/block_nether_flat.svg";
+import "@/assets/icons/block_nether_surface.svg";
+import "@/assets/icons/block_the_end_flat.svg";
+import "@/assets/icons/block_the_end_surface.svg";
+import "@/assets/icons/block_other.svg";
+import "@/assets/icons/block_other_flat.svg";
+import "@/assets/icons/block_skylands.svg";
 
 export default defineComponent({
 	name: 'WorldListItem',

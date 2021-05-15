@@ -45,6 +45,8 @@ import {useStore} from "@/store";
 import SvgIcon from "@/components/SvgIcon.vue";
 import {MutationTypes} from "@/store/mutation-types";
 import {DynmapUIElement} from "@/dynmap";
+import "@/assets/icons/players.svg";
+import "@/assets/icons/maps.svg";
 
 export default defineComponent({
 	components: {

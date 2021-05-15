@@ -21,14 +21,15 @@ import {ControlOptions, DomUtil, Util, Map, Control} from 'leaflet';
 import {getMinecraftTime} from '@/util';
 import {DynmapWorldState} from "@/dynmap";
 
-import sun from '@/assets/icons/clock_sun.svg';
-import sunRain from '@/assets/icons/clock_sun_rain.svg';
-import sunStorm from '@/assets/icons/clock_sun_storm.svg';
-import moon from '@/assets/icons/clock_moon.svg';
-import moonRain from '@/assets/icons/clock_moon_rain.svg';
-import moonStorm from '@/assets/icons/clock_moon_storm.svg';
 import {watch} from "@vue/runtime-core";
 import {useStore} from "@/store";
+
+import "@/assets/icons/clock_moon.svg";
+import "@/assets/icons/clock_moon_rain.svg";
+import "@/assets/icons/clock_moon_storm.svg";
+import "@/assets/icons/clock_sun.svg";
+import "@/assets/icons/clock_sun_rain.svg";
+import "@/assets/icons/clock_sun_storm.svg";
 
 export interface ClockControlOptions extends ControlOptions {
 	showTimeOfDay: boolean;
@@ -44,8 +45,8 @@ export class ClockControl extends Control {
 	private _sun?: HTMLElement;
 	private _moon?: HTMLElement;
 	private _clock?: HTMLElement;
-	private _currentMoonIcon?: BrowserSpriteSymbol;
-	private _currentSunIcon?: BrowserSpriteSymbol;
+	private _currentMoonIcon?: string;
+	private _currentSunIcon?: string;
 	private _unwatchHandler?: Function;
 
 	constructor(options: ClockControlOptions) {
@@ -66,12 +67,12 @@ export class ClockControl extends Control {
 		this._moon.style.transform = 'translate(-150px, -150px)';
 
 		this._sun!.innerHTML = `
-		<svg class="svg-icon" viewBox="${sun.viewBox}">
-	  		<use xlink:href="${sun.url}" />
+		<svg class="svg-icon">
+	  		<use xlink:href="#clock_sun" />
 		</svg>`;
 		this._moon!.innerHTML = `
-		<svg class="svg-icon" viewBox="${moon.viewBox}">
-	  		<use xlink:href="${moon.url}" />
+		<svg class="svg-icon">
+	  		<use xlink:href="#clock_moon" />
 		</svg>`;
 
 		if (this.options.showDigitalClock) {
@@ -138,33 +139,33 @@ export class ClockControl extends Control {
 
 		if (this.options.showWeather) {
 			if (worldState.thundering) {
-				this._setSunIcon(sunStorm);
-				this._setMoonIcon(moonStorm);
+				this._setSunIcon('clock_sun_storm');
+				this._setMoonIcon('clock_moon_storm');
 			} else if (worldState.raining) {
-				this._setSunIcon(sunRain);
-				this._setMoonIcon(moonRain);
+				this._setSunIcon('clock_sun_rain');
+				this._setMoonIcon('clock_moon_rain');
 			} else {
-				this._setSunIcon(sun);
-				this._setMoonIcon(moon);
+				this._setSunIcon('clock_moon');
+				this._setMoonIcon('clock_sun');
 			}
 		}
 	}
 
-	_setSunIcon(icon: BrowserSpriteSymbol) {
+	_setSunIcon(icon: string) {
 		if(this._sun && this._currentSunIcon !== icon) {
 			this._sun!.innerHTML = `
-				<svg class="svg-icon" viewBox="${icon.viewBox}">
-					<use xlink:href="${icon.url}" />
+				<svg class="svg-icon">
+					<use xlink:href="#${icon}" />
 				</svg>`;
 			this._currentSunIcon = icon;
 		}
 	}
 
-	_setMoonIcon(icon: BrowserSpriteSymbol) {
+	_setMoonIcon(icon: string) {
 		if(this._moon && this._currentMoonIcon !== icon) {
 			this._moon!.innerHTML = `
-				<svg class="svg-icon" viewBox="${icon.viewBox}">
-					<use xlink:href="${icon.url}" />
+				<svg class="svg-icon">
+					<use xlink:href="#${icon}" />
 				</svg>`;
 			this._currentMoonIcon = icon;
 		}

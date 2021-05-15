@@ -20,8 +20,7 @@
 import {MarkerOptions, DivIcon, DomUtil} from 'leaflet';
 import {DynmapPlayer} from "@/dynmap";
 import {getMinecraftHead} from '@/util';
-
-const playerImage = require('@/assets/images/player_face.png');
+import playerImage from '@/assets/images/player_face.png';
 
 const noSkinImage: HTMLImageElement = document.createElement('img');
 noSkinImage.height = 16;

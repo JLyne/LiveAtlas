@@ -31,8 +31,7 @@ import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {getMinecraftHead} from '@/util';
-
-const defaultImage = require('@/assets/images/player_face.png');
+import defaultImage from '@/assets/images/player_face.png';
 
 export default defineComponent({
 	name: 'PlayerListItem',

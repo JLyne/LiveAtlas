@@ -27,8 +27,7 @@
 	import {DynmapChat} from "@/dynmap";
 	import {getMinecraftHead} from '@/util';
 	import {useStore} from "@/store";
-
-	const defaultImage = require('@/assets/images/player_face.png');
+	import defaultImage from '@/assets/images/player_face.png';
 
 	export default defineComponent({
 		props: {

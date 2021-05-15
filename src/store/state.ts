@@ -68,7 +68,7 @@ export type State = {
 }
 
 export const state: State = {
-	version: process.env.PACKAGE_VERSION || 'Unknown',
+	version: (import.meta.env.VITE_VERSION || 'Unknown') as string,
 
 	configuration: {
 		version: '',

@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<div class="map" :style="{'background-color': mapBackground }">
+	<div class="map" :style="{backgroundColor: mapBackground }">
 		<MapLayer v-for="[name, map] in maps" :key="name" :map="map" :name="name" :leaflet="leaflet"></MapLayer>
 		<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
 		<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>
@@ -60,7 +60,7 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			leaflet = undefined as DynmapMap | undefined,
+			leaflet = undefined as any,
 
 			maps = computed(() => store.state.maps),
 			markerSets = computed(() => store.state.markerSets),
@@ -193,7 +193,7 @@ export default defineComponent({
 			crs: CRS.Simple,
 			worldCopyJump: false,
 			// markerZoomAnimation: false,
-		}));
+		})) as DynmapMap;
 
 		this.leaflet.createPane('vectors');
 

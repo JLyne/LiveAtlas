@@ -24,7 +24,8 @@ import '@/scss/style.scss';
 
 const splash = document.getElementById('splash'),
 	splashError = document.getElementById('splash__error'),
-	splashAttempt = document.getElementById('splash__error-attempt');
+	splashAttempt = document.getElementById('splash__error-attempt'),
+	svgs = import.meta.globEager('/assets/icons/*.svg');
 
 window.hideSplash = function() {
 	requestAnimationFrame(function() {

@@ -15,10 +15,11 @@
  */
 
 import {Control, ControlOptions, DomUtil, Map} from 'leaflet';
-import chat from '@/assets/icons/chat.svg';
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {watch} from "@vue/runtime-core";
+
+import "@/assets/icons/chat.svg";
 
 export class ChatControl extends Control {
 	// @ts-ignore
@@ -34,8 +35,8 @@ export class ChatControl extends Control {
 		chatButton.type = 'button';
 		chatButton.title = 'Chat';
 		chatButton.innerHTML = `
-		<svg class="svg-icon" viewBox="${chat.viewBox}">
-		  <use xlink:href="${chat.url}" />
+		<svg class="svg-icon">
+		  <use xlink:href="#chat" />
 		</svg>`;
 
 		chatButton.addEventListener('click', e => {

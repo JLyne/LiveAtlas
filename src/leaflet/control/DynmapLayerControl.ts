@@ -18,12 +18,12 @@
  */
 
 import {Util, Control, DomEvent, LeafletEvent, Map as LeafletMap, Layer, DomUtil} from 'leaflet';
-import layers from '@/assets/icons/layers.svg';
 import LayersObject = Control.LayersObject;
 import LayersOptions = Control.LayersOptions;
 import Layers = Control.Layers;
 
-import checkbox from '@/assets/icons/checkbox.svg';
+import '@/assets/icons/layers.svg';
+import '@/assets/icons/checkbox.svg';
 
 export class DynmapLayerControl extends Control.Layers {
 	private _layersLink?: HTMLElement;
@@ -55,8 +55,8 @@ export class DynmapLayerControl extends Control.Layers {
 		const element = super.onAdd(map);
 
 		this._layersLink!.innerHTML = `
-		<svg class="svg-icon" viewBox="${layers.viewBox}">
-		  <use xlink:href="${layers.url}" />
+		<svg class="svg-icon">
+		  <use xlink:href="#layers" />
 		</svg>`;
 
 		return element;
@@ -120,8 +120,8 @@ export class DynmapLayerControl extends Control.Layers {
 
 		item.appendChild(input);
 		item.insertAdjacentHTML('beforeend',  `
-		<svg class="svg-icon" viewBox="${checkbox.viewBox}" aria-hidden="true">
-	  		<use xlink:href="${checkbox.url}" />
+		<svg class="svg-icon" aria-hidden="true">
+	  		<use xlink:href="#checkbox" />
 		</svg>`);
 		item.appendChild(label);
 

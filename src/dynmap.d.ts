@@ -116,7 +116,7 @@ interface DynmapWorld {
 	title: string;
 	height: number;
 	center: Coordinate;
-	maps: Map<String, DynmapWorldMap>;
+	maps: Map<string, DynmapWorldMap>;
 }
 
 interface DynmapWorldMap {

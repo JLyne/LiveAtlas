@@ -30,7 +30,7 @@ import {
 	LeafletEvent,
 	Map, TileLayer,
 } from 'leaflet';
-import loadingIcon from '@/assets/icons/loading.svg';
+import '@/assets/icons/loading.svg';
 
 export interface LoadingControlOptions extends ControlOptions {
 	delayIndicator?: number;
@@ -54,8 +54,8 @@ export class LoadingControl extends Control {
 		this._loadingIndicator.title = 'Loading...';
 		this._loadingIndicator.hidden = true;
 		this._loadingIndicator.innerHTML = `
-		<svg class="svg-icon" viewBox="${loadingIcon.viewBox}">
-		  <use xlink:href="${loadingIcon.url}" />
+		<svg class="svg-icon">
+		  <use xlink:href="#loading" />
 		</svg>`;
 
 		this._addLayerListeners(map);

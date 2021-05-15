@@ -23,6 +23,7 @@ export interface DynmapIconOptions extends DivIconOptions {
 	icon: string;
 	label: string;
 	isHtml?: boolean;
+	showLabel?: boolean;
 }
 
 const markerContainer: HTMLDivElement = document.createElement('div');
