@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [vue(), svgSpritePlugin({
     symbolId: (name) => name,
   })],
+  base: './',
   server: {
     port: 8080
   },
