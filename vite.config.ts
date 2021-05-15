@@ -20,5 +20,6 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 600,
+    assetsDir: 'live-atlas/assets'
   }
 });
