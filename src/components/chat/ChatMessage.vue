@@ -113,7 +113,7 @@
 
 				.message__content {
 					display: block;
-					color: #eeeeee;
+					color: var(--text-emphasis);
 				}
 			}
 		}

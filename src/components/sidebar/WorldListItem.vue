@@ -90,8 +90,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-	@import '../../scss/variables';
-
 	.world {
 		display: flex;
 		align-items: center;
@@ -130,7 +128,7 @@ export default defineComponent({
 		}
 
 		&.map--selected button {
-			background-color: $global-focus-color;
+			background-color: var(--background-hover);
 		}
 	}
 </style>

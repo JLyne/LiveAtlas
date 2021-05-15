@@ -116,7 +116,6 @@
 </script>
 
 <style lang="scss">
-	@import '../scss/variables';
 	@import '../scss/placeholders';
 
 	.chat {
@@ -148,7 +147,7 @@
 
 				&.message--skeleton {
 					font-style: italic;
-					color: #aaaaaa;
+					color: var(--text-subtle);
 				}
 			}
 		}
@@ -160,19 +159,19 @@
 			margin: 1.5rem -1.5rem -1.5rem;
 
 			.chat__input {
-				border-bottom-left-radius: $global-border-radius;
+				border-bottom-left-radius: var(--border-radius);
 				flex-grow: 1;
 			}
 
 			.chat__send {
 				padding-left: 1rem;
 				padding-right: 1rem;
-				border-radius: 0 0 $global-border-radius 0;
+				border-radius: 0 0 var(--border-radius) 0;
 			}
 
 			.chat__error {
-				background-color: #771616;
-				color: #eeeeee;
+				background-color: var(--background-error);
+				color: var(--text-emphasis);
 				font-size: 1.6rem;
 				padding: 0.5rem 1rem;
 				line-height: 2rem;
@@ -183,11 +182,11 @@
 		.chat__login {
 			font-size: 1.6rem;
 			padding: 1.2rem;
-			background-color: #333333;
-			color: #aaaaaa;
+			background-color: var(--background-light);
+			color: var(--text-subtle);
 			margin: 1.5rem -1.5rem -1.5rem;
-			border-bottom-left-radius: $global-border-radius;
-			border-bottom-right-radius: $global-border-radius;
+			border-bottom-left-radius: var(--border-radius);
+			border-bottom-right-radius: var(--border-radius);
 		}
 
 		@media (max-width: 400px), (max-height: 480px) {

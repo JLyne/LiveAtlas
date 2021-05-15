@@ -15,8 +15,8 @@
  */
 
 .leaflet-control {
-	background-color: $global-background;
-	border-radius: $global-border-radius;
+	background-color: var(--background-base);
+	border-radius: var(--border-radius);
 	margin: 0;
 	box-sizing: border-box;
 	overflow: hidden;
@@ -39,20 +39,20 @@
 
 	a {
 		border-radius: 0;
-		border-bottom: 0.1rem solid $global-border-color;
+		border-bottom: 0.1rem solid var(--border-color);
 
 		&.leaflet-disabled {
-			background-color: $global-disabled-background;
+			background-color: var(--background-disabled);
 			cursor: not-allowed;
 
 			&:hover {
-				color: $global-disabled-text-color;
-				border-bottom-color: $global-border-color;
+				color: var(--text-disabled);
+				border-bottom-color: var(--border-color);
 			}
 		}
 
 		&:hover {
-			border-bottom-color: $global-border-color;
+			border-bottom-color: var(--border-color);
 		}
 	}
 
@@ -141,7 +141,7 @@
 .leaflet-control-layers {
 	width: auto;
 	border: none;
-	color: $global-text-color;
+	color: var(--text-base);
 
 	&.leaflet-control-layers-expanded {
 		padding: 0;
@@ -281,7 +281,7 @@
 	animation-fill-mode: forwards;
 	
 	&:focus, &:hover, &:active {
-		background-color: $global-background;
+		background-color: var(--background-base);
 	}
 
 	&[hidden] {

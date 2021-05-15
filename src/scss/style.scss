@@ -16,8 +16,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
-@import "variables";
 @import "placeholders";
 @import "leaflet/controls";
 @import "leaflet/popups";
@@ -53,7 +51,7 @@
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: $global-text-color transparent;
+    scrollbar-color: var(--background-hover) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -65,13 +63,13 @@
 }
 
 *::-webkit-scrollbar-thumb {
-	background-color: #333333;
+	background-color: var(--background-light);
 	border-radius: 2rem;
 	transition: background 1s ease-in;
 }
 
 *:hover::-webkit-scrollbar-thumb {
-  background-color: $global-focus-color;
+  background-color: var(--background-hover);
 }
 
 *::-webkit-scrollbar-button {
@@ -84,13 +82,13 @@ html {
 
 body {
 	font-family: Raleway, sans-serif;
-	color: $global-text-color;
+	color: var(--text-base);
 	text-shadow: 0.1rem 0.1rem #000000;
 	letter-spacing: 0.02rem;
 }
 
 html, body {
-    background-color: $global-background;
+    background-color: var(--background-dark);
     height: 100%;
 	overscroll-behavior: none;
 }
@@ -111,7 +109,7 @@ h2 {
 }
 
 a {
-	color: $global-text-color;
+	color: var(--text-base);
 }
 
 button {
@@ -120,22 +118,22 @@ button {
 
 input {
 	appearance: none;
-	background-color: #333333;
+	background-color: var(--background-light);
 	box-shadow: none;
-	color: #cccccc;
+	color: var(--text-base);
 	font-size: 1.6rem;
 	padding: 1rem;
-	border: 0.2rem solid #333333;
+	border: 0.2rem solid var(--border-color);
 	border-radius: 0;
 
 	&:focus {
-		color: #eeeeee;
-		outline-color: #eeeeee;
+		color: var(--text-emphasis);
+		outline-color: var(--text-emphasis);
 	}
 
 	&[disabled] {
-		background-color: #333333;
-		border-color: #333333;
+		background-color: var(--background-disabled);
+		border-color: var(--border-color);
 		cursor: not-allowed;
 	}
 }
@@ -174,7 +172,7 @@ input {
 
 		&:checked {
 			& ~ span {
-				color: #cccccc;
+				color: var(--text-base);
 			}
 
 			& + svg {
@@ -190,7 +188,7 @@ input {
 	}
 
 	span {
-		color: #aaaaaa;
+		color: var(--text-subtle);
 		padding-left: 3rem;
 	}
 }
@@ -220,17 +218,17 @@ input {
 		font-size: 2rem;
 		line-height: 2rem;
 		margin-top: auto;
-		background-color: #222;
+		background-color: var(--background-base);
 		z-index: 1;
 		padding: 0.1rem 0.1rem 0;
 		border-radius: 0.3rem;
 
 		&.night {
-			color: #ddffff;
+			color: var(--text-night);
 		}
 
 		&.day {
-			color: #ffdd33;
+			color: var(--text-day);
 		}
 
 		&.night, &.day {
@@ -327,8 +325,8 @@ input {
 
 		white-space: nowrap;
 
-		color: $global-text-color;
-		background: #121212;
+		color: var(--text-base);
+		background: var(--background-dark);
 		padding: 0.2rem;
 		display: none;
 		max-width: 25vw;

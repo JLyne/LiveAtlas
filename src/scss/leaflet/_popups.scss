@@ -16,14 +16,14 @@
 
 .leaflet-popup {
 	.leaflet-popup-content-wrapper, .leaflet-popup-tip {
-		background-color: $global-background;
-		color: $global-text-color;
+		background-color: var(--background-base);
+		color: var(--text-base);
 	}
 
 	.leaflet-popup-content-wrapper {
 		max-height: 50vh;
 		display: flex;
-		border-radius: $global-border-radius;
+		border-radius: var(--border-radius);
 	}
 
 	.leaflet-popup-content {
@@ -42,8 +42,8 @@
 
 	@at-root  {
 		.leaflet-container a.leaflet-popup-close-button {
-			background-color: $global-background;
-			border-radius: $global-border-radius;
+			background-color: var(--background-base);
+			border-radius: var(--border-radius);
 			width: 2rem;
 			height: 2rem;
 			top: -1rem;

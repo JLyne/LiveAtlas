@@ -276,7 +276,7 @@ export default defineComponent({
 	.map {
 		width: 100%;
 		height: 100%;
-		background: #000;
+		background: transparent;
 		z-index: 0;
 	}
 </style>

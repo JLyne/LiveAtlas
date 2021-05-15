@@ -88,7 +88,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '../scss/variables';
 @import '../scss/placeholders';
 
 .sidebar {
@@ -173,7 +172,7 @@ export default defineComponent({
 
 		.section__skeleton {
 			font-style: italic;
-			color: #aaa;
+			color: var(--text-disabled);
 			text-align: center;
 			align-self: center;
 			margin-top: 1rem;

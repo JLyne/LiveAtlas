@@ -141,7 +141,9 @@ export default defineComponent({
 				cursor: not-allowed;
 			}
 
-			color: #999999;
+			.player__name {
+				color: var(--text-disabled);
+			}
 		}
 
 		&.player--other-world {
@@ -149,7 +151,9 @@ export default defineComponent({
 				opacity: 0.5;
 			}
 
-			color: #999999;
+			.player__name {
+				color: var(--text-disabled);
+			}
 		}
 	}
 </style>

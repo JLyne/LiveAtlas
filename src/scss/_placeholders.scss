@@ -18,9 +18,9 @@
 	appearance: none;
 	border: none;
 	box-shadow: none;
-	background-color: $global-background;
-	color: $global-text-color;
-	border-radius: $global-border-radius;
+	background-color: var(--background-base);
+	color: var(--text-base);
+	border-radius: var(--border-radius);
 	cursor: pointer;
 	display: block;
 	text-align: center;
@@ -29,28 +29,28 @@
 	font-size: 1.6rem;
 
 	&:hover, &.active {
-		background-color: $global-focus-color;
-		color: #222222;
+		background-color: var(--background-hover);
+		color: var(--text-hover);
 	}
 
 	&:focus {
-		outline-color: $global-focus-color;
+		outline-color: var(--outline-focus);
 		outline-width: 0.2rem;
 	}
 
 	&:active {
-		background-color: #eeeeee;
-		color: #121212;
+		background-color: var(--background-active);
+		color: var(--text-active);
 	}
 
 	&[disabled], &.disabled {
-		background-color: $global-disabled-background;
-		color: $global-disabled-text-color;
+		background-color: var(--background-disabled);
+		color: var(--text-disabled);
 		cursor: not-allowed;
 
 		&:hover, &:focus, &:active {
-			background-color: $global-disabled-background;
-			color: $global-disabled-text-color;
+			background-color: var(--background-disabled);
+			color: var(--text-disabled);
 		}
 	}
 
@@ -71,9 +71,9 @@
 }
 
 %panel {
-	background-color: $global-background;
-	color: $global-text-color;
-	border-radius: $global-border-radius;
+	background-color: var(--background-base);
+	color: var(--text-base);
+	border-radius: var(--border-radius);
 	display: flex;
 	flex-direction: column;
 	padding: 1.5rem;
