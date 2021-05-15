@@ -79,6 +79,14 @@
         #splash__error {
             margin-top: 2rem;
             transition: opacity 0.5s ease-in;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            max-width: 60rem;
+        }
+
+        #splash__error-message {
+            font-family: monospace;
         }
 
         #splash__error[aria-hidden=true] {
@@ -125,7 +133,9 @@
         </svg>
 
         <div id="splash__error" role="alert" aria-hidden="true">
-            Failed to load server configuration. Retrying<span id="splash__error-attempt"></span>...
+            <span>Failed to load server configuration.</span>
+            <span id="splash__error-message"></span>
+            <span id="splash__error-retry">Retrying<span id="splash__error-attempt"></span>...</span>
         </div>
     </div>
 

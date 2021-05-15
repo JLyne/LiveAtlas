@@ -553,10 +553,40 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 }
 
 export default {
+	validateConfiguration(): Promise<void> {
+		const check = '\nCheck your standalone/config.js file exists and is being loaded correctly.';
+
+		if(!window.config || !window.config.url) {
+			return Promise.reject(`Dynmap's configuration is missing. ${check}`);
+		}
+
+		if(!window.config.url.configuration) {
+			return Promise.reject(`Dynmap's configuration URL is missing. ${check}`);
+		}
+
+		if(!window.config.url.update) {
+			return Promise.reject(`Dynmap's update URL is missing. ${check}`);
+		}
+
+		if(!window.config.url.markers) {
+			return Promise.reject(`Dynmap's markers URL is missing. ${check}`);
+		}
+
+		if(!window.config.url.tiles) {
+			return Promise.reject(`Dynmap's tiles URL is missing. ${check}`);
+		}
+
+		if(!window.config.url.sendmessage) {
+			return Promise.reject(`Dynmap's sendmessage URL is missing. ${check}`);
+		}
+
+		return Promise.resolve();
+	},
+
 	getConfiguration(): Promise<DynmapConfigurationResponse> {
 		return fetch(window.config.url.configuration).then(response => {
 			if (!response.ok) {
-				throw new Error('Network request failed');
+				throw new Error('Network request failed: ' + response.statusText);
 			}
 
 			return response.json();

@@ -23,7 +23,10 @@ import 'normalize-scss/sass/normalize/_import-now.scss';
 import '@/scss/style.scss';
 
 const splash = document.getElementById('splash'),
+	splashSpinner = document.getElementById('splash__spinner'),
 	splashError = document.getElementById('splash__error'),
+	splashErrorMessage = document.getElementById('splash__error-message'),
+	splashRetry = document.getElementById('splash__error-retry'),
 	splashAttempt = document.getElementById('splash__error-attempt'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
 
@@ -35,13 +38,26 @@ window.hideSplash = function() {
 	});
 };
 
-window.showSplashError = function(attempts: number) {
+window.showSplashError = function(message: string, fatal: boolean, attempts: number) {
 	if(splashError) {
 		splashError.setAttribute('aria-hidden', 'false');
 	}
 
-	if(splashAttempt) {
-		splashAttempt.textContent = attempts.toString();
+	if(splashErrorMessage) {
+		splashErrorMessage.innerText = message || 'Unknown error';
+	}
+
+	if(splashSpinner && fatal) {
+		splashSpinner.style.visibility = 'hidden';
+	}
+
+	if(splashAttempt && splashRetry) {
+		if(fatal) {
+			splashAttempt.hidden = splashRetry.hidden = true;
+		} else if(attempts) {
+			splashAttempt.hidden = splashRetry.hidden = false;
+			splashAttempt.textContent = attempts.toString();
+		}
 	}
 };
 
