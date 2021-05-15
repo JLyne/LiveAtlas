@@ -145,8 +145,8 @@ export class ClockControl extends Control {
 				this._setSunIcon('clock_sun_rain');
 				this._setMoonIcon('clock_moon_rain');
 			} else {
-				this._setSunIcon('clock_moon');
-				this._setMoonIcon('clock_sun');
+				this._setSunIcon('clock_sun');
+				this._setMoonIcon('clock_moon');
 			}
 		}
 	}
