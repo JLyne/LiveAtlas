@@ -31,6 +31,13 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build/) and [
 - Login/register
 - Inactivity timeout
 
+## Supported Browsers
+Chrome 63+
+Edge 18+
+Firefox 60+
+Opera 50+
+Safari 11+ (In theory, some iOS 11 devices do not work but others do. 12 is fine)
+
 ## Installation
 Using an [external webserver](https://github.com/webbukkit/dynmap/wiki/External-Webserver-Basics) is recommended.
 
