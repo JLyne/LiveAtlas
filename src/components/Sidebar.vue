@@ -30,6 +30,7 @@
 <!--				<SvgIcon name="settings"></SvgIcon>-->
 <!--			</button>-->
 		</header>
+		<ServerList v-if="serverCount > 1" v-show="currentlyVisible.has('maps')"></ServerList>
 		<WorldList v-if="mapCount > 1" v-show="currentlyVisible.has('maps')"></WorldList>
 		<PlayerList v-if="previouslyVisible.has('players')" v-show="currentlyVisible.has('players')"></PlayerList>
 		<FollowTarget v-if="following" v-show="followActive" :target="following"></FollowTarget>
@@ -40,6 +41,7 @@
 import {defineComponent, computed} from "@vue/runtime-core";
 import PlayerList from './sidebar/PlayerList.vue';
 import WorldList from './sidebar/WorldList.vue';
+import ServerList from "@/components/sidebar/ServerList.vue";
 import FollowTarget from './sidebar/FollowTarget.vue';
 import {useStore} from "@/store";
 import SvgIcon from "@/components/SvgIcon.vue";
@@ -50,6 +52,7 @@ import "@/assets/icons/maps.svg";
 
 export default defineComponent({
 	components: {
+		ServerList,
 		SvgIcon,
 		PlayerList,
 		FollowTarget,
@@ -62,6 +65,7 @@ export default defineComponent({
 			previouslyVisible = computed(() => store.state.ui.previouslyVisibleElements),
 			smallScreen = computed(() => store.state.ui.smallScreen),
 			mapCount = computed(() => store.state.maps.size),
+			serverCount = computed(() => store.state.servers.size),
 			following = computed(() => store.state.followTarget),
 
 			toggleElement = (element: DynmapUIElement) => {
@@ -76,6 +80,7 @@ export default defineComponent({
 
 		return {
 			mapCount,
+			serverCount,
 			currentlyVisible,
 			previouslyVisible,
 			toggleElement,

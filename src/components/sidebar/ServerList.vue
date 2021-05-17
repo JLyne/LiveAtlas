@@ -15,35 +15,32 @@
   -->
 
 <template>
-	<section class="sidebar__section">
-		<span class="section__heading">{{ heading }}</span>
+	<section class="sidebar__section" v-if="servers.size > 1">
+		<span class="section__heading">Servers</span>
 		<ul class="section__content">
-			<WorldListItem :world="world" v-for="[name, world] in worlds" :key="name"></WorldListItem>
-			<li v-if="!worlds.size" class="section__skeleton">
-				No maps have been configured
-			</li>
+			<ServerListItem :server="server" v-for="[name, server] in servers" :key="name"></ServerListItem>
 		</ul>
 	</section>
 </template>
 
 <script lang="ts">
-import WorldListItem from './WorldListItem.vue';
+import ServerListItem from './ServerListItem.vue';
 import {defineComponent} from 'vue';
 import {useStore} from "@/store";
 
 export default defineComponent({
-	name: 'WorldList',
+	name: 'ServerList',
 	components: {
-		WorldListItem
+		ServerListItem
 	},
 
 	computed: {
 		heading() {
-			return useStore().state.messages.mapTypes;
+			return 'Servers';
 		},
 
-		worlds() {
-			return useStore().state.worlds;
+		servers() {
+			return useStore().state.servers;
 		}
 	},
 });
