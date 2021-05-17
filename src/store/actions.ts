@@ -78,9 +78,8 @@ export interface Actions {
 
 export const actions: ActionTree<State, State> & Actions = {
 	[ActionTypes.LOAD_CONFIGURATION]({commit, state}): Promise<DynmapConfigurationResponse> {
-		//Cleanup in case we are switching servers
-		commit(MutationTypes.CLEAR_PLAYERS, undefined);
-		commit(MutationTypes.CLEAR_CURRENT_MAP, undefined);
+		//Clear any existing has to avoid triggering a second config load, after this load changes the hash
+		commit(MutationTypes.CLEAR_CONFIGURATION_HASH, undefined);
 
 		return API.getConfiguration().then(config => {
 			commit(MutationTypes.SET_CONFIGURATION, config.config);
@@ -88,6 +87,11 @@ export const actions: ActionTree<State, State> & Actions = {
 			commit(MutationTypes.SET_WORLDS, config.worlds);
 			commit(MutationTypes.SET_COMPONENTS, config.components);
 			commit(MutationTypes.SET_LOGGED_IN, config.loggedIn);
+
+			//Skip default map/ui visibility logic if we already have a map selected (i.e config reload after hash change)
+			if(state.currentMap) {
+				return config;
+			}
 
 			if(state.configuration.expandUI && !state.ui.smallScreen) {
 				commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'players', state: true});
@@ -151,6 +155,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			commit(MutationTypes.ADD_MARKER_SET_UPDATES, update.updates.markerSets);
 			commit(MutationTypes.ADD_TILE_UPDATES, update.updates.tiles);
 			commit(MutationTypes.ADD_CHAT, update.updates.chat);
+			commit(MutationTypes.SET_CONFIGURATION_HASH, update.configHash);
 
 			return dispatch(ActionTypes.SET_PLAYERS, update.players).then(() => {
 				return update;

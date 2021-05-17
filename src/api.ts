@@ -726,7 +726,7 @@ export default {
 					raining: response.hasStorm || false,
 				},
 				playerCount: response.count || 0,
-				configHash: response.configHash || 0,
+				configHash: response.confighash || 0,
 				timestamp: response.timestamp || 0,
 				players,
 				updates: buildUpdates(response.updates || []),

@@ -29,7 +29,6 @@ import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
 import {parseUrl} from '@/util';
 import {MutationTypes} from "@/store/mutation-types";
-import API from '@/api';
 
 export default defineComponent({
 	name: 'App',
@@ -45,6 +44,7 @@ export default defineComponent({
 			title = computed(() => store.state.configuration.title),
 			currentUrl = computed(() => store.getters.url),
 			currentServer = computed(() => store.state.currentServer),
+			configurationHash = computed(() => store.state.configurationHash),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
 			updatesEnabled = ref(false),
@@ -54,7 +54,7 @@ export default defineComponent({
 			loadConfiguration = () => {
 				return store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
 					startUpdates();
-					requestAnimationFrame(window.hideSplash);
+					requestAnimationFrame(() => window.hideSplash());
 				}).catch(e => {
 					console.error('Failed to load server configuration: ', e);
 					window.showSplashError(e, false, ++configAttempts.value);
@@ -115,10 +115,22 @@ export default defineComponent({
 		watch(currentServer, (newServer) => {
 			window.showSplash();
 			stopUpdates();
-			window.history.replaceState({}, '', newServer);
+
+			//Cleanup
+			store.commit(MutationTypes.CLEAR_PLAYERS, undefined);
+			store.commit(MutationTypes.CLEAR_CURRENT_MAP, undefined);
 			store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
 
+			window.history.replaceState({}, '', newServer);
 			loadConfiguration();
+		});
+		watch(configurationHash, (newHash, oldHash) => {
+			if(newHash && oldHash) {
+				window.showSplash();
+				stopUpdates();
+				store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
+				loadConfiguration();
+			}
 		});
 
 		onMounted(() => loadConfiguration());

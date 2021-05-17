@@ -42,6 +42,8 @@ export type CurrentMapPayload = {
 export type Mutations<S = State> = {
 	[MutationTypes.SET_SERVERS](state: S, servers: Map<string, LiveAtlasServerDefinition>): void
 	[MutationTypes.SET_CONFIGURATION](state: S, config: DynmapServerConfig): void
+	[MutationTypes.SET_CONFIGURATION_HASH](state: S, hash: number): void
+	[MutationTypes.CLEAR_CONFIGURATION_HASH](state: S): void
 	[MutationTypes.SET_MESSAGES](state: S, messages: DynmapMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<DynmapWorld>): void
 	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
@@ -96,6 +98,17 @@ export const mutations: MutationTree<State> & Mutations = {
 	// Sets configuration options from the initial config fetch
 	[MutationTypes.SET_CONFIGURATION](state: State, config: DynmapServerConfig) {
 		state.configuration = Object.assign(state.configuration, config);
+		state.configurationHash = config.hash;
+	},
+
+	// Sets configuration hash
+	[MutationTypes.SET_CONFIGURATION_HASH](state: State, hash: number) {
+		state.configurationHash = hash;
+	},
+
+	// Sets configuration hash
+	[MutationTypes.CLEAR_CONFIGURATION_HASH](state: State) {
+		state.configurationHash = undefined;
 	},
 
 	//Set messsages from the initial config fetch
@@ -108,8 +121,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.worlds.clear();
 		state.maps.clear();
 
-		state.currentMap = undefined;
-		state.currentWorld = undefined;
 		state.followTarget = undefined;
 		state.panTarget = undefined;
 
@@ -121,6 +132,20 @@ export const mutations: MutationTree<State> & Mutations = {
 			state.worlds.set(world.name, world);
 			world.maps.forEach(map => state.maps.set([world.name, map.name].join('_'), map));
 		});
+
+		//Update current world if a world with the same name still exists, otherwise clear
+		if(state.currentWorld && state.worlds.has(state.currentWorld.name)) {
+			state.currentWorld = state.worlds.get(state.currentWorld.name);
+		} else {
+			state.currentWorld = undefined;
+		}
+
+		//Update current map if a map with the same name still exists, otherwise clear
+		if(state.currentWorld && state.currentMap && state.maps.has([state.currentWorld.name, state.currentMap.name].join('_'))) {
+			state.currentMap = state.maps.get([state.currentWorld.name, state.currentMap.name].join('_'));
+		} else {
+			state.currentMap = undefined;
+		}
 	},
 
 	//Sets the state and settings of optional components, from the initial config fetch

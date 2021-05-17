@@ -29,6 +29,7 @@ export type State = {
 	version: string;
 	servers: Map<string, LiveAtlasServerDefinition>;
 	configuration: DynmapServerConfig;
+	configurationHash: number | undefined;
 	messages: DynmapMessageConfig;
 	components: DynmapComponentConfig;
 
@@ -90,6 +91,7 @@ export const state: State = {
 		expandUI: false,
 		hash: 0,
 	},
+	configurationHash: undefined,
 
 	messages: {
 		chatNotAllowed: '',

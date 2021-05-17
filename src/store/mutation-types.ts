@@ -17,6 +17,8 @@
 export enum MutationTypes {
 	SET_SERVERS ='setServers',
 	SET_CONFIGURATION = 'setConfiguration',
+	SET_CONFIGURATION_HASH = 'setConfigurationHash',
+	CLEAR_CONFIGURATION_HASH = 'clearConfigurationHash',
 	SET_MESSAGES = 'setMessages',
 	SET_WORLDS = 'setWorlds',
 	SET_COMPONENTS = 'setComponents',
