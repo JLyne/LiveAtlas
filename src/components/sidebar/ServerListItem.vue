@@ -17,8 +17,8 @@
 <template>
 	<li :class="{'server': true, 'server--selected': server.id === currentServer}">
 		<button type="button" :class="{'active': server.id === currentServer}"
-		        :title="server.label || server.id"
-		        @click="setCurrentServer(server.id)">{{ server.label || server.id }}</button>
+			:title="server.label || server.id" @click="setCurrentServer(server.id)">{{ server.label || server.id }}
+		</button>
 	</li>
 </template>
 

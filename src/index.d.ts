@@ -1,4 +1,3 @@
-import { ComponentCustomProperties } from 'vue'
 import {State, Store} from "@/store";
 import {DynmapUrlConfig} from "@/dynmap";
 
