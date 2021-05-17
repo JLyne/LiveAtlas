@@ -15,8 +15,10 @@
   -->
 
 <template>
-	<li :class="{'server': true, 'server--selected': server.id === currentServer.id}">
-		<button type="button" :title="server.label || server.id" @click="setCurrentServer(server.id)">{{ server.label || server.id }}</button>
+	<li :class="{'server': true, 'server--selected': server.id === currentServer}">
+		<button type="button" :class="{'active': server.id === currentServer}"
+		        :title="server.label || server.id"
+		        @click="setCurrentServer(server.id)">{{ server.label || server.id }}</button>
 	</li>
 </template>
 
@@ -36,7 +38,7 @@ export default defineComponent({
 	},
 
 	computed: {
-		currentServer(): LiveAtlasServerDefinition | undefined {
+		currentServer(): string | undefined {
 			return useStore().state.currentServer;
 		}
 	},
@@ -50,19 +52,18 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+	@import '../../scss/placeholders';
+
 	.server {
 		height: 3.2rem;
 
 		button {
+			@extend %button;
 			text-align: left;
 			display: block;
 			height: 100%;
 			width: 100%;
 			border-radius: 0.5rem;
-		}
-
-		&.server--selected button {
-			background-color: var(--background-hover);
 		}
 	}
 </style>
