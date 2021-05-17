@@ -46,9 +46,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<DynmapWorld>): void
 	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, DynmapMarkerSet>): void
-	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
 	[MutationTypes.ADD_WORLD](state: S, world: DynmapWorld): void
-	[MutationTypes.CLEAR_WORLDS](state: S): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: DynmapWorldState): void
 	[MutationTypes.SET_UPDATE_TIMESTAMP](state: S, time: Date): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
@@ -70,9 +68,9 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_CURRENT_PROJECTION](state: S, payload: DynmapProjection): void
 	[MutationTypes.SET_CURRENT_LOCATION](state: S, payload: Coordinate): void
 	[MutationTypes.SET_CURRENT_ZOOM](state: S, payload: number): void
-	[MutationTypes.CLEAR_CURRENT_ZOOM](state: S): void
 	[MutationTypes.SET_PARSED_URL](state: S, payload: DynmapParsedUrl): void
 	[MutationTypes.CLEAR_PARSED_URL](state: S): void
+	[MutationTypes.CLEAR_CURRENT_MAP](state: S): void
 	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: DynmapPlayer): void
 	[MutationTypes.SET_PAN_TARGET](state: S, payload: DynmapPlayer): void
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: S, a?: void): void
@@ -145,29 +143,8 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 	},
 
-	//Sets the existing marker sets from the last marker fetch
-	[MutationTypes.CLEAR_MARKER_SETS](state: State) {
-		state.markerSets.clear();
-		state.pendingSetUpdates.clear();
-	},
-
 	[MutationTypes.ADD_WORLD](state: State, world: DynmapWorld) {
 		state.worlds.set(world.name, world);
-	},
-
-	[MutationTypes.CLEAR_WORLDS](state: State) {
-		console.log('??????');
-		state.worlds.clear();
-		state.maps.clear();
-
-		state.currentMap = undefined;
-		state.currentWorld = undefined;
-		state.followTarget = undefined;
-		state.panTarget = undefined;
-
-		state.currentWorldState.timeOfDay = 0;
-		state.currentWorldState.raining = false;
-		state.currentWorldState.thundering = false;
 	},
 
 	//Sets the current world state an update fetch
@@ -383,10 +360,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.CLEAR_PLAYERS](state: State) {
 		state.followTarget = undefined;
 		state.panTarget = undefined;
-
-		for(const [key, player] of state.players) {
-			state.players.delete(key);
-		}
+		state.players.clear();
 	},
 
 	//Sets the currently active server
@@ -437,13 +411,19 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentZoom = payload;
 	},
 
-	[MutationTypes.CLEAR_CURRENT_ZOOM](state: State) {
-		state.currentZoom = 0;
-	},
-
 	//Sets the result of parsing the current map url, if present and valid
 	[MutationTypes.SET_PARSED_URL](state: State, payload: DynmapParsedUrl) {
 		state.parsedUrl = payload;
+	},
+
+	//Clear the current map/world
+	[MutationTypes.CLEAR_CURRENT_MAP](state: State) {
+		state.markerSets.clear();
+		state.pendingSetUpdates.clear();
+		state.pendingTileUpdates = [];
+
+		state.currentWorld = undefined;
+		state.currentMap = undefined;
 	},
 
 	//Clear any existing parsed url

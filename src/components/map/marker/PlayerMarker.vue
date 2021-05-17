@@ -226,7 +226,7 @@ export default defineComponent({
 			this.updateChatBalloon();
 		},
 		currentWorld(newValue) {
-			if(newValue.name === this.player.location.world) {
+			if(newValue && newValue.name === this.player.location.world) {
 				this.enableLayer();
 			} else if(this.markerVisible) {
 				this.disableLayer();

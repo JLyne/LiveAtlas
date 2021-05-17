@@ -41,9 +41,7 @@ window.showSplash = function() {
 	splash.hidden = false;
 
 	requestAnimationFrame(function() {
-		if(splash) {
-			splash.style.opacity = '1';
-		}
+		splash.style.opacity = '1';
 	});
 };
 
@@ -99,8 +97,6 @@ API.validateConfiguration().then((config) => {
 	} else {
 		store.commit(MutationTypes.SET_CURRENT_SERVER, config.keys().next().value);
 	}
-
-	console.log(store.state.currentServer);
 
 	const app = createApp(App).use(store);
 

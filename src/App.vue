@@ -54,7 +54,7 @@ export default defineComponent({
 			loadConfiguration = () => {
 				return store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
 					startUpdates();
-					window.hideSplash();
+					requestAnimationFrame(window.hideSplash);
 				}).catch(e => {
 					console.error('Failed to load server configuration: ', e);
 					window.showSplashError(e, false, ++configAttempts.value);
@@ -117,7 +117,6 @@ export default defineComponent({
 			stopUpdates();
 			window.history.replaceState({}, '', newServer);
 			store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
-			store.commit(MutationTypes.CLEAR_CURRENT_ZOOM, undefined);
 
 			loadConfiguration();
 		});
