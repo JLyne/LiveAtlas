@@ -23,9 +23,11 @@ import {
 	DynmapWorld, DynmapWorldState, Coordinate, DynmapParsedUrl, DynmapChat, DynmapUIElement
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
+import {LiveAtlasServerDefinition} from "@/index";
 
 export type State = {
 	version: string;
+	servers: Map<string, LiveAtlasServerDefinition>;
 	configuration: DynmapServerConfig;
 	messages: DynmapMessageConfig;
 	components: DynmapComponentConfig;
@@ -48,6 +50,7 @@ export type State = {
 	followTarget?: DynmapPlayer;
 	panTarget?: DynmapPlayer;
 
+	currentServer?: string;
 	currentWorldState: DynmapWorldState;
 	currentWorld?: DynmapWorld;
 	currentMap?: DynmapWorldMap;
@@ -69,6 +72,7 @@ export type State = {
 
 export const state: State = {
 	version: (import.meta.env.VITE_VERSION || 'Unknown') as string,
+	servers: new Map(),
 
 	configuration: {
 		version: '',
@@ -150,6 +154,7 @@ export const state: State = {
 	followTarget: undefined,
 	panTarget: undefined,
 
+	currentServer: undefined,
 	currentWorld: undefined,
 	currentMap: undefined,
 	currentLocation: {

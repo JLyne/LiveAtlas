@@ -20,8 +20,49 @@
 	<meta name="description" content="Minecraft Dynamic Map" />
 
     <title>Minecraft Dynamic Map - LiveAtlas</title>
+    <!-- Remove this if you are using multiple maps -->
+    <script src="./standalone/config.js"></script>
+    <script>
+        window.liveAtlasConfig = {
+        	// Server URLS can be defined here instead of using the standalone/config.js file.
+            // Multiple servers are supported too.
+            // servers: {
+            //     creative: {
+            //     	label: 'Creative',
+            //         configuration: 'http://dynmap.local/standalone/creative/MySQL_configuration.php',
+            //         update: 'http://dynmap.local/standalone/creative/MySQL_update.php?world={world}&ts={timestamp}',
+            //         sendmessage: 'http://dynmap.local/standalone/creative/MySQL_sendmessage.php',
+            //         login: 'http://dynmap.local/standalone/creative/MySQL_login.php',
+            //         register: 'http://dynmap.local/standalone/creative/MySQL_register.php',
+            //         tiles: 'http://dynmap.local/standalone/creative/MySQL_tiles.php?tile=',
+            //         markers: 'http://dynmap.local/standalone/creative/MySQL_markers.php?marker='
+            //     },
+            //     survival: {
+            //     	label: 'Survival',
+            //     	configuration: 'http://dynmap.local/standalone/survival/MySQL_configuration.php',
+            //         update: 'http://dynmap.local/standalone/survival/MySQL_update.php?world={world}&ts={timestamp}',
+            //         sendmessage: 'http://dynmap.local/standalone/survival/MySQL_sendmessage.php',
+            //         login: 'http://dynmap.local/standalone/survival/MySQL_login.php',
+            //         register: 'http://dynmap.local/standalone/survival/MySQL_register.php',
+            //         tiles: 'http://dynmap.local/standalone/survival/MySQL_tiles.php?tile=',
+            //         markers: 'http://dynmap.local/standalone/survival/MySQL_markers.php?marker='
+            //     },
+            //     build: {
+            //     	label: 'Build',
+            //     	configuration: 'http://dynmap.local/standalone/build/MySQL_configuration.php',
+            //         update: 'http://dynmap.local/standalone/build/MySQL_update.php?world={world}&ts={timestamp}',
+            //         sendmessage: 'http://dynmap.local/standalone/build/MySQL_sendmessage.php',
+            //         login: 'http://dynmap.local/standalone/build/MySQL_login.php',
+            //         register: 'http://dynmap.local/standalone/build/MySQL_register.php',
+            //         tiles: 'http://dynmap.local/standalone/build/MySQL_tiles.php?tile=',
+            //         markers: 'http://dynmap.local/standalone/build/MySQL_markers.php?marker='
+            //     }
+            // }
+        };
+    </script>
 
     <style>
+        /* Theme colours */
         :root {
             --background-base: #222222; /* Buttons/sidebar */
             --background-dark: #121212; /* Body/map labels  */
@@ -171,7 +212,6 @@
     </noscript>
 
     <div id="mcmap" class="dynmap"></div>
-    <script src="./standalone/config.js"></script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

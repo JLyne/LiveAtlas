@@ -44,6 +44,7 @@ export default defineComponent({
 			updateInterval = computed(() => store.state.configuration.updateInterval),
 			title = computed(() => store.state.configuration.title),
 			currentUrl = computed(() => store.getters.url),
+			currentServer = computed(() => store.state.currentServer),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
 			updatesEnabled = ref(false),
@@ -51,24 +52,14 @@ export default defineComponent({
 			configAttempts = ref(0),
 
 			loadConfiguration = () => {
-				let validated = false;
-
-				API.validateConfiguration().then(() => {
-					validated = true;
-
-					return store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
-						startUpdates();
-						window.hideSplash();
-					});
+				return store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
+					startUpdates();
+					window.hideSplash();
 				}).catch(e => {
 					console.error('Failed to load server configuration: ', e);
-					window.showSplashError(e, !validated, ++configAttempts.value);
-
-					//Don't retry if config isn't valid
-					if(validated) {
-						setTimeout(() => loadConfiguration(), 1000);
-					}
-				})
+					window.showSplashError(e, false, ++configAttempts.value);
+					setTimeout(() => loadConfiguration(), 1000);
+				});
 			},
 
 			startUpdates = () => {
@@ -121,6 +112,15 @@ export default defineComponent({
 
 		watch(title, (title) => document.title = title);
 		watch(currentUrl, (url) => window.history.replaceState({}, '', url));
+		watch(currentServer, (newServer) => {
+			window.showSplash();
+			stopUpdates();
+			window.history.replaceState({}, '', newServer);
+			store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
+			store.commit(MutationTypes.CLEAR_CURRENT_ZOOM, undefined);
+
+			loadConfiguration();
+		});
 
 		onMounted(() => loadConfiguration());
 		onBeforeUnmount(() => stopUpdates());

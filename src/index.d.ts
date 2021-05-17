@@ -1,5 +1,6 @@
 import { ComponentCustomProperties } from 'vue'
 import {State, Store} from "@/store";
+import {DynmapUrlConfig} from "@/dynmap";
 
 declare module "*.png" {
    const value: any;
@@ -17,4 +18,9 @@ declare module '@vue/runtime-core' {
 	interface ComponentCustomProperties {
 		$store: Store<State>
 	}
+}
+
+interface LiveAtlasServerDefinition extends DynmapUrlConfig {
+	id: string
+	label?: string
 }

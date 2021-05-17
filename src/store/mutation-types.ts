@@ -15,12 +15,15 @@
  */
 
 export enum MutationTypes {
+	SET_SERVERS ='setServers',
 	SET_CONFIGURATION = 'setConfiguration',
 	SET_MESSAGES = 'setMessages',
 	SET_WORLDS = 'setWorlds',
 	SET_COMPONENTS = 'setComponents',
 	SET_MARKER_SETS = 'setMarkerSets',
+	CLEAR_MARKER_SETS = 'clearMarkerSets',
 	ADD_WORLD = 'addWorld',
+	CLEAR_WORLDS = 'clearWorlds',
 	SET_WORLD_STATE = 'setWorldState',
 	SET_UPDATE_TIMESTAMP = 'setUpdateTimestamp',
 	ADD_MARKER_SET_UPDATES = 'addMarkerSetUpdates',
@@ -32,15 +35,18 @@ export enum MutationTypes {
 	POP_LINE_UPDATES = 'popLineUpdates',
 	POP_TILE_UPDATES = 'popTileUpdates',
 	INCREMENT_REQUEST_ID = 'incrementRequestId',
-	SET_PLAYERS = 'setPlayers',
 	SET_PLAYERS_ASYNC = 'setPlayersAsync',
+	CLEAR_PLAYERS = 'clearPlayers',
 	SYNC_PLAYERS = 'syncPlayers',
 
+	SET_CURRENT_SERVER = 'setCurrentServer',
 	SET_CURRENT_MAP = 'setCurrentMap',
 	SET_CURRENT_PROJECTION = 'setCurrentProjection',
 	SET_CURRENT_LOCATION = 'setCurrentLocation',
 	SET_CURRENT_ZOOM = 'setCurrentZoom',
+	CLEAR_CURRENT_ZOOM = 'clearCurrentZoom',
 	SET_PARSED_URL = 'setParsedUrl',
+	CLEAR_PARSED_URL = 'clearParsedUrl',
 
 	SET_FOLLOW_TARGET = 'setFollowTarget',
 	SET_PAN_TARGET = 'setPanTarget',

@@ -78,7 +78,11 @@ export interface Actions {
 
 export const actions: ActionTree<State, State> & Actions = {
 	[ActionTypes.LOAD_CONFIGURATION]({commit, state}): Promise<DynmapConfigurationResponse> {
+		commit(MutationTypes.CLEAR_MARKER_SETS, undefined);
+		commit(MutationTypes.CLEAR_PLAYERS, undefined);
+
 		return API.getConfiguration().then(config => {
+			commit(MutationTypes.CLEAR_WORLDS, undefined);
 			commit(MutationTypes.SET_CONFIGURATION, config.config);
 			commit(MutationTypes.SET_MESSAGES, config.messages);
 			commit(MutationTypes.SET_WORLDS, config.worlds);

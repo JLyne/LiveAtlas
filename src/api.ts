@@ -36,6 +36,7 @@ import {
 } from "@/dynmap";
 import {useStore} from "@/store";
 import ChatError from "@/errors/ChatError";
+import {LiveAtlasServerDefinition} from "@/index";
 
 function buildServerConfig(response: any): DynmapServerConfig {
 	return {
@@ -118,22 +119,22 @@ function buildWorlds(response: any): Array<DynmapWorld> {
 
 function buildComponents(response: any): DynmapComponentConfig {
 	const components: DynmapComponentConfig = {
-			markers: {
-				showLabels: false,
-			},
-			chatBox: undefined,
-			chatBalloons: false,
-			playerMarkers: undefined,
-			coordinatesControl: undefined,
-			linkControl: false,
-			clockControl: undefined,
-			logoControls: [],
-		};
+		markers: {
+			showLabels: false,
+		},
+		chatBox: undefined,
+		chatBalloons: false,
+		playerMarkers: undefined,
+		coordinatesControl: undefined,
+		linkControl: false,
+		clockControl: undefined,
+		logoControls: [],
+	};
 
 	(response.components || []).forEach((component: any) => {
 		const type = component.type || "unknown";
 
-		switch(type) {
+		switch (type) {
 			case "markers":
 				components.markers = {
 					showLabels: component.showlabel || false,
@@ -195,7 +196,7 @@ function buildComponents(response: any): DynmapComponentConfig {
 				break;
 
 			case "chat":
-				if(response.allowwebchat) {
+				if (response.allowwebchat) {
 					components.chatSending = {
 						loginRequired: response['webchat-requires-login'] || false,
 						maxLength: response['chatlengthlimit'] || 256,
@@ -236,7 +237,7 @@ function buildMarkerSet(id: string, data: any): any {
 function buildMarkers(data: any): Map<string, DynmapMarker> {
 	const markers = Object.freeze(new Map()) as Map<string, DynmapMarker>;
 
-	for(const key in data) {
+	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
 			continue;
 		}
@@ -267,7 +268,7 @@ function buildMarker(marker: any): DynmapMarker {
 function buildAreas(data: any): Map<string, DynmapArea> {
 	const areas = Object.freeze(new Map()) as Map<string, DynmapArea>;
 
-	for(const key in data) {
+	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
 			continue;
 		}
@@ -279,7 +280,7 @@ function buildAreas(data: any): Map<string, DynmapArea> {
 }
 
 function buildArea(area: any): DynmapArea {
-	return  {
+	return {
 		style: {
 			color: area.color || '#ff0000',
 			opacity: area.opacity || 1,
@@ -301,7 +302,7 @@ function buildArea(area: any): DynmapArea {
 function buildLines(data: any): Map<string, DynmapLine> {
 	const lines = Object.freeze(new Map()) as Map<string, DynmapLine>;
 
-	for(const key in data) {
+	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
 			continue;
 		}
@@ -333,7 +334,7 @@ function buildLine(line: any): DynmapLine {
 function buildCircles(data: any): Map<string, DynmapCircle> {
 	const circles = Object.freeze(new Map()) as Map<string, DynmapCircle>;
 
-	for(const key in data) {
+	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
 			continue;
 		}
@@ -370,10 +371,10 @@ function buildCircle(circle: any): DynmapCircle {
 
 function buildUpdates(data: Array<any>): DynmapUpdates {
 	const updates = {
-		markerSets: new Map<string, DynmapMarkerSetUpdates>(),
-		tiles: [] as DynmapTileUpdate[],
-		chat: [] as DynmapChat[],
-	},
+			markerSets: new Map<string, DynmapMarkerSetUpdates>(),
+			tiles: [] as DynmapTileUpdate[],
+			chat: [] as DynmapChat[],
+		},
 		dropped = {
 			stale: 0,
 			noSet: 0,
@@ -387,15 +388,15 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 
 	let accepted = 0;
 
-	for(const entry of data) {
-		switch(entry.type) {
+	for (const entry of data) {
+		switch (entry.type) {
 			case 'component': {
-				if(lastUpdate && entry.timestamp < lastUpdate) {
+				if (lastUpdate && entry.timestamp < lastUpdate) {
 					dropped.stale++;
 					continue;
 				}
 
-				if(!entry.id) {
+				if (!entry.id) {
 					dropped.noId++;
 					continue;
 				}
@@ -403,17 +404,17 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 				//Set updates don't have a set field, the id is the set
 				const set = entry.msg.startsWith("set") ? entry.id : entry.set;
 
-				if(!set) {
+				if (!set) {
 					dropped.noSet++;
 					continue;
 				}
 
-				if(entry.ctype !== 'markers') {
+				if (entry.ctype !== 'markers') {
 					dropped.unknownCType++;
 					continue;
 				}
 
-				if(!updates.markerSets.has(set)) {
+				if (!updates.markerSets.has(set)) {
 					updates.markerSets.set(set, {
 						areaUpdates: [],
 						markerUpdates: [],
@@ -429,21 +430,21 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 						removed: entry.msg.endsWith('deleted'),
 					};
 
-				if(entry.msg.startsWith("set")) {
+				if (entry.msg.startsWith("set")) {
 					markerSetUpdates!.removed = update.removed;
 					markerSetUpdates!.payload = update.removed ? undefined : buildMarkerSet(set, entry);
-				} else if(entry.msg.startsWith("marker")) {
+				} else if (entry.msg.startsWith("marker")) {
 					update.payload = update.removed ? undefined : buildMarker(entry);
 					markerSetUpdates!.markerUpdates.push(Object.freeze(update));
-				} else if(entry.msg.startsWith("area")) {
+				} else if (entry.msg.startsWith("area")) {
 					update.payload = update.removed ? undefined : buildArea(entry);
 					markerSetUpdates!.areaUpdates.push(Object.freeze(update));
 
-				} else if(entry.msg.startsWith("circle")) {
+				} else if (entry.msg.startsWith("circle")) {
 					update.payload = update.removed ? undefined : buildCircle(entry);
 					markerSetUpdates!.circleUpdates.push(Object.freeze(update));
 
-				} else if(entry.msg.startsWith("line")) {
+				} else if (entry.msg.startsWith("line")) {
 					update.payload = update.removed ? undefined : buildLine(entry);
 					markerSetUpdates!.lineUpdates.push(Object.freeze(update));
 				}
@@ -454,17 +455,17 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 			}
 
 			case 'chat':
-				if(!entry.message || !entry.timestamp) {
+				if (!entry.message || !entry.timestamp) {
 					dropped.incomplete++;
 					continue;
 				}
 
-				if(entry.timestamp < lastUpdate) {
+				if (entry.timestamp < lastUpdate) {
 					dropped.stale++;
 					continue;
 				}
 
-				if(entry.source !== 'player' && entry.source !== 'web') {
+				if (entry.source !== 'player' && entry.source !== 'web') {
 					dropped.notImplemented++;
 					continue;
 				}
@@ -481,12 +482,12 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 				break;
 
 			case 'playerjoin':
-				if(!entry.account || !entry.timestamp) {
+				if (!entry.account || !entry.timestamp) {
 					dropped.incomplete++;
 					continue;
 				}
 
-				if(entry.timestamp < lastUpdate) {
+				if (entry.timestamp < lastUpdate) {
 					dropped.stale++;
 					continue;
 				}
@@ -500,12 +501,12 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 				break;
 
 			case 'playerquit':
-				if(!entry.account || !entry.timestamp) {
+				if (!entry.account || !entry.timestamp) {
 					dropped.incomplete++;
 					continue;
 				}
 
-				if(entry.timestamp < lastUpdate) {
+				if (entry.timestamp < lastUpdate) {
 					dropped.stale++;
 					continue;
 				}
@@ -519,12 +520,12 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 				break;
 
 			case 'tile':
-				if(!entry.name || !entry.timestamp) {
+				if (!entry.name || !entry.timestamp) {
 					dropped.incomplete++;
 					continue;
 				}
 
-				if(lastUpdate && entry.timestamp < lastUpdate) {
+				if (lastUpdate && entry.timestamp < lastUpdate) {
 					dropped.stale++;
 					continue;
 				}
@@ -553,45 +554,105 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 }
 
 export default {
-	validateConfiguration(): Promise<void> {
+	validateConfiguration(): Promise<Map<string, LiveAtlasServerDefinition>> {
+		if (typeof window.liveAtlasConfig.servers !== 'undefined') {
+			return this.validateLiveAtlasConfiguration(window.liveAtlasConfig.servers);
+		}
+
+		return this.validateDynmapConfiguration(window.config.url ?? null);
+	},
+
+	validateLiveAtlasConfiguration(config: any): Promise<Map<string, LiveAtlasServerDefinition>> {
+		const check = '\nCheck your LiveAtlas configuration in index.html is correct.',
+			result = new Map<string, LiveAtlasServerDefinition>();
+
+		if (!Object.keys(config).length) {
+			return Promise.reject(`No servers defined in LiveAtlas configuration.`);
+		}
+
+		for (const server in config) {
+			if (!Object.hasOwnProperty.call(config, server)) {
+				continue;
+			}
+
+			const serverConfig = config[server];
+
+			if (!serverConfig || serverConfig.constructor !== Object) {
+				return Promise.reject(`Server '${server} has an invalid configuration. ${check}`);
+			}
+
+			if (!serverConfig.configuration) {
+				return Promise.reject(`Server '${server} has no configuration URL. ${check}`);
+			}
+
+			if (!serverConfig.update) {
+				return Promise.reject(`Server '${server} has no update URL. ${check}`);
+			}
+
+			if (!serverConfig.markers) {
+				return Promise.reject(`Server '${server} has no markers URL. ${check}`);
+			}
+
+			if (!serverConfig.tiles) {
+				return Promise.reject(`Server '${server} has no tiles URL. ${check}`);
+			}
+
+			if (!serverConfig.sendmessage) {
+				return Promise.reject(`Server '${server} has no sendmessage URL. ${check}`);
+			}
+
+			serverConfig.id = server;
+			result.set(server, serverConfig);
+		}
+
+		return Promise.resolve(result);
+	},
+
+	validateDynmapConfiguration(config: LiveAtlasServerDefinition): Promise<Map<string, LiveAtlasServerDefinition>> {
 		const check = '\nCheck your standalone/config.js file exists and is being loaded correctly.';
 
-		if(!window.config || !window.config.url) {
-			return Promise.reject(`Dynmap's configuration is missing. ${check}`);
+		if (!config) {
+			return Promise.reject(`Dynmap configuration is missing. ${check}`);
 		}
 
-		if(!window.config.url.configuration) {
-			return Promise.reject(`Dynmap's configuration URL is missing. ${check}`);
+		if (!config.configuration) {
+			return Promise.reject(`Dynmap configuration URL is missing. ${check}`);
 		}
 
-		if(!window.config.url.update) {
-			return Promise.reject(`Dynmap's update URL is missing. ${check}`);
+		if (!config.update) {
+			return Promise.reject(`Dynmap update URL is missing. ${check}`);
 		}
 
-		if(!window.config.url.markers) {
-			return Promise.reject(`Dynmap's markers URL is missing. ${check}`);
+		if (!config.markers) {
+			return Promise.reject(`Dynmap markers URL is missing. ${check}`);
 		}
 
-		if(!window.config.url.tiles) {
-			return Promise.reject(`Dynmap's tiles URL is missing. ${check}`);
+		if (!config.tiles) {
+			return Promise.reject(`Dynmap tiles URL is missing. ${check}`);
 		}
 
-		if(!window.config.url.sendmessage) {
-			return Promise.reject(`Dynmap's sendmessage URL is missing. ${check}`);
+		if (!config.sendmessage) {
+			return Promise.reject(`Dynmap sendmessage URL is missing. ${check}`);
 		}
 
-		return Promise.resolve();
+		config.id = 'dynmap';
+		config.label = 'Dynmap';
+
+		const result = new Map<string, LiveAtlasServerDefinition>();
+		result.set('dynmap', config);
+
+		return Promise.resolve(result);
 	},
 
 	getConfiguration(): Promise<DynmapConfigurationResponse> {
-		return fetch(window.config.url.configuration).then(response => {
+		return fetch(useStore().getters.serverConfig.configuration).then(response => {
 			if (!response.ok) {
 				throw new Error('Network request failed: ' + response.statusText);
 			}
 
 			return response.json();
 		}).then((response): DynmapConfigurationResponse => {
-			if(response.error === 'login-required') {
+			if (response.error === 'login-required') {
 				throw new Error("Login required");
 			} else if (response.error) {
 				throw new Error(response.error);
@@ -608,7 +669,7 @@ export default {
 	},
 
 	getUpdate(requestId: number, world: string, timestamp: number): Promise<DynmapUpdateResponse> {
-		let url = window.config.url.update;
+		let url = useStore().getters.serverConfig.update;
 		url = url.replace('{world}', world);
 		url = url.replace('{timestamp}', timestamp.toString());
 
@@ -674,7 +735,7 @@ export default {
 	},
 
 	getMarkerSets(world: string): Promise<Map<string, DynmapMarkerSet>> {
-		const url = `${window.config.url.markers}_markers_/marker_${world}.json`;
+		const url = `${useStore().getters.serverConfig.markers}_markers_/marker_${world}.json`;
 
 		return fetch(url).then(response => {
 			if (!response.ok) {
@@ -687,8 +748,8 @@ export default {
 
 			response.sets = response.sets || {};
 
-			for(const key in response.sets) {
-				if(!Object.prototype.hasOwnProperty.call(response.sets, key)) {
+			for (const key in response.sets) {
+				if (!Object.prototype.hasOwnProperty.call(response.sets, key)) {
 					continue;
 				}
 
@@ -714,18 +775,18 @@ export default {
 	sendChatMessage(message: string) {
 		const store = useStore();
 
-		if(!store.state.components.chatSending) {
+		if (!store.state.components.chatSending) {
 			return Promise.reject(new ChatError("Chat is not enabled"));
 		}
 
-		return fetch(window.config.url.sendmessage, {
+		return fetch(useStore().getters.serverConfig.sendmessage, {
 			method: 'POST',
 			body: JSON.stringify({
 				name: null,
 				message: message,
 			})
 		}).then((response) => {
-			if(response.status === 403) { //Rate limited
+			if (response.status === 403) { //Rate limited
 				throw new ChatError(store.state.messages.chatCooldown
 					.replace('%interval%', store.state.components.chatSending!.cooldown.toString()));
 			}
@@ -740,7 +801,7 @@ export default {
 				throw new ChatError(store.state.messages.chatNotAllowed);
 			}
 		}).catch(e => {
-			if(!(e instanceof ChatError)) {
+			if (!(e instanceof ChatError)) {
 				console.error('Unexpected error while sending chat message');
 				console.trace(e);
 			}

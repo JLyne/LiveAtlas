@@ -168,6 +168,11 @@ export default defineComponent({
 			min-height: 0;
 			overflow: auto;
 			will-change: transform;
+			margin-bottom: 1rem;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
 		}
 
 		.section__skeleton {

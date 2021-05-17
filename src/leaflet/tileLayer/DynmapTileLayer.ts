@@ -20,6 +20,7 @@
 import {TileLayer, Coords, DoneCallback, TileLayerOptions, DomUtil, Util, LatLng} from 'leaflet';
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {Coordinate, DynmapWorldMap} from "@/dynmap";
+import {store} from "@/store";
 
 export interface DynmapTileLayerOptions extends TileLayerOptions {
 	mapSettings: DynmapWorldMap;
@@ -111,7 +112,7 @@ export class DynmapTileLayer extends TileLayer {
 
 		if (!url) {
 			const path = escape(`${this._mapSettings.world.name}/${name}`);
-			url = `${window.config.url.tiles}${path}`;
+			url = `${store.getters.serverConfig.tiles}${path}`;
 
 			if(typeof timestamp !== 'undefined') {
 				url += (url.indexOf('?') === -1 ? `?timestamp=${timestamp}` : `&timestamp=${timestamp}`);

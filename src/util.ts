@@ -99,7 +99,7 @@ const tickHeadQueue = () => {
 		src = (head.size === 'body') ? `faces/body/${head.account}.png` :`faces/${head.size}x${head.size}/${head.account}.png`;
 
 	headsLoading.add(head.cacheKey);
-	head.image.src = concatURL(window.config.url.markers, src);
+	head.image.src = concatURL(useStore().getters.serverConfig.markers, src);
 
 	tickHeadQueue();
 }

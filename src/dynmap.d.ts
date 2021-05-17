@@ -21,15 +21,13 @@ import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 
 declare global {
 	interface Window {
-		config: DynmapConfig;
+		config: { url: DynmapUrlConfig };
+		liveAtlasConfig: any,
 		hideSplash: Function;
+		showSplash: Function;
 		showSplashError: Function;
 	}
 }
-
-type DynmapConfig = {
-	url: DynmapUrlConfig;
-};
 
 type DynmapUrlConfig = {
 	configuration: string;

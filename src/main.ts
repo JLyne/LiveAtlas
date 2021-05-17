@@ -16,11 +16,13 @@
 
 import { createApp } from 'vue'
 import App from './App.vue'
+import API from './api';
 import {store} from "@/store";
 
 import 'leaflet/dist/leaflet.css';
 import 'normalize-scss/sass/normalize/_import-now.scss';
 import '@/scss/style.scss';
+import {MutationTypes} from "@/store/mutation-types";
 
 const splash = document.getElementById('splash'),
 	splashSpinner = document.getElementById('splash__spinner'),
@@ -30,11 +32,34 @@ const splash = document.getElementById('splash'),
 	splashAttempt = document.getElementById('splash__error-attempt'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
 
-window.hideSplash = function() {
+window.showSplash = function() {
+	if(!splash) {
+		return;
+	}
+
+	splash.ontransitionend = null;
+	splash.hidden = false;
+
 	requestAnimationFrame(function() {
 		if(splash) {
-			splash.style.opacity = '0';
+			splash.style.opacity = '1';
 		}
+	});
+};
+
+window.hideSplash = function() {
+	if(!splash) {
+		return;
+	}
+
+	splash.ontransitionend = function(e) {
+		if(e.target === splash) {
+			splash.hidden = true;
+		}
+	};
+
+	requestAnimationFrame(function() {
+		splash.style.opacity = '0';
 	});
 };
 
@@ -61,17 +86,24 @@ window.showSplashError = function(message: string, fatal: boolean, attempts: num
 	}
 };
 
-if(splash) {
-	splash.addEventListener('transitionend', function(e) {
-		if(e.target === splash) {
-			splash.hidden = true;
-		}
-	});
-}
-
 console.info(`LiveAtlas version ${store.state.version} - https://github.com/JLyne/LiveAtlas`);
 
-const app = createApp(App).use(store);
+API.validateConfiguration().then((config) => {
+	store.commit(MutationTypes.SET_SERVERS, config);
 
-// app.config.performance = true;
-app.mount('#mcmap');
+	if(config.size > 1) {
+		const lastSegment = window.location.pathname.split('/').pop(),
+			serverName = lastSegment && config.has(lastSegment) ? lastSegment : config.keys().next().value;
+
+		store.commit(MutationTypes.SET_CURRENT_SERVER, serverName);
+	} else {
+		store.commit(MutationTypes.SET_CURRENT_SERVER, config.keys().next().value);
+	}
+
+	console.log(store.state.currentServer);
+
+	const app = createApp(App).use(store);
+
+	// app.config.performance = true;
+	app.mount('#mcmap');
+});
