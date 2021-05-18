@@ -77,7 +77,7 @@
 
 					sendingMessage.value = true;
 					sendingError.value = null;
-t
+
 					try {
 						await store.dispatch(ActionTypes.SEND_CHAT_MESSAGE, message);
 						enteredMessage.value = "";
