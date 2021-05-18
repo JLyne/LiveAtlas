@@ -208,6 +208,11 @@
 		}
 	}
 
+	/* Always show below other controls */
+	.leaflet-control-loading {
+		order: 3;
+	}
+
 	.leaflet-bar {
 		flex-direction: column;
 

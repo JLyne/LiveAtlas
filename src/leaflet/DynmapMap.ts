@@ -17,20 +17,16 @@
 import {Map, DomUtil, MapOptions} from 'leaflet';
 import LayerManager from "@/leaflet/layer/LayerManager";
 
-interface DynmapMapOptions extends MapOptions {
-	layerControl: boolean;
-}
-
 export default class DynmapMap extends Map {
 	private readonly _layerManager: LayerManager;
 	private _controlCorners: any;
 	private	_controlContainer?: HTMLElement;
 	private	_container?: HTMLElement;
 
-	constructor(element: string | HTMLElement, options?: DynmapMapOptions) {
+	constructor(element: string | HTMLElement, options?: MapOptions) {
 		super(element, options);
 
-		this._layerManager = Object.seal(new LayerManager(this, options?.layerControl));
+		this._layerManager = Object.seal(new LayerManager(this));
 	}
 
 	getLayerManager(): LayerManager {

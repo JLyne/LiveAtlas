@@ -187,7 +187,6 @@ export default defineComponent({
 			fadeAnimation: false,
 			zoomAnimation: true,
 			zoomControl: true,
-			layerControl: true,
 			preferCanvas: true,
 			attributionControl: false,
 			crs: CRS.Simple,

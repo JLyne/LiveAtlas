@@ -83,7 +83,7 @@ export const state: State = {
 		followMap: '',
 		followZoom: 0,
 		updateInterval: 3000,
-		showLayerControl: true,
+		showLayerControl: false,
 		title: '',
 		loginEnabled: false,
 		maxPlayers: 0,

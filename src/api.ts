@@ -51,11 +51,11 @@ function buildServerConfig(response: any): DynmapServerConfig {
 		followMap: response.followmap || undefined,
 		followZoom: response.followzoom || 0,
 		updateInterval: response.updaterate || 3000,
-		showLayerControl: response.showlayercontrol || true,
+		showLayerControl: response.showlayercontrol && response.showlayercontrol !== 'false', //Sent as a string for some reason
 		title: response.title.replace(titleColours, '') || 'Dynmap',
 		loginEnabled: response['login-enabled'] || false,
 		maxPlayers: response.maxcount || 0,
-		expandUI: response.sidebaropened && response.sidebaropened !== 'false',
+		expandUI: response.sidebaropened && response.sidebaropened !== 'false', //Sent as a string for some reason
 		hash: response.confighash || 0,
 	};
 }

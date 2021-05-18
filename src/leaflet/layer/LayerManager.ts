@@ -16,22 +16,35 @@
 
 import {Map, Layer} from 'leaflet';
 import {DynmapLayerControl} from "@/leaflet/control/DynmapLayerControl";
+import {watch} from "vue";
+import {useStore} from "@/store";
+import {computed} from "@vue/runtime-core";
 
 export default class LayerManager {
-	private showControl: boolean = false;
 	private readonly layerControl: DynmapLayerControl;
 	private readonly map: Map;
 
-	constructor(map: Map, showControl?: boolean) {
-		this.showControl = showControl || this.showControl;
+	constructor(map: Map) {
+		const showControl = computed(() => useStore().state.configuration.showLayerControl);
 		this.map = map;
 		this.layerControl = new DynmapLayerControl({}, {},{
 			position: 'topleft',
 		});
 
-		if(this.showControl) {
+		if(showControl.value) {
+			console.log('adding');
 			this.map.addControl(this.layerControl);
 		}
+
+		watch(showControl, (show) => {
+			if(show) {
+				console.log('adding 2');
+				this.map.addControl(this.layerControl);
+			} else {
+				console.log('removing');
+				this.map.removeControl(this.layerControl);
+			}
+		})
 	}
 
 	addLayer(layer: Layer, showInControl: boolean, name: string, position: number) {
