@@ -73,19 +73,19 @@ export default defineComponent({
 				}
 			},
 
-			handlePendingUpdates = () => {
-				useStore().dispatch(ActionTypes.POP_TILE_UPDATES, 10).then(updates => {
-					for(const update of updates) {
-						layer.updateNamedTile(update.name, update.timestamp);
-					}
+			handlePendingUpdates = async () => {
+				const updates = await useStore().dispatch(ActionTypes.POP_TILE_UPDATES, 10);
 
-					if(pendingUpdates.value) {
-						// eslint-disable-next-line no-unused-vars
-						updateFrame = requestAnimationFrame(() => handlePendingUpdates());
-					} else {
-						updateFrame = 0;
-					}
-				});
+				for(const update of updates) {
+					layer.updateNamedTile(update.name, update.timestamp);
+				}
+
+				if(pendingUpdates.value) {
+					// eslint-disable-next-line no-unused-vars
+					updateFrame = requestAnimationFrame(() => handlePendingUpdates());
+				} else {
+					updateFrame = 0;
+				}
 			};
 
 		watch(active, (newValue) => newValue ? enableLayer() : disableLayer());

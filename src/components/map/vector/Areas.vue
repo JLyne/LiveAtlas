@@ -71,34 +71,34 @@ export default defineComponent({
 				layers.delete(id);
 			},
 
-			handlePendingUpdates = () => {
-				useStore().dispatch(ActionTypes.POP_AREA_UPDATES, {
+			handlePendingUpdates = async () => {
+				const updates = await useStore().dispatch(ActionTypes.POP_AREA_UPDATES, {
 					markerSet: props.set.id,
 					amount: 10,
-				}).then(updates => {
-					const converter = getPointConverter();
-
-					for(const update of updates) {
-						if(update.removed) {
-							deleteArea(update.id);
-						} else {
-							const layer = updateArea(layers.get(update.id), update.payload as DynmapArea, converter)
-
-							if(!layers.has(update.id)) {
-								props.layerGroup.addLayer(layer);
-							}
-
-							layers.set(update.id, layer);
-						}
-					}
-
-					if(pendingUpdates.value) {
-						// eslint-disable-next-line no-unused-vars
-						updateFrame = requestAnimationFrame(() => handlePendingUpdates());
-					} else {
-						updateFrame = 0;
-					}
 				});
+
+				const converter = getPointConverter();
+
+				for(const update of updates) {
+					if(update.removed) {
+						deleteArea(update.id);
+					} else {
+						const layer = updateArea(layers.get(update.id), update.payload as DynmapArea, converter)
+
+						if(!layers.has(update.id)) {
+							props.layerGroup.addLayer(layer);
+						}
+
+						layers.set(update.id, layer);
+					}
+				}
+
+				if(pendingUpdates.value) {
+					// eslint-disable-next-line no-unused-vars
+					updateFrame = requestAnimationFrame(() => handlePendingUpdates());
+				} else {
+					updateFrame = 0;
+				}
 			};
 
 		//FIXME: Prevent unnecessary repositioning when changing worlds
