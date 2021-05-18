@@ -85,7 +85,9 @@ window.showSplashError = function(message: string, fatal: boolean, attempts: num
 
 console.info(`LiveAtlas version ${store.state.version} - https://github.com/JLyne/LiveAtlas`);
 
-API.validateConfiguration().then((config) => {
+try {
+	const config = API.validateConfiguration();
+
 	store.commit(MutationTypes.SET_SERVERS, config);
 
 	if(config.size > 1) {
@@ -106,7 +108,7 @@ API.validateConfiguration().then((config) => {
 
 	// app.config.performance = true;
 	app.mount('#app');
-}).catch(e => {
+} catch(e) {
 	console.error('LiveAtlas configuration is invalid: ', e);
 	window.showSplashError('LiveAtlas configuration is invalid\n' + e, true);
-});
+}

@@ -37,6 +37,7 @@ import {
 import {useStore} from "@/store";
 import ChatError from "@/errors/ChatError";
 import {LiveAtlasDynmapServerDefinition, LiveAtlasServerDefinition} from "@/index";
+import ConfigurationError from "@/errors/ConfigurationError";
 
 const titleColours = /§[0-9a-f]/ig;
 
@@ -555,12 +556,12 @@ function buildUpdates(data: Array<any>): DynmapUpdates {
 	return updates;
 }
 
-const validateLiveAtlasConfiguration = (config: any): Promise<Map<string, LiveAtlasServerDefinition>> => {
+const validateLiveAtlasConfiguration = (config: any): Map<string, LiveAtlasServerDefinition> => {
 	const check = '\nCheck your server configuration in index.html is correct.',
 		result = new Map<string, LiveAtlasServerDefinition>();
 
 	if (!Object.keys(config).length) {
-		return Promise.reject(`No servers defined in LiveAtlas configuration.`);
+		throw new ConfigurationError(`No servers defined. ${check}`);
 	}
 
 	for (const server in config) {
@@ -570,35 +571,35 @@ const validateLiveAtlasConfiguration = (config: any): Promise<Map<string, LiveAt
 
 		const serverConfig = config[server];
 
+		if (!serverConfig || serverConfig.constructor !== Object || !Object.keys(serverConfig).length) {
+			throw new ConfigurationError(`Server '${server}': Configuration missing. ${check}`);
+		}
+
 		serverConfig.id = server;
 		serverConfig.type = 'dynmap';
 
-		if (!serverConfig || serverConfig.constructor !== Object) {
-			return Promise.reject(`Server '${server}' has an invalid configuration. ${check}`);
-		}
-
 		if (!serverConfig.dynmap || serverConfig.dynmap.constructor !== Object) {
-			return Promise.reject(`Server '${server}' has an invalid configuration. ${check}`);
+			throw new ConfigurationError(`Server '${server}': Dynmap configuration object missing. ${check}`);
 		}
 
 		if (!serverConfig.dynmap.configuration) {
-			return Promise.reject(`Server '${server}' has no dynmap configuration URL. ${check}`);
+			throw new ConfigurationError(`Server '${server}': Dynmap configuration URL missing. ${check}`);
 		}
 
 		if (!serverConfig.dynmap.update) {
-			return Promise.reject(`Server '${server}' has no dynmap update URL. ${check}`);
+			throw new ConfigurationError(`Server '${server}': Dynmap update URL missing. ${check}`);
 		}
 
 		if (!serverConfig.dynmap.markers) {
-			return Promise.reject(`Server '${server}' has no dynmap markers URL. ${check}`);
+			throw new ConfigurationError(`Server '${server}': Dynmap markers URL missing. ${check}`);
 		}
 
 		if (!serverConfig.dynmap.tiles) {
-			return Promise.reject(`Server '${server}' has no dynmap tiles URL. ${check}`);
+			throw new ConfigurationError(`Server '${server}': Dynmap tiles URL missing. ${check}`);
 		}
 
 		if (!serverConfig.dynmap.sendmessage) {
-			return Promise.reject(`Server '${server}' has no dynmap sendmessage URL. ${check}`);
+			throw new ConfigurationError(`Server '${server}': Dynmap sendmessage URL missing. ${check}`);
 		}
 
 		if(serverConfig.url) {
@@ -606,7 +607,7 @@ const validateLiveAtlasConfiguration = (config: any): Promise<Map<string, LiveAt
 			a.href = serverConfig.url;
 
 			if(a.origin !== window.location.origin) {
-				return Promise.reject(`Server '${server}'s URL doesn't match LiveAtlas' origin. ${check}`);
+				throw new ConfigurationError(`Server '${server}': URL doesn't match LiveAtlas origin. ${check}`);
 			}
 
 			serverConfig.url = a.pathname;
@@ -617,34 +618,34 @@ const validateLiveAtlasConfiguration = (config: any): Promise<Map<string, LiveAt
 		result.set(server, serverConfig);
 	}
 
-	return Promise.resolve(result);
+	return result;
 };
 
-const validateDynmapConfiguration = (config: DynmapUrlConfig): Promise<Map<string, LiveAtlasDynmapServerDefinition>> => {
+const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveAtlasDynmapServerDefinition> => {
 	const check = '\nCheck your standalone/config.js file exists and is being loaded correctly.';
 
 	if (!config) {
-		return Promise.reject(`Dynmap configuration is missing. ${check}`);
+		throw new ConfigurationError(`Dynmap configuration is missing. ${check}`);
 	}
 
 	if (!config.configuration) {
-		return Promise.reject(`Dynmap configuration URL is missing. ${check}`);
+		throw new ConfigurationError(`Dynmap configuration URL is missing. ${check}`);
 	}
 
 	if (!config.update) {
-		return Promise.reject(`Dynmap update URL is missing. ${check}`);
+		throw new ConfigurationError(`Dynmap update URL is missing. ${check}`);
 	}
 
 	if (!config.markers) {
-		return Promise.reject(`Dynmap markers URL is missing. ${check}`);
+		throw new ConfigurationError(`Dynmap markers URL is missing. ${check}`);
 	}
 
 	if (!config.tiles) {
-		return Promise.reject(`Dynmap tiles URL is missing. ${check}`);
+		throw new ConfigurationError(`Dynmap tiles URL is missing. ${check}`);
 	}
 
 	if (!config.sendmessage) {
-		return Promise.reject(`Dynmap sendmessage URL is missing. ${check}`);
+		throw new ConfigurationError(`Dynmap sendmessage URL is missing. ${check}`);
 	}
 
 	const result = new Map<string, LiveAtlasDynmapServerDefinition>();
@@ -655,7 +656,7 @@ const validateDynmapConfiguration = (config: DynmapUrlConfig): Promise<Map<strin
 		dynmap: config
 	});
 
-	return Promise.resolve(result);
+	return result;
 };
 
 async function fetchJSON(url: string) {
@@ -682,12 +683,16 @@ async function fetchJSON(url: string) {
 
 
 export default {
-	validateConfiguration(): Promise<Map<string, LiveAtlasServerDefinition>> {
-		if (typeof window.liveAtlasConfig.servers !== 'undefined') {
-			return validateLiveAtlasConfiguration(window.liveAtlasConfig.servers);
+	validateConfiguration(): Map<string, LiveAtlasServerDefinition> {
+		if (!window.liveAtlasConfig) {
+			throw new ConfigurationError(`Configuration object is missing`);
 		}
 
-		return validateDynmapConfiguration(window.config.url ?? null);
+		if (typeof window.liveAtlasConfig.servers !== 'undefined') {
+			return validateLiveAtlasConfiguration(window.liveAtlasConfig.servers || {});
+		}
+
+		return validateDynmapConfiguration(window.config?.url || null);
 	},
 
 	async getConfiguration(): Promise<DynmapConfigurationResponse> {
