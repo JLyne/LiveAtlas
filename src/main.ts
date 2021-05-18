@@ -93,6 +93,11 @@ API.validateConfiguration().then((config) => {
 		const lastSegment = window.location.pathname.split('/').pop(),
 			serverName = lastSegment && config.has(lastSegment) ? lastSegment : config.keys().next().value;
 
+		//Update url if server doesn't exist
+		if(serverName !== lastSegment) {
+			window.history.replaceState({}, '', store.state.servers.get(serverName)!.url + window.location.hash);
+		}
+
 		store.commit(MutationTypes.SET_CURRENT_SERVER, serverName);
 	} else {
 		store.commit(MutationTypes.SET_CURRENT_SERVER, config.keys().next().value);
