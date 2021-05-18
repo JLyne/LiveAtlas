@@ -646,12 +646,18 @@ const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveA
 	return result;
 };
 
-async function fetchJSON(url: string) {
+async function fetchJSON(url: string, signal: AbortSignal) {
 	let response, json;
 
 	try {
-		response = await fetch(url);
+		response = await fetch(url, {signal});
 	} catch(e) {
+		if(e instanceof DOMException && e.name === 'AbortError') {
+			console.warn('Request aborted');
+		} else {
+			console.error(e);
+		}
+
 		throw new Error(`Network request failed`);
 	}
 
@@ -668,6 +674,9 @@ async function fetchJSON(url: string) {
 	return json;
 }
 
+let configurationAbort: AbortController | undefined = undefined,
+	markersAbort: AbortController | undefined = undefined,
+	updateAbort: AbortController | undefined = undefined;
 
 export default {
 	validateConfiguration(): Map<string, LiveAtlasServerDefinition> {
@@ -683,7 +692,13 @@ export default {
 	},
 
 	async getConfiguration(): Promise<DynmapConfigurationResponse> {
-		const response = await fetchJSON(useStore().getters.serverConfig.dynmap.configuration);
+		if(configurationAbort) {
+			configurationAbort.abort();
+		}
+
+		configurationAbort = new AbortController();
+
+		const response = await fetchJSON(useStore().getters.serverConfig.dynmap.configuration, configurationAbort.signal);
 
 		if (response.error === 'login-required') {
 			throw new Error("Login required");
@@ -705,7 +720,13 @@ export default {
 		url = url.replace('{world}', world);
 		url = url.replace('{timestamp}', timestamp.toString());
 
-		const response = await fetchJSON(url);
+		if(updateAbort) {
+			updateAbort.abort();
+		}
+
+		updateAbort = new AbortController();
+
+		const response = await fetchJSON(url, updateAbort.signal);
 		const players: Set<DynmapPlayer> = new Set();
 
 		(response.players || []).forEach((player: any) => {
@@ -762,7 +783,13 @@ export default {
 	async getMarkerSets(world: string): Promise<Map<string, DynmapMarkerSet>> {
 		const url = `${useStore().getters.serverConfig.dynmap.markers}_markers_/marker_${world}.json`;
 
-		const response = await fetchJSON(url);
+		if(markersAbort) {
+			markersAbort.abort();
+		}
+
+		markersAbort = new AbortController();
+
+		const response = await fetchJSON(url, markersAbort.signal);
 		const sets: Map<string, DynmapMarkerSet> = new Map();
 
 		response.sets = response.sets || {};
