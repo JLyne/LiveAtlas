@@ -32,16 +32,13 @@ export default class LayerManager {
 		});
 
 		if(showControl.value) {
-			console.log('adding');
 			this.map.addControl(this.layerControl);
 		}
 
 		watch(showControl, (show) => {
 			if(show) {
-				console.log('adding 2');
 				this.map.addControl(this.layerControl);
 			} else {
-				console.log('removing');
 				this.map.removeControl(this.layerControl);
 			}
 		})
