@@ -561,7 +561,7 @@ export default {
 			return this.validateLiveAtlasConfiguration(window.liveAtlasConfig.servers);
 		}
 
-		return this.validateDynmapConfiguration(window.config.url ?? null);
+		return this.validateDynmapConfiguration(window.config.url as LiveAtlasServerDefinition ?? null);
 	},
 
 	validateLiveAtlasConfiguration(config: any): Promise<Map<string, LiveAtlasServerDefinition>> {
