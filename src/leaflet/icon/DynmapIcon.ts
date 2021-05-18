@@ -60,7 +60,7 @@ export class DynmapIcon extends DivIcon {
 		}
 
 		const div = markerContainer.cloneNode(false) as HTMLDivElement,
-			url = `${useStore().getters.serverConfig.markers}_markers_/${this.options.icon}.png`,
+			url = `${useStore().getters.serverConfig.dynmap.markers}_markers_/${this.options.icon}.png`,
 			size = point(this.options.iconSize as PointExpression);
 
 		this._image = markerIcon.cloneNode(false) as HTMLImageElement;
@@ -96,7 +96,7 @@ export class DynmapIcon extends DivIcon {
 
 	update(options: DynmapIconOptions) {
 		if(this._image && options.icon !== this.options.icon) {
-			this._image!.src = `${useStore().getters.serverConfig.markers}_markers_/${options.icon}.png`;
+			this._image!.src = `${useStore().getters.serverConfig.dynmap.markers}_markers_/${options.icon}.png`;
 			this.options.icon = options.icon;
 		}
 
