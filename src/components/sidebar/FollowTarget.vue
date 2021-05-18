@@ -62,11 +62,14 @@ export default defineComponent({
 
 				unfollow();
 			},
-			updatePlayerImage = () => {
+			updatePlayerImage = async () => {
 				image.value = defaultImage;
 
 				if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkinFaces) {
-					getMinecraftHead(props.target, '16').then((result) => image.value = result.src).catch(() => {});
+					try {
+						const result = await getMinecraftHead(props.target, '16');
+						image.value = result.src;
+					} catch (e) {}
 				}
 			};
 

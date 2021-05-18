@@ -658,6 +658,29 @@ const validateDynmapConfiguration = (config: DynmapUrlConfig): Promise<Map<strin
 	return Promise.resolve(result);
 };
 
+async function fetchJSON(url: string) {
+	let response, json;
+
+	try {
+		response = await fetch(url);
+	} catch(e) {
+		throw new Error(`Network request failed (${e})`);
+	}
+
+	if (!response.ok) {
+		throw new Error(`Network request failed (${response.statusText || 'Unknown'})`);
+	}
+
+	try {
+		json = await response.json();
+	} catch(e) {
+		throw new Error('Request returned invalid json');
+	}
+
+	return json;
+}
+
+
 export default {
 	validateConfiguration(): Promise<Map<string, LiveAtlasServerDefinition>> {
 		if (typeof window.liveAtlasConfig.servers !== 'undefined') {
@@ -667,132 +690,112 @@ export default {
 		return validateDynmapConfiguration(window.config.url ?? null);
 	},
 
-	getConfiguration(): Promise<DynmapConfigurationResponse> {
-		return fetch(useStore().getters.serverConfig.dynmap.configuration).then(response => {
-			if (!response.ok) {
-				throw new Error('Network request failed: ' + response.statusText);
-			}
+	async getConfiguration(): Promise<DynmapConfigurationResponse> {
+		const response = await fetchJSON(useStore().getters.serverConfig.dynmap.configuration);
 
-			return response.json();
-		}).then((response): DynmapConfigurationResponse => {
-			if (response.error === 'login-required') {
-				throw new Error("Login required");
-			} else if (response.error) {
-				throw new Error(response.error);
-			}
+		if (response.error === 'login-required') {
+			throw new Error("Login required");
+		} else if (response.error) {
+			throw new Error(response.error);
+		}
 
-			return {
-				config: buildServerConfig(response),
-				messages: buildMessagesConfig(response),
-				worlds: buildWorlds(response),
-				components: buildComponents(response),
-				loggedIn: response.loggedin || false,
-			}
-		});
+		return {
+			config: buildServerConfig(response),
+			messages: buildMessagesConfig(response),
+			worlds: buildWorlds(response),
+			components: buildComponents(response),
+			loggedIn: response.loggedin || false,
+		}
 	},
 
-	getUpdate(requestId: number, world: string, timestamp: number): Promise<DynmapUpdateResponse> {
+	async getUpdate(requestId: number, world: string, timestamp: number): Promise<DynmapUpdateResponse> {
 		let url = useStore().getters.serverConfig.dynmap.update;
 		url = url.replace('{world}', world);
 		url = url.replace('{timestamp}', timestamp.toString());
 
-		return fetch(url).then(response => {
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
+		const response = await fetchJSON(url);
+		const players: Set<DynmapPlayer> = new Set();
 
-			return response.json();
-		}).then((response): DynmapUpdateResponse => {
-			const players: Set<DynmapPlayer> = new Set();
+		(response.players || []).forEach((player: any) => {
+			const world = player.world && player.world !== '-some-other-bogus-world-' ? player.world : undefined;
 
-			(response.players || []).forEach((player: any) => {
-				const world = player.world && player.world !== '-some-other-bogus-world-' ? player.world : undefined;
-
-				players.add({
-					account: player.account || "",
-					health: player.health || 0,
-					armor: player.armor || 0,
-					name: player.name || "",
-					sort: player.sort || 0,
-					hidden: !world,
-					location: {
-						//Add 0.5 to position in the middle of a block
-						x: !isNaN(player.x) ? player.x + 0.5 : 0,
-						y: !isNaN(player.y) ? player.y : 0,
-						z: !isNaN(player.z) ? player.z + 0.5 : 0,
-						world: world,
-					}
-				});
+			players.add({
+				account: player.account || "",
+				health: player.health || 0,
+				armor: player.armor || 0,
+				name: player.name || "",
+				sort: player.sort || 0,
+				hidden: !world,
+				location: {
+					//Add 0.5 to position in the middle of a block
+					x: !isNaN(player.x) ? player.x + 0.5 : 0,
+					y: !isNaN(player.y) ? player.y : 0,
+					z: !isNaN(player.z) ? player.z + 0.5 : 0,
+					world: world,
+				}
 			});
-
-			//Extra fake players for testing
-			// for(let i = 0; i < 150; i++) {
-			// 	players.add({
-			// 		account: "VIDEO GAMES " + i,
-			// 		health: Math.round(Math.random() * 10),
-			// 		armor: Math.round(Math.random() * 10),
-			// 		name: "VIDEO GAMES " + i,
-			// 		sort: 0,
-			// 		location: {
-			// 			x: Math.round(Math.random() * 1000) - 500,
-			// 			y: 64,
-			// 			z: Math.round(Math.random() * 1000) - 500,
-			// 			world: "world",
-			// 		}
-			// 	});
-			// }
-
-			return {
-				worldState: {
-					timeOfDay: response.servertime || 0,
-					thundering: response.isThundering || false,
-					raining: response.hasStorm || false,
-				},
-				playerCount: response.count || 0,
-				configHash: response.confighash || 0,
-				timestamp: response.timestamp || 0,
-				players,
-				updates: buildUpdates(response.updates || []),
-			}
 		});
+
+		//Extra fake players for testing
+		// for(let i = 0; i < 150; i++) {
+		// 	players.add({
+		// 		account: "VIDEO GAMES " + i,
+		// 		health: Math.round(Math.random() * 10),
+		// 		armor: Math.round(Math.random() * 10),
+		// 		name: "VIDEO GAMES " + i,
+		// 		sort: 0,
+		// 		location: {
+		// 			x: Math.round(Math.random() * 1000) - 500,
+		// 			y: 64,
+		// 			z: Math.round(Math.random() * 1000) - 500,
+		// 			world: "world",
+		// 		}
+		// 	});
+		// }
+
+		return {
+			worldState: {
+				timeOfDay: response.servertime || 0,
+				thundering: response.isThundering || false,
+				raining: response.hasStorm || false,
+			},
+			playerCount: response.count || 0,
+			configHash: response.confighash || 0,
+			timestamp: response.timestamp || 0,
+			players,
+			updates: buildUpdates(response.updates || []),
+		}
 	},
 
-	getMarkerSets(world: string): Promise<Map<string, DynmapMarkerSet>> {
+	async getMarkerSets(world: string): Promise<Map<string, DynmapMarkerSet>> {
 		const url = `${useStore().getters.serverConfig.dynmap.markers}_markers_/marker_${world}.json`;
 
-		return fetch(url).then(response => {
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
+		const response = await fetchJSON(url);
+		const sets: Map<string, DynmapMarkerSet> = new Map();
+
+		response.sets = response.sets || {};
+
+		for (const key in response.sets) {
+			if (!Object.prototype.hasOwnProperty.call(response.sets, key)) {
+				continue;
 			}
 
-			return response.json();
-		}).then((response): Map<string, DynmapMarkerSet> => {
-			const sets: Map<string, DynmapMarkerSet> = new Map();
+			const set = response.sets[key],
+				markers = buildMarkers(set.markers || {}),
+				circles = buildCircles(set.circles || {}),
+				areas = buildAreas(set.areas || {}),
+				lines = buildLines(set.lines || {});
 
-			response.sets = response.sets || {};
+			sets.set(key, {
+				...buildMarkerSet(key, set),
+				markers,
+				circles,
+				areas,
+				lines,
+			});
+		}
 
-			for (const key in response.sets) {
-				if (!Object.prototype.hasOwnProperty.call(response.sets, key)) {
-					continue;
-				}
-
-				const set = response.sets[key],
-					markers = buildMarkers(set.markers || {}),
-					circles = buildCircles(set.circles || {}),
-					areas = buildAreas(set.areas || {}),
-					lines = buildLines(set.lines || {});
-
-				sets.set(key, {
-					...buildMarkerSet(key, set),
-					markers,
-					circles,
-					areas,
-					lines,
-				});
-			}
-
-			return sets;
-		});
+		return sets;
 	},
 
 	sendChatMessage(message: string) {

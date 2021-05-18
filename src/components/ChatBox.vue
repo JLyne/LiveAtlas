@@ -68,7 +68,7 @@
 					}
 				}),
 
-				sendMessage = () => {
+				sendMessage = async () => {
 					const message = enteredMessage.value.trim().substring(0, messageMaxLength.value);
 
 					if(!message) {
@@ -77,21 +77,22 @@
 
 					sendingMessage.value = true;
 					sendingError.value = null;
-
-					store.dispatch(ActionTypes.SEND_CHAT_MESSAGE, message).then(() => {
+t
+					try {
+						await store.dispatch(ActionTypes.SEND_CHAT_MESSAGE, message);
 						enteredMessage.value = "";
 						sendingError.value = null;
-					}).catch(e => {
+					} catch(e) {
 						if(e instanceof ChatError) {
 							sendingError.value = e.message;
 						} else {
 							sendingError.value = `An unexpected error occurred. See console for details.`;
 						}
-					}).finally(() => {
+					} finally {
 						sendingMessage.value = false;
 
 						requestAnimationFrame(() => chatInput.value!.focus());
-					});
+					}
 				};
 
 			watch(chatBoxVisible, newValue => {

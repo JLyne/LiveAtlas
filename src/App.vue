@@ -67,13 +67,15 @@ export default defineComponent({
 				update();
 			},
 
-			update = () => {
+			update = async () => {
 				//TODO: Error notification for repeated failures?
-				store.dispatch(ActionTypes.GET_UPDATE, undefined).finally(() => {
+				try {
+					await store.dispatch(ActionTypes.GET_UPDATE, undefined);
+				} finally {
 					if(updatesEnabled.value) {
 						updateTimeout.value = setTimeout(() => update(), updateInterval.value);
 					}
-				});
+				}
 			},
 
 			stopUpdates = () => {
