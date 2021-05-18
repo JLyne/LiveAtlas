@@ -77,91 +77,92 @@ export interface Actions {
 }
 
 export const actions: ActionTree<State, State> & Actions = {
-	[ActionTypes.LOAD_CONFIGURATION]({commit, state}): Promise<DynmapConfigurationResponse> {
+	async [ActionTypes.LOAD_CONFIGURATION]({commit, state}): Promise<DynmapConfigurationResponse> {
 		//Clear any existing has to avoid triggering a second config load, after this load changes the hash
 		commit(MutationTypes.CLEAR_CONFIGURATION_HASH, undefined);
 
-		return API.getConfiguration().then(config => {
-			commit(MutationTypes.SET_CONFIGURATION, config.config);
-			commit(MutationTypes.SET_MESSAGES, config.messages);
-			commit(MutationTypes.SET_WORLDS, config.worlds);
-			commit(MutationTypes.SET_COMPONENTS, config.components);
-			commit(MutationTypes.SET_LOGGED_IN, config.loggedIn);
+		const config = await API.getConfiguration();
 
-			//Skip default map/ui visibility logic if we already have a map selected (i.e config reload after hash change)
-			if(state.currentMap) {
-				return config;
-			}
+		commit(MutationTypes.SET_CONFIGURATION, config.config);
+		commit(MutationTypes.SET_MESSAGES, config.messages);
+		commit(MutationTypes.SET_WORLDS, config.worlds);
+		commit(MutationTypes.SET_COMPONENTS, config.components);
+		commit(MutationTypes.SET_LOGGED_IN, config.loggedIn);
 
-			if(state.configuration.expandUI && !state.ui.smallScreen) {
-				commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'players', state: true});
-				commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'maps', state: true});
-			}
-
-			let worldName, mapName;
-
-			// Use config default world if it exists
-			if(config.config.defaultWorld && state.worlds.has(config.config.defaultWorld)) {
-				worldName = config.config.defaultWorld;
-			}
-
-			// Prefer world from parsed url if present and it exists
-			if(state.parsedUrl.world && state.worlds.has(state.parsedUrl.world)) {
-				worldName = state.parsedUrl.world;
-			}
-
-			// Use first world, if any, if neither of the above exist
-			if(!worldName) {
-				worldName = state.worlds.size ? state.worlds.entries().next().value[1].name : undefined;
-			}
-
-			if(worldName) {
-				const world = state.worlds.get(worldName) as DynmapWorld;
-
-				// Use config default map if it exists
-				if(config.config.defaultMap && world.maps.has(config.config.defaultMap)) {
-					mapName = config.config.defaultMap;
-				}
-
-				// Prefer map from parsed url if present and it exists
-				if(state.parsedUrl.map && world.maps.has(state.parsedUrl.map)) {
-					mapName = state.parsedUrl.map;
-				}
-
-				// Use first map, if any, if neither of the above exist
-				if(!mapName) {
-					mapName = world.maps.size ? world.maps.entries().next().value[1].name : undefined;
-				}
-			}
-
-			if(worldName && mapName) {
-				commit(MutationTypes.SET_CURRENT_MAP, {
-					worldName, mapName
-				});
-			}
-
+		//Skip default map/ui visibility logic if we already have a map selected (i.e config reload after hash change)
+		if(state.currentMap) {
 			return config;
-		});
+		}
+
+		if(state.configuration.expandUI && !state.ui.smallScreen) {
+			commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'players', state: true});
+			commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'maps', state: true});
+		}
+
+		let worldName, mapName;
+
+		// Use config default world if it exists
+		if(config.config.defaultWorld && state.worlds.has(config.config.defaultWorld)) {
+			worldName = config.config.defaultWorld;
+		}
+
+		// Prefer world from parsed url if present and it exists
+		if(state.parsedUrl.world && state.worlds.has(state.parsedUrl.world)) {
+			worldName = state.parsedUrl.world;
+		}
+
+		// Use first world, if any, if neither of the above exist
+		if(!worldName) {
+			worldName = state.worlds.size ? state.worlds.entries().next().value[1].name : undefined;
+		}
+
+		if(worldName) {
+			const world = state.worlds.get(worldName) as DynmapWorld;
+
+			// Use config default map if it exists
+			if(config.config.defaultMap && world.maps.has(config.config.defaultMap)) {
+				mapName = config.config.defaultMap;
+			}
+
+			// Prefer map from parsed url if present and it exists
+			if(state.parsedUrl.map && world.maps.has(state.parsedUrl.map)) {
+				mapName = state.parsedUrl.map;
+			}
+
+			// Use first map, if any, if neither of the above exist
+			if(!mapName) {
+				mapName = world.maps.size ? world.maps.entries().next().value[1].name : undefined;
+			}
+		}
+
+		if(worldName && mapName) {
+			commit(MutationTypes.SET_CURRENT_MAP, {
+				worldName, mapName
+			});
+		}
+
+		return config;
 	},
-	[ActionTypes.GET_UPDATE]({commit, dispatch, state}) {
+
+	async [ActionTypes.GET_UPDATE]({commit, dispatch, state}) {
 		if(!state.currentWorld) {
 			return Promise.reject("No current world");
 		}
 
-		return API.getUpdate(state.updateRequestId, state.currentWorld.name, state.updateTimestamp.valueOf()).then(update => {
-			commit(MutationTypes.SET_WORLD_STATE, update.worldState);
-			commit(MutationTypes.SET_UPDATE_TIMESTAMP, new Date(update.timestamp));
-			commit(MutationTypes.INCREMENT_REQUEST_ID, undefined);
-			commit(MutationTypes.ADD_MARKER_SET_UPDATES, update.updates.markerSets);
-			commit(MutationTypes.ADD_TILE_UPDATES, update.updates.tiles);
-			commit(MutationTypes.ADD_CHAT, update.updates.chat);
-			commit(MutationTypes.SET_CONFIGURATION_HASH, update.configHash);
+		const update = await API.getUpdate(state.updateRequestId, state.currentWorld.name, state.updateTimestamp.valueOf())
 
-			return dispatch(ActionTypes.SET_PLAYERS, update.players).then(() => {
-				return update;
-			});
-		});
+		commit(MutationTypes.SET_WORLD_STATE, update.worldState);
+		commit(MutationTypes.SET_UPDATE_TIMESTAMP, new Date(update.timestamp));
+		commit(MutationTypes.INCREMENT_REQUEST_ID, undefined);
+		commit(MutationTypes.ADD_MARKER_SET_UPDATES, update.updates.markerSets);
+		commit(MutationTypes.ADD_TILE_UPDATES, update.updates.tiles);
+		commit(MutationTypes.ADD_CHAT, update.updates.chat);
+		commit(MutationTypes.SET_CONFIGURATION_HASH, update.configHash);
+
+		await dispatch(ActionTypes.SET_PLAYERS, update.players);
+		return update;
 	},
+
 	[ActionTypes.SET_PLAYERS]({commit, state}, players: Set<DynmapPlayer>) {
 		const keep: Set<string> = new Set();
 
@@ -187,79 +188,79 @@ export const actions: ActionTree<State, State> & Actions = {
 			requestAnimationFrame(() => processQueue(players, resolve));
 		});
 	},
-	[ActionTypes.GET_MARKER_SETS]({commit, state}) {
+
+	async [ActionTypes.GET_MARKER_SETS]({commit, state}) {
 		if(!state.currentWorld) {
-			return Promise.reject("No current world");
+			throw new Error("No current world");
 		}
 
-		return API.getMarkerSets(state.currentWorld.name).then(markerSets => {
-			commit(MutationTypes.SET_MARKER_SETS, markerSets);
+		const markerSets = await API.getMarkerSets(state.currentWorld.name)
+		commit(MutationTypes.SET_MARKER_SETS, markerSets);
 
-			return markerSets;
-		});
+		return markerSets;
 	},
 
-	[ActionTypes.POP_MARKER_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapMarkerUpdate[]> {
+	async [ActionTypes.POP_MARKER_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapMarkerUpdate[]> {
 		if(!state.markerSets.has(markerSet)) {
 			console.warn(`POP_MARKER_UPDATES: Marker set ${markerSet} doesn't exist`);
-			return Promise.resolve([]);
+			return [];
 		}
 
 		const updates = state.pendingSetUpdates.get(markerSet)!.markerUpdates.slice(0, amount);
 
 		commit(MutationTypes.POP_MARKER_UPDATES, {markerSet, amount});
 
-		return Promise.resolve(updates);
+		return updates;
 	},
 
-	[ActionTypes.POP_AREA_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapAreaUpdate[]> {
+	async [ActionTypes.POP_AREA_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapAreaUpdate[]> {
 		if(!state.markerSets.has(markerSet)) {
 			console.warn(`POP_AREA_UPDATES: Marker set ${markerSet} doesn't exist`);
-			return Promise.resolve([]);
+			return [];
 		}
 
 		const updates = state.pendingSetUpdates.get(markerSet)!.areaUpdates.slice(0, amount);
 
 		commit(MutationTypes.POP_AREA_UPDATES, {markerSet, amount});
 
-		return Promise.resolve(updates);
+		return updates;
 	},
 
-	[ActionTypes.POP_CIRCLE_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapCircleUpdate[]> {
+	async [ActionTypes.POP_CIRCLE_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapCircleUpdate[]> {
 		if(!state.markerSets.has(markerSet)) {
 			console.warn(`POP_CIRCLE_UPDATES: Marker set ${markerSet} doesn't exist`);
-			return Promise.resolve([]);
+			return [];
 		}
 
 		const updates = state.pendingSetUpdates.get(markerSet)!.circleUpdates.slice(0, amount);
 
 		commit(MutationTypes.POP_CIRCLE_UPDATES, {markerSet, amount});
 
-		return Promise.resolve(updates);
+		return updates;
 	},
 
-	[ActionTypes.POP_LINE_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapLineUpdate[]> {
+	async [ActionTypes.POP_LINE_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapLineUpdate[]> {
 		if(!state.markerSets.has(markerSet)) {
 			console.warn(`POP_LINE_UPDATES: Marker set ${markerSet} doesn't exist`);
-			return Promise.resolve([]);
+			return [];
 		}
 
 		const updates = state.pendingSetUpdates.get(markerSet)!.lineUpdates.slice(0, amount);
 
 		commit(MutationTypes.POP_LINE_UPDATES, {markerSet, amount});
 
-		return Promise.resolve(updates);
+		return updates;
 	},
 
-	[ActionTypes.POP_TILE_UPDATES]({commit, state}, amount: number): Promise<Array<DynmapTileUpdate>> {
+	async [ActionTypes.POP_TILE_UPDATES]({commit, state}, amount: number): Promise<Array<DynmapTileUpdate>> {
 		const updates = state.pendingTileUpdates.slice(0, amount);
 
 		commit(MutationTypes.POP_TILE_UPDATES, amount);
 
-		return Promise.resolve(updates);
+		return updates;
 	},
 
-	[ActionTypes.SEND_CHAT_MESSAGE]({commit, state}, message: string): Promise<void> {
-		return API.sendChatMessage(message);
+	async [ActionTypes.SEND_CHAT_MESSAGE]({commit, state}, message: string): Promise<void> {
+		await API.sendChatMessage(message);
 	},
 }
