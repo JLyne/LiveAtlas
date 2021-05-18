@@ -51,15 +51,17 @@ export default defineComponent({
 			updateTimeout = ref(0),
 			configAttempts = ref(0),
 
-			loadConfiguration = () => {
-				return store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined).then(() => {
+			loadConfiguration = async () => {
+				try {
+					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
 					startUpdates();
 					requestAnimationFrame(() => window.hideSplash());
-				}).catch(e => {
-					console.error('Failed to load server configuration: ', e);
-					window.showSplashError('Failed to load server configuration\n' + e, false, ++configAttempts.value);
+				} catch(e) {
+					const error = `Failed to load server configuration for '${store.state.currentServer}'`;
+					console.error(`${error}:`, e);
+					window.showSplashError(`${error}\n${e}`, false, ++configAttempts.value);
 					setTimeout(() => loadConfiguration(), 1000);
-				});
+				}
 			},
 
 			startUpdates = () => {
