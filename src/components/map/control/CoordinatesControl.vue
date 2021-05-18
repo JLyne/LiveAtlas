@@ -15,10 +15,11 @@
   -->
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import {computed, defineComponent, onMounted, onUnmounted} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import {CoordinatesControl, CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import DynmapMap from "@/leaflet/DynmapMap";
+import {watch} from "vue";
 
 export default defineComponent({
 	props: {
@@ -28,22 +29,24 @@ export default defineComponent({
 		}
 	},
 
-	setup() {
+	setup(props) {
 		const store = useStore(),
-			componentSettings = store.state.components.coordinatesControl,
-			control = new CoordinatesControl(componentSettings as CoordinatesControlOptions);
+			componentSettings = computed(() => store.state.components.coordinatesControl);
+		let control = new CoordinatesControl(componentSettings.value as CoordinatesControlOptions);
 
-		return {
-			control,
-		}
-	},
+		watch(componentSettings, (newSettings) => {
+			props.leaflet.removeControl(control);
 
-	mounted() {
-		this.leaflet.addControl(this.control);
-	},
+			if(!newSettings) {
+				return;
+			}
 
-	unmounted() {
-		this.leaflet.removeControl(this.control);
+			control = new CoordinatesControl(newSettings as CoordinatesControlOptions);
+			props.leaflet.addControl(control);
+		}, {deep: true});
+
+		onMounted(() => props.leaflet.addControl(control));
+		onUnmounted(() => props.leaflet.removeControl(control));
 	},
 
 	render() {
@@ -51,7 +54,3 @@ export default defineComponent({
 	}
 })
 </script>
-
-<style scoped>
-
-</style>

@@ -150,7 +150,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
 	//Sets the state and settings of optional components, from the initial config fetch
 	[MutationTypes.SET_COMPONENTS](state: State, components: DynmapComponentConfig) {
-		state.components = components;
+		state.components = Object.assign(state.components, components);
 	},
 
 	//Sets the existing marker sets from the last marker fetch

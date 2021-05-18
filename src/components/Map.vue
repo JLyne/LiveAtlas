@@ -20,7 +20,7 @@
 		<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
 		<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>
 
-		<LogoControl v-for="(logo, index) in logoControls" :key="index" :options="logo" :leaflet="leaflet"></LogoControl>
+		<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo" :leaflet="leaflet"></LogoControl>
 		<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
 		<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
 		<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>

@@ -15,10 +15,11 @@
   -->
 
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted} from "@vue/runtime-core";
+import {computed, defineComponent, onMounted, onUnmounted} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import {ClockControl, ClockControlOptions} from "@/leaflet/control/ClockControl";
 import DynmapMap from "@/leaflet/DynmapMap";
+import {watch} from "vue";
 
 export default defineComponent({
 	props: {
@@ -30,8 +31,19 @@ export default defineComponent({
 
 	setup(props) {
 		const store = useStore(),
-			componentSettings = store.state.components.clockControl,
-			control = new ClockControl(componentSettings as ClockControlOptions) as ClockControl;
+			componentSettings = computed(() => store.state.components.clockControl);
+		let control = new ClockControl(componentSettings.value as ClockControlOptions) as ClockControl;
+
+		watch(componentSettings, (newSettings) => {
+			props.leaflet.removeControl(control);
+
+			if(!newSettings) {
+				return;
+			}
+
+			control = new ClockControl(newSettings as ClockControlOptions);
+			props.leaflet.addControl(control);
+		}, {deep: true});
 
 		onMounted(() => props.leaflet.addControl(control));
 		onUnmounted(() => props.leaflet.removeControl(control));
