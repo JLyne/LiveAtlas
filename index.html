@@ -20,44 +20,68 @@
 	<meta name="description" content="Minecraft Dynamic Map" />
 
     <title>Minecraft Dynamic Map - LiveAtlas</title>
-    <!-- Remove this if you are using multiple maps -->
+
+    <!-- Remove this if you are using multiple servers in the config below -->
     <script src="./standalone/config.js"></script>
+
     <script>
         window.liveAtlasConfig = {
         	// Server URLS can be defined here instead of using the standalone/config.js file.
-            // Multiple servers are supported too.
-            // servers: {
-            //     creative: {
-            //     	label: 'Creative',
-            //         configuration: 'http://dynmap.local/standalone/creative/MySQL_configuration.php',
-            //         update: 'http://dynmap.local/standalone/creative/MySQL_update.php?world={world}&ts={timestamp}',
-            //         sendmessage: 'http://dynmap.local/standalone/creative/MySQL_sendmessage.php',
-            //         login: 'http://dynmap.local/standalone/creative/MySQL_login.php',
-            //         register: 'http://dynmap.local/standalone/creative/MySQL_register.php',
-            //         tiles: 'http://dynmap.local/standalone/creative/MySQL_tiles.php?tile=',
-            //         markers: 'http://dynmap.local/standalone/creative/MySQL_markers.php?marker='
-            //     },
-            //     survival: {
-            //     	label: 'Survival',
-            //     	configuration: 'http://dynmap.local/standalone/survival/MySQL_configuration.php',
-            //         update: 'http://dynmap.local/standalone/survival/MySQL_update.php?world={world}&ts={timestamp}',
-            //         sendmessage: 'http://dynmap.local/standalone/survival/MySQL_sendmessage.php',
-            //         login: 'http://dynmap.local/standalone/survival/MySQL_login.php',
-            //         register: 'http://dynmap.local/standalone/survival/MySQL_register.php',
-            //         tiles: 'http://dynmap.local/standalone/survival/MySQL_tiles.php?tile=',
-            //         markers: 'http://dynmap.local/standalone/survival/MySQL_markers.php?marker='
-            //     },
-            //     build: {
-            //     	label: 'Build',
-            //     	configuration: 'http://dynmap.local/standalone/build/MySQL_configuration.php',
-            //         update: 'http://dynmap.local/standalone/build/MySQL_update.php?world={world}&ts={timestamp}',
-            //         sendmessage: 'http://dynmap.local/standalone/build/MySQL_sendmessage.php',
-            //         login: 'http://dynmap.local/standalone/build/MySQL_login.php',
-            //         register: 'http://dynmap.local/standalone/build/MySQL_register.php',
-            //         tiles: 'http://dynmap.local/standalone/build/MySQL_tiles.php?tile=',
-            //         markers: 'http://dynmap.local/standalone/build/MySQL_markers.php?marker='
-            //     }
-            // }
+            // Multiple servers are supported, see https://github.com/JLyne/LiveAtlas/wiki/Configuring-Multiple-Servers.
+            servers: {
+                creative: {
+                	label: 'Creative',
+                    url: '/map/creative',
+                    dynmap: {
+                        configuration: 'http://dynmap.local/standalone/creative/MySQL_configuration.php',
+                        update: 'http://dynmap.local/standalone/creative/MySQL_update.php?world={world}&ts={timestamp}',
+                        sendmessage: 'http://dynmap.local/standalone/creative/MySQL_sendmessage.php',
+                        login: 'http://dynmap.local/standalone/creative/MySQL_login.php',
+                        register: 'http://dynmap.local/standalone/creative/MySQL_register.php',
+                        tiles: 'http://dynmap.local/standalone/creative/MySQL_tiles.php?tile=',
+                        markers: 'http://dynmap.local/standalone/creative/MySQL_markers.php?marker='
+                    }
+                },
+                survival: {
+                	label: 'Survival',
+                    url: '/map/survival',
+                    dynmap: {
+                        configuration: 'http://dynmap.local/standalone/survival/MySQL_configuration.php',
+                        update: 'http://dynmap.local/standalone/survival/MySQL_update.php?world={world}&ts={timestamp}',
+                        sendmessage: 'http://dynmap.local/standalone/survival/MySQL_sendmessage.php',
+                        login: 'http://dynmap.local/standalone/survival/MySQL_login.php',
+                        register: 'http://dynmap.local/standalone/survival/MySQL_register.php',
+                        tiles: 'http://dynmap.local/standalone/survival/MySQL_tiles.php?tile=',
+                        markers: 'http://dynmap.local/standalone/survival/MySQL_markers.php?marker='
+                    }
+                },
+                build: {
+                	label: 'Build',
+                    url: '/map/build',
+                    dynmap: {
+                        configuration: 'http://dynmap.local/standalone/build/MySQL_configuration.php',
+                        update: 'http://dynmap.local/standalone/build/MySQL_update.php?world={world}&ts={timestamp}',
+                        sendmessage: 'http://dynmap.local/standalone/build/MySQL_sendmessage.php',
+                        login: 'http://dynmap.local/standalone/build/MySQL_login.php',
+                        register: 'http://dynmap.local/standalone/build/MySQL_register.php',
+                        tiles: 'http://dynmap.local/standalone/build/MySQL_tiles.php?tile=',
+                        markers: 'http://dynmap.local/standalone/build/MySQL_markers.php?marker='
+                    }
+                },
+                test: {
+                	label: 'Local Test',
+                    url: '/map/test',
+                    dynmap: {
+                        configuration: 'http://dynmap.local:8123/up/configuration',
+                        update: 'http://dynmap.local:8123/up/world/{world}/{timestamp}',
+                        sendmessage: 'http://dynmap.local:8123/up/sendmessage',
+                        login: 'http://dynmap.local:8123/up/login',
+                        register: 'http://dynmap.local:8123/up/register',
+                        tiles: 'http://dynmap.local:8123/tiles/',
+                        markers: 'http://dynmap.local:8123/tiles/'
+                    }
+                },
+            }
         };
     </script>
 

@@ -17,7 +17,7 @@
 import {GetterTree} from "vuex";
 import {State} from "@/store/state";
 import {getMinecraftTime} from "@/util";
-import {LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasDynmapServerDefinition} from "@/index";
 
 export type Getters = {
 	playerMarkersEnabled(state: State): boolean;
@@ -26,7 +26,7 @@ export type Getters = {
 	night(state: State): boolean;
 	mapBackground(state: State, getters: GetterTree<State, State> & Getters): string;
 	url(state: State, getters: GetterTree<State, State> & Getters): string;
-	serverConfig(state: State, getters: GetterTree<State, State> & Getters): LiveAtlasServerDefinition;
+	serverConfig(state: State, getters: GetterTree<State, State> & Getters): LiveAtlasDynmapServerDefinition;
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -76,11 +76,11 @@ export const getters: GetterTree<State, State> & Getters = {
 		return `#${state.currentWorld.name};${state.currentMap.name};${locationString};${zoom}`;
 	},
 
-	serverConfig(state: State): LiveAtlasServerDefinition {
+	serverConfig(state: State): LiveAtlasDynmapServerDefinition {
 		if(!state.currentServer) {
 			throw RangeError("No current server");
 		}
 
-		return state.servers.get(state.currentServer) as LiveAtlasServerDefinition;
-	}
+		return state.servers.get(state.currentServer) as LiveAtlasDynmapServerDefinition;
+	},
 }

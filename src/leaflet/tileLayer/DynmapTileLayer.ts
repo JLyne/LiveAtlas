@@ -112,7 +112,7 @@ export class DynmapTileLayer extends TileLayer {
 
 		if (!url) {
 			const path = escape(`${this._mapSettings.world.name}/${name}`);
-			url = `${store.getters.serverConfig.tiles}${path}`;
+			url = `${store.getters.serverConfig.dynmap.tiles}${path}`;
 
 			if(typeof timestamp !== 'undefined') {
 				url += (url.indexOf('?') === -1 ? `?timestamp=${timestamp}` : `&timestamp=${timestamp}`);

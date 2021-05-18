@@ -19,7 +19,13 @@ declare module '@vue/runtime-core' {
 	}
 }
 
-interface LiveAtlasServerDefinition extends DynmapUrlConfig {
+interface LiveAtlasServerDefinition {
 	id: string
 	label?: string
+	url?: string
+}
+
+interface LiveAtlasDynmapServerDefinition extends LiveAtlasServerDefinition {
+	type: 'dynmap',
+	dynmap: DynmapUrlConfig,
 }
