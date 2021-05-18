@@ -29,7 +29,6 @@ const splash = document.getElementById('splash'),
 	splashError = document.getElementById('splash__error'),
 	splashErrorMessage = document.getElementById('splash__error-message'),
 	splashRetry = document.getElementById('splash__error-retry'),
-	splashAttempt = document.getElementById('splash__error-attempt'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
 
 window.showSplash = function() {
@@ -74,12 +73,12 @@ window.showSplashError = function(message: string, fatal: boolean, attempts: num
 		splashSpinner.style.visibility = 'hidden';
 	}
 
-	if(splashAttempt && splashRetry) {
+	if(splashRetry) {
 		if(fatal) {
-			splashAttempt.hidden = splashRetry.hidden = true;
+			splashRetry.hidden = true;
 		} else if(attempts) {
-			splashAttempt.hidden = splashRetry.hidden = false;
-			splashAttempt.textContent = attempts.toString();
+			splashRetry.hidden = false;
+			splashRetry.textContent = `Retrying... (${attempts.toString()})`;
 		}
 	}
 };
@@ -107,4 +106,7 @@ API.validateConfiguration().then((config) => {
 
 	// app.config.performance = true;
 	app.mount('#app');
+}).catch(e => {
+	console.error('LiveAtlas configuration is invalid: ', e);
+	window.showSplashError('LiveAtlas configuration is invalid\n' + e, true);
 });

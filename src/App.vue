@@ -57,7 +57,7 @@ export default defineComponent({
 					requestAnimationFrame(() => window.hideSplash());
 				}).catch(e => {
 					console.error('Failed to load server configuration: ', e);
-					window.showSplashError(e, false, ++configAttempts.value);
+					window.showSplashError('Failed to load server configuration\n' + e, false, ++configAttempts.value);
 					setTimeout(() => loadConfiguration(), 1000);
 				});
 			},
