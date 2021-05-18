@@ -57,6 +57,11 @@ export default defineComponent({
 					startUpdates();
 					requestAnimationFrame(() => window.hideSplash());
 				} catch(e) {
+					//Request was aborted, probably because another server was selected before the request finished. Don't retry
+					if(e instanceof DOMException && e.name === 'AbortError') {
+						return;
+					}
+
 					const error = `Failed to load server configuration for '${store.state.currentServer}'`;
 					console.error(`${error}:`, e);
 					window.showSplashError(`${error}\n${e}`, false, ++configAttempts.value);
@@ -75,6 +80,10 @@ export default defineComponent({
 					await store.dispatch(ActionTypes.GET_UPDATE, undefined);
 				} finally {
 					if(updatesEnabled.value) {
+						if(updateTimeout.value) {
+							clearTimeout(updateTimeout.value);
+						}
+
 						updateTimeout.value = setTimeout(() => update(), updateInterval.value);
 					}
 				}

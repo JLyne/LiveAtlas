@@ -653,7 +653,8 @@ async function fetchJSON(url: string, signal: AbortSignal) {
 		response = await fetch(url, {signal});
 	} catch(e) {
 		if(e instanceof DOMException && e.name === 'AbortError') {
-			console.warn('Request aborted');
+			console.warn(`Request aborted (${url}`);
+			throw e;
 		} else {
 			console.error(e);
 		}
