@@ -22,7 +22,6 @@ declare module '@vue/runtime-core' {
 interface LiveAtlasServerDefinition {
 	id: string
 	label?: string
-	url?: string
 }
 
 interface LiveAtlasDynmapServerDefinition extends LiveAtlasServerDefinition {

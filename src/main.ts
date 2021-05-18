@@ -96,7 +96,7 @@ try {
 
 		//Update url if server doesn't exist
 		if(serverName !== lastSegment) {
-			window.history.replaceState({}, '', store.state.servers.get(serverName)!.url + window.location.hash);
+			window.history.replaceState({}, '', serverName + window.location.hash);
 		}
 
 		store.commit(MutationTypes.SET_CURRENT_SERVER, serverName);

@@ -602,19 +602,6 @@ const validateLiveAtlasConfiguration = (config: any): Map<string, LiveAtlasServe
 			throw new ConfigurationError(`Server '${server}': Dynmap sendmessage URL missing. ${check}`);
 		}
 
-		if(serverConfig.url) {
-			const a = document.createElement('a');
-			a.href = serverConfig.url;
-
-			if(a.origin !== window.location.origin) {
-				throw new ConfigurationError(`Server '${server}': URL doesn't match LiveAtlas origin. ${check}`);
-			}
-
-			serverConfig.url = a.pathname;
-		} else {
-			serverConfig.url = serverConfig.id;
-		}
-
 		result.set(server, serverConfig);
 	}
 
