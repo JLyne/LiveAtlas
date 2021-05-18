@@ -665,7 +665,7 @@ async function fetchJSON(url: string) {
 	try {
 		response = await fetch(url);
 	} catch(e) {
-		throw new Error(`Network request failed (${e})`);
+		throw new Error(`Network request failed`);
 	}
 
 	if (!response.ok) {
