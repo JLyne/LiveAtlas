@@ -38,6 +38,8 @@ import {useStore} from "@/store";
 import ChatError from "@/errors/ChatError";
 import {LiveAtlasServerDefinition} from "@/index";
 
+const titleColours = /§[0-9a-f]/ig;
+
 function buildServerConfig(response: any): DynmapServerConfig {
 	return {
 		version: response.dynmapversion || '',
@@ -49,7 +51,7 @@ function buildServerConfig(response: any): DynmapServerConfig {
 		followZoom: response.followzoom || 0,
 		updateInterval: response.updaterate || 3000,
 		showLayerControl: response.showlayercontrol || true,
-		title: response.title || 'Dynmap',
+		title: response.title.replace(titleColours, '') || 'Dynmap',
 		loginEnabled: response['login-enabled'] || false,
 		maxPlayers: response.maxcount || 0,
 		expandUI: response.sidebaropened && response.sidebaropened !== 'false',
