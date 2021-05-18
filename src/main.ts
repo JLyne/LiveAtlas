@@ -101,5 +101,5 @@ API.validateConfiguration().then((config) => {
 	const app = createApp(App).use(store);
 
 	// app.config.performance = true;
-	app.mount('#mcmap');
+	app.mount('#app');
 });

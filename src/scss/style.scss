@@ -193,11 +193,11 @@ input {
 	}
 }
 
-.dynmap {
+#app {
     height: 100%;
 }
 
-.dynmap .map .tile img, img {
+#app .map .tile img, img {
     image-rendering: pixelated;
 }
 
