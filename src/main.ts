@@ -15,14 +15,14 @@
  */
 
 import { createApp } from 'vue'
-import App from './App.vue'
-import API from './api';
+import App from './App.vue';
 import {store} from "@/store";
 
 import 'leaflet/dist/leaflet.css';
 import 'normalize-scss/sass/normalize/_import-now.scss';
 import '@/scss/style.scss';
 import {MutationTypes} from "@/store/mutation-types";
+import {validateConfiguration} from "@/util";
 
 const splash = document.getElementById('splash'),
 	splashSpinner = document.getElementById('splash__spinner'),
@@ -86,7 +86,7 @@ window.showSplashError = function(message: string, fatal: boolean, attempts: num
 console.info(`LiveAtlas version ${store.state.version} - https://github.com/JLyne/LiveAtlas`);
 
 try {
-	const config = API.validateConfiguration();
+	const config = validateConfiguration();
 
 	store.commit(MutationTypes.SET_SERVERS, config);
 
