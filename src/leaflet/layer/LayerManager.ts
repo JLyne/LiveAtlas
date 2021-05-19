@@ -61,6 +61,10 @@ export default class LayerManager {
 	}
 
 	addHiddenLayer(layer: Layer, name: string, position: number) {
+		if(this.layerControl.hasLayer(layer)) {
+			this.layerControl.removeLayer(layer);
+		}
+
 		if(typeof position !== 'undefined') {
 			this.layerControl.addOverlayAtPosition(layer, name, position);
 		} else {

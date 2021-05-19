@@ -155,10 +155,11 @@ export const mutations: MutationTree<State> & Mutations = {
 
 	//Sets the existing marker sets from the last marker fetch
 	[MutationTypes.SET_MARKER_SETS](state: State, markerSets: Map<string, DynmapMarkerSet>) {
-		state.markerSets = markerSets;
+		state.markerSets.clear();
 		state.pendingSetUpdates.clear();
 
 		for(const entry of markerSets) {
+			state.markerSets.set(entry[0], entry[1]);
 			state.pendingSetUpdates.set(entry[0], {
 				markerUpdates: [],
 				areaUpdates: [],
