@@ -150,7 +150,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			return Promise.reject("No current world");
 		}
 
-		const update =await getAPI().getUpdate(state.updateRequestId, state.currentWorld.name, state.updateTimestamp.valueOf());
+		const update = await getAPI().getUpdate(state.updateRequestId, state.currentWorld.name, state.updateTimestamp.valueOf());
 
 		commit(MutationTypes.SET_WORLD_STATE, update.worldState);
 		commit(MutationTypes.SET_UPDATE_TIMESTAMP, new Date(update.timestamp));

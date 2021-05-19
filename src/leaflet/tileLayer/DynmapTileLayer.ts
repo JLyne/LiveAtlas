@@ -69,18 +69,29 @@ export interface TileInfo {
 	fmt: string;
 }
 
+// noinspection JSUnusedGlobalSymbols
 export class DynmapTileLayer extends TileLayer {
-
 	constructor(options: DynmapTileLayerOptions) {
 		super('', options);
+
+		this._mapSettings = options.mapSettings;
+		options.maxZoom = this._mapSettings.nativeZoomLevels + this._mapSettings.extraZoomLevels;
+		options.maxNativeZoom = this._mapSettings.nativeZoomLevels;
+		options.zoomReverse = true;
+		options.tileSize = 128;
+		options.minZoom = 0;
+
 		Util.setOptions(this, options);
 
 		if (options.mapSettings === null) {
 			throw new TypeError("mapSettings missing");
 		}
 
-		this._projection = new DynmapProjection({});
-		this._mapSettings = options.mapSettings;
+		this._projection = new DynmapProjection({
+			mapToWorld: this._mapSettings.mapToWorld,
+			worldToMap: this._mapSettings.worldToMap,
+			nativeZoomLevels: this._mapSettings.nativeZoomLevels,
+		});
 		this._cachedTileUrls = Object.seal(new Map());
 		this._namedTiles = Object.seal(new Map());
 		this._loadQueue = [];
@@ -99,8 +110,12 @@ export class DynmapTileLayer extends TileLayer {
 		}
 	}
 
-	getTileName(coords: Coordinate): string {
-		throw "getTileName not implemented";
+	getTileName(coords: Coordinate) {
+		const info = this.getTileInfo(coords);
+		// Y is inverted for HD-map.
+		info.y = -info.y;
+		info.scaledy = info.y >> 5;
+		return `${info.prefix}${info.nightday}/${info.scaledx}_${info.scaledy}/${info.zoom}${info.x}_${info.y}.${info.fmt}`;
 	}
 
 	getTileUrl(coords: Coordinate) {
@@ -232,7 +247,10 @@ export class DynmapTileLayer extends TileLayer {
 
 	// Some helper functions.
 	zoomprefix(amount: number) {
-		return 'z'.repeat(amount);
+		// amount == 0 -> ''
+		// amount == 1 -> 'z_'
+		// amount == 2 -> 'zz_'
+		return 'z'.repeat(amount) + (amount === 0 ? '' : '_');
 	}
 
 	getTileInfo(coords: Coordinate): TileInfo {

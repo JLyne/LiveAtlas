@@ -20,25 +20,42 @@
 import {Util, LatLng, Class} from 'leaflet';
 import {Coordinate} from "@/dynmap";
 
-export interface DynmapProjectionOptions {}
+export interface DynmapProjectionOptions {
+	mapToWorld: [number, number, number, number, number, number, number, number, number],
+	worldToMap: [number, number, number, number, number, number, number, number, number],
+	nativeZoomLevels: number
+}
 
 export interface DynmapProjection {
+	options: DynmapProjectionOptions
 	locationToLatLng(location: Coordinate): LatLng;
 	latLngToLocation(latLng: LatLng, y: number): Coordinate;
 }
 
 export class DynmapProjection extends Class {
 
-	constructor(options?: DynmapProjectionOptions) {
+	constructor(options: DynmapProjectionOptions) {
 		super();
 		Util.setOptions(this, options);
 	}
 
 	locationToLatLng(location: Coordinate): LatLng {
-		return new LatLng(location.x, location.z);
+		const wtp = this.options.worldToMap,
+			lat = wtp[3] * location.x + wtp[4] * location.y + wtp[5] * location.z,
+			lng = wtp[0] * location.x + wtp[1] * location.y + wtp[2] * location.z;
+
+		return new LatLng(
+			-((128 - lat) / (1 << this.options.nativeZoomLevels)),
+			lng / (1 << this.options.nativeZoomLevels));
 	}
 
 	latLngToLocation(latLng: LatLng, y: number): Coordinate {
-		return {x: latLng.lat, y, z: latLng.lng};
+		const ptw = this.options.mapToWorld,
+			lat = latLng.lng * (1 << this.options.nativeZoomLevels),
+			lon = 128 + latLng.lat * (1 << this.options.nativeZoomLevels),
+			x = ptw[0] * lat + ptw[1] * lon + ptw[2] * y,
+			z = ptw[6] * lat + ptw[7] * lon + ptw[8] * y;
+
+		return {x: x, y: y, z: z};
 	}
 }

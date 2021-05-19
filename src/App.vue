@@ -141,7 +141,7 @@ export default defineComponent({
 
 			window.history.replaceState({}, '', newServer.id);
 			loadConfiguration();
-		});
+		}, {deep: true});
 		watch(configurationHash, (newHash, oldHash) => {
 			if(newHash && oldHash) {
 				window.showSplash();
