@@ -669,7 +669,12 @@ async function fetchJSON(url: string, signal: AbortSignal) {
 	try {
 		json = await response.json();
 	} catch(e) {
-		throw new Error('Request returned invalid json');
+		if(e instanceof DOMException && e.name === 'AbortError') {
+			console.warn(`Request aborted (${url}`);
+			throw e;
+		} else {
+			throw new Error('Request returned invalid json');
+		}
 	}
 
 	return json;
