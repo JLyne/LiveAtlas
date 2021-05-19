@@ -94,7 +94,8 @@ export const actions: ActionTree<State, State> & Actions = {
 			return config;
 		}
 
-		if(state.configuration.expandUI && !state.ui.smallScreen) {
+		//Make UI visible if configured, there's enough space to do so, and this is the first config load
+		if(!state.ui.visibleElements.size && state.configuration.expandUI && !state.ui.smallScreen) {
 			commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'players', state: true});
 			commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'maps', state: true});
 		}
