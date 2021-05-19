@@ -18,7 +18,6 @@ import {MutationTypes} from "@/store/mutation-types";
 import {ActionContext, ActionTree} from "vuex";
 import {State} from "@/store/state";
 import {ActionTypes} from "@/store/action-types";
-import API from '@/api';
 import {Mutations} from "@/store/mutations";
 import {
 	DynmapAreaUpdate, DynmapCircleUpdate,
@@ -28,6 +27,7 @@ import {
 	DynmapPlayer, DynmapTileUpdate,
 	DynmapUpdateResponse, DynmapWorld
 } from "@/dynmap";
+import {getAPI} from "@/util";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(
@@ -81,7 +81,7 @@ export const actions: ActionTree<State, State> & Actions = {
 		//Clear any existing has to avoid triggering a second config load, after this load changes the hash
 		commit(MutationTypes.CLEAR_CONFIGURATION_HASH, undefined);
 
-		const config = await API.getConfiguration();
+		const config = await getAPI().getConfiguration();
 
 		commit(MutationTypes.SET_CONFIGURATION, config.config);
 		commit(MutationTypes.SET_MESSAGES, config.messages);
@@ -150,7 +150,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			return Promise.reject("No current world");
 		}
 
-		const update = await API.getUpdate(state.updateRequestId, state.currentWorld.name, state.updateTimestamp.valueOf())
+		const update =await getAPI().getUpdate(state.updateRequestId, state.currentWorld.name, state.updateTimestamp.valueOf());
 
 		commit(MutationTypes.SET_WORLD_STATE, update.worldState);
 		commit(MutationTypes.SET_UPDATE_TIMESTAMP, new Date(update.timestamp));
@@ -195,7 +195,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			throw new Error("No current world");
 		}
 
-		const markerSets = await API.getMarkerSets(state.currentWorld.name)
+		const markerSets = await getAPI().getMarkerSets(state.currentWorld.name)
 		commit(MutationTypes.SET_MARKER_SETS, markerSets);
 
 		return markerSets;
@@ -262,6 +262,6 @@ export const actions: ActionTree<State, State> & Actions = {
 	},
 
 	async [ActionTypes.SEND_CHAT_MESSAGE]({commit, state}, message: string): Promise<void> {
-		await API.sendChatMessage(message);
+		await getAPI().sendChatMessage(message);
 	},
 }

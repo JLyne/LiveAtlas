@@ -51,7 +51,7 @@ export type State = {
 	followTarget?: DynmapPlayer;
 	panTarget?: DynmapPlayer;
 
-	currentServer?: string;
+	currentServer?: LiveAtlasServerDefinition;
 	currentWorldState: DynmapWorldState;
 	currentWorld?: DynmapWorld;
 	currentMap?: DynmapWorldMap;

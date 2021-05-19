@@ -14,7 +14,8 @@
  *    limitations under the License.
  */
 
-import {DynmapPlayer} from "@/dynmap";
+import API from '@/api';
+import {DynmapPlayer, DynmapUrlConfig} from "@/dynmap";
 import {useStore} from "@/store";
 import {LiveAtlasDynmapServerDefinition, LiveAtlasServerDefinition} from "@/index";
 import ConfigurationError from "@/errors/ConfigurationError";
@@ -317,3 +318,13 @@ export const validateConfiguration = (): Map<string, LiveAtlasServerDefinition> 
 
 	return validateDynmapConfiguration(window.config?.url || null);
 };
+
+export const getAPI = () => {
+	const store = useStore();
+
+	if(!store.state.currentServer) {
+		throw new RangeError("No current server");
+	}
+
+	return API;
+}

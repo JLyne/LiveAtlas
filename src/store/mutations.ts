@@ -90,7 +90,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.SET_SERVERS](state: State, config: Map<string, LiveAtlasServerDefinition>) {
 		state.servers = config;
 
-		if(state.currentServer && !state.servers.has(state.currentServer)) {
+		if(state.currentServer && !state.servers.has(state.currentServer.id)) {
 			state.currentServer = undefined;
 		}
 	},
@@ -395,7 +395,7 @@ export const mutations: MutationTree<State> & Mutations = {
 			throw new RangeError(`Unknown server ${serverName}`);
 		}
 
-		state.currentServer = serverName;
+		state.currentServer = state.servers.get(serverName);
 	},
 
 	//Sets the currently active map/world
