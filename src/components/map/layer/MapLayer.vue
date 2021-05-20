@@ -90,7 +90,7 @@ export default defineComponent({
 
 		watch(active, (newValue) => newValue ? enableLayer() : disableLayer());
 		watch(night, (newValue) =>  {
-			if(props.map.nightAndDay && active.value) {
+			if(props.map.nightAndDay) {
 				layer.setNight(newValue);
 			}
 		});
