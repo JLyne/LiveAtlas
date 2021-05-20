@@ -31,12 +31,19 @@ const splash = document.getElementById('splash'),
 	splashRetry = document.getElementById('splash__error-retry'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
 
+if(splash) {
+	splash.ontransitionend = function(e) {
+		if(e.target === splash && splash.style.opacity === '0') {
+			splash.hidden = true;
+		}
+	};
+}
+
 window.showSplash = function() {
 	if(!splash) {
 		return;
 	}
 
-	splash.ontransitionend = null;
 	splash.hidden = false;
 
 	requestAnimationFrame(function() {
@@ -49,14 +56,12 @@ window.hideSplash = function() {
 		return;
 	}
 
-	splash.ontransitionend = function(e) {
-		if(e.target === splash) {
-			splash.hidden = true;
-		}
-	};
-
 	requestAnimationFrame(function() {
 		splash.style.opacity = '0';
+
+		if(window.getComputedStyle(splash).opacity === '0') {
+			splash.hidden = true;
+		}
 	});
 };
 
