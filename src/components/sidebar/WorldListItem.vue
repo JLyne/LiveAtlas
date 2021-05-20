@@ -58,7 +58,7 @@ export default defineComponent({
 	computed: {
 		currentMap(): DynmapWorldMap | undefined {
 			return useStore().state.currentMap;
-		}
+		},
 	},
 
 	methods: {
@@ -66,10 +66,10 @@ export default defineComponent({
 			let worldType: string,
 				mapType: string;
 
-			if (this.world.name.endsWith('_nether') || (this.world.name == 'DIM-1')) {
+			if (/(^|_)nether(_|$)/i.test(this.world.name) || (this.world.name == 'DIM-1')) {
 				worldType = 'nether';
 				mapType = (map.name == 'nether') ? 'surface' : 'flat';
-			} else if (this.world.name.endsWith('the_end') || (this.world.name == 'DIM1')) {
+			} else if (/(^|_)end(_|$)/i.test(this.world.name) || (this.world.name == 'DIM1')) {
 				worldType = 'the_end';
 				mapType = (map.name == 'the_end') ? 'surface' : 'flat';
 			} else {
