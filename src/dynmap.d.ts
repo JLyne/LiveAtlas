@@ -18,6 +18,7 @@ import {PathOptions, PointTuple, PolylineOptions} from "leaflet";
 import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
+import {LiveAtlasMessageConfig} from "@/index";
 
 declare global {
 	interface Window {
@@ -54,18 +55,6 @@ interface DynmapServerConfig {
 	grayHiddenPlayers: boolean;
 	expandUI: boolean;
 	hash: number;
-}
-
-interface DynmapMessageConfig {
-	chatNotAllowed: string;
-	chatRequiresLogin: string;
-	chatCooldown: string;
-	mapTypes: string;
-	players: string;
-	playerJoin: string;
-	playerQuit: string;
-	anonymousJoin: string;
-	anonymousQuit: string;
 }
 
 interface DynmapComponentConfig {
@@ -156,7 +145,7 @@ interface DynmapLocation {
 
 interface DynmapConfigurationResponse {
 	config: DynmapServerConfig,
-	messages: DynmapMessageConfig,
+	messages: LiveAtlasMessageConfig,
 	worlds: Array<DynmapWorld>,
 	components: DynmapComponentConfig,
 	loggedIn: boolean,

@@ -61,12 +61,12 @@ export default defineComponent({
 			this.leaflet.getLayerManager().addLayer(
 				this.layerGroup,
 				true,
-				useStore().state.messages.players,
+				useStore().state.messages.headingPlayers,
 				this.componentSettings!.layerPriority);
 		} else {
 			this.leaflet.getLayerManager().addHiddenLayer(
 				this.layerGroup,
-				useStore().state.messages.players,
+				useStore().state.messages.headingPlayers,
 				this.componentSettings!.layerPriority);
 		}
 	},

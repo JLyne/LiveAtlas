@@ -47,17 +47,17 @@
 							return props.message.message;
 						case 'playerjoin':
 							if(props.message.playerName) {
-								return store.state.messages.playerJoin
+								return store.state.messages.chatPlayerJoin
 									.replace('%playername%', props.message.playerName);
 							} else {
-								return store.state.messages.anonymousJoin;
+								return store.state.messages.chatAnonymousJoin;
 							}
 						case 'playerleave':
 							if(props.message.playerName) {
-								return store.state.messages.playerQuit
+								return store.state.messages.chatPlayerQuit
 									.replace('%playername%', props.message.playerName);
 							} else {
-								return store.state.messages.anonymousQuit;
+								return store.state.messages.chatAnonymousQuit;
 							}
 					}
 				})

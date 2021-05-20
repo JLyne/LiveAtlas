@@ -17,18 +17,16 @@
 <template>
 	<section class="chat">
 		<ul class="chat__messages">
-			<ChatMessage v-for="message in messages" :key="message.timestamp" :message="message"></ChatMessage>
-			<li v-if="!messages.length" class="message message--skeleton">No chat messages yet...</li>
+			<ChatMessage v-for="message in chatMessages" :key="message.timestamp" :message="message"></ChatMessage>
+			<li v-if="!chatMessages.length" class="message message--skeleton">{{ messageNoMessages }}</li>
 		</ul>
 		<form v-if="sendingEnabled" class="chat__form" @submit.prevent="sendMessage">
 			<div v-if="sendingError" class="chat__error">{{ sendingError }}</div>
-			<input ref="chatInput" v-model="enteredMessage" class="chat__input" type="text" :maxlength="messageMaxLength"
+			<input ref="chatInput" v-model="enteredMessage" class="chat__input" type="text" :maxlength="maxMessageLength"
 					placeholder="Type your chat message here..."  :disabled="sendingMessage">
-			<button class="chat__send" :disabled="!enteredMessage || sendingMessage">Send</button>
+			<button class="chat__send" :disabled="!enteredMessage || sendingMessage">{{ messageSend }}</button>
 		</form>
-		<div v-if="loginRequired" class="chat__login">
-			Please <a href="login.html">login</a> to send chat messages
-		</div>
+		<div v-if="loginRequired" class="chat__login" v-html="messageLogin"></div>
 	</section>
 </template>
 
@@ -53,14 +51,14 @@
 						&& !store.state.loggedIn;
 				}),
 				sendingEnabled = computed(() => store.state.components.chatSending && !loginRequired.value),
-				messageMaxLength = computed(() => store.state.components.chatSending?.maxLength),
+				maxMessageLength = computed(() => store.state.components.chatSending?.maxLength),
 
 				chatInput = ref<HTMLInputElement | null>(null),
 				enteredMessage = ref<string>(""),
 				sendingMessage = ref<boolean>(false),
 				sendingError = ref<string | null>(null),
 
-				messages = computed(() => {
+				chatMessages = computed(() => {
 					if(componentSettings.value!.messageHistory) {
 						return store.state.chat.messages.slice(0, componentSettings.value!.messageHistory);
 					} else {
@@ -68,8 +66,13 @@
 					}
 				}),
 
+				messageSend = computed(() => store.state.messages.chatSend),
+				messageNoMessages = computed(() => store.state.messages.chatNoMessages),
+				messageLogin = computed(() => store.state.messages.chatLogin.replace(
+					'{{link}}', store.state.messages.chatLoginLink)),
+
 				sendMessage = async () => {
-					const message = enteredMessage.value.trim().substring(0, messageMaxLength.value);
+					const message = enteredMessage.value.trim().substring(0, maxMessageLength.value);
 
 					if(!message) {
 						return;
@@ -86,7 +89,7 @@
 						if(e instanceof ChatError) {
 							sendingError.value = e.message;
 						} else {
-							sendingError.value = `An unexpected error occurred. See console for details.`;
+							sendingError.value = store.state.messages.chatErrorUnknown;
 						}
 					} finally {
 						sendingMessage.value = false;
@@ -105,12 +108,15 @@
 				chatInput,
 				enteredMessage,
 				sendMessage,
-				messages,
+				chatMessages,
 				loginRequired,
 				sendingEnabled,
 				sendingMessage,
 				sendingError,
-				messageMaxLength
+				maxMessageLength,
+				messageLogin,
+				messageSend,
+				messageNoMessages,
 			}
 		}
 	})

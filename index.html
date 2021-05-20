@@ -32,37 +32,37 @@
                 creative: {
                 	label: 'Creative',
                     dynmap: {
-                        configuration: 'http://dynmap.local/standalone/creative/MySQL_configuration.php',
-                        update: 'http://dynmap.local/standalone/creative/MySQL_update.php?world={world}&ts={timestamp}',
-                        sendmessage: 'http://dynmap.local/standalone/creative/MySQL_sendmessage.php',
-                        login: 'http://dynmap.local/standalone/creative/MySQL_login.php',
-                        register: 'http://dynmap.local/standalone/creative/MySQL_register.php',
-                        tiles: 'http://dynmap.local/standalone/creative/MySQL_tiles.php?tile=',
-                        markers: 'http://dynmap.local/standalone/creative/MySQL_markers.php?marker='
+                        configuration: 'http://dynmap.local/creative/MySQL_configuration.php',
+                        update: 'http://dynmap.local/creative/MySQL_update.php?world={world}&ts={timestamp}',
+                        sendmessage: 'http://dynmap.local/creative/MySQL_sendmessage.php',
+                        login: 'http://dynmap.local/creative/MySQL_login.php',
+                        register: 'http://dynmap.local/creative/MySQL_register.php',
+                        tiles: 'http://dynmap.local/creative/MySQL_tiles.php?tile=',
+                        markers: 'http://dynmap.local/creative/MySQL_markers.php?marker='
                     }
                 },
                 survival: {
                 	label: 'Survival',
                     dynmap: {
-                        configuration: 'http://dynmap.local/standalone/survival/MySQL_configuration.php',
-                        update: 'http://dynmap.local/standalone/survival/MySQL_update.php?world={world}&ts={timestamp}',
-                        sendmessage: 'http://dynmap.local/standalone/survival/MySQL_sendmessage.php',
-                        login: 'http://dynmap.local/standalone/survival/MySQL_login.php',
-                        register: 'http://dynmap.local/standalone/survival/MySQL_register.php',
-                        tiles: 'http://dynmap.local/standalone/survival/MySQL_tiles.php?tile=',
-                        markers: 'http://dynmap.local/standalone/survival/MySQL_markers.php?marker='
+                        configuration: 'http://dynmap.local/survival/MySQL_configuration.php',
+                        update: 'http://dynmap.local/survival/MySQL_update.php?world={world}&ts={timestamp}',
+                        sendmessage: 'http://dynmap.local/survival/MySQL_sendmessage.php',
+                        login: 'http://dynmap.local/survival/MySQL_login.php',
+                        register: 'http://dynmap.local/survival/MySQL_register.php',
+                        tiles: 'http://dynmap.local/survival/MySQL_tiles.php?tile=',
+                        markers: 'http://dynmap.local/survival/MySQL_markers.php?marker='
                     }
                 },
                 build: {
                 	label: 'Build',
                     dynmap: {
-                        configuration: 'http://dynmap.local/standalone/build/MySQL_configuration.php',
-                        update: 'http://dynmap.local/standalone/build/MySQL_update.php?world={world}&ts={timestamp}',
-                        sendmessage: 'http://dynmap.local/standalone/build/MySQL_sendmessage.php',
-                        login: 'http://dynmap.local/standalone/build/MySQL_login.php',
-                        register: 'http://dynmap.local/standalone/build/MySQL_register.php',
-                        tiles: 'http://dynmap.local/standalone/build/MySQL_tiles.php?tile=',
-                        markers: 'http://dynmap.local/standalone/build/MySQL_markers.php?marker='
+                        configuration: 'http://dynmap.local/build/MySQL_configuration.php',
+                        update: 'http://dynmap.local/build/MySQL_update.php?world={world}&ts={timestamp}',
+                        sendmessage: 'http://dynmap.local/build/MySQL_sendmessage.php',
+                        login: 'http://dynmap.local/build/MySQL_login.php',
+                        register: 'http://dynmap.local/build/MySQL_register.php',
+                        tiles: 'http://dynmap.local/build/MySQL_tiles.php?tile=',
+                        markers: 'http://dynmap.local/build/MySQL_markers.php?marker='
                     }
                 },
                 test: {
@@ -78,6 +78,16 @@
                         markers: 'http://dynmap.local:8123/tiles/'
                     }
                 },
+            },
+
+            messages: {
+            	headingServers: 'Servers',
+            	chatNoMessages: 'No chat messages yet...',
+                chatLogin: 'Please {{link}} to send chat messages',
+                chatLoginLink: 'login',
+                chatSend: 'Send',
+                chatErrorUnknown: 'Unexpected error while sending chat message',
+                chatErrorDisabled: 'Chat is not enabled',
             }
         };
     </script>

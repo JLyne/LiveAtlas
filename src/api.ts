@@ -24,7 +24,6 @@ import {
 	DynmapMarker,
 	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
-	DynmapMessageConfig,
 	DynmapPlayer,
 	DynmapServerConfig,
 	DynmapTileUpdate,
@@ -36,6 +35,7 @@ import {
 } from "@/dynmap";
 import {useStore} from "@/store";
 import ChatError from "@/errors/ChatError";
+import {LiveAtlasMessageConfig} from "@/index";
 
 const titleColours = /§[0-9a-f]/ig;
 
@@ -58,17 +58,26 @@ function buildServerConfig(response: any): DynmapServerConfig {
 	};
 }
 
-function buildMessagesConfig(response: any): DynmapMessageConfig {
+function buildMessagesConfig(response: any): LiveAtlasMessageConfig {
+	const liveAtlasMessages = window.liveAtlasConfig ? window.liveAtlasConfig.messages || {} : {};
+
 	return {
-		chatNotAllowed: response['msg-chatnotallowed'] || '',
-		chatRequiresLogin: response['msg-chatrequireslogin'] || '',
-		chatCooldown: response.spammessage || '',
-		mapTypes: response['msg-maptypes'] || '',
-		players: response['msg-players'] || '',
-		playerJoin: response.joinmessage || '',
-		playerQuit: response.quitmessage || '',
-		anonymousJoin: response['msg-hiddennamejoin'] || '',
-		anonymousQuit: response['msg-hiddennamequit'] || '',
+		chatPlayerJoin: response.joinmessage || '',
+		chatPlayerQuit: response.quitmessage || '',
+		chatAnonymousJoin: response['msg-hiddennamejoin'] || '',
+		chatAnonymousQuit: response['msg-hiddennamequit'] || '',
+		chatLogin: liveAtlasMessages.chatLogin || '',
+		chatLoginLink: liveAtlasMessages.chatLoginLink || '',
+		chatNoMessages: liveAtlasMessages.chatNoMessages || '',
+		chatSend: liveAtlasMessages.chatSend || '',
+		chatErrorNotAllowed: response['msg-chatnotallowed'] || '',
+		chatErrorRequiresLogin: response['msg-chatrequireslogin'] || '',
+		chatErrorCooldown: response.spammessage || '',
+		chatErrorDisabled: liveAtlasMessages.chatErrorDisabled || '',
+		chatErrorUnknown: liveAtlasMessages.chatErrorUnknown || '',
+		headingWorlds: response['msg-maptypes'] || '',
+		headingPlayers: response['msg-players'] || '',
+		headingServers: liveAtlasMessages.headingServers || '',
 	}
 }
 
@@ -721,7 +730,7 @@ export default {
 		const store = useStore();
 
 		if (!store.state.components.chatSending) {
-			return Promise.reject(new ChatError("Chat is not enabled"));
+			return Promise.reject(store.state.messages.chatErrorDisabled);
 		}
 
 		return fetch(useStore().getters.serverConfig.dynmap.sendmessage, {
@@ -732,7 +741,7 @@ export default {
 			})
 		}).then((response) => {
 			if (response.status === 403) { //Rate limited
-				throw new ChatError(store.state.messages.chatCooldown
+				throw new ChatError(store.state.messages.chatErrorCooldown
 					.replace('%interval%', store.state.components.chatSending!.cooldown.toString()));
 			}
 
@@ -743,11 +752,11 @@ export default {
 			return response.json();
 		}).then(response => {
 			if (response.error !== 'none') {
-				throw new ChatError(store.state.messages.chatNotAllowed);
+				throw new ChatError(store.state.messages.chatErrorNotAllowed);
 			}
 		}).catch(e => {
 			if (!(e instanceof ChatError)) {
-				console.error('Unexpected error while sending chat message');
+				console.error(store.state.messages.chatErrorUnknown);
 				console.trace(e);
 			}
 

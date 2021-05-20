@@ -38,7 +38,7 @@ export default defineComponent({
 
 	computed: {
 		heading() {
-			return useStore().state.messages.players;
+			return useStore().state.messages.headingPlayers;
 		},
 
 		players() {

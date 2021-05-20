@@ -25,14 +25,13 @@ import {
 	DynmapMarker,
 	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
-	DynmapMessageConfig,
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapWorld,
 	DynmapWorldState, DynmapParsedUrl, DynmapChat, DynmapUIElement
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import {LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasMessageConfig, LiveAtlasServerDefinition} from "@/index";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -44,7 +43,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_CONFIGURATION](state: S, config: DynmapServerConfig): void
 	[MutationTypes.SET_CONFIGURATION_HASH](state: S, hash: number): void
 	[MutationTypes.CLEAR_CONFIGURATION_HASH](state: S): void
-	[MutationTypes.SET_MESSAGES](state: S, messages: DynmapMessageConfig): void
+	[MutationTypes.SET_MESSAGES](state: S, messages: LiveAtlasMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<DynmapWorld>): void
 	[MutationTypes.CLEAR_WORLDS](state: S): void
 	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
@@ -114,7 +113,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Set messsages from the initial config fetch
-	[MutationTypes.SET_MESSAGES](state: State, messages: DynmapMessageConfig) {
+	[MutationTypes.SET_MESSAGES](state: State, messages: LiveAtlasMessageConfig) {
 		state.messages = Object.assign(state.messages, messages);
 	},
 

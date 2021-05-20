@@ -39,7 +39,7 @@ export default defineComponent({
 
 	computed: {
 		heading() {
-			return useStore().state.messages.mapTypes;
+			return useStore().state.messages.headingWorlds;
 		},
 
 		worlds() {

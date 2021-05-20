@@ -17,20 +17,19 @@
 import {
 	DynmapComponentConfig,
 	DynmapWorldMap, DynmapMarkerSet, DynmapMarkerSetUpdates,
-	DynmapMessageConfig,
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapWorld, DynmapWorldState, Coordinate, DynmapParsedUrl, DynmapChat, DynmapUIElement
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import {LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasMessageConfig, LiveAtlasServerDefinition} from "@/index";
 
 export type State = {
 	version: string;
 	servers: Map<string, LiveAtlasServerDefinition>;
 	configuration: DynmapServerConfig;
 	configurationHash: number | undefined;
-	messages: DynmapMessageConfig;
+	messages: LiveAtlasMessageConfig;
 	components: DynmapComponentConfig;
 
 	loggedIn: boolean;
@@ -94,15 +93,20 @@ export const state: State = {
 	configurationHash: undefined,
 
 	messages: {
-		chatNotAllowed: '',
-		chatRequiresLogin: '',
-		chatCooldown: '',
-		mapTypes: '',
-		players: '',
-		playerJoin: '',
-		playerQuit: '',
-		anonymousJoin: '',
-		anonymousQuit: '',
+		chatPlayerJoin: '',
+		chatPlayerQuit: '',
+		chatAnonymousJoin: '',
+		chatAnonymousQuit: '',
+		chatNoMessages: '',
+		chatLogin: '',
+		chatErrorNotAllowed: '',
+		chatErrorCooldown: '',
+		chatErrorRequiresLogin: '',
+		chatErrorDisabled: '',
+		chatErrorUnknown: '',
+		headingWorlds: '',
+		headingPlayers: '',
+		headingServers: '',
 	},
 
 	loggedIn: false,
