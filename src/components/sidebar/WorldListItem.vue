@@ -95,6 +95,10 @@ export default defineComponent({
 		align-items: center;
 		margin-bottom:  .5rem;
 
+		.world__name {
+			word-break: break-all;
+		}
+
 		.world__maps {
 			display: flex;
 			align-items: center;
