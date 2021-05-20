@@ -81,6 +81,6 @@ export const getters: GetterTree<State, State> & Getters = {
 			throw RangeError("No current server");
 		}
 
-		return state.servers.get(state.currentServer) as LiveAtlasDynmapServerDefinition;
+		return state.currentServer as LiveAtlasDynmapServerDefinition;
 	},
 }

@@ -19,10 +19,10 @@ import {defineComponent, onUnmounted, computed, watch} from "@vue/runtime-core";
 import {DynmapWorldMap} from "@/dynmap";
 import {Map} from 'leaflet';
 import {useStore} from "@/store";
-import {HDMapType} from "@/leaflet/mapType/HDMapType";
 import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import {getMinecraftTime} from "@/util";
+import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
 
 export default defineComponent({
 	props: {
@@ -46,7 +46,7 @@ export default defineComponent({
 
 		const store = useStore(),
 			night = computed(() => getMinecraftTime(store.state.currentWorldState.timeOfDay).night),
-			layer = new HDMapType({
+			layer = new DynmapTileLayer({
 				errorTileUrl: 'images/blank.png',
 				mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map))),
 				night: night.value,

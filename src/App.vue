@@ -29,6 +29,7 @@ import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
 import {parseUrl} from '@/util';
 import {MutationTypes} from "@/store/mutation-types";
+import {LiveAtlasServerDefinition} from "@/index";
 
 export default defineComponent({
 	name: 'App',
@@ -62,7 +63,7 @@ export default defineComponent({
 						return;
 					}
 
-					const error = `Failed to load server configuration for '${store.state.currentServer}'`;
+					const error = `Failed to load server configuration for '${store.state.currentServer.id}'`;
 					console.error(`${error}:`, e);
 					window.showSplashError(`${error}\n${e}`, false, ++configAttempts.value);
 					setTimeout(() => loadConfiguration(), 1000);
@@ -125,9 +126,13 @@ export default defineComponent({
 
 		watch(title, (title) => document.title = title);
 		watch(currentUrl, (url) => window.history.replaceState({}, '', url));
-		watch(currentServer, (newServer) => {
+		watch(currentServer, (newServer: LiveAtlasServerDefinition) => {
 			window.showSplash();
 			stopUpdates();
+
+			if(!newServer) {
+				return;
+			}
 
 			//Cleanup
 			store.commit(MutationTypes.CLEAR_PLAYERS, undefined);
@@ -136,9 +141,9 @@ export default defineComponent({
 			store.commit(MutationTypes.CLEAR_WORLDS, undefined);
 			store.commit(MutationTypes.CLEAR_MARKER_SETS, undefined);
 
-			window.history.replaceState({}, '', newServer);
+			window.history.replaceState({}, '', newServer.id);
 			loadConfiguration();
-		});
+		}, {deep: true});
 		watch(configurationHash, (newHash, oldHash) => {
 			if(newHash && oldHash) {
 				window.showSplash();
