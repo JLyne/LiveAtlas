@@ -31,6 +31,7 @@ import {
 	Map, TileLayer,
 } from 'leaflet';
 import '@/assets/icons/loading.svg';
+import {useStore} from "@/store";
 
 export interface LoadingControlOptions extends ControlOptions {
 	delayIndicator?: number;
@@ -51,7 +52,7 @@ export class LoadingControl extends Control {
 	}
 
 	onAdd(map: Map) {
-		this._loadingIndicator.title = 'Loading...';
+		this._loadingIndicator.title = useStore().state.messages.loadingTitle;
 		this._loadingIndicator.hidden = true;
 		this._loadingIndicator.innerHTML = `
 		<svg class="svg-icon">

@@ -50,11 +50,11 @@ export default defineComponent({
 
 			title = computed(() => {
 				if(props.player.hidden) {
-					return 'This player is currently hidden from the map\nDouble-click to follow player when they become visible';
+					return store.state.messages.playersTitleHidden;
 				} else if(otherWorld.value) {
-					return 'This player is in another world.\nClick to center on player\nDouble-click to follow player';
+					return store.state.messages.playersTitleOtherWorld;
 				} else {
-					return 'Click to center on player\nDouble-click to follow player';
+					return store.state.messages.playersTitle;
 				}
 			}),
 

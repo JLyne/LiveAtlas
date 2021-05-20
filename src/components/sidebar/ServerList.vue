@@ -36,7 +36,7 @@ export default defineComponent({
 
 	computed: {
 		heading() {
-			return useStore().state.messages.headingServers;
+			return useStore().state.messages.serversHeading;
 		},
 
 		servers() {

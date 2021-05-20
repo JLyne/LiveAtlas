@@ -23,7 +23,7 @@
 		<form v-if="sendingEnabled" class="chat__form" @submit.prevent="sendMessage">
 			<div v-if="sendingError" class="chat__error">{{ sendingError }}</div>
 			<input ref="chatInput" v-model="enteredMessage" class="chat__input" type="text" :maxlength="maxMessageLength"
-					placeholder="Type your chat message here..."  :disabled="sendingMessage">
+					:placeholder="messagePlaceholder"  :disabled="sendingMessage">
 			<button class="chat__send" :disabled="!enteredMessage || sendingMessage">{{ messageSend }}</button>
 		</form>
 		<div v-if="loginRequired" class="chat__login" v-html="messageLogin"></div>
@@ -67,9 +67,10 @@
 				}),
 
 				messageSend = computed(() => store.state.messages.chatSend),
+				messagePlaceholder = computed(() => store.state.messages.chatPlaceholder),
 				messageNoMessages = computed(() => store.state.messages.chatNoMessages),
 				messageLogin = computed(() => store.state.messages.chatLogin.replace(
-					'{{link}}', store.state.messages.chatLoginLink)),
+					'{{link}}', `<a href="login.html">${store.state.messages.chatLoginLink}</a>`)),
 
 				sendMessage = async () => {
 					const message = enteredMessage.value.trim().substring(0, maxMessageLength.value);
@@ -117,6 +118,7 @@
 				messageLogin,
 				messageSend,
 				messageNoMessages,
+				messagePlaceholder,
 			}
 		}
 	})

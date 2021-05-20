@@ -18,17 +18,13 @@
 	<aside class="sidebar">
 		<header class="sidebar__buttons">
 			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active':currentlyVisible.has('maps')}"
-					@click="toggleElement('maps')" title="Map list" aria-label="Map list">
+					@click="toggleElement('maps')" :title="messageWorlds" :aria-label="messageWorlds">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
 			<button :class="{'button--players': true, 'active': currentlyVisible.has('players')}"
-					@click="toggleElement('players')" title="Player list" aria-label="Player list">
+					@click="toggleElement('players')" :title="messagePlayers" :aria-label="messagePlayers">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
-<!--			<button :class="{'button&#45;&#45;settings': true, 'active': currentlyVisible.has('settings'))}"-->
-<!--					@click="toggleElement('settings')" title="Settings" aria-label="Settings">-->
-<!--				<SvgIcon name="settings"></SvgIcon>-->
-<!--			</button>-->
 		</header>
 		<ServerList v-if="serverCount > 1" v-show="currentlyVisible.has('maps')"></ServerList>
 		<WorldList v-if="mapCount > 1" v-show="currentlyVisible.has('maps')"></WorldList>
@@ -68,6 +64,9 @@ export default defineComponent({
 			serverCount = computed(() => store.state.servers.size),
 			following = computed(() => store.state.followTarget),
 
+			messageWorlds = computed(() => store.state.messages.worldsHeading),
+			messagePlayers = computed(() => store.state.messages.playersHeading),
+
 			toggleElement = (element: DynmapUIElement) => {
 				store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, element);
 			},
@@ -86,6 +85,8 @@ export default defineComponent({
 			toggleElement,
 			followActive,
 			following,
+			messageWorlds,
+			messagePlayers,
 		}
 	}
 })

@@ -19,9 +19,7 @@
 		<span class="section__heading">{{ heading }}</span>
 		<ul class="section__content">
 			<WorldListItem :world="world" v-for="[name, world] in worlds" :key="name"></WorldListItem>
-			<li v-if="!worlds.size" class="section__skeleton">
-				No maps have been configured
-			</li>
+			<li v-if="!worlds.size" class="section__skeleton">{{ skeletonWorlds }}</li>
 		</ul>
 	</section>
 </template>
@@ -39,7 +37,11 @@ export default defineComponent({
 
 	computed: {
 		heading() {
-			return useStore().state.messages.headingWorlds;
+			return useStore().state.messages.worldsHeading;
+		},
+
+		skeletonWorlds() {
+			return useStore().state.messages.worldsSkeleton;
 		},
 
 		worlds() {

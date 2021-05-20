@@ -19,9 +19,7 @@
 		<span class="section__heading">{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</span>
 		<ul class="section__content">
 			<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
-			<li v-if="!players.size" class="section__skeleton">
-				No players are currently online
-			</li>
+			<li v-if="!players.size" class="section__skeleton">{{ skeletonPlayers }}</li>
 		</ul>
 	</section>
 </template>
@@ -38,7 +36,11 @@ export default defineComponent({
 
 	computed: {
 		heading() {
-			return useStore().state.messages.headingPlayers;
+			return useStore().state.messages.playersHeading;
+		},
+
+		skeletonPlayers() {
+			return useStore().state.messages.playersSkeleton;
 		},
 
 		players() {

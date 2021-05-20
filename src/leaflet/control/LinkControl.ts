@@ -36,7 +36,7 @@ export class LinkControl extends Control {
 		const linkButton = DomUtil.create('button', 'leaflet-control-link') as HTMLButtonElement;
 
 		linkButton.type = 'button';
-		linkButton.title = 'Copy link to current location';
+		linkButton.title = useStore().state.messages.linkTitle;
 		linkButton.innerHTML = `
 		<svg class="svg-icon" aria-hidden="true">
 		  <use xlink:href="#link" />

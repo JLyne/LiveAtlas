@@ -33,7 +33,7 @@ export class ChatControl extends Control {
 		const chatButton = DomUtil.create('button', 'leaflet-control-chat') as HTMLButtonElement;
 
 		chatButton.type = 'button';
-		chatButton.title = 'Chat';
+		chatButton.title = useStore().state.messages.chatTitle;
 		chatButton.innerHTML = `
 		<svg class="svg-icon">
 		  <use xlink:href="#chat" />

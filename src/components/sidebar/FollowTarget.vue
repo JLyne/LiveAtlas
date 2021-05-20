@@ -16,17 +16,17 @@
 
 <template>
 	<section class="sidebar__section following">
-		<h2>Following</h2>
+		<h2>{{ heading }}</h2>
 
 		<div :class="{'following__target': true, 'following__target--hidden': target.hidden}">
 			<img width="32" height="32" class="target__icon" :src="image" alt="" />
 			<span class="target__info">
 				<span class="target__name" v-html="target.name"></span>
-				<span class="target__status" v-show="target.hidden">Currently hidden</span>
+				<span class="target__status" v-show="target.hidden">{{ messageHidden }}</span>
 			</span>
-			<button class="target__unfollow" type="button" :title="`Stop following this player`"
+			<button class="target__unfollow" type="button" :title="messageUnfollowTitle"
 				@click.prevent="unfollow"
-				@keydown="onKeydown">Unfollow</button>
+				@keydown="onKeydown">{{ messageUnfollow }}</button>
 		</div>
 	</section>
 </template>
@@ -35,7 +35,7 @@
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {defineComponent, onMounted, ref, watch} from "@vue/runtime-core";
+import {computed, defineComponent, onMounted, ref, watch} from "@vue/runtime-core";
 import {getMinecraftHead} from '@/util';
 import defaultImage from '@/assets/images/player_face.png';
 
@@ -51,6 +51,11 @@ export default defineComponent({
 		const store = useStore(),
 			image = ref(defaultImage),
 			account = ref(props.target.account),
+
+			heading = computed(() => store.state.messages.followingHeading),
+			messageUnfollow = computed(() => store.state.messages.followingUnfollow),
+			messageUnfollowTitle = computed(() => store.state.messages.followingTitleUnfollow),
+			messageHidden = computed(() => store.state.messages.followingHidden),
 
 			unfollow = () => {
 				useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
@@ -79,7 +84,11 @@ export default defineComponent({
 		return {
 			image,
 			onKeydown,
-			unfollow
+			unfollow,
+			heading,
+			messageUnfollow,
+			messageUnfollowTitle,
+			messageHidden,
 		}
 	},
 });
