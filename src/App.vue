@@ -63,7 +63,7 @@ export default defineComponent({
 						return;
 					}
 
-					const error = `Failed to load server configuration for '${store.state.currentServer.id}'`;
+					const error = `Failed to load server configuration for '${store.state.currentServer!.id}'`;
 					console.error(`${error}:`, e);
 					window.showSplashError(`${error}\n${e}`, false, ++configAttempts.value);
 					setTimeout(() => loadConfiguration(), 1000);
@@ -126,7 +126,7 @@ export default defineComponent({
 
 		watch(title, (title) => document.title = title);
 		watch(currentUrl, (url) => window.history.replaceState({}, '', url));
-		watch(currentServer, (newServer: LiveAtlasServerDefinition) => {
+		watch(currentServer, (newServer?: LiveAtlasServerDefinition) => {
 			window.showSplash();
 			stopUpdates();
 

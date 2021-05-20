@@ -166,7 +166,11 @@ export const state: State = {
 	},
 	currentZoom: 0,
 
-	currentProjection: new DynmapProjection(), //Projection for converting location <-> latlg. Object itself isn't reactive for performance reasons
+	currentProjection: new DynmapProjection({
+		mapToWorld: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+		worldToMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+		nativeZoomLevels: 1
+	}), //Projection for converting location <-> latlg. Object itself isn't reactive for performance reasons
 	currentWorldState: {
 		raining: false,
 		thundering: false,
