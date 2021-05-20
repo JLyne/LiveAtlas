@@ -96,7 +96,8 @@ export default defineComponent({
 		margin-bottom:  .5rem;
 
 		.world__name {
-			word-break: break-all;
+			word-break: break-word;
+			overflow-wrap: break-word;
 		}
 
 		.world__maps {
