@@ -46,8 +46,10 @@ export type Mutations<S = State> = {
 	[MutationTypes.CLEAR_CONFIGURATION_HASH](state: S): void
 	[MutationTypes.SET_MESSAGES](state: S, messages: DynmapMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<DynmapWorld>): void
+	[MutationTypes.CLEAR_WORLDS](state: S): void
 	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, DynmapMarkerSet>): void
+	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
 	[MutationTypes.ADD_WORLD](state: S, world: DynmapWorld): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: DynmapWorldState): void
 	[MutationTypes.SET_UPDATE_TIMESTAMP](state: S, time: Date): void
@@ -148,6 +150,18 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 	},
 
+	[MutationTypes.CLEAR_WORLDS](state: State) {
+		state.worlds.clear();
+		state.maps.clear();
+
+		state.followTarget = undefined;
+		state.panTarget = undefined;
+
+		state.currentWorldState.timeOfDay = 0;
+		state.currentWorldState.raining = false;
+		state.currentWorldState.thundering = false;
+	},
+
 	//Sets the state and settings of optional components, from the initial config fetch
 	[MutationTypes.SET_COMPONENTS](state: State, components: DynmapComponentConfig) {
 		state.components = Object.assign(state.components, components);
@@ -167,6 +181,11 @@ export const mutations: MutationTree<State> & Mutations = {
 				lineUpdates: [],
 			});
 		}
+	},
+
+	[MutationTypes.CLEAR_MARKER_SETS](state: State) {
+		state.markerSets.clear();
+		state.pendingSetUpdates.clear();
 	},
 
 	[MutationTypes.ADD_WORLD](state: State, world: DynmapWorld) {
