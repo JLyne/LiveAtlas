@@ -119,18 +119,16 @@ interface DynmapWorld {
 
 interface DynmapWorldMap {
 	world: DynmapWorld;
-	background: string;
-	backgroundDay: string;
-	backgroundNight: string;
-	compassView: string;
-	icon: string;
-	imageFormat: string;
 	name: string;
+	icon: string;
+	title: string;
+	background: string;
 	nightAndDay: boolean;
+	backgroundDay?: string;
+	backgroundNight?: string;
+	imageFormat: string;
 	prefix: string;
 	protected: boolean;
-	title: string;
-	type: string;
 	mapToWorld: [number, number, number, number, number, number, number, number, number];
 	worldToMap: [number, number, number, number, number, number, number, number, number];
 	nativeZoomLevels: number;
