@@ -7,7 +7,7 @@ LiveAtlas is a drop-in replacement for the original Dynmap frontend, which aims 
 
 Development is ongoing, and there are some rough edges, but most of the Dynmap features used by a typical Minecraft server have been implemented.
 
-You can see it in action [here](https://minecraft.rtgame.co.uk/map/build/) and [here](https://minecraft.rtgame.co.uk/map/survival/)
+You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 
 ## Supported Dynmap features
 - Viewing maps
@@ -36,7 +36,7 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build/) and [
 - Edge 18+
 - Firefox 60+
 - Opera 50+
-- Safari 11+ (In theory, some iOS 11 devices do not work but others do. 12 is fine)
+- Safari 12.1+
 
 ## Installation
 Using an [external webserver](https://github.com/webbukkit/dynmap/wiki/External-Webserver-Basics) is recommended.
