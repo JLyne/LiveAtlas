@@ -112,7 +112,7 @@ export default defineComponent({
 			left: 0.7rem;
 			pointer-events: none;
 			margin: auto;
-			z-index: 1;
+			z-index: 2;
 		}
 
 		.player__name {
