@@ -33,11 +33,11 @@ const splash = document.getElementById('splash'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
 
 if(splash) {
-	splash.ontransitionend = function(e) {
+	splash.addEventListener('transitionend', e => {
 		if(e.target === splash && splash.style.opacity === '0') {
 			splash.hidden = true;
 		}
-	};
+	});
 }
 
 window.showSplash = function() {
