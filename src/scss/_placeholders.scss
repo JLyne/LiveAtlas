@@ -27,6 +27,7 @@
 	position: relative;
 	transition: color 0.2s ease-in, background-color 0.2s ease-in;
 	font-size: 1.6rem;
+	font-family: Raleway, sans-serif;
 
 	&:hover, &.active {
 		background-color: var(--background-hover);
