@@ -50,20 +50,3 @@ export default defineComponent({
 	}
 });
 </script>
-
-<style lang="scss" scoped>
-	@import '../../scss/placeholders';
-
-	.server {
-		height: 3.2rem;
-
-		button {
-			@extend %button;
-			text-align: left;
-			display: block;
-			height: 100%;
-			width: 100%;
-			border-radius: 0.5rem;
-		}
-	}
-</style>

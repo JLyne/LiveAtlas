@@ -17,7 +17,7 @@
 <template>
 	<section class="sidebar__section" v-if="servers.size > 1">
 		<span class="section__heading">{{ heading }}</span>
-		<ul class="section__content">
+		<ul class="section__content menu">
 			<ServerListItem :server="server" v-for="[name, server] in servers" :key="name"></ServerListItem>
 		</ul>
 	</section>
@@ -46,7 +46,3 @@ export default defineComponent({
 });
 
 </script>
-
-<style scoped>
-
-</style>

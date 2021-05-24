@@ -154,14 +154,19 @@ input {
 	> li {
 		display: flex;
 		padding: 0.8rem 0.8rem 0.7rem;
+		position: relative;
 		margin: 0 !important;
 
 		> button {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
 			margin: -0.8rem -0.8rem -0.7rem;
 			padding: 0.8rem 0.8rem 0.7rem;
 			text-align: left;
 			flex-grow: 1;
 			min-height: 3.2rem;
+			border-radius: 0.5rem;
 		}
 	}
 }

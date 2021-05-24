@@ -104,13 +104,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 	.player {
-		position: relative;
-		display: block;
-		line-height: 3rem;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-
 		.player__icon {
 			position: absolute;
 			display: block;
@@ -123,12 +116,7 @@ export default defineComponent({
 		}
 
 		.player__name {
-			padding: 0.8rem 0 0.7rem 3.5rem;
-			text-align: left;
-			margin: 0;
-			width: 100%;
-			height: 100%;
-			min-height: 3.2rem;
+			padding-left: 3.5rem;
 		}
 
 		&.player--hidden {

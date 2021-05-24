@@ -17,7 +17,7 @@
 <template>
 	<section class="sidebar__section sidebar__section--players">
 		<span class="section__heading">{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</span>
-		<ul class="section__content">
+		<ul class="section__content menu">
 			<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
 			<li v-if="!players.size" class="section__skeleton">{{ skeletonPlayers }}</li>
 		</ul>
