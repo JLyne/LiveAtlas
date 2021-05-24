@@ -51,7 +51,7 @@ export default defineComponent({
 			currentZoom = computed(() => store.state.currentZoom),
 
 			location = computed(() => {
-				if(!event.value) {
+				if (!event.value) {
 					return {x: 0, y: 0, z: 0}
 				}
 
@@ -70,7 +70,7 @@ export default defineComponent({
 
 			//Url to copy
 			url = computed(() => {
-				if(!currentWorld.value || !currentMap.value) {
+				if (!currentWorld.value || !currentMap.value) {
 					return '';
 				}
 
@@ -81,14 +81,14 @@ export default defineComponent({
 			}),
 
 			style = computed(() => {
-				if(!menuElement.value || !event.value) {
+				if (!menuElement.value || !event.value) {
 					return {};
 				}
 
 				//Don't position offscreen
 				const x = Math.min(
 					window.innerWidth - menuElement.value.offsetWidth - 10,
-						event.value.originalEvent.clientX
+					event.value.originalEvent.clientX
 					),
 					y = Math.min(
 						window.innerHeight - menuElement.value.offsetHeight - 10,
@@ -101,7 +101,6 @@ export default defineComponent({
 			});
 
 		const handleEsc = (e: KeyboardEvent) => {
-			console.log(e);
 				if (e.key === "Escape") {
 					closeContextMenu();
 				}
@@ -110,13 +109,13 @@ export default defineComponent({
 				event.value = null;
 			},
 			pan = () => {
-				if(event.value) {
+				if (event.value) {
 					props.leaflet.panTo(event.value.latlng);
 				}
 			};
 
 		watch(menuVisible, visible => {
-			if(visible) {
+			if (visible) {
 				requestAnimationFrame(() => locationButton.value && locationButton.value.focus());
 			}
 		});
