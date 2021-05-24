@@ -37,6 +37,9 @@
 	&:focus {
 		outline-color: var(--outline-focus);
 		outline-width: 0.2rem;
+		background-color: var(--background-hover);
+		color: var(--text-hover);
+		z-index: 1;
 	}
 
 	&:active {
