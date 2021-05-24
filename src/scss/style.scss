@@ -156,6 +156,7 @@ input {
 		padding: 0.8rem 0.8rem 0.7rem;
 		position: relative;
 		margin: 0 !important;
+		border-bottom: 0.1rem solid transparent;
 
 		> button {
 			text-overflow: ellipsis;
@@ -341,6 +342,12 @@ input {
 	font-size: 1.5rem;
 	font-weight: inherit;
 	line-height: 1;
+
+	/* Workaround for focus outlines until https://github.com/Leaflet/Leaflet/pull/7259 gets released */
+	:focus {
+		outline: -webkit-focus-ring-color auto thin !important;
+		outline: revert !important;
+	}
 }
 
 .leaflet-players-pane {
