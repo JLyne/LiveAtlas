@@ -128,6 +128,7 @@ export default defineComponent({
 		button {
 			width: 5rem;
 			height: 5rem;
+			box-shadow: var(--box-shadow);
 
 			& + button {
 				margin-left: 1rem;

@@ -179,6 +179,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 	#map-context-menu {
 		background-color: var(--background-base);
+		box-shadow: var(--box-shadow);
 		color: var(--text-base);
 		border-radius: var(--border-radius);
 		position: fixed;
