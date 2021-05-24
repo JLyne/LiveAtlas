@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<div class="map" :style="{backgroundColor: mapBackground }">
+	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs">
 		<MapLayer v-for="[name, map] in maps" :key="name" :map="map" :name="name" :leaflet="leaflet"></MapLayer>
 		<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
 		<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>
@@ -25,8 +25,8 @@
 		<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
 		<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
 		<ChatControl v-if="chatBoxEnabled" :leaflet="leaflet"></ChatControl>
-		<MapContextMenu :leaflet="leaflet" v-if="leaflet"></MapContextMenu>
 	</div>
+	<MapContextMenu :leaflet="leaflet" v-if="leaflet"></MapContextMenu>
 </template>
 
 <script lang="ts">
@@ -188,7 +188,7 @@ export default defineComponent({
 	},
 
 	mounted() {
-		this.leaflet = new DynmapMap(this.$el, Object.freeze({
+		this.leaflet = new DynmapMap(this.$el.nextElementSibling, Object.freeze({
 			zoom: this.configuration.defaultZoom,
 			center: new LatLng(0, 0),
 			fadeAnimation: false,

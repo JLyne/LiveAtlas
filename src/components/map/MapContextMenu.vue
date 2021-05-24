@@ -1,5 +1,5 @@
 <template>
-	<nav id="map__context-menu" v-show="menuVisible" ref="menuElement" :style="style">
+	<nav id="map-context-menu" v-show="menuVisible" ref="menuElement" :style="style">
 		<ul class="menu">
 			<li>
 				<button type="button" v-clipboard="locationCopy">{{ locationLabel }}</button>
@@ -130,7 +130,6 @@ export default defineComponent({
 		});
 
 		props.leaflet.on('contextmenu', (e: LeafletMouseEvent) => {
-			console.log('This event handler');
 			e.originalEvent.stopImmediatePropagation();
 			e.originalEvent.preventDefault();
 			props.leaflet.closePopup();
@@ -158,15 +157,17 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-	#map__context-menu {
+	#map-context-menu {
 		background-color: var(--background-base);
 		color: var(--text-base);
 		border-radius: var(--border-radius);
 		position: fixed;
-		z-index: 1001;
+		z-index: 150;
 		padding: 0.5rem;
 		min-width: 15rem;
 		max-width: 22.5rem;
+		top: 0;
+		left: 0;
 
 		::v-deep(.world) {
 			padding: 0.2rem 0 0.2rem 0.8rem;
