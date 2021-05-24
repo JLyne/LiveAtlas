@@ -25,6 +25,7 @@
 		<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
 		<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
 		<ChatControl v-if="chatBoxEnabled" :leaflet="leaflet"></ChatControl>
+		<MapContextMenu :leaflet="leaflet" v-if="leaflet"></MapContextMenu>
 	</div>
 </template>
 
@@ -45,9 +46,11 @@ import {Coordinate, DynmapPlayer} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import DynmapMap from "@/leaflet/DynmapMap";
 import {LoadingControl} from "@/leaflet/control/LoadingControl";
+import MapContextMenu from "@/components/map/MapContextMenu.vue";
 
 export default defineComponent({
 	components: {
+		MapContextMenu,
 		MapLayer,
 		PlayersLayer,
 		MarkerSetLayer,
@@ -90,20 +93,24 @@ export default defineComponent({
 			maps,
 			markerSets,
 			configuration,
+
 			playerMarkersEnabled,
 			coordinatesControlEnabled,
 			clockControlEnabled,
 			linkControlEnabled,
 			chatBoxEnabled,
+
 			logoControls,
 			followTarget,
 			panTarget,
 			mapBackground,
+
 			currentWorld,
 			currentMap,
 			currentProjection,
+
 			scheduledPan,
-			scheduledZoom
+			scheduledZoom,
 		}
 	},
 
@@ -277,5 +284,6 @@ export default defineComponent({
 		height: 100%;
 		background: transparent;
 		z-index: 0;
+		cursor: default;
 	}
 </style>

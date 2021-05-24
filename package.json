@@ -11,7 +11,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/clipboard": "^2.0.1",
+    "@soerenmartius/vue3-clipboard": "^0.1.2",
     "@types/leaflet": "^1.7.0",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",

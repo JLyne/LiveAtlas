@@ -106,6 +106,7 @@ export default defineComponent({
 			margin-left: auto;
 			padding-left: 1rem;
 			padding-right: 0.2rem;
+			list-style: none;
 		}
 	}
 
