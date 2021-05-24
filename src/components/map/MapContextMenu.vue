@@ -2,7 +2,7 @@
 	<nav id="map__context-menu" v-show="menuVisible" ref="menuElement" :style="style">
 		<ul class="menu">
 			<li>
-				<button ref="locationButton" type="button" v-clipboard="locationCopy">{{ locationLabel }}</button>
+				<button type="button" v-clipboard="locationCopy">{{ locationLabel }}</button>
 			</li>
 			<li>
 				<button type="button" v-clipboard="url">{{ messageCopyLink }}</button>
@@ -21,7 +21,7 @@ import {computed, defineComponent, onMounted, onUnmounted} from "@vue/runtime-co
 import {LeafletMouseEvent} from "leaflet";
 import {useStore} from "@/store";
 import WorldListItem from "@/components/sidebar/WorldListItem.vue";
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import {getUrlForLocation} from "@/util";
 
 export default defineComponent({
@@ -114,12 +114,6 @@ export default defineComponent({
 				}
 			};
 
-		watch(menuVisible, visible => {
-			if (visible) {
-				requestAnimationFrame(() => locationButton.value && locationButton.value.focus());
-			}
-		});
-
 		onMounted(() => {
 			window.addEventListener('click', closeContextMenu);
 			window.addEventListener('keyup', handleEsc);
@@ -130,8 +124,18 @@ export default defineComponent({
 			window.removeEventListener('keyup', handleEsc);
 		});
 
+		window.addEventListener('contextmenu', e => {
+			if(e.target.classList.contains('leaflet-zoom-animated')) {
+				e.preventDefault();
+			}
+		});
+
 		props.leaflet.on('contextmenu', (e: LeafletMouseEvent) => {
+			console.log('This event handler');
+			e.originalEvent.stopImmediatePropagation();
 			e.originalEvent.preventDefault();
+			props.leaflet.closePopup();
+			props.leaflet.closeTooltip();
 			event.value = e;
 		});
 
@@ -141,7 +145,6 @@ export default defineComponent({
 
 			menuVisible,
 			menuElement,
-			locationButton,
 			url,
 
 			locationLabel,
