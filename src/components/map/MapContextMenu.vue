@@ -124,7 +124,7 @@ export default defineComponent({
 		});
 
 		window.addEventListener('contextmenu', e => {
-			if(e.target.classList.contains('leaflet-zoom-animated')) {
+			if(e.target && e.target instanceof HTMLElement && e.target.classList.contains('leaflet-zoom-animated')) {
 				e.preventDefault();
 			}
 		});
