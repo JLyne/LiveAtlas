@@ -61,4 +61,6 @@ interface LiveAtlasMessageConfig {
 	loadingTitle: string;
 	locationRegion: string;
 	locationChunk: string;
+	contextMenuCopyLink: string;
+	contextMenuCenterHere: string;
 }

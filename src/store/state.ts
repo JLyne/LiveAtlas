@@ -124,6 +124,8 @@ export const state: State = {
 		loadingTitle: '',
 		locationRegion: '',
 		locationChunk: '',
+		contextMenuCopyLink: '',
+		contextMenuCenterHere: ''
 	},
 
 	loggedIn: false,

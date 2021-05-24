@@ -2,10 +2,14 @@
 	<nav id="map__context-menu" v-show="menuVisible" ref="menuElement" :style="style">
 		<ul class="menu">
 			<li>
-				<button ref="locationButton" type="button" v-clipboard="locationCopy">{{locationLabel}}</button>
+				<button ref="locationButton" type="button" v-clipboard="locationCopy">{{ locationLabel }}</button>
 			</li>
-			<li><button type="button" v-clipboard="url">Copy link to here</button></li>
-			<li><button type="button" @click.prevent="pan">Center here</button></li>
+			<li>
+				<button type="button" v-clipboard="url">{{ messageCopyLink }}</button>
+			</li>
+			<li>
+				<button type="button" @click.prevent="pan">{{ messageCenterHere }}</button>
+			</li>
 			<WorldListItem v-if="currentWorld" :world="currentWorld"></WorldListItem>
 		</ul>
 	</nav>
@@ -32,7 +36,10 @@ export default defineComponent({
 
 	setup(props) {
 		const store = useStore(),
-			event = ref<LeafletMouseEvent|null>(null),
+			event = ref<LeafletMouseEvent | null>(null),
+
+			messageCopyLink = computed(() => store.state.messages.contextMenuCopyLink),
+			messageCenterHere = computed(() => store.state.messages.contextMenuCenterHere),
 
 			menuElement = ref<HTMLInputElement | null>(null),
 			locationButton = ref<HTMLInputElement | null>(null),
@@ -130,6 +137,9 @@ export default defineComponent({
 		});
 
 		return {
+			messageCopyLink,
+			messageCenterHere,
+
 			menuVisible,
 			menuElement,
 			locationButton,

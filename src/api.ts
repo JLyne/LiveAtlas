@@ -93,6 +93,8 @@ function buildMessagesConfig(response: any): LiveAtlasMessageConfig {
 		loadingTitle: liveAtlasMessages.loadingTitle || '',
 		locationRegion: liveAtlasMessages.locationRegion || '',
 		locationChunk: liveAtlasMessages.locationChunk || '',
+		contextMenuCopyLink: liveAtlasMessages.contextMenuCopyLink || '',
+		contextMenuCenterHere: liveAtlasMessages.contextMenuCenterHere || '',
 	}
 }
 
