@@ -42,7 +42,6 @@ export default defineComponent({
 			messageCenterHere = computed(() => store.state.messages.contextMenuCenterHere),
 
 			menuElement = ref<HTMLInputElement | null>(null),
-			locationButton = ref<HTMLInputElement | null>(null),
 			menuVisible = computed(() => !!event.value),
 
 			currentProjection = computed(() => store.state.currentProjection),
