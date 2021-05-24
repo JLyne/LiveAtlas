@@ -173,8 +173,9 @@ export default defineComponent({
 			flex-shrink: 1;
 			min-height: 0;
 			overflow: auto;
+			padding: 0 0.5rem;
+			margin: 0 -.5rem 1rem;
 			will-change: transform;
-			margin-bottom: 1rem;
 
 			&:last-child {
 				margin-bottom: 0;
