@@ -166,5 +166,26 @@ export default defineComponent({
 		padding: 0.5rem;
 		min-width: 15rem;
 		max-width: 22.5rem;
+
+		::v-deep(.world) {
+			padding: 0.2rem 0 0.2rem 0.8rem;
+			margin-bottom: 0;
+
+			li {
+				width: 2.8rem;
+				height: 2.8rem;
+			}
+		}
+
+		@media screen and (max-width: 767px) {
+			bottom: 0.5rem;
+			left: 0;
+			right: 0;
+			margin: auto;
+			width: 90vw;
+			max-width: 40rem;
+			overflow: auto;
+			transform: none !important;
+		}
 	}
 </style>
