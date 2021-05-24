@@ -123,6 +123,7 @@ export default defineComponent({
 		justify-content: flex-end;
 		margin-bottom: 1rem;
 		pointer-events: auto;
+		align-self: flex-end;
 
 		button {
 			width: 5rem;
