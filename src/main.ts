@@ -21,6 +21,8 @@ import {store} from "@/store";
 import 'leaflet/dist/leaflet.css';
 import 'normalize-scss/sass/normalize/_import-now.scss';
 import '@/scss/style.scss';
+
+import 'focus-visible';
 import {MutationTypes} from "@/store/mutation-types";
 import {validateConfiguration} from "@/util";
 import { VueClipboard } from '@soerenmartius/vue3-clipboard'

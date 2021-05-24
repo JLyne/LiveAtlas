@@ -1,0 +1,8 @@
+/*
+ Adds styles for both :focus-visible and .focus-visible for maximum browser support.
+*/
+@mixin focus() {
+	&:focus-visible, &.focus-visible {
+		@content;
+	}
+}

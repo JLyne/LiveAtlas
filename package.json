@@ -9,7 +9,6 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   },
-  "dependencies": {},
   "devDependencies": {
     "@soerenmartius/vue3-clipboard": "^0.1.2",
     "@types/leaflet": "^1.7.0",
@@ -20,6 +19,7 @@
     "@vue/eslint-config-typescript": "^7.0.0",
     "eslint": "^7.26.0",
     "eslint-plugin-vue": "^7.9.0",
+    "focus-visible": "^5.2.0",
     "leaflet": "^1.7.1",
     "normalize-scss": "^7.0.1",
     "rollup-plugin-analyzer": "^4.0.0",

@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 
+@import "mixins";
+
 %button {
 	appearance: none;
 	border: none;
@@ -34,7 +36,7 @@
 		color: var(--text-hover);
 	}
 
-	&:focus {
+	@include focus {
 		outline-color: var(--outline-focus);
 		outline-width: 0.2rem;
 		background-color: var(--background-hover);
@@ -52,7 +54,12 @@
 		color: var(--text-disabled);
 		cursor: not-allowed;
 
-		&:hover, &:focus, &:active {
+		&:hover, &:active {
+			background-color: var(--background-disabled);
+			color: var(--text-disabled);
+		}
+
+		@include focus {
 			background-color: var(--background-disabled);
 			color: var(--text-disabled);
 		}

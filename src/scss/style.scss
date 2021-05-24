@@ -16,6 +16,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+@import "mixins";
 @import "placeholders";
 @import "leaflet/controls";
 @import "leaflet/popups";
@@ -72,7 +73,7 @@ input {
 	border: 0.2rem solid var(--border-color);
 	border-radius: 0;
 
-	&:focus {
+	@include focus {
 		color: var(--text-emphasis);
 		outline-color: var(--text-emphasis);
 	}
@@ -312,17 +313,21 @@ input {
 		}
 	}
 
-	&:hover, &:focus {
+	&:hover {
 		z-index: 1000;
+	}
+
+	@include focus {
+		z-index: 1000;
+
+		.marker__label {
+			display: block;
+			outline: auto;
+		}
 	}
 
 	&:hover .marker__label {
 		display: block;
-	}
-
-	&:focus .marker__label {
-		display: block;
-		outline: auto;
 	}
 
 	@at-root {
@@ -343,7 +348,7 @@ input {
 	line-height: 1;
 
 	/* Workaround for focus outlines until https://github.com/Leaflet/Leaflet/pull/7259 gets released */
-	:focus {
+	@include focus {
 		outline: -webkit-focus-ring-color auto thin !important;
 		outline: revert !important;
 	}
