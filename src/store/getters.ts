@@ -16,7 +16,7 @@
 
 import {GetterTree} from "vuex";
 import {State} from "@/store/state";
-import {getMinecraftTime} from "@/util";
+import {getMinecraftTime, getUrlForLocation} from "@/util";
 import {LiveAtlasDynmapServerDefinition} from "@/index";
 
 export type Getters = {
@@ -63,17 +63,16 @@ export const getters: GetterTree<State, State> & Getters = {
 	},
 
 	url(state: State): string {
-		const x = Math.round(state.currentLocation.x),
-			y = Math.round(state.currentLocation.y),
-			z = Math.round(state.currentLocation.z),
-			locationString = `${x},${y},${z}`,
+		const x = state.currentLocation.x,
+			y = state.currentLocation.y,
+			z = state.currentLocation.z,
 			zoom = state.currentZoom;
 
 		if(!state.currentWorld || !state.currentMap) {
 			return '';
 		}
 
-		return `#${state.currentWorld.name};${state.currentMap.name};${locationString};${zoom}`;
+		return getUrlForLocation(state.currentWorld, state.currentMap, {x,y,z}, zoom);
 	},
 
 	serverConfig(state: State): LiveAtlasDynmapServerDefinition {

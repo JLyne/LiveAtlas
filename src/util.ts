@@ -15,7 +15,7 @@
  */
 
 import API from '@/api';
-import {DynmapPlayer, DynmapUrlConfig} from "@/dynmap";
+import {DynmapPlayer, DynmapUrlConfig, DynmapWorld, DynmapWorldMap} from "@/dynmap";
 import {useStore} from "@/store";
 import {LiveAtlasDynmapServerDefinition, LiveAtlasServerDefinition} from "@/index";
 import ConfigurationError from "@/errors/ConfigurationError";
@@ -327,4 +327,20 @@ export const getAPI = () => {
 	}
 
 	return API;
+}
+
+export const getUrlForLocation = (world: DynmapWorld, map: DynmapWorldMap, location: {
+	x: number,
+	y: number,
+	z: number }, zoom: number): string => {
+	const x = Math.round(location.x),
+			y = Math.round(location.y),
+			z = Math.round(location.z),
+			locationString = `${x},${y},${z}`;
+
+		if(!world || !map) {
+			return '';
+		}
+
+		return `#${world.name};${map.name};${locationString};${zoom}`;
 }
