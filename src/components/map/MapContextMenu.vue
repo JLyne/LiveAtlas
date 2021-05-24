@@ -124,6 +124,9 @@ export default defineComponent({
 			window.removeEventListener('keyup', handleEsc);
 		});
 
+		props.leaflet.on('movestart', closeContextMenu);
+		props.leaflet.on('zoomstart', closeContextMenu);
+
 		props.leaflet.on('contextmenu', (e: LeafletMouseEvent) => {
 			e.originalEvent.stopImmediatePropagation();
 			e.originalEvent.preventDefault();
