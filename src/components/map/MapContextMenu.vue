@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import DynmapMap from "@/leaflet/DynmapMap";
-import {computed, defineComponent, onMounted, onUnmounted} from "@vue/runtime-core";
+import {computed, defineComponent, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import {LeafletMouseEvent} from "leaflet";
 import {useStore} from "@/store";
 import WorldListItem from "@/components/sidebar/WorldListItem.vue";
@@ -37,6 +37,7 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore(),
 			event = ref<LeafletMouseEvent | null>(null),
+			lastMouseMoveEvent = ref<LeafletMouseEvent | null>(null),
 
 			messageCopyLink = computed(() => store.state.messages.contextMenuCopyLink),
 			messageCenterHere = computed(() => store.state.messages.contextMenuCenterHere),
@@ -123,18 +124,34 @@ export default defineComponent({
 			window.removeEventListener('keyup', handleEsc);
 		});
 
-		window.addEventListener('contextmenu', e => {
-			if(e.target && e.target instanceof HTMLElement && e.target.classList.contains('leaflet-zoom-animated')) {
-				e.preventDefault();
-			}
-		});
-
 		props.leaflet.on('contextmenu', (e: LeafletMouseEvent) => {
 			e.originalEvent.stopImmediatePropagation();
 			e.originalEvent.preventDefault();
-			props.leaflet.closePopup();
-			props.leaflet.closeTooltip();
 			event.value = e;
+		});
+
+		//Sometimes contextmenu events don't fire from leaflet for some reason
+		//As a workaround listen on the window and then use the last mousemove event for positioning
+		props.leaflet.on('mousemove', (e: LeafletMouseEvent) => {
+			lastMouseMoveEvent.value = e;
+		});
+
+		window.addEventListener('contextmenu', e => {
+			if(e.target && e.target instanceof HTMLElement && e.target.classList.contains('leaflet-zoom-animated')) {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+
+				if(lastMouseMoveEvent.value) {
+					event.value = lastMouseMoveEvent.value;
+				}
+			}
+		});
+
+		watch(event, value => {
+			if(value) {
+				props.leaflet.closePopup();
+				props.leaflet.closeTooltip();
+			}
 		});
 
 		return {
