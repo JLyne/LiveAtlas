@@ -9,27 +9,29 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   },
-  "devDependencies": {
+  "dependencies": {
     "@soerenmartius/vue3-clipboard": "^0.1.2",
-    "@types/leaflet": "^1.7.0",
+    "focus-visible": "^5.2.0",
+    "normalize-scss": "^7.0.1",
+    "leaflet": "^1.7.1",
+    "vue": "^3.0.11",
+    "vuex": "^4.0.0"
+  },
+  "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "@vitejs/plugin-vue": "^1.2.2",
     "@vue/compiler-sfc": "^3.0.11",
     "@vue/eslint-config-typescript": "^7.0.0",
+    "@types/leaflet": "^1.7.0",
     "eslint": "^7.26.0",
     "eslint-plugin-vue": "^7.9.0",
-    "focus-visible": "^5.2.0",
-    "leaflet": "^1.7.1",
-    "normalize-scss": "^7.0.1",
     "rollup-plugin-analyzer": "^4.0.0",
     "sass": "^1.32.13",
     "typescript": "~4.2.4",
     "vite": "^2.3.2",
     "vite-plugin-svg-sprite-component": "^1.0.8",
-    "vue": "^3.0.11",
-    "vue-tsc": "^0.1.2",
-    "vuex": "^4.0.0"
+    "vue-tsc": "^0.1.2"
   },
   "eslintConfig": {
     "root": true,
@@ -45,12 +47,5 @@
       "parser": "@typescript-eslint/parser"
     },
     "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not IE 11",
-    "not op_mini all"
-  ]
+  }
 }
