@@ -25,7 +25,8 @@ import '@/scss/style.scss';
 import 'focus-visible';
 import {MutationTypes} from "@/store/mutation-types";
 import {validateConfiguration} from "@/util";
-import { VueClipboard } from '@soerenmartius/vue3-clipboard'
+import { VueClipboard } from '@soerenmartius/vue3-clipboard';
+import Notifications from '@kyvg/vue3-notification'
 
 const splash = document.getElementById('splash'),
 	splashSpinner = document.getElementById('splash__spinner'),
@@ -112,7 +113,10 @@ try {
 		store.commit(MutationTypes.SET_CURRENT_SERVER, config.keys().next().value);
 	}
 
-	const app = createApp(App).use(store).use(VueClipboard);
+	const app = createApp(App)
+		.use(store)
+		.use(Notifications)
+		.use(VueClipboard);
 
 	// app.config.performance = true;
 	app.mount('#app');

@@ -7,9 +7,11 @@
     "preview": "vite preview --port 8082",
     "build": "vue-tsc --noEmit && vite build --out-dir dist",
     "lint": "eslint src",
-    "lint:fix": "eslint src --fix"
+    "lint:fix": "eslint src --fix",
+    "postinstall": "patch-package"
   },
   "dependencies": {
+    "@kyvg/vue3-notification": "^2.3.0",
     "@soerenmartius/vue3-clipboard": "^0.1.2",
     "focus-visible": "^5.2.0",
     "normalize-scss": "^7.0.1",
@@ -26,6 +28,7 @@
     "@types/leaflet": "^1.7.0",
     "eslint": "^7.26.0",
     "eslint-plugin-vue": "^7.9.0",
+    "patch-package": "^6.4.7",
     "rollup-plugin-analyzer": "^4.0.0",
     "sass": "^1.32.13",
     "typescript": "~4.2.4",

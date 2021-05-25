@@ -20,7 +20,8 @@
 import {Control, ControlOptions, DomUtil, Map} from 'leaflet';
 import {useStore} from "@/store";
 import '@/assets/icons/link.svg';
-import { toClipboard } from '@soerenmartius/vue3-clipboard'
+import { toClipboard } from '@soerenmartius/vue3-clipboard';
+import {notify} from "@kyvg/vue3-notification";
 
 export class LinkControl extends Control {
 	// @ts-ignore
@@ -44,7 +45,13 @@ export class LinkControl extends Control {
 
 		linkButton.addEventListener('click', e => {
 			e.preventDefault();
-			toClipboard(window.location.href.split("#")[0] + useStore().getters.url);
+			toClipboard(window.location.href.split("#")[0] + useStore().getters.url).then(() => {
+				notify('Copied to clipboard');
+			}).catch((e) => {
+				notify({ type: 'error', text:'Unable to copy to clipboard'});
+				console.error('Error copying to clipboard', e);
+			});
+
 		});
 
 		return linkButton;

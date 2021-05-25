@@ -2,10 +2,18 @@
 	<nav id="map-context-menu" v-show="menuVisible" ref="menuElement" :style="style">
 		<ul class="menu">
 			<li>
-				<button type="button" v-clipboard="locationCopy">{{ locationLabel }}</button>
+				<button type="button"
+				        v-clipboard:copy="locationCopy"
+				        v-clipboard:success="copySuccess"
+				        v-clipboard:error="copyError">{{ locationLabel }}
+				</button>
 			</li>
 			<li>
-				<button type="button" v-clipboard="url">{{ messageCopyLink }}</button>
+				<button type="button"
+				        v-clipboard:copy="url"
+				        v-clipboard:success="copySuccess"
+				        v-clipboard:error="copyError">{{ messageCopyLink }}
+				</button>
 			</li>
 			<li>
 				<button type="button" @click.prevent="pan">{{ messageCenterHere }}</button>
@@ -112,6 +120,11 @@ export default defineComponent({
 				if (event.value) {
 					props.leaflet.panTo(event.value.latlng);
 				}
+			},
+			copySuccess = () => notify('Copied to clipboard'),
+			copyError = (e: Error) => {
+				notify({ type: 'error', text:'Unable to copy to clipboard'});
+				console.error('Error copying to clipboard', e);
 			};
 
 		onMounted(() => {
@@ -160,6 +173,9 @@ export default defineComponent({
 		return {
 			messageCopyLink,
 			messageCenterHere,
+
+			copySuccess,
+			copyError,
 
 			menuVisible,
 			menuElement,
