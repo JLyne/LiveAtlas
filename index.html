@@ -155,24 +155,30 @@
 
         * {
             scrollbar-width: thin;
+            scrollbar-color: var(--background-light) transparent;
+        }
+
+        *:hover, *:focus-within {
             scrollbar-color: var(--background-hover) transparent;
         }
 
         *::-webkit-scrollbar {
-          width: 1.2rem;
+            width: 0.7rem;
         }
 
         *::-webkit-scrollbar-track {
-          background: transparent;
+            background: transparent;
         }
 
         *::-webkit-scrollbar-thumb {
             background-color: var(--background-light);
+            border: 2px solid #000000;
             border-radius: 2rem;
             transition: background 1s ease-in;
+            padding-right: 0.2rem;
         }
 
-        *:hover::-webkit-scrollbar-thumb {
+        *:hover::-webkit-scrollbar-thumb, *:focus-within::-webkit-scrollbar-thumb {
           background-color: var(--background-hover);
         }
 

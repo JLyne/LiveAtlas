@@ -168,6 +168,14 @@ export default defineComponent({
 		padding: 0.2rem 0.5rem 0 0.2rem;
 		width: 24rem;
         align-items: flex-end;
+
+		&:not(:hover):not(:focus-within) {
+			scrollbar-color: var(--background-base) transparent;
+		}
+
+		&:not(:hover):not(:focus-within)::-webkit-scrollbar-thumb {
+			background-color: var(--background-base);
+		}
 	}
 
 	.sidebar__section {
