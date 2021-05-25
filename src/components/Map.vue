@@ -301,6 +301,7 @@ export default defineComponent({
 				border: 0.2rem solid #cccccc;
 				display: block;
 				z-index: 2000;
+				pointer-events: none;
 			}
 		}
 	}
