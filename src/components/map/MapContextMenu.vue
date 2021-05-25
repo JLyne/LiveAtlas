@@ -1,5 +1,6 @@
 <template>
 	<nav id="map-context-menu" v-show="menuVisible" ref="menuElement" :style="style">
+		<button type="button" ref="focusMover" class="focus-mover"></button>
 		<ul class="menu">
 			<li>
 				<button type="button"
@@ -31,6 +32,8 @@ import {useStore} from "@/store";
 import WorldListItem from "@/components/sidebar/WorldListItem.vue";
 import {ref} from "vue";
 import {getUrlForLocation} from "@/util";
+import {notify} from "@kyvg/vue3-notification";
+import {nextTick} from 'vue';
 
 export default defineComponent({
 	name: "MapContextMenu",
@@ -51,6 +54,7 @@ export default defineComponent({
 			messageCenterHere = computed(() => store.state.messages.contextMenuCenterHere),
 
 			menuElement = ref<HTMLInputElement | null>(null),
+			focusMover = ref<HTMLInputElement | null>(null),
 			menuVisible = computed(() => !!event.value),
 
 			currentProjection = computed(() => store.state.currentProjection),
@@ -109,8 +113,9 @@ export default defineComponent({
 			});
 
 		const handleEsc = (e: KeyboardEvent) => {
-				if (e.key === "Escape") {
+				if (e.key === "Escape" && menuVisible.value) {
 					closeContextMenu();
+					props.leaflet.getContainer().focus();
 				}
 			},
 			closeContextMenu = () => {
@@ -119,6 +124,7 @@ export default defineComponent({
 			pan = () => {
 				if (event.value) {
 					props.leaflet.panTo(event.value.latlng);
+					props.leaflet.getContainer().focus();
 				}
 			},
 			copySuccess = () => notify('Copied to clipboard'),
@@ -126,6 +132,12 @@ export default defineComponent({
 				notify({ type: 'error', text:'Unable to copy to clipboard'});
 				console.error('Error copying to clipboard', e);
 			};
+
+		watch(menuVisible, value => {
+			if(value) {
+				nextTick(() => focusMover.value && focusMover.value.focus());
+			}
+		})
 
 		onMounted(() => {
 			window.addEventListener('click', closeContextMenu);
@@ -179,6 +191,7 @@ export default defineComponent({
 
 			menuVisible,
 			menuElement,
+			focusMover,
 			url,
 
 			locationLabel,
