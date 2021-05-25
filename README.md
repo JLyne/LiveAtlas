@@ -36,7 +36,7 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Edge 18+
 - Firefox 60+
 - Opera 53+
-- Safari 12.1+
+- Safari 11.1+
 
 ## Installation
 Using an [external webserver](https://github.com/webbukkit/dynmap/wiki/External-Webserver-Basics) is recommended.
