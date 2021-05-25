@@ -18,7 +18,7 @@
 	<Map></Map>
 	<Sidebar></Sidebar>
 	<ChatBox v-if="chatBoxEnabled" v-show="chatBoxEnabled && chatVisible"></ChatBox>
-	<notifications position="bottom center" speed="250" max="3" ignoreDuplicates="true" />
+	<notifications position="bottom center" :speed="250" :max="3" :ignoreDuplicates="true" />
 </template>
 
 <script lang="ts">
