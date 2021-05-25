@@ -17,7 +17,7 @@
  *    limitations under the License.
  */
 
-import {Marker} from "leaflet";
+import {LeafletMouseEvent, Marker} from "leaflet";
 import {DynmapMarker} from "@/dynmap";
 import {DynmapIcon} from "@/leaflet/icon/DynmapIcon";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
@@ -33,6 +33,10 @@ export const createMarker = (options: DynmapMarker, projection: DynmapProjection
 		}),
 		maxZoom: options.maxZoom,
 		minZoom: options.minZoom,
+	});
+
+	marker.on('click', (e: LeafletMouseEvent) => {
+		e.target._map.panTo(e.target.getLatLng());
 	});
 
 	if(options.popupContent) {
