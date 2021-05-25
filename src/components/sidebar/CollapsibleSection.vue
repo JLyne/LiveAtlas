@@ -1,12 +1,13 @@
 <template>
 	<section :class="{'sidebar__section': true, 'section--collapsed': collapsed}">
-		<button type="button" class="section__heading"
-		        @click.prevent="toggle" @keypress.prevent="handleKeypress" :title="title">
+		<button :id="`${name}-heading`" type="button" class="section__heading"
+		        @click.prevent="toggle" @keydown.prevent="handleKeydown" :title="title"
+		        :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
 			<slot name="heading"></slot>
 		</button>
-		<ul class="section__content menu">
+		<div :id="`${name}-content`" role="region" :aria-labelledby="`${name}-heading`" :aria-hidden="collapsed">
 			<slot></slot>
-		</ul>
+		</div>
 	</section>
 </template>
 
@@ -20,7 +21,7 @@
 
 		props: {
 			name: {
-				type: Object as () => LiveAtlasSidebarSection,
+				type: String as () => LiveAtlasSidebarSection,
 				required: true,
 			}
 		},
@@ -36,7 +37,7 @@
 		},
 
 		methods: {
-			handleKeypress(e: KeyboardEvent) {
+			handleKeydown(e: KeyboardEvent) {
 				if(e.key !== ' ' && e.key !== 'Enter') {
 					return;
 				}
