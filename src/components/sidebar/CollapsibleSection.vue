@@ -1,7 +1,7 @@
 <template>
 	<section :class="{'sidebar__section': true, 'section--collapsed': collapsed}">
 		<button :id="`${name}-heading`" type="button" class="section__heading"
-		        @click.prevent="toggle" @keydown.prevent="handleKeydown" :title="title"
+		        @click.prevent="toggle" @keydown="handleKeydown" :title="title"
 		        :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
 			<slot name="heading"></slot>
 		</button>
@@ -41,6 +41,8 @@
 				if(e.key !== ' ' && e.key !== 'Enter') {
 					return;
 				}
+
+				e.preventDefault();
 
 				this.toggle();
 			},
