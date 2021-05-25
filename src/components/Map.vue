@@ -278,12 +278,30 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+	@import '../scss/_mixins.scss';
+
 	.map {
 		width: 100%;
 		height: 100%;
 		background: transparent;
 		z-index: 0;
 		cursor: default;
+		box-sizing: border-box;
+		position: relative;
+
+		@include focus {
+			&:before {
+				content: '';
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				border: 0.2rem solid #cccccc;
+				display: block;
+				z-index: 2000;
+			}
+		}
 	}
 </style>
