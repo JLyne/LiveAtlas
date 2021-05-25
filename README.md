@@ -32,10 +32,10 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Inactivity timeout
 
 ## Supported Browsers
-- Chrome 63+
+- Chrome 66+
 - Edge 18+
 - Firefox 60+
-- Opera 50+
+- Opera 53+
 - Safari 12.1+
 
 ## Installation
