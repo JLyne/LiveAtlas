@@ -57,9 +57,3 @@ export default defineComponent({
 	}
 });
 </script>
-
-<style scoped lang="scss">
-	.sidebar__section.sidebar__section--players {
-		flex-shrink: 10;
-	}
-</style>

@@ -26,10 +26,12 @@
 				<SvgIcon name="players"></SvgIcon>
 			</button>
 		</header>
-		<ServerList v-if="serverCount > 1" v-show="currentlyVisible.has('maps')"></ServerList>
-		<WorldList v-if="mapCount > 1" v-show="currentlyVisible.has('maps')"></WorldList>
-		<PlayerList v-if="previouslyVisible.has('players')" v-show="currentlyVisible.has('players')"></PlayerList>
-		<FollowTarget v-if="following" v-show="followActive" :target="following"></FollowTarget>
+		<div class="sidebar__content">
+			<ServerList v-if="serverCount > 1" v-show="currentlyVisible.has('maps')"></ServerList>
+			<WorldList v-if="mapCount > 1" v-show="currentlyVisible.has('maps')"></WorldList>
+			<PlayerList v-if="previouslyVisible.has('players')" v-show="currentlyVisible.has('players')"></PlayerList>
+			<FollowTarget v-if="following" v-show="followActive" :target="following"></FollowTarget>
+		</div>
 	</aside>
 </template>
 
@@ -105,7 +107,6 @@ export default defineComponent({
 	display: flex;
 	flex-direction: column;
 	padding: 1rem;
-	width: 23rem;
 	font-size: 1.5rem;
 	will-change: transform;
 	pointer-events: none;
@@ -155,16 +156,26 @@ export default defineComponent({
 		}
 	}
 
+	.sidebar__content {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		flex-shrink: 1;
+		min-height: 0;
+		overflow: auto;
+		pointer-events: auto;
+		margin-right: -0.5rem;
+		padding: 0.2rem 0.5rem 0 0.2rem;
+		width: 24rem;
+        align-items: flex-end;
+	}
+
 	.sidebar__section {
 		@extend %panel;
-		flex: 0 1 auto;
-		min-height: 10rem;
 		margin-bottom: 1rem;
-		pointer-events: auto;
-
-		&:last-child {
-			margin-bottom: 0;
-		}
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 23rem;
 
 		.section__heading {
 			font-size: 2rem;
@@ -183,12 +194,8 @@ export default defineComponent({
 		}
 
 		.section__content {
-			flex-shrink: 1;
-			min-height: 0;
-			overflow: auto;
 			padding: 0 0.5rem;
 			margin: 0 -.5rem 1rem;
-			will-change: transform;
 
 			&:last-child {
 				margin-bottom: 0;
@@ -213,6 +220,11 @@ export default defineComponent({
 				display: none;
 			}
 		}
+
+		@media (max-width: 320px) {
+			box-sizing: border-box;
+			width: 100%;
+		}
 	}
 
 	@media (max-width: 480px) {
@@ -227,11 +239,6 @@ export default defineComponent({
 
 	@media (max-width: 400px) {
 		padding-right: 6.5rem;
-	}
-
-	@media (max-width: 320px) {
-		box-sizing: border-box;
-		width: 100%;
 	}
 
 	@media print {
