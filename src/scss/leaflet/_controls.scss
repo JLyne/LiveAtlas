@@ -203,7 +203,7 @@
 	.leaflet-control {
 		order: 2;
 		min-width: 5rem;
-		margin-top: 1rem;
+		margin-bottom: 1rem;
 
 		&:first-child {
 			margin-top: 0;
@@ -232,7 +232,6 @@
 
 	.leaflet-control-logo {
 		order: 1;
-		margin-bottom: 1rem;
 		margin-top: 0 !important;
 
 		& + .leaflet-control-logo {

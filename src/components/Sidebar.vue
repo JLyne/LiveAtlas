@@ -176,6 +176,7 @@ export default defineComponent({
 		box-sizing: border-box;
 		width: 100%;
 		max-width: 23rem;
+		flex: 0 0 auto;
 
 		.section__heading {
 			font-size: 2rem;

@@ -86,6 +86,10 @@ input {
 	}
 }
 
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
 .focus-mover {
 	clip: rect(1px, 1px, 1px, 1px);
 	position: absolute;
