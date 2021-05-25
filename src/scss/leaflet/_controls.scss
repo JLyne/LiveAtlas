@@ -247,6 +247,10 @@
 	.leaflet-control-zoom {
 		flex-shrink: 0;
 
+		a {
+			font-family: sans-serif; /* +/- look better */
+		}
+
 		@media (max-width: 480px) and (pointer: coarse), (max-height: 480px) and (pointer: coarse), (max-height: 400px) {
 			display: none;
 
