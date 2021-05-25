@@ -15,23 +15,27 @@
   -->
 
 <template>
-	<section class="sidebar__section">
-		<span class="section__heading">{{ heading }}</span>
-		<ul class="section__content">
-			<WorldListItem :world="world" v-for="[name, world] in worlds" :key="name"></WorldListItem>
-			<li v-if="!worlds.size" class="section__skeleton">{{ skeletonWorlds }}</li>
-		</ul>
-	</section>
+	<CollapsibleSection name="maps">
+		<template v-slot:heading>{{ heading }}</template>
+		<template v-slot:default>
+			<ul class="section__content">
+				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="name"></WorldListItem>
+				<li v-if="!worlds.size" class="section__skeleton">{{ skeletonWorlds }}</li>
+			</ul>
+		</template>
+	</CollapsibleSection>
 </template>
 
 <script lang="ts">
 import WorldListItem from './WorldListItem.vue';
 import {defineComponent} from 'vue';
 import {useStore} from "@/store";
+import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
 
 export default defineComponent({
 	name: 'WorldList',
 	components: {
+		CollapsibleSection,
 		WorldListItem
 	},
 
@@ -47,11 +51,6 @@ export default defineComponent({
 		worlds() {
 			return useStore().state.worlds;
 		}
-	},
+	}
 });
-
 </script>
-
-<style scoped>
-
-</style>

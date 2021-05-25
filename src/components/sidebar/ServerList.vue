@@ -15,22 +15,26 @@
   -->
 
 <template>
-	<section class="sidebar__section" v-if="servers.size > 1">
-		<span class="section__heading">{{ heading }}</span>
-		<ul class="section__content menu">
-			<ServerListItem :server="server" v-for="[name, server] in servers" :key="name"></ServerListItem>
-		</ul>
-	</section>
+	<CollapsibleSection v-if="servers.size > 1" name="servers">
+		<template v-slot:heading>{{ heading }}</template>
+		<template v-slot:default>
+			<ul class="section__content menu">
+				<ServerListItem :server="server" v-for="[name, server] in servers" :key="name"></ServerListItem>
+			</ul>
+		</template>
+	</CollapsibleSection>
 </template>
 
 <script lang="ts">
 import ServerListItem from './ServerListItem.vue';
 import {defineComponent} from 'vue';
 import {useStore} from "@/store";
+import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
 
 export default defineComponent({
 	name: 'ServerList',
 	components: {
+		CollapsibleSection,
 		ServerListItem
 	},
 
@@ -42,7 +46,6 @@ export default defineComponent({
 		servers() {
 			return useStore().state.servers;
 		}
-	},
+	}
 });
-
 </script>

@@ -42,9 +42,9 @@ import FollowTarget from './sidebar/FollowTarget.vue';
 import {useStore} from "@/store";
 import SvgIcon from "@/components/SvgIcon.vue";
 import {MutationTypes} from "@/store/mutation-types";
-import {DynmapUIElement} from "@/dynmap";
 import "@/assets/icons/players.svg";
 import "@/assets/icons/maps.svg";
+import {LiveAtlasUIElement} from "@/index";
 
 export default defineComponent({
 	components: {
@@ -67,7 +67,7 @@ export default defineComponent({
 			messageWorlds = computed(() => store.state.messages.worldsHeading),
 			messagePlayers = computed(() => store.state.messages.playersHeading),
 
-			toggleElement = (element: DynmapUIElement) => {
+			toggleElement = (element: LiveAtlasUIElement) => {
 				store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, element);
 			},
 
@@ -168,7 +168,18 @@ export default defineComponent({
 
 		.section__heading {
 			font-size: 2rem;
-			margin-bottom: 1rem;
+			cursor: pointer;
+			user-select: none;
+			padding: 1.5rem 1.5rem 1rem;
+			margin: -1.5rem -1.5rem 0;
+			background-color: transparent;
+			color: inherit;
+			text-align: left;
+
+			&:hover, &:focus-visible, &.focus-visible, &:active {
+				background-color: transparent;
+				color: inherit;
+			}
 		}
 
 		.section__content {
@@ -190,6 +201,17 @@ export default defineComponent({
 			text-align: center;
 			align-self: center;
 			margin-top: 1rem;
+		}
+
+		&.section--collapsed {
+			.section__heading {
+				padding-bottom: 1.5rem;
+				margin-bottom: -1.5rem;
+			}
+
+			.section__content {
+				display: none;
+			}
 		}
 	}
 

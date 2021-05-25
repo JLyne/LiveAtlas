@@ -15,22 +15,26 @@
   -->
 
 <template>
-	<section class="sidebar__section sidebar__section--players">
-		<span class="section__heading">{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</span>
-		<ul class="section__content menu">
-			<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
-			<li v-if="!players.size" class="section__skeleton">{{ skeletonPlayers }}</li>
-		</ul>
-	</section>
+	<CollapsibleSection name="players">
+		<template v-slot:heading>{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</template>
+		<template v-slot:default>
+			<ul class="section__content menu">
+				<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
+				<li v-if="!players.size" class="section__skeleton">{{ skeletonPlayers }}</li>
+			</ul>
+		</template>
+	</CollapsibleSection>
 </template>
 
 <script lang="ts">
 import PlayerListItem from "./PlayerListItem.vue";
 import {defineComponent} from "@vue/runtime-core";
 import {useStore} from "@/store";
+import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
 
 export default defineComponent({
 	components: {
+		CollapsibleSection,
 		PlayerListItem
 	},
 
@@ -50,7 +54,7 @@ export default defineComponent({
 		maxPlayers(): number {
 			return useStore().state.configuration.maxPlayers;
 		}
-	},
+	}
 });
 </script>
 

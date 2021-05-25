@@ -63,4 +63,8 @@ interface LiveAtlasMessageConfig {
 	locationChunk: string;
 	contextMenuCopyLink: string;
 	contextMenuCenterHere: string;
+	toggleTitle: string;
 }
+
+export type LiveAtlasUIElement = 'chat' | 'players' | 'maps' | 'settings';
+export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';

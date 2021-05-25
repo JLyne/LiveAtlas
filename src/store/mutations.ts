@@ -28,10 +28,10 @@ import {
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapWorld,
-	DynmapWorldState, DynmapParsedUrl, DynmapChat, DynmapUIElement
+	DynmapWorldState, DynmapParsedUrl, DynmapChat
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import {LiveAtlasMessageConfig, LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasMessageConfig, LiveAtlasServerDefinition, LiveAtlasUIElement} from "@/index";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -80,8 +80,8 @@ export type Mutations<S = State> = {
 	[MutationTypes.CLEAR_PAN_TARGET](state: S, a?: void): void
 
 	[MutationTypes.SET_SMALL_SCREEN](state: S, payload: boolean): void
-	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: S, payload: DynmapUIElement): void
-	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: S, payload: {element: DynmapUIElement, state: boolean}): void
+	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: S, payload: LiveAtlasUIElement): void
+	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: S, payload: {element: LiveAtlasUIElement, state: boolean}): void
 
 	[MutationTypes.SET_LOGGED_IN](state: S, payload: boolean): void
 }
@@ -509,7 +509,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.ui.smallScreen = smallScreen;
 	},
 
-	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: State, element: DynmapUIElement): void {
+	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: State, element: LiveAtlasUIElement): void {
 		const newState = !state.ui.visibleElements.has(element);
 
 		if(newState && state.ui.smallScreen) {
@@ -520,7 +520,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		newState ? state.ui.visibleElements.add(element) : state.ui.visibleElements.delete(element);
 	},
 
-	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: State, payload: {element: DynmapUIElement, state: boolean}): void {
+	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: State, payload: {element: LiveAtlasUIElement, state: boolean}): void {
 		if(payload.state && state.ui.smallScreen) {
 			state.ui.visibleElements.clear();
 		}

@@ -19,10 +19,10 @@ import {
 	DynmapWorldMap, DynmapMarkerSet, DynmapMarkerSetUpdates,
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
-	DynmapWorld, DynmapWorldState, Coordinate, DynmapParsedUrl, DynmapChat, DynmapUIElement
+	DynmapWorld, DynmapWorldState, Coordinate, DynmapParsedUrl, DynmapChat
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import {LiveAtlasMessageConfig, LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasMessageConfig, LiveAtlasServerDefinition, LiveAtlasSidebarSection, LiveAtlasUIElement} from "@/index";
 
 export type State = {
 	version: string;
@@ -63,8 +63,9 @@ export type State = {
 
 	ui: {
 		smallScreen: boolean;
-		visibleElements: Set<DynmapUIElement>;
-		previouslyVisibleElements: Set<DynmapUIElement>;
+		visibleElements: Set<LiveAtlasUIElement>;
+		previouslyVisibleElements: Set<LiveAtlasUIElement>;
+		collapsedSections: Set<LiveAtlasSidebarSection>;
 	};
 
 	parsedUrl: DynmapParsedUrl;
@@ -125,7 +126,8 @@ export const state: State = {
 		locationRegion: '',
 		locationChunk: '',
 		contextMenuCopyLink: '',
-		contextMenuCenterHere: ''
+		contextMenuCenterHere: '',
+		toggleTitle: '',
 	},
 
 	loggedIn: false,
@@ -207,6 +209,7 @@ export const state: State = {
 		smallScreen: false,
 		visibleElements:new Set(),
 		previouslyVisibleElements: new Set(),
+		collapsedSections: new Set(),
 	},
 
 	parsedUrl: {
