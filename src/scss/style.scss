@@ -60,7 +60,7 @@ a {
 	color: var(--text-base);
 }
 
-button {
+button, [type=button] {
 	@extend %button;
 }
 
@@ -86,7 +86,7 @@ input {
 	}
 }
 
-.js-focus-visible :focus:not(.focus-visible) {
+.js-focus-visible :focus:not(.focus-visible):not(:focus-visible) {
   outline: none;
 }
 
@@ -204,6 +204,7 @@ input {
 	flex-direction: column;
 	align-items: center;
 	padding: 0.5rem 2rem;
+	overflow: hidden;
 
 	.clock__time {
 		text-align: center;
@@ -365,9 +366,10 @@ input {
 	line-height: 1;
 
 	/* Workaround for focus outlines until https://github.com/Leaflet/Leaflet/pull/7259 gets released */
-	@include focus {
-		outline: -webkit-focus-ring-color auto thin !important;
-		outline: revert !important;
+	* {
+		@include focus {
+			outline-style: auto !important;
+		}
 	}
 }
 

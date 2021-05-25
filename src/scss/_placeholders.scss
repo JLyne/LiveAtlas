@@ -37,10 +37,9 @@
 	}
 
 	@include focus {
-		outline-color: var(--outline-focus);
-		outline-width: 0.2rem;
-		background-color: var(--background-hover);
-		color: var(--text-hover);
+		outline: var(--outline-focus) auto thick !important;
+		background-color: var(--background-base);
+		color: var(--text-base);
 		z-index: 1;
 	}
 
