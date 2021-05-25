@@ -18,7 +18,7 @@
 	<CollapsibleSection name="players">
 		<template v-slot:heading>{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</template>
 		<template v-slot:default>
-			<ul class="section__content menu">
+			<ul class="section__content menu" role="listbox">
 				<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
 				<li v-if="!players.size" class="section__skeleton">{{ skeletonPlayers }}</li>
 			</ul>

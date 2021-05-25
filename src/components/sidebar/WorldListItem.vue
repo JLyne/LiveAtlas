@@ -15,11 +15,13 @@
   -->
 
 <template>
-	<li class="world">
+	<li class="world" role="none">
 		<span class="world__name">{{ world.title }}</span>
-		<ul class="world__maps">
-			<li :class="{'map': true, 'map--selected': map === currentMap}" v-for="[name, map] in world.maps" :key="name">
-				<button type="button" :title="map.title" @click="setCurrentMap(map.name)" :aria-label="map.title">
+		<ul class="world__maps" role="menu">
+			<li :class="{'map': true, 'map--selected': map === currentMap}" v-for="[name, map] in world.maps" :key="name" role="none">
+				<button role="menuitemradio" type="button" :title="`${world.title} - ${map.title}`"
+				        @click="setCurrentMap(map.name)" :aria-label="`${world.title} - ${map.title}`"
+				        :aria-checked="map === currentMap">
 					<SvgIcon :name="getMapIcon(map)"></SvgIcon>
 				</button>
 			</li>

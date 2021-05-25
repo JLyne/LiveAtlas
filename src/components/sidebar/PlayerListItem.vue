@@ -16,11 +16,11 @@
 
 <template>
 	<li :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}">
-		<img width="16" height="16" class="player__icon" :src="image" alt="" />
+		<img width="16" height="16" class="player__icon" :src="image" alt="" aria-hidden="true" />
 		<button class="player__name" type="button" :title="title"
 				:disbled="player.hidden"
 				@click.prevent="pan"
-				@keydown="onKeydown"
+				@keydown.prevent="onKeydown"
 				@dblclick.prevent="follow" v-html="player.name"></button>
 	</li>
 </template>

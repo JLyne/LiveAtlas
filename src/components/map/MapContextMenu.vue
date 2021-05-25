@@ -1,23 +1,22 @@
 <template>
 	<nav id="map-context-menu" v-show="menuVisible" ref="menuElement" :style="style">
-		<button type="button" ref="focusMover" class="focus-mover"></button>
-		<ul class="menu">
-			<li>
-				<button type="button"
-				        v-clipboard:copy="locationCopy"
+		<div tabindex="0" ref="focusMover" class="focus-mover" aria-label="Context menu"></div>
+		<ul class="menu" role="menu">
+			<li role="none">
+				<button type="button" role="menuitem" v-clipboard:copy="locationCopy"
 				        v-clipboard:success="copySuccess"
 				        v-clipboard:error="copyError">{{ locationLabel }}
 				</button>
 			</li>
-			<li>
-				<button type="button"
+			<li role="none">
+				<button type="button" role="menuitem"
 				        v-clipboard:copy="url"
 				        v-clipboard:success="copySuccess"
 				        v-clipboard:error="copyError">{{ messageCopyLink }}
 				</button>
 			</li>
-			<li>
-				<button type="button" @click.prevent="pan">{{ messageCenterHere }}</button>
+			<li role="none">
+				<button type="button" role="menuitem" @click.prevent="pan">{{ messageCenterHere }}</button>
 			</li>
 			<WorldListItem v-if="currentWorld" :world="currentWorld"></WorldListItem>
 		</ul>

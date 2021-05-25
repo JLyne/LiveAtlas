@@ -18,7 +18,7 @@
 	<CollapsibleSection name="maps">
 		<template v-slot:heading>{{ heading }}</template>
 		<template v-slot:default>
-			<ul class="section__content">
+			<ul class="section__content" role="listbox">
 				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="name"></WorldListItem>
 				<li v-if="!worlds.size" class="section__skeleton">{{ skeletonWorlds }}</li>
 			</ul>
