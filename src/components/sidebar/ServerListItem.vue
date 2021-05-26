@@ -17,7 +17,7 @@
 <template>
 	<li :class="{'server': true, 'server--selected': selected}" role="none">
 		<button type="button" :class="{'active': selected}"
-		        role="menuitemradio" :aria-checked="selected" :title="server.label || server.id"
+		        role="option" :aria-pressed="selected" :title="server.label || server.id"
 			    @click="setCurrentServer(server.id)" @keydown="(e) => handleKeydown(e, server.id)">{{ server.label || server.id }}
 		</button>
 	</li>
