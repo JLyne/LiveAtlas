@@ -18,7 +18,7 @@
 	<CollapsibleSection v-if="servers.size > 1" name="servers">
 		<template v-slot:heading>{{ heading }}</template>
 		<template v-slot:default>
-			<ul class="section__content menu" role="listbox">
+			<ul class="section__content menu" role="listbox" aria-labelledby="servers-heading">
 				<ServerListItem :server="server" v-for="[name, server] in servers" :key="name"></ServerListItem>
 			</ul>
 		</template>

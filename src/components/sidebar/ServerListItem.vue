@@ -15,9 +15,10 @@
   -->
 
 <template>
-	<li :class="{'server': true, 'server--selected': currentServer && server.id === currentServer.id}">
-		<button type="button" :class="{'active': currentServer && server.id === currentServer.id}"
-			:title="server.label || server.id" @click="setCurrentServer(server.id)">{{ server.label || server.id }}
+	<li :class="{'server': true, 'server--selected': selected}" role="none">
+		<button type="button" :class="{'active': selected}"
+		        role="menuitemradio" :aria-checked="selected" :title="server.label || server.id"
+			    @click="setCurrentServer(server.id)" @keydown="(e) => handleKeydown(e, server.id)">{{ server.label || server.id }}
 		</button>
 	</li>
 </template>
@@ -40,10 +41,23 @@ export default defineComponent({
 	computed: {
 		currentServer(): LiveAtlasServerDefinition | undefined {
 			return useStore().state.currentServer;
+		},
+		selected(): boolean {
+			return this.currentServer && this.server.id === this.currentServer.id;
 		}
 	},
 
 	methods: {
+		handleKeydown(e: KeyboardEvent, serverId: string) {
+			if(e.key !== ' ' && e.key !== 'Enter') {
+				return;
+			}
+
+			e.preventDefault();
+
+			this.setCurrentServer(serverId);
+		},
+
 		setCurrentServer(serverId: string) {
 			useStore().commit(MutationTypes.SET_CURRENT_SERVER, serverId);
 		}
