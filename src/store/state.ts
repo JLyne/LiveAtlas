@@ -131,6 +131,7 @@ export const state: State = {
 		contextMenuCopyLink: '',
 		contextMenuCenterHere: '',
 		toggleTitle: '',
+		mapTitle: '',
 	},
 
 	loggedIn: false,

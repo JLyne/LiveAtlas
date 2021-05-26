@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs" aria-label="Map">
+	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs" :aria-label="mapTitle">
 		<MapLayer v-for="[name, map] in maps" :key="name" :map="map" :name="name" :leaflet="leaflet"></MapLayer>
 		<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
 		<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>
@@ -86,7 +86,9 @@ export default defineComponent({
 
 			//Location and zoom to pan to upon next projection change
 			scheduledPan = ref<Coordinate|null>(null),
-			scheduledZoom = ref<number|null>(null);
+			scheduledZoom = ref<number|null>(null),
+
+			mapTitle = computed(() => store.state.messages.mapTitle);
 
 		return {
 			leaflet,
@@ -111,6 +113,8 @@ export default defineComponent({
 
 			scheduledPan,
 			scheduledZoom,
+
+			mapTitle
 		}
 	},
 
