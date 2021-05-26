@@ -75,7 +75,7 @@ export default defineComponent({
 
 			followActive = computed(() => {
 				//Show following alongside playerlist on small screens
-				return (!smallScreen.value && following)
+				return (!smallScreen.value && following.value)
 					|| (smallScreen.value && currentlyVisible.value.has('players'));
 			});
 
