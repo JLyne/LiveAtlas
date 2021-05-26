@@ -18,17 +18,17 @@
 	<section class="sidebar" role="none">
 		<header class="sidebar__buttons">
 			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active':currentlyVisible.has('maps')}"
-					@click="toggleElement('maps')" :title="messageWorlds"
+					@click="toggleMaps" :title="messageWorlds"
 					:aria-label="messageWorlds" :aria-expanded="currentlyVisible.has('maps')">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
 			<button :class="{'button--players': true, 'active': currentlyVisible.has('players')}"
-					@click="toggleElement('players')" :title="messagePlayers"
+					@click="togglePlayers" :title="messagePlayers"
 					:aria-label="messagePlayers" :aria-expanded="currentlyVisible.has('players')">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
 		</header>
-		<div class="sidebar__content" @keydown="handleKeydown">
+		<div class="sidebar__content" @keydown="handleSidebarKeydown">
 			<ServerList v-if="serverCount > 1" v-show="currentlyVisible.has('maps')"></ServerList>
 			<WorldList v-if="mapCount > 1" v-show="currentlyVisible.has('maps')"></WorldList>
 			<PlayerList id="players" v-if="previouslyVisible.has('players')"
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, computed} from "@vue/runtime-core";
+import {computed, defineComponent} from "@vue/runtime-core";
 import PlayerList from './sidebar/PlayerList.vue';
 import WorldList from './sidebar/WorldList.vue';
 import ServerList from "@/components/sidebar/ServerList.vue";
@@ -49,7 +49,7 @@ import SvgIcon from "@/components/SvgIcon.vue";
 import {MutationTypes} from "@/store/mutation-types";
 import "@/assets/icons/players.svg";
 import "@/assets/icons/maps.svg";
-import {LiveAtlasUIElement} from "@/index";
+import {nextTick} from "vue";
 
 export default defineComponent({
 	components: {
@@ -72,10 +72,6 @@ export default defineComponent({
 			messageWorlds = computed(() => store.state.messages.worldsHeading),
 			messagePlayers = computed(() => store.state.messages.playersHeading),
 
-			toggleElement = (element: LiveAtlasUIElement) => {
-				store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, element);
-			},
-
 			followActive = computed(() => {
 				//Show following alongside playerlist on small screens
 				return (!smallScreen.value && following.value)
@@ -87,7 +83,6 @@ export default defineComponent({
 			serverCount,
 			currentlyVisible,
 			previouslyVisible,
-			toggleElement,
 			followActive,
 			following,
 			messageWorlds,
@@ -95,8 +90,25 @@ export default defineComponent({
 		}
 	},
 
+	mounted() {
+		window.addEventListener('keydown', this.handleButtonKeydown);
+	},
+
+	unmounted() {
+		window.removeEventListener('keydown', this.handleButtonKeydown);
+	},
+
 	methods: {
-		handleKeydown(e: KeyboardEvent) {
+		handleButtonKeydown(e: KeyboardEvent) {
+			if(e.key === '!' && e.ctrlKey && e.shiftKey) {
+				e.preventDefault();
+				this.toggleMaps();
+			} else if(e.key === '"' && e.ctrlKey && e.shiftKey) {
+				e.preventDefault();
+				this.togglePlayers();
+			}
+		},
+		handleSidebarKeydown(e: KeyboardEvent) {
 			if(!e.target || !(e.target as HTMLElement).matches('.section__heading button')) {
 				return;
 			}
@@ -136,6 +148,32 @@ export default defineComponent({
 			e.preventDefault();
 			e.stopImmediatePropagation();
 			sectionHeadings[newPosition].focus();
+		},
+		togglePlayers() {
+			useStore().commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'players');
+			nextTick(this.focusPlayers);
+		},
+		toggleMaps() {
+			useStore().commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'maps');
+			nextTick(this.focusMaps);
+		},
+		focusPlayers() {
+			if (this.currentlyVisible.has('players')) {
+				const heading = document.getElementById('players-heading');
+
+				if (heading) {
+					heading.focus();
+				}
+			}
+		},
+		focusMaps() {
+			if(this.currentlyVisible.has('maps')) {
+				const heading = document.querySelector('.section__heading button');
+
+				if(heading) {
+					heading.focus();
+				}
+			}
 		}
 	}
 })
