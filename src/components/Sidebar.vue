@@ -195,10 +195,18 @@ export default defineComponent({
 			background-color: transparent;
 			color: inherit;
 			text-align: left;
+			display: flex;
+			align-items: center;
 
 			&:hover, &:focus-visible, &.focus-visible, &:active {
 				background-color: transparent;
 				color: inherit;
+			}
+
+			.svg-icon {
+				margin-left: auto;
+				width: 1.5rem;
+                height: 1.5rem;
 			}
 		}
 

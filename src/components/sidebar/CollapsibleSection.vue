@@ -1,9 +1,12 @@
 <template>
-	<section :class="{'sidebar__section': true, 'section--collapsed': collapsed}">
+	<section :class="{'sidebar__section': true, 'section--collapsible': true, 'section--collapsed': collapsed}">
 		<button :id="`${name}-heading`" type="button" class="section__heading"
 		        @click.prevent="toggle" @keydown="handleKeydown" :title="title"
 		        :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
-			<slot name="heading"></slot>
+			<span>
+				<slot name="heading"></slot>
+			</span>
+			<SvgIcon name="arrow"></SvgIcon>
 		</button>
 		<div :id="`${name}-content`" role="region" :aria-labelledby="`${name}-heading`" :aria-hidden="collapsed">
 			<slot></slot>
@@ -15,10 +18,12 @@
 	import {useStore} from "@/store";
 	import {LiveAtlasSidebarSection} from "@/index";
 	import {defineComponent} from "@vue/runtime-core";
+	import SvgIcon from "@/components/SvgIcon.vue";
+	import '@/assets/icons/arrow.svg';
 
 	export default defineComponent({
 		name: 'CollapsibleSection',
-
+		components: {SvgIcon},
 		props: {
 			name: {
 				type: String as () => LiveAtlasSidebarSection,
@@ -59,3 +64,17 @@
 		}
 	});
 </script>
+
+<style lang="scss" scoped>
+	.section--collapsible {
+		.section__heading .svg-icon {
+			transform: rotate(180deg);
+		}
+
+		&.section--collapsed {
+			.section__heading .svg-icon {
+				transform: none;
+			}
+		}
+	}
+</style>
