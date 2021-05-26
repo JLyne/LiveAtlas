@@ -1,7 +1,7 @@
 <template>
 	<section :class="{'sidebar__section': true, 'section--collapsible': true, 'section--collapsed': collapsed}">
-		<h2>
-			<button :id="`${name}-heading`" type="button" class="section__heading"
+		<h2 class="section__heading">
+			<button :id="`${name}-heading`" type="button"
 			        @click.prevent="toggle" :title="title"
 			        :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
 				<span>

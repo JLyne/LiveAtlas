@@ -97,11 +97,11 @@ export default defineComponent({
 
 	methods: {
 		handleKeydown(e: KeyboardEvent) {
-			if(!e.target || !(e.target as HTMLElement).classList.contains('section__heading')) {
+			if(!e.target || !(e.target as HTMLElement).matches('.section__heading button')) {
 				return;
 			}
 
-			const sectionHeadings: HTMLElement[] = Array.from(this.$el.querySelectorAll('.section__heading')),
+			const sectionHeadings: HTMLElement[] = Array.from(this.$el.querySelectorAll('.section__heading button')),
 				position = sectionHeadings.indexOf(e.target as HTMLElement);
 
 			if(position === -1) {
@@ -234,27 +234,31 @@ export default defineComponent({
 		flex: 0 0 auto;
 
 		.section__heading {
-			font-size: 2rem;
 			cursor: pointer;
 			user-select: none;
-			padding: 1.5rem 1.5rem 1rem;
-			margin: -1.5rem -1.5rem 0;
-			background-color: transparent;
-			color: inherit;
 			text-align: left;
-			display: flex;
 			align-items: center;
-			width: calc(100% + 3rem);
+			margin: 0;
+
+			button {
+				display: flex;
+				font-size: 2rem;
+				padding: 1.5rem 1.5rem 1rem;
+				margin: -1.5rem -1.5rem 0;
+				background-color: transparent;
+				color: inherit;
+				width: calc(100% + 3rem);
+
+				.svg-icon {
+					margin-left: auto;
+					width: 1.5rem;
+					height: 1.5rem;
+				}
+			}
 
 			&:hover, &:focus-visible, &.focus-visible, &:active {
 				background-color: transparent;
 				color: inherit;
-			}
-
-			.svg-icon {
-				margin-left: auto;
-				width: 1.5rem;
-                height: 1.5rem;
 			}
 		}
 
@@ -276,7 +280,7 @@ export default defineComponent({
 		}
 
 		&.section--collapsed {
-			.section__heading {
+			.section__heading button {
 				padding-bottom: 1.5rem;
 				margin-bottom: -1.5rem;
 			}
