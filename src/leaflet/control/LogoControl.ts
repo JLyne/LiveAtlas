@@ -40,6 +40,7 @@ export class LogoControl extends Control {
 		if (this.options.url) {
 			link = DomUtil.create('a', '', container) as HTMLAnchorElement;
 			link.href = this.options.url;
+			link.setAttribute('aria-label', this.options.text);
 		}
 
 		if (this.options.image) {

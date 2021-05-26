@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs">
+	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs" aria-label="Map">
 		<MapLayer v-for="[name, map] in maps" :key="name" :map="map" :name="name" :leaflet="leaflet"></MapLayer>
 		<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
 		<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>

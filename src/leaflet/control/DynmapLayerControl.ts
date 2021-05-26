@@ -55,7 +55,7 @@ export class DynmapLayerControl extends Control.Layers {
 		const element = super.onAdd(map);
 
 		this._layersLink!.innerHTML = `
-		<svg class="svg-icon">
+		<svg class="svg-icon" aria-hidden="true">
 		  <use xlink:href="#layers" />
 		</svg>`;
 
