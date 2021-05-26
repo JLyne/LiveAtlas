@@ -43,7 +43,7 @@ export default defineComponent({
 			return useStore().state.currentServer;
 		},
 		selected(): boolean {
-			return this.currentServer && this.server.id === this.currentServer.id;
+			return !!this.currentServer && this.server.id === this.currentServer.id;
 		}
 	},
 
