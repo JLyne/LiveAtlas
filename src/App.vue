@@ -28,7 +28,7 @@ import Sidebar from './components/Sidebar.vue';
 import ChatBox from './components/ChatBox.vue';
 import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
-import {parseUrl} from '@/util';
+import {hideSplash, parseUrl, showSplash, showSplashError} from '@/util';
 import {MutationTypes} from "@/store/mutation-types";
 import {LiveAtlasServerDefinition} from "@/index";
 
@@ -58,7 +58,7 @@ export default defineComponent({
 					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
 					startUpdates();
 					requestAnimationFrame(() => {
-						window.hideSplash();
+						hideSplash();
 
 						const map = document.getElementById('#app');
 
@@ -74,7 +74,7 @@ export default defineComponent({
 
 					const error = `Failed to load server configuration for '${store.state.currentServer!.id}'`;
 					console.error(`${error}:`, e);
-					window.showSplashError(`${error}\n${e}`, false, ++configAttempts.value);
+					showSplashError(`${error}\n${e}`, false, ++configAttempts.value);
 					setTimeout(() => loadConfiguration(), 1000);
 				}
 			},
@@ -136,7 +136,7 @@ export default defineComponent({
 		watch(title, (title) => document.title = title);
 		watch(currentUrl, (url) => window.history.replaceState({}, '', url));
 		watch(currentServer, (newServer?: LiveAtlasServerDefinition) => {
-			window.showSplash();
+			showSplash();
 			stopUpdates();
 
 			if(!newServer) {
@@ -155,7 +155,7 @@ export default defineComponent({
 		}, {deep: true});
 		watch(configurationHash, (newHash, oldHash) => {
 			if(newHash && oldHash) {
-				window.showSplash();
+				showSplash();
 				stopUpdates();
 				store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
 				loadConfiguration();

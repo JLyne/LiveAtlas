@@ -24,9 +24,6 @@ declare global {
 	interface Window {
 		config: { url: DynmapUrlConfig };
 		liveAtlasConfig: any,
-		hideSplash: Function;
-		showSplash: Function;
-		showSplashError: Function;
 	}
 }
 

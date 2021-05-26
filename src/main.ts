@@ -24,15 +24,11 @@ import '@/scss/style.scss';
 
 import 'focus-visible';
 import {MutationTypes} from "@/store/mutation-types";
-import {validateConfiguration} from "@/util";
+import {showSplashError, validateConfiguration} from "@/util";
 import { VueClipboard } from '@soerenmartius/vue3-clipboard';
 import Notifications from '@kyvg/vue3-notification'
 
 const splash = document.getElementById('splash'),
-	splashSpinner = document.getElementById('splash__spinner'),
-	splashError = document.getElementById('splash__error'),
-	splashErrorMessage = document.getElementById('splash__error-message'),
-	splashRetry = document.getElementById('splash__error-retry'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
 
 if(splash) {
@@ -42,55 +38,6 @@ if(splash) {
 		}
 	});
 }
-
-window.showSplash = function() {
-	if(!splash) {
-		return;
-	}
-
-	splash.hidden = false;
-
-	requestAnimationFrame(function() {
-		splash.style.opacity = '1';
-	});
-};
-
-window.hideSplash = function() {
-	if(!splash) {
-		return;
-	}
-
-	requestAnimationFrame(function() {
-		splash.style.opacity = '0';
-
-		if(window.getComputedStyle(splash).opacity === '0') {
-			splash.hidden = true;
-		}
-	});
-};
-
-window.showSplashError = function(message: string, fatal: boolean, attempts: number) {
-	if(splashError) {
-		splashError.setAttribute('aria-hidden', 'false');
-	}
-
-	if(splashErrorMessage) {
-		splashErrorMessage.innerText = message || 'Unknown error';
-	}
-
-	if(splashSpinner && fatal) {
-		splashSpinner.style.visibility = 'hidden';
-	}
-
-	if(splashRetry) {
-		if(fatal) {
-			splashRetry.hidden = true;
-		} else if(attempts) {
-			splashRetry.hidden = false;
-			splashRetry.textContent = `Retrying... (${attempts.toString()})`;
-		}
-	}
-};
 
 console.info(`LiveAtlas version ${store.state.version} - https://github.com/JLyne/LiveAtlas`);
 
@@ -122,5 +69,5 @@ try {
 	app.mount('#app');
 } catch(e) {
 	console.error('LiveAtlas configuration is invalid: ', e);
-	window.showSplashError('LiveAtlas configuration is invalid\n' + e, true);
+	showSplashError('LiveAtlas configuration is invalid\n' + e, true);
 }
