@@ -18,7 +18,7 @@
 	<Map></Map>
 	<Sidebar></Sidebar>
 	<ChatBox v-if="chatBoxEnabled" v-show="chatBoxEnabled && chatVisible"></ChatBox>
-	<notifications position="bottom center" :speed="250" :max="3" :ignoreDuplicates="true" />
+	<notifications position="bottom center" :speed="250" :max="3" :ignoreDuplicates="true" classes="notification" />
 </template>
 
 <script lang="ts">
@@ -57,7 +57,15 @@ export default defineComponent({
 				try {
 					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
 					startUpdates();
-					requestAnimationFrame(() => window.hideSplash());
+					requestAnimationFrame(() => {
+						window.hideSplash();
+
+						const map = document.getElementById('#app');
+
+						if(map) {
+							(map as HTMLElement).focus();
+						}
+					});
 				} catch(e) {
 					//Request was aborted, probably because another server was selected before the request finished. Don't retry
 					if(e instanceof DOMException && e.name === 'AbortError') {
