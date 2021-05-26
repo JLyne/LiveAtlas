@@ -20,7 +20,7 @@
 		<button class="player__name" type="button" :title="title"
 				:disbled="player.hidden"
 				@click.prevent="pan"
-				@keydown.prevent="onKeydown"
+				@keydown="onKeydown"
 				@dblclick.prevent="follow" v-html="player.name"></button>
 	</li>
 </template>
