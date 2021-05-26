@@ -1,13 +1,15 @@
 <template>
 	<section :class="{'sidebar__section': true, 'section--collapsible': true, 'section--collapsed': collapsed}">
-		<button :id="`${name}-heading`" type="button" class="section__heading"
-		        @click.prevent="toggle" :title="title"
-		        :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
-			<span>
-				<slot name="heading"></slot>
-			</span>
-			<SvgIcon name="arrow"></SvgIcon>
-		</button>
+		<h2>
+			<button :id="`${name}-heading`" type="button" class="section__heading"
+			        @click.prevent="toggle" :title="title"
+			        :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
+				<span>
+					<slot name="heading"></slot>
+				</span>
+				<SvgIcon name="arrow"></SvgIcon>
+			</button>
+		</h2>
 		<div :id="`${name}-content`" role="region" :aria-labelledby="`${name}-heading`" :aria-hidden="collapsed">
 			<slot></slot>
 		</div>

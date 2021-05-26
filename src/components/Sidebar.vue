@@ -15,24 +15,27 @@
   -->
 
 <template>
-	<aside class="sidebar">
+	<section class="sidebar" role="none">
 		<header class="sidebar__buttons">
 			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active':currentlyVisible.has('maps')}"
-					@click="toggleElement('maps')" :title="messageWorlds" :aria-label="messageWorlds">
+					@click="toggleElement('maps')" :title="messageWorlds"
+					:aria-label="messageWorlds" :aria-expanded="currentlyVisible.has('maps')">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
 			<button :class="{'button--players': true, 'active': currentlyVisible.has('players')}"
-					@click="toggleElement('players')" :title="messagePlayers" :aria-label="messagePlayers">
+					@click="toggleElement('players')" :title="messagePlayers"
+					:aria-label="messagePlayers" :aria-expanded="currentlyVisible.has('players')">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
 		</header>
 		<div class="sidebar__content" @keydown="handleKeydown">
 			<ServerList v-if="serverCount > 1" v-show="currentlyVisible.has('maps')"></ServerList>
 			<WorldList v-if="mapCount > 1" v-show="currentlyVisible.has('maps')"></WorldList>
-			<PlayerList v-if="previouslyVisible.has('players')" v-show="currentlyVisible.has('players')"></PlayerList>
+			<PlayerList id="players" v-if="previouslyVisible.has('players')"
+			            v-show="currentlyVisible.has('players')"></PlayerList>
 			<FollowTarget v-if="following" v-show="followActive" :target="following"></FollowTarget>
 		</div>
-	</aside>
+	</section>
 </template>
 
 <script lang="ts">
@@ -241,6 +244,7 @@ export default defineComponent({
 			text-align: left;
 			display: flex;
 			align-items: center;
+			width: calc(100% + 3rem);
 
 			&:hover, &:focus-visible, &.focus-visible, &:active {
 				background-color: transparent;

@@ -54,6 +54,9 @@ export class DynmapLayerControl extends Control.Layers {
 		// @ts-ignore
 		const element = super.onAdd(map);
 
+		this._layersLink!.parentElement!.removeAttribute('aria-haspopup');
+		this._layersLink!.setAttribute('role', 'button');
+		this._layersLink!.setAttribute('aria-expanded', 'false');
 		this._layersLink!.innerHTML = `
 		<svg class="svg-icon" aria-hidden="true">
 		  <use xlink:href="#layers" />
@@ -70,9 +73,18 @@ export class DynmapLayerControl extends Control.Layers {
 	expand() {
 		// @ts-ignore
 		DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
+		this._layersLink!.setAttribute('aria-expanded', 'true');
 
 		// @ts-ignore
 		super._checkDisabledLayers();
+		return this;
+	}
+
+	collapse() {
+		// @ts-ignore
+		DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
+		this._layersLink!.setAttribute('aria-expanded', 'false');
+
 		return this;
 	}
 
