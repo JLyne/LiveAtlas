@@ -205,6 +205,8 @@ export default defineComponent({
 			// markerZoomAnimation: false,
 		})) as DynmapMap;
 
+		window.addEventListener('keydown', this.handleKeydown);
+
 		this.leaflet.createPane('vectors');
 
 		this.leaflet.addControl(new LoadingControl({
@@ -221,7 +223,17 @@ export default defineComponent({
 		});
 	},
 
+	unmounted() {
+		window.removeEventListener('keydown', this.handleKeydown);
+	},
+
 	methods: {
+		handleKeydown(e: KeyboardEvent) {
+			if(e.key === 'Escape') {
+				e.preventDefault();
+				this.leaflet.getContainer().focus();
+			}
+		},
 		updateFollow(player: DynmapPlayer, newFollow: boolean) {
 			const store = useStore(),
 				followMapName = store.state.configuration.followMap,

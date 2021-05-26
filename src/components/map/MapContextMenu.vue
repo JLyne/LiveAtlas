@@ -114,7 +114,6 @@ export default defineComponent({
 		const handleEsc = (e: KeyboardEvent) => {
 				if (e.key === "Escape" && menuVisible.value) {
 					closeContextMenu();
-					props.leaflet.getContainer().focus();
 				}
 			},
 			closeContextMenu = () => {
