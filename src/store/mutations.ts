@@ -31,7 +31,7 @@ import {
 	DynmapWorldState, DynmapParsedUrl, DynmapChat
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import {LiveAtlasMessageConfig, LiveAtlasServerDefinition, LiveAtlasUIElement} from "@/index";
+import {LiveAtlasMessageConfig, LiveAtlasServerDefinition, LiveAtlasSidebarSection, LiveAtlasUIElement} from "@/index";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -82,6 +82,9 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_SMALL_SCREEN](state: S, payload: boolean): void
 	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: S, payload: LiveAtlasUIElement): void
 	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: S, payload: {element: LiveAtlasUIElement, state: boolean}): void
+
+	[MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE](state: S, section: LiveAtlasSidebarSection): void
+	[MutationTypes.SET_SIDEBAR_SECTION_COLLAPSED_STATE](state: S, payload: {section: LiveAtlasSidebarSection, state: boolean}): void
 
 	[MutationTypes.SET_LOGGED_IN](state: S, payload: boolean): void
 }
@@ -530,6 +533,22 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 
 		payload.state ? state.ui.visibleElements.add(payload.element) : state.ui.visibleElements.delete(payload.element);
+	},
+
+	[MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE](state: State, section: LiveAtlasSidebarSection): void {
+		if(state.ui.sidebar.collapsedSections.has(section)) {
+			state.ui.sidebar.collapsedSections.delete(section);
+		} else {
+			state.ui.sidebar.collapsedSections.add(section);
+		}
+	},
+
+	[MutationTypes.SET_SIDEBAR_SECTION_COLLAPSED_STATE](state: State, payload: {section: LiveAtlasSidebarSection, state: boolean}): void {
+		if (payload.state) {
+			state.ui.sidebar.collapsedSections.delete(payload.section);
+		} else {
+			state.ui.sidebar.collapsedSections.add(payload.section);
+		}
 	},
 
 	[MutationTypes.SET_LOGGED_IN](state: State, payload: boolean): void {

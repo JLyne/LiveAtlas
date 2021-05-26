@@ -20,6 +20,7 @@
 	import {defineComponent} from "@vue/runtime-core";
 	import SvgIcon from "@/components/SvgIcon.vue";
 	import '@/assets/icons/arrow.svg';
+	import {MutationTypes} from "@/store/mutation-types";
 
 	export default defineComponent({
 		name: 'CollapsibleSection',
@@ -37,7 +38,7 @@
 			},
 
 			collapsed(): boolean {
-				return useStore().state.ui.collapsedSections.has(this.name);
+				return useStore().state.ui.sidebar.collapsedSections.has(this.name);
 			},
 		},
 
@@ -53,13 +54,7 @@
 			},
 
 			toggle() {
-				const store = useStore();
-
-				if(this.collapsed) {
-					store.state.ui.collapsedSections.delete(this.name);
-				} else {
-					store.state.ui.collapsedSections.add(this.name);
-				}
+				useStore().commit(MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE, this.name);
 			}
 		}
 	});

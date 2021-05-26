@@ -65,7 +65,10 @@ export type State = {
 		smallScreen: boolean;
 		visibleElements: Set<LiveAtlasUIElement>;
 		previouslyVisibleElements: Set<LiveAtlasUIElement>;
-		collapsedSections: Set<LiveAtlasSidebarSection>;
+
+		sidebar: {
+			collapsedSections: Set<LiveAtlasSidebarSection>;
+		}
 	};
 
 	parsedUrl: DynmapParsedUrl;
@@ -209,7 +212,10 @@ export const state: State = {
 		smallScreen: false,
 		visibleElements:new Set(),
 		previouslyVisibleElements: new Set(),
-		collapsedSections: new Set(),
+
+		sidebar: {
+			collapsedSections: new Set(),
+		},
 	},
 
 	parsedUrl: {

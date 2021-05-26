@@ -60,5 +60,8 @@ export enum MutationTypes {
 	TOGGLE_UI_ELEMENT_VISIBILITY = 'toggleUIElementVisibility',
 	SET_UI_ELEMENT_VISIBILITY = 'setUIElementVisibility',
 
+	TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE = 'toggleSidebarSectionCollapsedState',
+	SET_SIDEBAR_SECTION_COLLAPSED_STATE = 'setSidebarSectionCollapsedState',
+
 	SET_LOGGED_IN = 'setLoggedIn',
 }
