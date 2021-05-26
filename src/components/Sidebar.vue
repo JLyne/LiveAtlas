@@ -171,7 +171,7 @@ export default defineComponent({
 				const heading = document.querySelector('.section__heading button');
 
 				if(heading) {
-					heading.focus();
+					(heading as HTMLElement).focus();
 				}
 			}
 		}
