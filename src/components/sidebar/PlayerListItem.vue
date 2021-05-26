@@ -19,8 +19,7 @@
 		<img width="16" height="16" class="player__icon" :src="image" alt="" aria-hidden="true" />
 		<button class="player__name" type="button" :title="title"
 				:disbled="player.hidden"
-				@click.prevent="pan"
-				@keydown="onKeydown"
+				@click.prevent="onClick"
 				@dblclick.prevent="follow" v-html="player.name"></button>
 	</li>
 </template>
@@ -60,6 +59,7 @@ export default defineComponent({
 
 			pan = () => {
 				if(!props.player.hidden) {
+					console.log('clear?');
 					store.commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
 					store.commit(MutationTypes.SET_PAN_TARGET, props.player);
 				}
@@ -67,17 +67,12 @@ export default defineComponent({
 
 			follow = () => store.commit(MutationTypes.SET_FOLLOW_TARGET, props.player),
 
-			onKeydown = (e: KeyboardEvent) => {
-				if(e.key !== ' ' && e.key !== 'Enter') {
-					return;
-				}
-
+			onClick = (e: MouseEvent) => {
 				if(e.shiftKey) {
 					follow();
+					e.preventDefault();
 				} else {
-					if(!props.player.hidden) {
-						pan();
-					}
+					pan();
 				}
 			};
 
@@ -95,7 +90,7 @@ export default defineComponent({
 			otherWorld,
 			pan,
 			follow,
-			onKeydown
+			onClick
 		}
 	},
 
