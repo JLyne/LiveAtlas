@@ -25,8 +25,7 @@
 				<span class="target__status" v-show="target.hidden">{{ messageHidden }}</span>
 			</span>
 			<button class="target__unfollow" type="button" :title="messageUnfollowTitle"
-				@click.prevent="unfollow"
-				@keydown="onKeydown">{{ messageUnfollow }}</button>
+				@click.prevent="unfollow">{{ messageUnfollow }}</button>
 		</div>
 	</section>
 </template>
@@ -60,13 +59,6 @@ export default defineComponent({
 			unfollow = () => {
 				useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
 			},
-			onKeydown = (e: KeyboardEvent) => {
-				if(e.key !== ' ') {
-					return;
-				}
-
-				unfollow();
-			},
 			updatePlayerImage = async () => {
 				image.value = defaultImage;
 
@@ -83,7 +75,6 @@ export default defineComponent({
 
 		return {
 			image,
-			onKeydown,
 			unfollow,
 			heading,
 			messageUnfollow,

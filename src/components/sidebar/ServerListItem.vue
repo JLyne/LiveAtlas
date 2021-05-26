@@ -18,7 +18,7 @@
 	<li :class="{'server': true, 'server--selected': selected}" role="none">
 		<button type="button" :class="{'active': selected}"
 		        role="option" :aria-pressed="selected" :title="server.label || server.id"
-			    @click="setCurrentServer(server.id)" @keydown="(e) => handleKeydown(e, server.id)">{{ server.label || server.id }}
+			    @click="setCurrentServer(server.id)">{{ server.label || server.id }}
 		</button>
 	</li>
 </template>
@@ -48,16 +48,6 @@ export default defineComponent({
 	},
 
 	methods: {
-		handleKeydown(e: KeyboardEvent, serverId: string) {
-			if(e.key !== ' ' && e.key !== 'Enter') {
-				return;
-			}
-
-			e.preventDefault();
-
-			this.setCurrentServer(serverId);
-		},
-
 		setCurrentServer(serverId: string) {
 			useStore().commit(MutationTypes.SET_CURRENT_SERVER, serverId);
 		}
