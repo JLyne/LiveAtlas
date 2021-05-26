@@ -26,7 +26,7 @@
 				<SvgIcon name="players"></SvgIcon>
 			</button>
 		</header>
-		<div class="sidebar__content">
+		<div class="sidebar__content" @keydown="handleKeydown">
 			<ServerList v-if="serverCount > 1" v-show="currentlyVisible.has('maps')"></ServerList>
 			<WorldList v-if="mapCount > 1" v-show="currentlyVisible.has('maps')"></WorldList>
 			<PlayerList v-if="previouslyVisible.has('players')" v-show="currentlyVisible.has('players')"></PlayerList>
@@ -89,6 +89,50 @@ export default defineComponent({
 			following,
 			messageWorlds,
 			messagePlayers,
+		}
+	},
+
+	methods: {
+		handleKeydown(e: KeyboardEvent) {
+			if(!e.target || !(e.target as HTMLElement).classList.contains('section__heading')) {
+				return;
+			}
+
+			const sectionHeadings: HTMLElement[] = Array.from(this.$el.querySelectorAll('.section__heading')),
+				position = sectionHeadings.indexOf(e.target as HTMLElement);
+
+			if(position === -1) {
+				return;
+			}
+
+			let newPosition;
+
+			switch(e.key) {
+				case 'ArrowDown':
+					newPosition = position + 1;
+					break;
+				case 'ArrowUp':
+					newPosition = position - 1;
+					break;
+				case 'Home':
+					newPosition = 0;
+					break;
+				case 'End':
+					newPosition = sectionHeadings.length - 1;
+					break;
+				default:
+					return;
+			}
+
+			if(newPosition >= sectionHeadings.length) {
+				newPosition = 0
+			} else if(newPosition < 0) {
+				newPosition = sectionHeadings.length - 1;
+			}
+
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			sectionHeadings[newPosition].focus();
 		}
 	}
 })
