@@ -19,8 +19,7 @@
 @import "mixins";
 @import "placeholders";
 @import "notifications";
-@import "leaflet/controls";
-@import "leaflet/popups";
+@import "leaflet";
 
 @keyframes spin {
 	0% {
@@ -263,118 +262,6 @@ input {
 		transform: scale(calc((1/6)*5));
     	transform-origin: top center
 	}
-}
-
-/*******************
- * players on the map
- */
-
-.marker {
-	display: flex;
-	align-items: center;
-
-	&.marker--player {
-   		transition: transform 0.3s ease-in 0s;
-
-		.marker__label {
-			display: block;
-		}
-
-		.player__health,
-		.player__armor {
-			width: 50px;
-		}
-
-		.player__health,
-		.player__armor,
-		.player__health-bar,
-		.player__armor-bar {
-			height: 7px;
-		}
-
-		.player__health {
-			background: url(../assets/images/heart_depleted.png) repeat-x left center;
-		}
-
-		.player__health-bar {
-			background: url(../assets/images/heart.png) repeat-x left center;
-		}
-
-		.player__armor {
-			background: url(../assets/images/armor_depleted.png) repeat-x left center;
-		}
-
-		.player__armor-bar {
-			background: url(../assets/images/armor.png) repeat-x left center;
-		}
-	}
-
-	.marker__label {
-		flex: 0 0 auto;
-		margin-left: 2px;
-		z-index: 20;
-		font-size: 1.5rem;
-		line-height: 1;
-
-		white-space: nowrap;
-
-		color: var(--text-base);
-		background: var(--background-dark);
-		padding: 0.2rem;
-		display: none;
-		max-width: 25vw;
-		text-overflow: ellipsis;
-		overflow: hidden;
-
-		@at-root .leaflet-pane--show-labels .marker__label {
-			display: block;
-		}
-	}
-
-	&:hover {
-		z-index: 1000;
-	}
-
-	@include focus {
-		z-index: 1000;
-
-		.marker__label {
-			display: block;
-			outline: auto;
-		}
-	}
-
-	&:hover .marker__label {
-		display: block;
-	}
-
-	@at-root {
-		.no-animations .marker.marker--player {
-			transition: none;
-		}
-	}
-
-	@media print {
-		display: none !important;
-	}
-}
-
-.leaflet-container {
-	font-family: inherit;
-	font-size: 1.5rem;
-	font-weight: inherit;
-	line-height: 1;
-
-	/* Workaround for focus outlines until https://github.com/Leaflet/Leaflet/pull/7259 gets released */
-	* {
-		@include focus {
-			outline-style: auto !important;
-		}
-	}
-}
-
-.leaflet-players-pane {
-	z-index: 600;
 }
 
 @media print {

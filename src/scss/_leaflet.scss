@@ -1,0 +1,21 @@
+@import "leaflet/controls";
+@import "leaflet/popups";
+@import "leaflet/markers";
+
+.leaflet-container {
+	font-family: inherit;
+	font-size: 1.5rem;
+	font-weight: inherit;
+	line-height: 1;
+
+	/* Workaround for focus outlines until https://github.com/Leaflet/Leaflet/pull/7259 gets released */
+	* {
+		@include focus {
+			outline-style: auto !important;
+		}
+	}
+}
+
+.leaflet-players-pane {
+	z-index: 600;
+}
