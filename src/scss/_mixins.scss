@@ -10,3 +10,69 @@
 		@content;
 	}
 }
+
+@mixin button {
+	appearance: none;
+	border: none;
+	box-shadow: none;
+	background-color: var(--background-base);
+	color: var(--text-base);
+	border-radius: var(--border-radius);
+	cursor: pointer;
+	display: block;
+	text-align: center;
+	position: relative;
+	transition: color 0.2s ease-in, background-color 0.2s ease-in;
+	font-size: 1.6rem;
+	font-family: Raleway, sans-serif;
+	box-sizing: border-box;
+
+	.svg-icon {
+		display: inline-block;
+		width: 3rem;
+		height: 3rem;
+		pointer-events: none;
+
+		&:only-child {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			margin: auto;
+		}
+	}
+}
+
+@mixin button-hovered {
+	background-color: var(--background-hover);
+	color: var(--text-hover);
+}
+
+@mixin button-focused {
+	outline: var(--outline-focus) auto thick !important;
+	background-color: var(--background-base);
+	color: var(--text-base);
+	z-index: 1;
+}
+
+@mixin button-active {
+	background-color: var(--background-active);
+	color: var(--text-active);
+}
+
+@mixin button-disabled {
+	background-color: var(--background-disabled);
+	color: var(--text-disabled);
+	cursor: not-allowed;
+
+	&:hover, &:active {
+		background-color: var(--background-disabled);
+		color: var(--text-disabled);
+	}
+
+	@include focus {
+		background-color: var(--background-disabled);
+		color: var(--text-disabled);
+	}
+}
