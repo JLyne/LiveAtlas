@@ -58,6 +58,7 @@ export class PlayerMarker extends Marker {
 		});
 	}
 
+	// noinspection JSUnusedGlobalSymbols
 	_resetZIndex() {
 		//Don't change the zindex
 	}

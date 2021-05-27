@@ -33,7 +33,7 @@ export class LogoControl extends Control {
 		super(options);
 	}
 
-	onAdd(map: L.Map) {
+	onAdd() {
 		const container = DomUtil.create('div', 'leaflet-control-logo');
 		let link;
 

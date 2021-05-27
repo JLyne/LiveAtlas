@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-import {Control, ControlOptions, DomUtil, Map} from 'leaflet';
+import {Control, ControlOptions, DomUtil} from 'leaflet';
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {watch} from "@vue/runtime-core";
@@ -29,7 +29,7 @@ export class ChatControl extends Control {
 		super(options);
 	}
 
-	onAdd(map: Map) {
+	onAdd() {
 		const chatButton = DomUtil.create('button', 'leaflet-control-chat') as HTMLButtonElement;
 
 		chatButton.type = 'button';

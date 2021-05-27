@@ -259,7 +259,7 @@ export class DynmapTileLayer extends TileLayer {
 		// zoomoutlevel: izoom < mapzoomin -> 0, else -> izoom - mapzoomin (which ranges from 0 till mapzoomout)
 		const izoom = this._getZoomForUrl(),
 			zoomoutlevel = Math.max(0, izoom - this._mapSettings.extraZoomLevels),
-			scale = 1 << zoomoutlevel,
+			scale = (1 << zoomoutlevel),
 			x = scale * coords.x,
 			y = scale * coords.y;
 

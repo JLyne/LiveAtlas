@@ -1,4 +1,4 @@
-import {State, Store} from "@/store";
+import {State} from "@/store";
 import {DynmapUrlConfig} from "@/dynmap";
 
 declare module "*.png" {
@@ -10,13 +10,6 @@ declare module '*.vue' {
   import type { DefineComponent } from 'vue'
   const component: DefineComponent<{}, {}, any>
   export default component
-}
-
-declare module '@vue/runtime-core' {
-	// provide typings for `this.$store`
-	interface ComponentCustomProperties {
-		$store: Store<State>
-	}
 }
 
 interface LiveAtlasServerDefinition {

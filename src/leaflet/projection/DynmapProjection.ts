@@ -32,6 +32,7 @@ export interface DynmapProjection {
 	latLngToLocation(latLng: LatLng, y: number): Coordinate;
 }
 
+// noinspection JSUnusedGlobalSymbols
 export class DynmapProjection extends Class {
 
 	constructor(options: DynmapProjectionOptions) {

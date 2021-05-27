@@ -17,7 +17,7 @@
  *    limitations under the License.
  */
 
-import {ControlOptions, DomUtil, Util, Map, Control} from 'leaflet';
+import {ControlOptions, DomUtil, Util, Control} from 'leaflet';
 import {getMinecraftTime} from '@/util';
 import {DynmapWorldState} from "@/dynmap";
 
@@ -55,7 +55,7 @@ export class ClockControl extends Control {
 		Util.setOptions(this, options);
 	}
 
-	onAdd(map: Map) {
+	onAdd() {
 		const digital = !this.options.showTimeOfDay && !this.options.showWeather && this.options.showDigitalClock,
 			worldState = useStore().state.currentWorldState;
 
@@ -86,7 +86,7 @@ export class ClockControl extends Control {
 		return this._container;
 	}
 
-	onRemove(map: Map) {
+	onRemove() {
 		if(this._unwatchHandler) {
 			this._unwatchHandler();
 		}

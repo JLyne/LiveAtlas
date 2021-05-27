@@ -21,6 +21,7 @@ import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 import {LiveAtlasMessageConfig} from "@/index";
 
 declare global {
+	// noinspection JSUnusedGlobalSymbols
 	interface Window {
 		config: { url: DynmapUrlConfig };
 		liveAtlasConfig: any,

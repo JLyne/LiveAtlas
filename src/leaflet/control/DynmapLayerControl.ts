@@ -34,6 +34,7 @@ export class DynmapLayerControl extends Control.Layers {
 	private _layerPositions: Map<Layer, number>;
 
 	constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersOptions) {
+		// noinspection JSUnusedGlobalSymbols
 		super(baseLayers, overlays, Object.assign(options, {
 			sortLayers: true,
 			sortFunction: (layer1: Layer, layer2: Layer, name1: string, name2: string) => {
@@ -103,6 +104,7 @@ export class DynmapLayerControl extends Control.Layers {
 		return super.removeLayer(layer);
 	}
 
+	// noinspection JSUnusedGlobalSymbols
 	_addItem(obj: any) {
 		const container = obj.overlay ? this._overlaysList : this._baseLayersList,
 			item = document.createElement('label'),

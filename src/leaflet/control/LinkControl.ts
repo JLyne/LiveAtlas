@@ -17,7 +17,7 @@
  *    limitations under the License.
  */
 
-import {Control, ControlOptions, DomUtil, Map} from 'leaflet';
+import {Control, ControlOptions, DomUtil} from 'leaflet';
 import {useStore} from "@/store";
 import '@/assets/icons/link.svg';
 import { toClipboard } from '@soerenmartius/vue3-clipboard';
@@ -27,13 +27,11 @@ export class LinkControl extends Control {
 	// @ts-ignore
 	options: ControlOptions
 
-	private _map ?: Map;
-
 	constructor(options: ControlOptions) {
 		super(options);
 	}
 
-	onAdd(map: Map) {
+	onAdd() {
 		const linkButton = DomUtil.create('button', 'leaflet-control-link') as HTMLButtonElement;
 
 		linkButton.type = 'button';

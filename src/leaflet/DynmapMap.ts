@@ -33,6 +33,7 @@ export default class DynmapMap extends Map {
 		return this._layerManager;
 	}
 
+	// noinspection JSUnusedGlobalSymbols
 	_initControlPos() {
 		const corners: any = this._controlCorners = {},
 			l = 'leaflet-',
@@ -51,9 +52,5 @@ export default class DynmapMap extends Map {
 		createCorner('bottom', 'center');
 		createCorner('bottom', 'left');
 		createCorner('bottom', 'right');
-	}
-
-	getUrl() {
-
 	}
 }

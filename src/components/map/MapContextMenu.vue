@@ -3,12 +3,14 @@
 		<div tabindex="0" ref="focusMover" class="focus-mover" aria-label="Context menu"></div>
 		<ul class="menu" role="menu">
 			<li role="none">
+				<!--suppress HtmlUnknownAttribute -->
 				<button type="button" role="menuitem" v-clipboard:copy="locationCopy"
 				        v-clipboard:success="copySuccess"
 				        v-clipboard:error="copyError">{{ locationLabel }}
 				</button>
 			</li>
 			<li role="none">
+				<!--suppress HtmlUnknownAttribute -->
 				<button type="button" role="menuitem"
 				        v-clipboard:copy="url"
 				        v-clipboard:success="copySuccess"

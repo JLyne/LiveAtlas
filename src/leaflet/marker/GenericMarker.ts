@@ -27,6 +27,7 @@ export class GenericMarker extends Marker {
 		Util.setOptions(this, options);
 	}
 
+	// noinspection JSUnusedGlobalSymbols
 	_resetZIndex() {
 		//Don't change the zindex
 	}
