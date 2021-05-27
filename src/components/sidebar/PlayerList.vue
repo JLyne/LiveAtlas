@@ -18,10 +18,10 @@
 	<CollapsibleSection name="players">
 		<template v-slot:heading>{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</template>
 		<template v-slot:default>
-			<ul class="section__content menu" role="listbox">
+			<RadioList class="section__content">
 				<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
-				<li v-if="!players.size" class="section__skeleton">{{ skeletonPlayers }}</li>
-			</ul>
+				<span v-if="!players.size" class="section__skeleton">{{ skeletonPlayers }}</span>
+			</RadioList>
 		</template>
 	</CollapsibleSection>
 </template>
@@ -31,9 +31,11 @@ import PlayerListItem from "./PlayerListItem.vue";
 import {defineComponent} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
+import RadioList from "@/components/util/RadioList.vue";
 
 export default defineComponent({
 	components: {
+		RadioList,
 		CollapsibleSection,
 		PlayerListItem
 	},

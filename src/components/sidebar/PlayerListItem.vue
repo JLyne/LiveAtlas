@@ -15,13 +15,14 @@
   -->
 
 <template>
-	<li :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}">
+	<input :id="`player-${player.account}`" type="radio" name="player" v-bind:value="player" v-model="followTarget"
+	       @click.prevent="onInputClick" />
+	<label :for="`player-${player.account}`"
+	       :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}" :title="title"
+	       @click.prevent="onLabelClick">
 		<img width="16" height="16" class="player__icon" :src="image" alt="" aria-hidden="true" />
-		<button class="player__name" type="button" :title="title"
-				:disbled="player.hidden"
-				@click.prevent="onClick"
-				@dblclick.prevent="follow" v-html="player.name"></button>
-	</li>
+		<span class="player__name" v-html="player.name"></span>
+	</label>
 </template>
 
 <script lang="ts">
@@ -57,9 +58,10 @@ export default defineComponent({
 				}
 			}),
 
+			followTarget = computed(() => store.state.followTarget),
+
 			pan = () => {
 				if(!props.player.hidden) {
-					console.log('clear?');
 					store.commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
 					store.commit(MutationTypes.SET_PAN_TARGET, props.player);
 				}
@@ -67,10 +69,19 @@ export default defineComponent({
 
 			follow = () => store.commit(MutationTypes.SET_FOLLOW_TARGET, props.player),
 
-			onClick = (e: MouseEvent) => {
+			onInputClick = (e: MouseEvent) => {
+				e.preventDefault();
+
 				if(e.shiftKey) {
 					follow();
-					e.preventDefault();
+				} else {
+					pan();
+				}
+			},
+
+			onLabelClick = (e: MouseEvent) => {
+				if(e.shiftKey || e.detail === 2) {
+					follow();
 				} else {
 					pan();
 				}
@@ -88,9 +99,9 @@ export default defineComponent({
 			image,
 			title,
 			otherWorld,
-			pan,
-			follow,
-			onClick
+			followTarget,
+			onInputClick,
+			onLabelClick
 		}
 	},
 
@@ -98,6 +109,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+	@import '../../scss/mixins';
+
 	.player {
 		.player__icon {
 			position: absolute;
@@ -111,21 +124,13 @@ export default defineComponent({
 		}
 
 		.player__name {
-			padding-left: 3.5rem;
+			padding-left: 2.7rem;
 		}
 
 		&.player--hidden {
 			.player__icon {
 				filter: grayscale(1);
 				opacity: 0.5;
-			}
-
-			.player__name {
-				cursor: not-allowed;
-			}
-
-			.player__name {
-				color: var(--text-disabled);
 			}
 		}
 

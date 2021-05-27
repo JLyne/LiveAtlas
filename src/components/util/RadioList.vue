@@ -50,7 +50,14 @@ export default defineComponent({
 				e.preventDefault();
 			} else if(e.key === 'Enter') {
 				if(e.target instanceof HTMLInputElement && e.target.type === 'radio') {
-					e.target.click();
+					const mouseEvent = new MouseEvent('click', {
+						ctrlKey: e.ctrlKey,
+						shiftKey: e.shiftKey,
+						metaKey: e.metaKey,
+						altKey: e.altKey,
+					});
+
+					e.target.dispatchEvent(mouseEvent);
 				}
 			}
 		}
