@@ -271,7 +271,7 @@
   </head>
   <body>
     <div id="splash">
-        <svg id="splash__logo" width="200" height="200" viewBox="0 0 270.06 267.09">
+        <svg id="splash__logo" width="200" height="200" viewBox="0 0 270.06 267.09" aria-hidden="true">
             <g transform="translate(-.49951 -4.5791)">
                 <path transform="scale(.75)"
                       d="m0.66602 9.7227v298.96c0.046934 2.8741 0.25213 2.6741 2.535 3.6641l110.65 47.987c3.8989 1.918 3.6147 1.7537 3.6147-2.3528v-297.68c-0.0605-3.8542 0.32855-4.1331-2.8087-5.4937l-110.14-47.768c-2.988-1.1299-3.8517-1.741-3.8517 2.6812zm65.271 177.53c19.088 0 34.562 15.922 34.562 35.562 2.2e-4 6.4076-1.6821 12.696-4.8691 18.201l-25.939 55.648c-1.8045 3.8714-3.0529 3.8185-5.0156-0.0742l-28.344-55.426c-0.68826-1.1762-1.3097-2.3924-1.8613-3.6426l-0.21875-0.42578 0.03711 8e-3c-1.9214-4.5044-2.9137-9.3701-2.9141-14.289 0-19.641 15.474-35.562 34.562-35.562zm0 20.625c-8.0178-6e-5 -14.518 6.6877-14.518 14.938s6.4998 14.938 14.518 14.938c8.0178 6e-5 14.518-6.6877 14.518-14.938s-6.4998-14.938-14.518-14.938z"
@@ -284,7 +284,7 @@
             </g>
         </svg>
 
-        <svg id="splash__spinner" width="38" height="38" viewBox="0 0 38 38" stroke="#fff">
+        <svg id="splash__spinner" width="38" height="38" viewBox="0 0 38 38" stroke="#fff" aria-label="LiveAtlas is loading">
             <g transform="translate(1 1)" stroke-width="2">
                 <circle stroke-opacity=".5" cx="18" cy="18" r="18" fill="transparent"/>
                 <path d="M36 18c0-9.94-8.06-18-18-18">
@@ -299,7 +299,7 @@
             </g>
         </svg>
 
-        <div id="splash__error" role="alert" aria-hidden="true">
+        <div id="splash__error" role="alert" aria-live="polite" aria-hidden="true">
             <span id="splash__error-message"></span>
             <span id="splash__error-retry"></span>
         </div>
@@ -309,7 +309,7 @@
         <strong>LiveAtlas requires JavaScript to work.<br />Please enable it to continue.</strong>
     </noscript>
 
-    <main id="app"></main>
+    <main id="app" aria-hidden="true"></main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
