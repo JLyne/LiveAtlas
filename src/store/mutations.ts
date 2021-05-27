@@ -39,6 +39,7 @@ export type CurrentMapPayload = {
 }
 
 export type Mutations<S = State> = {
+	[MutationTypes.INIT](state: S): void
 	[MutationTypes.SET_SERVERS](state: S, servers: Map<string, LiveAtlasServerDefinition>): void
 	[MutationTypes.SET_CONFIGURATION](state: S, config: DynmapServerConfig): void
 	[MutationTypes.SET_CONFIGURATION_HASH](state: S, hash: number): void
@@ -90,6 +91,14 @@ export type Mutations<S = State> = {
 }
 
 export const mutations: MutationTree<State> & Mutations = {
+	[MutationTypes.INIT](state: State) {
+		const collapsedSections = localStorage.getItem('collapsedSections');
+
+		if(collapsedSections) {
+			state.ui.sidebar.collapsedSections = new Set(JSON.parse(collapsedSections));
+		}
+	},
+
 	// Sets configuration options from the initial config fetch
 	[MutationTypes.SET_SERVERS](state: State, config: Map<string, LiveAtlasServerDefinition>) {
 		state.servers = config;
