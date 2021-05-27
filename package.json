@@ -6,8 +6,8 @@
     "serve": "vite",
     "preview": "vite preview --port 8082",
     "build": "vue-tsc --noEmit && vite build --out-dir dist",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
+    "lint": "eslint --ext .ts,.vue src",
+    "lint:fix": "eslint -ext .ts,.vue src --fix",
     "postinstall": "patch-package"
   },
   "dependencies": {
