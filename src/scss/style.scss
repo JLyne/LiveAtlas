@@ -187,9 +187,10 @@ input {
 
 		& + label {
 			@include button;
+			margin-bottom: 0.1rem;
 		}
 
-		&:hover + label, &:checked + label {
+		& + label:hover, &:checked + label {
 			@include button-hovered;
 			position: relative;
 		}
@@ -201,6 +202,10 @@ input {
 		&:active + label {
 			@include button-active;
 		}
+
+		&:disabled + label {
+			@include button-disabled;
+		}
 	}
 
 	& > li > button, & > input[type=radio] + label {
@@ -211,7 +216,6 @@ input {
 		text-align: left;
 		min-height: 3.2rem;
 		border-radius: 0.5rem;
-		border-bottom: 0.1rem solid transparent;
 	}
 }
 
