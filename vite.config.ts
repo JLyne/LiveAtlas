@@ -8,7 +8,7 @@ import analyze from 'rollup-plugin-analyzer';
 
 export default defineConfig({
   plugins: [vue(), analyze(), svgSpritePlugin({
-    symbolId: (name) => name,
+    symbolId: (name) => `icon--${name}`,
   })],
   base: './',
   server: {

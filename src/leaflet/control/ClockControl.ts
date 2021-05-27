@@ -68,11 +68,11 @@ export class ClockControl extends Control {
 
 		this._sun!.innerHTML = `
 		<svg class="svg-icon" aria-hidden="true">
-	  		<use xlink:href="#clock_sun" />
+	  		<use xlink:href="#icon--clock_sun" />
 		</svg>`;
 		this._moon!.innerHTML = `
 		<svg class="svg-icon" aria-hidden="true">
-	  		<use xlink:href="#clock_moon" />
+	  		<use xlink:href="#icon--clock_moon" />
 		</svg>`;
 
 		if (this.options.showDigitalClock) {
@@ -155,7 +155,7 @@ export class ClockControl extends Control {
 		if(this._sun && this._currentSunIcon !== icon) {
 			this._sun!.innerHTML = `
 				<svg class="svg-icon" aria-hidden="true">
-					<use xlink:href="#${icon}" />
+					<use xlink:href="#icon--${icon}" />
 				</svg>`;
 			this._currentSunIcon = icon;
 		}
@@ -165,7 +165,7 @@ export class ClockControl extends Control {
 		if(this._moon && this._currentMoonIcon !== icon) {
 			this._moon!.innerHTML = `
 				<svg class="svg-icon" aria-hidden="true">
-					<use xlink:href="#${icon}" />
+					<use xlink:href="#icon--${icon}" />
 				</svg>`;
 			this._currentMoonIcon = icon;
 		}

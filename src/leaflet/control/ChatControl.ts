@@ -36,7 +36,7 @@ export class ChatControl extends Control {
 		chatButton.title = useStore().state.messages.chatTitle;
 		chatButton.innerHTML = `
 		<svg class="svg-icon">
-		  <use xlink:href="#chat" />
+		  <use xlink:href="#icon--chat" />
 		</svg>`;
 
 		chatButton.addEventListener('click', e => {

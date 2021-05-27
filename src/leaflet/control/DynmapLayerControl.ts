@@ -60,7 +60,7 @@ export class DynmapLayerControl extends Control.Layers {
 		this._layersLink!.setAttribute('aria-expanded', 'false');
 		this._layersLink!.innerHTML = `
 		<svg class="svg-icon" aria-hidden="true">
-		  <use xlink:href="#layers" />
+		  <use xlink:href="#icon--layers" />
 		</svg>`;
 
 		return element;
@@ -135,7 +135,7 @@ export class DynmapLayerControl extends Control.Layers {
 		item.appendChild(input);
 		item.insertAdjacentHTML('beforeend',  `
 		<svg class="svg-icon" aria-hidden="true">
-	  		<use xlink:href="#checkbox" />
+	  		<use xlink:href="#icon--checkbox" />
 		</svg>`);
 		item.appendChild(label);
 

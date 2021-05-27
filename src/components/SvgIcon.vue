@@ -39,7 +39,7 @@ export default {
 
   computed: {
     iconPath() {
-      return `#${this.name}`;
+      return `#icon--${this.name}`;
     },
 
     className() {

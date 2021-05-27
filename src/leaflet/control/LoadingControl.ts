@@ -56,7 +56,7 @@ export class LoadingControl extends Control {
 		this._loadingIndicator.hidden = true;
 		this._loadingIndicator.innerHTML = `
 		<svg class="svg-icon">
-		  <use xlink:href="#loading" />
+		  <use xlink:href="#icon--loading" />
 		</svg>`;
 
 		this._addLayerListeners(map);

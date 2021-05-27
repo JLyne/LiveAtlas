@@ -38,7 +38,7 @@ export class LinkControl extends Control {
 		linkButton.title = useStore().state.messages.linkTitle;
 		linkButton.innerHTML = `
 		<svg class="svg-icon" aria-hidden="true">
-		  <use xlink:href="#link" />
+		  <use xlink:href="#icon--link" />
 		</svg>`;
 
 		linkButton.addEventListener('click', e => {
