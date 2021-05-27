@@ -20,7 +20,7 @@
 			<li role="none">
 				<button type="button" role="menuitem" @click.prevent="pan">{{ messageCenterHere }}</button>
 			</li>
-			<WorldListItem v-if="currentWorld" :world="currentWorld"></WorldListItem>
+			<WorldListItem v-if="currentWorld" :world="currentWorld" name="context"></WorldListItem>
 		</ul>
 	</nav>
 </template>

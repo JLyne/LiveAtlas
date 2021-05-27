@@ -15,23 +15,22 @@
   -->
 
 <template>
-	<li class="world" role="none">
+	<div class="world">
 		<span class="world__name">{{ world.title }}</span>
-		<ul class="world__maps" role="menu">
-			<li :class="{'map': true, 'map--selected': map === currentMap}" v-for="[name, map] in world.maps" :key="name" role="none">
-				<button role="menuitemradio" type="button" :title="`${world.title} - ${map.title}`"
-				        @click="setCurrentMap(map.name)" :aria-label="`${world.title} - ${map.title}`"
-				        :aria-checked="map === currentMap">
+		<div class="world__maps menu">
+			<template v-for="[key, map] in world.maps" :key="`${world.name}_${key}`">
+				<input :id="`${name}-${world.name}-${key}`" type="radio" :name="name" v-bind:value="map" v-model="currentMap">
+				<label class="map" :for="`${name}-${world.name}-${key}`" :title="`${world.title} - ${map.title}`">
 					<SvgIcon :name="getMapIcon(map)"></SvgIcon>
-				</button>
-			</li>
-		</ul>
-	</li>
+				</label>
+			</template>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
 import {useStore} from "@/store";
-import {DynmapWorldMap, DynmapWorld} from "@/dynmap";
+import {DynmapWorld, DynmapWorldMap} from "@/dynmap";
 import {defineComponent} from 'vue';
 import {MutationTypes} from "@/store/mutation-types";
 import SvgIcon from "@/components/SvgIcon.vue";
@@ -54,13 +53,22 @@ export default defineComponent({
 		world: {
 			type: Object as () => DynmapWorld,
 			required: true
+		},
+		name: {
+			type: String,
+			default: 'map',
 		}
 	},
 
 	computed: {
-		currentMap(): DynmapWorldMap | undefined {
-			return useStore().state.currentMap;
-		},
+		currentMap: {
+			get() {
+				return useStore().state.currentMap;
+			},
+			set(value) {
+				useStore().commit(MutationTypes.SET_CURRENT_MAP, {worldName: this.world.name, mapName: value.name});
+			}
+		}
 	},
 
 	methods: {
@@ -80,12 +88,6 @@ export default defineComponent({
 			}
 
 			return `block_${worldType}_${mapType}`;
-		},
-		setCurrentMap(mapName: string) {
-			useStore().commit(MutationTypes.SET_CURRENT_MAP, {
-				worldName: this.world.name,
-				mapName
-			});
 		}
 	}
 });
@@ -96,6 +98,7 @@ export default defineComponent({
 		display: flex;
 		align-items: center;
 		margin-bottom:  .5rem;
+		padding-left: 0.8rem;
 
 		.world__name {
 			word-break: break-word;
@@ -116,27 +119,17 @@ export default defineComponent({
 		width: 3.2rem;
 		height: 3.2rem;
 
-		button {
-			display: block;
-			height: 100%;
-			width: 100%;
-			border-radius: 0.5rem;
-
-			.svg-icon {
-				top: 0.2rem;
-				right: 0.2rem;
-				bottom: 0.2rem;
-				left: 0.2rem;
-				width: calc(100% - 0.4rem);
-			}
+		.svg-icon {
+			top: 0.2rem !important;
+			right: 0.2rem !important;
+			bottom: 0.2rem !important;
+			left: 0.2rem !important;
+			width: calc(100% - 0.4rem) !important;
+			height: auto !important;
 		}
 
-		& + .map {
+		& ~ .map {
 			margin-left: 0.5rem;
-		}
-
-		&.map--selected button {
-			background-color: var(--background-hover);
 		}
 	}
 </style>

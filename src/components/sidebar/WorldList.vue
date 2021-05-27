@@ -18,10 +18,10 @@
 	<CollapsibleSection name="maps">
 		<template v-slot:heading>{{ heading }}</template>
 		<template v-slot:default>
-			<ul class="section__content" role="listbox">
-				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="name"></WorldListItem>
-				<li v-if="!worlds.size" class="section__skeleton">{{ skeletonWorlds }}</li>
-			</ul>
+			<RadioList class="section__content">
+				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer.id}_${name}`"></WorldListItem>
+				<span v-if="!worlds.size" class="section__skeleton">{{ skeletonWorlds }}</span>
+			</RadioList>
 		</template>
 	</CollapsibleSection>
 </template>
@@ -31,10 +31,12 @@ import WorldListItem from './WorldListItem.vue';
 import {defineComponent} from 'vue';
 import {useStore} from "@/store";
 import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
+import RadioList from "@/components/util/RadioList.vue";
 
 export default defineComponent({
 	name: 'WorldList',
 	components: {
+		RadioList,
 		CollapsibleSection,
 		WorldListItem
 	},
@@ -50,6 +52,10 @@ export default defineComponent({
 
 		worlds() {
 			return useStore().state.worlds;
+		},
+
+		currentServer() {
+			return useStore().state.currentServer;
 		}
 	}
 });

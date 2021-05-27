@@ -51,8 +51,9 @@ export default {
 
 <style>
   .svg-icon {
-    fill: currentColor;
-    height: 24px;
-    width: 24px;
+    pointer-events: none;
+	fill: currentColor;
+	height: 24px;
+	width: 24px;
   }
 </style>
