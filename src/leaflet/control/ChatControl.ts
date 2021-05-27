@@ -46,7 +46,7 @@ export class ChatControl extends Control {
 		});
 
 		watch(useStore().state.ui.visibleElements, (newValue) => {
-			chatButton.classList.toggle('active', newValue.has('chat'));
+			chatButton.setAttribute('aria-expanded', newValue.has('chat').toString());
 		});
 
 		return chatButton;

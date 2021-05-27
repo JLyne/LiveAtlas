@@ -17,12 +17,12 @@
 <template>
 	<section class="sidebar" role="none">
 		<header class="sidebar__buttons">
-			<button v-if="mapCount > 1" :class="{'button--maps': true, 'active':currentlyVisible.has('maps')}"
+			<button v-if="mapCount > 1" :class="{'button--maps': true}"
 					@click="toggleMaps" :title="messageWorlds"
 					:aria-label="messageWorlds" :aria-expanded="currentlyVisible.has('maps')">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
-			<button :class="{'button--players': true, 'active': currentlyVisible.has('players')}"
+			<button :class="{'button--players': true}"
 					@click="togglePlayers" :title="messagePlayers"
 					:aria-label="messagePlayers" :aria-expanded="currentlyVisible.has('players')">
 				<SvgIcon name="players"></SvgIcon>

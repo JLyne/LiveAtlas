@@ -19,7 +19,7 @@
 %button {
 	@include button;
 
-	&:hover, &.active {
+	&:hover, &[aria-expanded="true"], &[aria-pressed="true"] {
 		@include button-hovered;
 	}
 
@@ -31,7 +31,7 @@
 		@include button-active;
 	}
 
-	&[disabled], &.disabled {
+	&[disabled], &[aria-disabled="true"] {
 		@include button-disabled;
 	}
 }
