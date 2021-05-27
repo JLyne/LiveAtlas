@@ -20,7 +20,7 @@
 		<template v-slot:default>
 			<RadioList class="section__content">
 				<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
-				<span v-if="!players.size" class="section__skeleton">{{ skeletonPlayers }}</span>
+				<div v-if="!players.size" class="section__skeleton" aria-disabled="true" role="radio">{{ skeletonPlayers }}</div>
 			</RadioList>
 		</template>
 	</CollapsibleSection>

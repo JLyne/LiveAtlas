@@ -20,7 +20,7 @@
 		<template v-slot:default>
 			<RadioList class="section__content">
 				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer.id}_${name}`"></WorldListItem>
-				<span v-if="!worlds.size" class="section__skeleton">{{ skeletonWorlds }}</span>
+				<div v-if="!worlds.size" class="section__skeleton" aria-disabled="true" role="radio">{{ skeletonWorlds }}</div>
 			</RadioList>
 		</template>
 	</CollapsibleSection>
