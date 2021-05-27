@@ -24,7 +24,8 @@ import '@/scss/style.scss';
 
 import 'focus-visible';
 import {MutationTypes} from "@/store/mutation-types";
-import {showSplashError, validateConfiguration} from "@/util";
+import {validateConfiguration} from "@/util/config";
+import {showSplashError} from "@/util/splash";
 import { VueClipboard } from '@soerenmartius/vue3-clipboard';
 import Notifications from '@kyvg/vue3-notification'
 

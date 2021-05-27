@@ -28,7 +28,8 @@ import Sidebar from './components/Sidebar.vue';
 import ChatBox from './components/ChatBox.vue';
 import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
-import {hideSplash, parseUrl, showSplash, showSplashError} from '@/util';
+import {parseUrl} from '@/util';
+import {hideSplash, showSplash, showSplashError} from '@/util/splash';
 import {MutationTypes} from "@/store/mutation-types";
 import {LiveAtlasServerDefinition} from "@/index";
 
