@@ -15,12 +15,9 @@
   -->
 
 <template>
-	<li :class="{'server': true, 'server--selected': selected}" role="none">
-		<button type="button" :class="{'active': selected}"
-		        role="radio" :aria-checked="selected" :title="server.label || server.id"
-			    @click="setCurrentServer(server.id)">{{ server.label || server.id }}
-		</button>
-	</li>
+	<input :id="`server-${server.id}`" type="radio" name="server" :value="server.id" v-model="currentServer"
+	       @click="setCurrentServer(server.id)">
+	<label :for="`server-${server.id}`">{{ server.label || server.id }}</label>
 </template>
 
 <script lang="ts">
@@ -39,11 +36,8 @@ export default defineComponent({
 	},
 
 	computed: {
-		currentServer(): LiveAtlasServerDefinition | undefined {
-			return useStore().state.currentServer;
-		},
-		selected(): boolean {
-			return !!this.currentServer && this.server.id === this.currentServer.id;
+		currentServer(): string | undefined {
+			return useStore().state.currentServer ? useStore().state.currentServer.id : undefined;
 		}
 	},
 

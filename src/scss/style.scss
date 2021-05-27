@@ -172,19 +172,46 @@ input {
 		display: flex;
 		padding: 0.8rem 0.8rem 0.7rem;
 		position: relative;
-		border-bottom: 0.1rem solid transparent;
 
 		> button {
-			text-overflow: ellipsis;
-			overflow: hidden;
-			white-space: nowrap;
 			margin: -0.8rem -0.8rem -0.7rem;
-			padding: 0.8rem 0.8rem 0.7rem;
-			text-align: left;
 			flex-grow: 1;
-			min-height: 3.2rem;
-			border-radius: 0.5rem;
 		}
+	}
+
+	> input[type=radio] {
+		clip: rect(1px, 1px, 1px, 1px);
+		height: 1px;
+		width: 1px;
+		position: absolute;
+
+		& + label {
+			@include button;
+		}
+
+		&:hover + label, &:checked + label {
+			@include button-hovered;
+			position: relative;
+		}
+
+		&:focus + label {
+			@include button-focused;
+		}
+
+		&:active + label {
+			@include button-active;
+		}
+	}
+
+	& > li > button, & > input[type=radio] + label {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+		padding: 0.8rem 0.8rem 0.7rem;
+		text-align: left;
+		min-height: 3.2rem;
+		border-radius: 0.5rem;
+		border-bottom: 0.1rem solid transparent;
 	}
 }
 
