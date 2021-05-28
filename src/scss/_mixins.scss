@@ -53,8 +53,6 @@
 
 @mixin button-focused {
 	outline: var(--outline-focus) auto thick !important;
-	//background-color: var(--background-base);
-	//color: var(--text-base);
 	z-index: 1;
 	border-color: var(--background-dark);
 }

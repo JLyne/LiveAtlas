@@ -27,6 +27,7 @@ import '@/assets/icons/checkbox.svg';
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {watch} from "vue";
+import {handleKeyboardEvent} from "@/util/events";
 
 const store = useStore();
 
@@ -70,6 +71,12 @@ export class DynmapLayerControl extends Control.Layers {
 		this._section!.style.display = '';
 		this.handleResize();
 
+		const firstCheckbox = this._container!.querySelector('input');
+
+		if(firstCheckbox) {
+			(firstCheckbox as HTMLElement).focus();
+		}
+
 		// @ts-ignore
 		super._checkDisabledLayers();
 		return this;
@@ -88,6 +95,11 @@ export class DynmapLayerControl extends Control.Layers {
 
 		DomEvent.disableClickPropagation(container);
 		DomEvent.disableScrollPropagation(container);
+
+		DomEvent.on(container, 'keydown', (e: Event) => {
+			const elements = Array.from(container.querySelectorAll('input')) as HTMLElement[];
+			handleKeyboardEvent(e as KeyboardEvent, elements);
+		});
 
 		const section = this._section = DomUtil.create('section', className + '-list'),
 			button = this._layersButton = DomUtil.create('button', className + '-toggle', container);

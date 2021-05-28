@@ -130,6 +130,19 @@ input {
 				opacity: 1;
 			}
 		}
+
+		@include focus {
+			& ~ span:after {
+				content: '';
+				outline: var(--outline-focus) 2px solid;
+				position: absolute;
+				top: 0;
+				right: -0.5rem;
+				bottom: 0;
+				left: -0.5rem;
+				border-radius: 0.5rem;
+			}
+		}
 	}
 
 	svg {
