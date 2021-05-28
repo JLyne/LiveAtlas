@@ -16,12 +16,12 @@
 
 <template>
 	<section class="chat">
-		<ul class="chat__messages">
+		<ul class="chat__messages" role="log" aria-live="polite" aria-relevant="additions">
 			<ChatMessage v-for="message in chatMessages" :key="message.timestamp" :message="message"></ChatMessage>
-			<li v-if="!chatMessages.length" class="message message--skeleton">{{ messageNoMessages }}</li>
+			<li v-if="!chatMessages.length" class="message message--skeleton" role="none">{{ messageNoMessages }}</li>
 		</ul>
 		<form v-if="sendingEnabled" class="chat__form" @submit.prevent="sendMessage">
-			<div v-if="sendingError" class="chat__error">{{ sendingError }}</div>
+			<div role="alert" v-if="sendingError" class="chat__error">{{ sendingError }}</div>
 			<input ref="chatInput" v-model="enteredMessage" class="chat__input" type="text" :maxlength="maxMessageLength"
 					:placeholder="messagePlaceholder"  :disabled="sendingMessage">
 			<button class="chat__send" :disabled="!enteredMessage || sendingMessage">{{ messageSend }}</button>
