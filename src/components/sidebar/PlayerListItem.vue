@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<input :id="`player-${player.account}`" type="radio" name="player" v-bind:value="player" v-model="followTarget"
+	<input :id="`player-${player.account}`" type="radio" name="player" v-bind:value="player.account" v-model="followTarget"
 	       @click.prevent="onInputClick" />
 	<label :for="`player-${player.account}`"
 	       :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}" :title="title"
@@ -58,7 +58,7 @@ export default defineComponent({
 				}
 			}),
 
-			followTarget = computed(() => store.state.followTarget),
+			followTarget = computed(() => store.state.followTarget ? store.state.followTarget.account : undefined),
 
 			pan = () => {
 				if(!props.player.hidden) {

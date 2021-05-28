@@ -19,7 +19,7 @@
 		<template v-slot:heading>{{ heading }}</template>
 		<template v-slot:default>
 			<RadioList v-if="worlds.size" class="section__content" aria-labelledby="maps-heading">
-				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer.id}_${name}`"></WorldListItem>
+				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer}_${name}`"></WorldListItem>
 			</RadioList>
 			<div v-else class="section__skeleton">{{ skeletonWorlds }}</div>
 		</template>
@@ -41,6 +41,13 @@ export default defineComponent({
 		WorldListItem
 	},
 
+	props: {
+		prefix: {
+			type: String,
+			default: 'map',
+		}
+	},
+
 	computed: {
 		heading() {
 			return useStore().state.messages.worldsHeading;
@@ -55,7 +62,8 @@ export default defineComponent({
 		},
 
 		currentServer() {
-			return useStore().state.currentServer;
+			const store = useStore();
+			return store.state.currentServer ? store.state.currentServer.id : undefined;
 		}
 	}
 });

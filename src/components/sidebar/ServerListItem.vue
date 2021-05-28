@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<input :id="`server-${server.id}`" type="radio" name="server" v-bind:value="server" v-model="currentServer">
+	<input :id="`server-${server.id}`" type="radio" name="server" v-bind:value="server.id" v-model="currentServer">
 	<label :for="`server-${server.id}`">{{ server.label || server.id }}</label>
 </template>
 
@@ -37,10 +37,11 @@ export default defineComponent({
 	computed: {
 		currentServer: {
 			get() {
-				return useStore().state.currentServer;
+				const store = useStore();
+				return store.state.currentServer ? store.state.currentServer.id : undefined;
 			},
-			set(value) {
-				useStore().commit(MutationTypes.SET_CURRENT_SERVER, value.id);
+			set(value: string) {
+				useStore().commit(MutationTypes.SET_CURRENT_SERVER, value);
 			}
 		}
 	},

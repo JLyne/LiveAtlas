@@ -19,7 +19,9 @@
 		<span class="world__name" aria-hidden="true">{{ world.title }}</span>
 		<div class="world__maps menu">
 			<template v-for="[key, map] in world.maps" :key="`${world.name}_${key}`">
-				<input :id="`${name}-${world.name}-${key}`" type="radio" :name="name" v-bind:value="map" v-model="currentMap" :aria-labelledby="`${name}-${world.name}-${key}-label`">
+				<input :id="`${name}-${world.name}-${key}`" type="radio" :name="name"
+				       v-bind:value="[world.name,map.name]" v-model="currentMap"
+				       :aria-labelledby="`${name}-${world.name}-${key}-label`">
 				<label :id="`${name}-${world.name}-${key}-label`" class="map" :for="`${name}-${world.name}-${key}`" :title="`${world.title} - ${map.title}`">
 					<SvgIcon :name="getMapIcon(map)"></SvgIcon>
 				</label>
@@ -63,10 +65,11 @@ export default defineComponent({
 	computed: {
 		currentMap: {
 			get() {
-				return useStore().state.currentMap;
+				const store = useStore();
+				return store.state.currentMap ? `${store.state.currentMap.world.name}_${store.state.currentMap.name}` : undefined;
 			},
-			set(value) {
-				useStore().commit(MutationTypes.SET_CURRENT_MAP, {worldName: this.world.name, mapName: value.name});
+			set(value: string[]) {
+				useStore().commit(MutationTypes.SET_CURRENT_MAP, {worldName: value[0], mapName: value[1]});
 			}
 		}
 	},
