@@ -16,15 +16,17 @@
 
 <template>
 	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs" :aria-label="mapTitle">
-		<MapLayer v-for="[name, map] in maps" :key="name" :map="map" :name="name" :leaflet="leaflet"></MapLayer>
-		<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
-		<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>
+		<template v-if="leaflet">
+			<MapLayer v-for="[name, map] in maps" :key="name" :map="map" :name="name" :leaflet="leaflet"></MapLayer>
+			<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
+			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>
 
-		<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo" :leaflet="leaflet"></LogoControl>
-		<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
-		<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
-		<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
-		<ChatControl v-if="chatBoxEnabled" :leaflet="leaflet"></ChatControl>
+			<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo" :leaflet="leaflet"></LogoControl>
+			<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
+			<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
+			<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
+			<ChatControl v-if="chatBoxEnabled" :leaflet="leaflet"></ChatControl>
+		</template>
 	</div>
 	<MapContextMenu :leaflet="leaflet" v-if="leaflet"></MapContextMenu>
 </template>
@@ -225,6 +227,7 @@ export default defineComponent({
 
 	unmounted() {
 		window.removeEventListener('keydown', this.handleKeydown);
+		this.leaflet.remove();
 	},
 
 	methods: {
