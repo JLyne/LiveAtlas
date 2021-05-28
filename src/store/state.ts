@@ -132,6 +132,7 @@ export const state: State = {
 		contextMenuCenterHere: '',
 		toggleTitle: '',
 		mapTitle: '',
+		layersTitle: '',
 	},
 
 	loggedIn: false,

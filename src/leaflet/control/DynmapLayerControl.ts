@@ -94,7 +94,7 @@ export class DynmapLayerControl extends Control.Layers {
 
 		section.style.display = 'none';
 
-		button.title = 'Layers';
+		button.title = store.state.messages.layersTitle;
 		button.setAttribute('aria-expanded', 'false');
 		button.innerHTML = `
 			<svg class="svg-icon" aria-hidden="true">
@@ -113,6 +113,8 @@ export class DynmapLayerControl extends Control.Layers {
 
 			this.visible = store.state.ui.visibleElements.has('layers');
 		});
+
+		watch(store.state.messages, (newValue) => (button.title = newValue.layersTitle));//
 
 		this.visible = store.state.ui.visibleElements.has('layers');
 

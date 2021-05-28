@@ -97,6 +97,7 @@ function buildMessagesConfig(response: any): LiveAtlasMessageConfig {
 		contextMenuCenterHere: liveAtlasMessages.contextMenuCenterHere || '',
 		toggleTitle: liveAtlasMessages.toggleTitle || '',
 		mapTitle: liveAtlasMessages.mapTitle || '',
+		layersTitle: liveAtlasMessages.layersTitle || '',
 	}
 }
 
