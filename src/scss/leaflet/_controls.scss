@@ -192,6 +192,18 @@
 	}
 }
 
+.leaflet-right {
+	padding-right: 1rem;
+
+	.leaflet-control {
+		margin: 0;
+	}
+
+	@media (max-width: 400px), (max-height: 480px) {
+		padding-right: 0.5rem;
+	}
+}
+
 .leaflet-top {
 	padding-top: 1rem;
 	flex-direction: column;
