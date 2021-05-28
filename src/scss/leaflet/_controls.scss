@@ -144,15 +144,14 @@
 	width: auto;
 	border: none;
 	color: var(--text-base);
-
-	&.leaflet-control-layers-expanded {
-		padding: 0;
-	}
+	position: relative;
 
 	.leaflet-control-layers-list {
-		padding: 0.7rem 1.5rem;
-		height: 100%;
-    	box-sizing: border-box;
+		@extend %panel;
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 6rem;
 		overflow: auto;
 
 		.layer {

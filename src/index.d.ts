@@ -60,5 +60,5 @@ interface LiveAtlasMessageConfig {
 	mapTitle: string;
 }
 
-export type LiveAtlasUIElement = 'chat' | 'players' | 'maps' | 'settings';
+export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps' | 'settings';
 export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';

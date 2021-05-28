@@ -24,14 +24,23 @@ import Layers = Control.Layers;
 
 import '@/assets/icons/layers.svg';
 import '@/assets/icons/checkbox.svg';
+import {useStore} from "@/store";
+import {MutationTypes} from "@/store/mutation-types";
+import {watch} from "vue";
+
+const store = useStore();
 
 export class DynmapLayerControl extends Control.Layers {
-	private _layersLink?: HTMLElement;
+	private _layersButton?: HTMLElement;
 	private _map ?: LeafletMap;
 	private _overlaysList?: HTMLElement;
 	private _baseLayersList?: HTMLElement;
 	private _layerControlInputs?: HTMLElement[];
 	private _layerPositions: Map<Layer, number>;
+	private _container?: HTMLElement;
+	private _section?: HTMLElement;
+	private _separator?: HTMLElement;
+	private visible: boolean = false;
 
 	constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersOptions) {
 		// noinspection JSUnusedGlobalSymbols
@@ -51,30 +60,15 @@ export class DynmapLayerControl extends Control.Layers {
 		this._layerPositions = new Map<Layer, number>();
 	}
 
-	onAdd(map: LeafletMap) {
-		// @ts-ignore
-		const element = super.onAdd(map);
-
-		this._layersLink!.parentElement!.removeAttribute('aria-haspopup');
-		this._layersLink!.setAttribute('role', 'button');
-		this._layersLink!.setAttribute('aria-expanded', 'false');
-		this._layersLink!.innerHTML = `
-		<svg class="svg-icon" aria-hidden="true">
-		  <use xlink:href="#icon--layers" />
-		</svg>`;
-
-		return element;
-	}
-
 	hasLayer(layer: Layer): boolean {
 		// @ts-ignore
 		return !!super._getLayer(Util.stamp(layer));
 	}
 
 	expand() {
-		// @ts-ignore
-		DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
-		this._layersLink!.setAttribute('aria-expanded', 'true');
+		this._layersButton!.setAttribute('aria-expanded', 'true');
+		this._section!.style.display = '';
+		this.handleResize();
 
 		// @ts-ignore
 		super._checkDisabledLayers();
@@ -82,11 +76,66 @@ export class DynmapLayerControl extends Control.Layers {
 	}
 
 	collapse() {
-		// @ts-ignore
-		DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
-		this._layersLink!.setAttribute('aria-expanded', 'false');
+		this._layersButton!.setAttribute('aria-expanded', 'false');
+		this._section!.style.display = 'none';
 
 		return this;
+	}
+
+	_initLayout() {
+		const className = 'leaflet-control-layers',
+			container = this._container = DomUtil.create('div', className);
+
+		DomEvent.disableClickPropagation(container);
+		DomEvent.disableScrollPropagation(container);
+
+		const section = this._section = DomUtil.create('section', className + '-list'),
+			button = this._layersButton = DomUtil.create('button', className + '-toggle', container);
+
+		section.style.display = 'none';
+
+		button.title = 'Layers';
+		button.setAttribute('aria-expanded', 'false');
+		button.innerHTML = `
+			<svg class="svg-icon" aria-hidden="true">
+			  <use xlink:href="#icon--layers" />
+			</svg>`;
+
+		//Use vuex to toggle and track expanded state
+		DomEvent.on(button,'click', () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'layers'));
+
+		watch(store.state.ui.visibleElements, (newValue) => {
+			if(newValue.has('layers') && !this.visible) {
+				this.expand();
+			} else if(this.visible && !newValue.has('layers')) {
+				this.collapse();
+			}
+
+			this.visible = store.state.ui.visibleElements.has('layers');
+		});
+
+		this.visible = store.state.ui.visibleElements.has('layers');
+
+		if (this.visible) {
+			this.expand();
+		}
+
+		this._baseLayersList = DomUtil.create('div', className + '-base', section);
+		this._separator = DomUtil.create('div', className + '-separator', section);
+		this._overlaysList = DomUtil.create('div', className + '-overlays', section);
+
+		container.appendChild(section);
+
+		window.addEventListener('resize', () => this.handleResize());
+		this.handleResize();
+	}
+
+	handleResize() {
+		const y = this._layersButton!.getBoundingClientRect().y;
+
+		//Limit height to remaining vertical space
+		// Including 30px element padding, 10px padding from edge of viewport, and 55px padding to avoid covering bottom bar
+		this._section!.style.maxHeight = `calc(100vh - ${(y + 30 + 10 + 55)}px)`;
 	}
 
 	addOverlayAtPosition(layer: Layer, name: string, position: number): this {
