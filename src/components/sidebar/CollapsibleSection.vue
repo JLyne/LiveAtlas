@@ -10,7 +10,7 @@
 				<SvgIcon name="arrow"></SvgIcon>
 			</button>
 		</h2>
-		<div :id="`${name}-content`" role="region" :aria-labelledby="`${name}-heading`" :aria-hidden="collapsed">
+		<div :id="`${name}-content`" :aria-hidden="collapsed">
 			<slot></slot>
 		</div>
 	</section>
