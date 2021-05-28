@@ -21,7 +21,7 @@
 			<RadioList v-if="worlds.size" class="section__content" aria-labelledby="maps-heading">
 				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer}_${name}`"></WorldListItem>
 			</RadioList>
-			<div v-else class="section__skeleton">{{ skeletonWorlds }}</div>
+			<div v-else class="section__content section__skeleton">{{ skeletonWorlds }}</div>
 		</template>
 	</CollapsibleSection>
 </template>
