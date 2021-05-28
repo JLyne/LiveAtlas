@@ -38,7 +38,7 @@ export const showSplashError = (message: string, fatal: boolean, attempts?: numb
 		splashError.setAttribute('aria-hidden', 'false');
 	}
 
-	if(splashErrorMessage) {
+	if(splashErrorMessage && splashErrorMessage.innerText !== message) {
 		splashErrorMessage.innerText = message || 'Unknown error';
 	}
 
