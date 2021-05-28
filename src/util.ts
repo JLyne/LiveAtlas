@@ -229,3 +229,11 @@ export const getUrlForLocation = (world: DynmapWorld, map: DynmapWorldMap, locat
 
 		return `#${world.name};${map.name};${locationString};${zoom}`;
 }
+
+export const focus = (selector: string) => {
+	const element = document.querySelector(selector);
+
+	if(element) {
+		(element as HTMLElement).focus();
+	}
+}

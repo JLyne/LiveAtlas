@@ -31,7 +31,7 @@ import {ActionTypes} from "@/store/action-types";
 import {parseUrl} from '@/util';
 import {hideSplash, showSplash, showSplashError} from '@/util/splash';
 import {MutationTypes} from "@/store/mutation-types";
-import {LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasServerDefinition, LiveAtlasUIElement} from "@/index";
 
 export default defineComponent({
 	name: 'App',
@@ -132,6 +132,34 @@ export default defineComponent({
 
 			onResize = () => {
 				store.commit(MutationTypes.SET_SMALL_SCREEN, window.innerWidth < 480 || window.innerHeight < 500);
+			},
+
+			onKeydown = (e: KeyboardEvent) => {
+				if(!e.ctrlKey || !e.shiftKey) {
+					return;
+				}
+
+				let element: LiveAtlasUIElement;
+
+				switch(e.key) {
+					case 'M':
+						element = 'maps';
+						break;
+					case 'C':
+						element = 'chat';
+						break;
+					case 'P':
+						element = 'players';
+						break;
+					case 'L':
+						element = 'layers';
+						break;
+					default:
+						return;
+				}
+
+				e.preventDefault();
+				store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, element);
 			};
 
 		watch(title, (title) => document.title = title);
@@ -169,8 +197,14 @@ export default defineComponent({
 		handleUrl();
 		onResize();
 
-		onMounted(() => window.addEventListener('resize', onResize));
-		onUnmounted(() => window.addEventListener('resize', onResize));
+		onMounted(() => {
+			window.addEventListener('resize', onResize);
+			window.addEventListener('keydown', onKeydown);
+		});
+		onUnmounted(() => {
+			window.addEventListener('resize', onResize);
+			window.addEventListener('keydown', onKeydown);
+		});
 
 		return {
 			chatBoxEnabled,

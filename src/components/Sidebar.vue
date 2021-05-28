@@ -15,25 +15,22 @@
   -->
 
 <template>
-	<section class="sidebar" role="none">
+	<section class="sidebar" role="none" ref="sidebar">
 		<header class="sidebar__buttons">
-			<button v-if="mapCount > 1" :class="{'button--maps': true}"
-					@click="toggleMaps" :title="messageWorlds"
-					:aria-label="messageWorlds" :aria-expanded="currentlyVisible.has('maps')">
+			<button v-if="mapCount > 1" :class="{'button--maps': true}" @click="toggleMaps" :title="messageWorlds"
+					:aria-label="messageWorlds" :aria-expanded="mapsVisible">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
-			<button :class="{'button--players': true}"
-					@click="togglePlayers" :title="messagePlayers"
-					:aria-label="messagePlayers" :aria-expanded="currentlyVisible.has('players')">
+			<button :class="{'button--players': true}" @click="togglePlayers" :title="messagePlayers"
+					:aria-label="messagePlayers" :aria-expanded="playersVisible">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
 		</header>
 		<div class="sidebar__content" @keydown="handleSidebarKeydown">
-			<ServerList v-if="serverCount > 1" v-show="currentlyVisible.has('maps')"></ServerList>
-			<WorldList v-if="mapCount > 1" v-show="currentlyVisible.has('maps')"></WorldList>
-			<PlayerList id="players" v-if="previouslyVisible.has('players')"
-			            v-show="currentlyVisible.has('players')"></PlayerList>
-			<FollowTarget v-if="following" v-show="followActive" :target="following"></FollowTarget>
+			<ServerList v-if="serverCount > 1" v-show="mapsVisible"></ServerList>
+			<WorldList v-if="mapCount > 1" v-show="mapsVisible"></WorldList>
+			<PlayerList id="players" v-if="previouslyVisible.has('players')" v-show="playersVisible"></PlayerList>
+			<FollowTarget v-if="following" v-show="followVisible" :target="following"></FollowTarget>
 		</div>
 	</section>
 </template>
@@ -49,8 +46,9 @@ import SvgIcon from "@/components/SvgIcon.vue";
 import {MutationTypes} from "@/store/mutation-types";
 import "@/assets/icons/players.svg";
 import "@/assets/icons/maps.svg";
-import {nextTick} from "vue";
+import {nextTick, ref, watch} from "vue";
 import {handleKeyboardEvent} from "@/util/events";
+import {focus} from "@/util";
 
 export default defineComponent({
 	components: {
@@ -63,6 +61,8 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
+			sidebar = ref<HTMLElement | null>(null),
+
 			currentlyVisible = computed(() => store.state.ui.visibleElements),
 			previouslyVisible = computed(() => store.state.ui.previouslyVisibleElements),
 			smallScreen = computed(() => store.state.ui.smallScreen),
@@ -73,78 +73,55 @@ export default defineComponent({
 			messageWorlds = computed(() => store.state.messages.worldsHeading),
 			messagePlayers = computed(() => store.state.messages.playersHeading),
 
-			followActive = computed(() => {
+			playersVisible = computed(() => currentlyVisible.value.has('players')),
+			mapsVisible = computed(() => currentlyVisible.value.has('maps')),
+			followVisible = computed(() => {
 				//Show following alongside playerlist on small screens
 				return (!smallScreen.value && following.value)
-					|| (smallScreen.value && currentlyVisible.value.has('players'));
+					|| (smallScreen.value && playersVisible.value);
 			});
 
-		return {
-			mapCount,
-			serverCount,
-			currentlyVisible,
-			previouslyVisible,
-			followActive,
-			following,
-			messageWorlds,
-			messagePlayers,
-		}
-	},
-
-	mounted() {
-		window.addEventListener('keydown', this.handleButtonKeydown);
-	},
-
-	unmounted() {
-		window.removeEventListener('keydown', this.handleButtonKeydown);
-	},
-
-	methods: {
-		handleButtonKeydown(e: KeyboardEvent) {
-			if(e.key === '!' && e.ctrlKey && e.shiftKey) {
-				e.preventDefault();
-				this.toggleMaps();
-			} else if(e.key === '"' && e.ctrlKey && e.shiftKey) {
-				e.preventDefault();
-				this.togglePlayers();
-			}
-		},
-		handleSidebarKeydown(e: KeyboardEvent) {
+		//Arrow key section navigation
+		const handleSidebarKeydown = (e: KeyboardEvent) => {
 			if(!e.target || !(e.target as HTMLElement).matches('.section__heading button')) {
 				return;
 			}
 
-			const sectionHeadings: HTMLElement[] = Array.from(this.$el.querySelectorAll('.section__heading button'));
+			const sectionHeadings: HTMLElement[] = Array.from(sidebar.value!.querySelectorAll('.section__heading button'));
 			handleKeyboardEvent(e, sectionHeadings);
-		},
-		togglePlayers() {
-			useStore().commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'players');
-			nextTick(this.focusPlayers);
-		},
-		toggleMaps() {
-			useStore().commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'maps');
-			nextTick(this.focusMaps);
-		},
-		focusPlayers() {
-			if (this.currentlyVisible.has('players')) {
-				const heading = document.getElementById('players-heading');
+		};
 
-				if (heading) {
-					heading.focus();
-				}
-			}
-		},
-		focusMaps() {
-			if(this.currentlyVisible.has('maps')) {
-				const heading = document.querySelector('.section__heading button');
+		const togglePlayers = () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'players');
+		const toggleMaps = () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'maps');
 
-				if(heading) {
-					(heading as HTMLElement).focus();
-				}
-			}
+		//Move focus when sidebar sections become visible
+		const focusMaps = () => focus('.section__heading button');
+		const focusPlayers = () => focus('#players-heading');
+
+		watch(playersVisible, newValue => newValue && nextTick(() => focusPlayers()));
+		watch(mapsVisible, newValue => newValue && nextTick(() => focusMaps()));
+
+		return {
+			sidebar,
+
+			mapCount,
+			serverCount,
+			following,
+
+			messageWorlds,
+			messagePlayers,
+
+			previouslyVisible,
+			playersVisible,
+			mapsVisible,
+			followVisible,
+
+			handleSidebarKeydown,
+			togglePlayers,
+			toggleMaps
 		}
-	}
-})
+	},
+});
 
 </script>
 
