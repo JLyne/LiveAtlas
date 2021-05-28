@@ -286,6 +286,7 @@ export default defineComponent({
 				background-color: transparent;
 				color: inherit;
 				width: calc(100% + 3rem);
+				align-items: center;
 
 				.svg-icon {
 					margin-left: auto;
