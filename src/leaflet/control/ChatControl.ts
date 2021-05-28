@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-import {Control, ControlOptions, DomUtil} from 'leaflet';
+import {Control, ControlOptions, DomEvent, DomUtil} from 'leaflet';
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {watch} from "@vue/runtime-core";
@@ -30,22 +30,30 @@ export class ChatControl extends Control {
 	}
 
 	onAdd() {
-		const chatButton = DomUtil.create('button', 'leaflet-control-chat') as HTMLButtonElement;
+		const store = useStore(),
+			chatButton = DomUtil.create('button', 'leaflet-control-chat') as HTMLButtonElement;
 
 		chatButton.type = 'button';
-		chatButton.title = useStore().state.messages.chatTitle;
+		chatButton.title = store.state.messages.chatTitle;
 		chatButton.innerHTML = `
 		<svg class="svg-icon">
 		  <use xlink:href="#icon--chat" />
 		</svg>`;
 
 		chatButton.addEventListener('click', e => {
-			useStore().commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'chat');
+			store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'chat');
 			e.stopPropagation();
 			e.preventDefault();
 		});
 
-		watch(useStore().state.ui.visibleElements, (newValue) => {
+		//Open chat on ArrowRight from button
+		DomEvent.on(chatButton,'keydown', (e: Event) => {
+			if((e as KeyboardEvent).key === 'ArrowRight') {
+				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'chat', state: true});
+			}
+		});
+
+		watch(store.state.ui.visibleElements, (newValue) => {
 			chatButton.setAttribute('aria-expanded', newValue.has('chat').toString());
 		});
 

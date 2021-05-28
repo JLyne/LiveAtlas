@@ -17,17 +17,17 @@
  *    limitations under the License.
  */
 
-import {Util, Control, DomEvent, LeafletEvent, Map as LeafletMap, Layer, DomUtil} from 'leaflet';
-import LayersObject = Control.LayersObject;
-import LayersOptions = Control.LayersOptions;
-import Layers = Control.Layers;
+import {Control, DomEvent, DomUtil, Layer, LeafletEvent, Map as LeafletMap, Util} from 'leaflet';
 
 import '@/assets/icons/layers.svg';
 import '@/assets/icons/checkbox.svg';
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {watch} from "vue";
+import {nextTick, watch} from "vue";
 import {handleKeyboardEvent} from "@/util/events";
+import LayersObject = Control.LayersObject;
+import LayersOptions = Control.LayersOptions;
+import Layers = Control.Layers;
 
 const store = useStore();
 
@@ -91,18 +91,32 @@ export class DynmapLayerControl extends Control.Layers {
 
 	_initLayout() {
 		const className = 'leaflet-control-layers',
-			container = this._container = DomUtil.create('div', className);
+			container = this._container = DomUtil.create('div', className),
+			section = this._section = DomUtil.create('section', className + '-list'),
+			button = this._layersButton = DomUtil.create('button', className + '-toggle', container);
 
 		DomEvent.disableClickPropagation(container);
 		DomEvent.disableScrollPropagation(container);
 
+		//Open layer list on ArrowRight from button
+		DomEvent.on(button,'keydown', (e: Event) => {
+			if((e as KeyboardEvent).key === 'ArrowRight') {
+				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'layers', state: true});
+			}
+		});
+
 		DomEvent.on(container, 'keydown', (e: Event) => {
+			//Close layer list on ArrowLeft from within list
+			if((e as KeyboardEvent).key === 'ArrowLeft') {
+				e.preventDefault();
+				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'layers', state: false});
+				nextTick(() => button.focus());
+			}
+
 			const elements = Array.from(container.querySelectorAll('input')) as HTMLElement[];
 			handleKeyboardEvent(e as KeyboardEvent, elements);
 		});
-
-		const section = this._section = DomUtil.create('section', className + '-list'),
-			button = this._layersButton = DomUtil.create('button', className + '-toggle', container);
+		DomEvent.on(button,'click', () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'layers'));
 
 		section.style.display = 'none';
 
@@ -113,9 +127,8 @@ export class DynmapLayerControl extends Control.Layers {
 			  <use xlink:href="#icon--layers" />
 			</svg>`;
 
-		//Use vuex to toggle and track expanded state
-		DomEvent.on(button,'click', () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'layers'));
 
+		//Use vuex track expanded state
 		watch(store.state.ui.visibleElements, (newValue) => {
 			if(newValue.has('layers') && !this.visible) {
 				this.expand();

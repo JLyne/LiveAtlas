@@ -18,11 +18,11 @@
 	<section class="sidebar" role="none" ref="sidebar">
 		<header class="sidebar__buttons">
 			<button v-if="mapCount > 1" :class="{'button--maps': true}" @click="toggleMaps" :title="messageWorlds"
-					:aria-label="messageWorlds" :aria-expanded="mapsVisible">
+					:aria-label="messageWorlds" :aria-expanded="mapsVisible" @keydown="handleMapsKeydown">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
 			<button :class="{'button--players': true}" @click="togglePlayers" :title="messagePlayers"
-					:aria-label="messagePlayers" :aria-expanded="playersVisible">
+					:aria-label="messagePlayers" :aria-expanded="playersVisible" @keydown="handlePlayersKeydown">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
 		</header>
@@ -91,6 +91,19 @@ export default defineComponent({
 			handleKeyboardEvent(e, sectionHeadings);
 		};
 
+		//Show sectinos on ArrowDown from button
+		const handleMapsKeydown = (e: KeyboardEvent) => {
+			if(e.key === 'ArrowDown') {
+				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'maps', state: true});
+			}
+		};
+
+		const handlePlayersKeydown = (e: KeyboardEvent) => {
+			if(e.key === 'ArrowDown') {
+				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'players', state: true});
+			}
+		};
+
 		const togglePlayers = () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'players');
 		const toggleMaps = () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'maps');
 
@@ -117,6 +130,9 @@ export default defineComponent({
 			followVisible,
 
 			handleSidebarKeydown,
+			handleMapsKeydown,
+			handlePlayersKeydown,
+
 			togglePlayers,
 			toggleMaps
 		}
