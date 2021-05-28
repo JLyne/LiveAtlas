@@ -18,10 +18,10 @@
 	<CollapsibleSection name="players">
 		<template v-slot:heading>{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</template>
 		<template v-slot:default>
-			<RadioList class="section__content">
+			<RadioList class="section__content" v-if="players.size">
 				<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
-				<div v-if="!players.size" class="section__skeleton" aria-disabled="true" role="radio">{{ skeletonPlayers }}</div>
 			</RadioList>
+			<div v-else class="section__skeleton">{{ skeletonPlayers }}</div>
 		</template>
 	</CollapsibleSection>
 </template>

@@ -18,10 +18,10 @@
 	<CollapsibleSection name="maps">
 		<template v-slot:heading>{{ heading }}</template>
 		<template v-slot:default>
-			<RadioList class="section__content">
+			<RadioList v-if="worlds.size" class="section__content">
 				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer.id}_${name}`"></WorldListItem>
-				<div v-if="!worlds.size" class="section__skeleton" aria-disabled="true" role="radio">{{ skeletonWorlds }}</div>
 			</RadioList>
+			<div v-else class="section__skeleton">{{ skeletonWorlds }}</div>
 		</template>
 	</CollapsibleSection>
 </template>
