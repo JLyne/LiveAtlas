@@ -226,17 +226,22 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 	#map-context-menu {
-		background-color: var(--background-base);
-		box-shadow: var(--box-shadow);
-		color: var(--text-base);
-		border-radius: var(--border-radius);
 		position: fixed;
 		z-index: 150;
-		padding: 0.5rem;
 		min-width: 15rem;
 		max-width: 22.5rem;
 		top: 0;
 		left: 0;
+
+		ul {
+			background-color: var(--background-base);
+			box-shadow: var(--box-shadow);
+			color: var(--text-base);
+			border-radius: var(--border-radius);
+			padding: 0.5rem;
+			position: relative;
+			z-index: 1;
+		}
 
 		::v-deep(.world) {
 			padding: 0.2rem 0 0.2rem 0.8rem;
@@ -258,6 +263,19 @@ export default defineComponent({
 			max-width: 40rem;
 			overflow: auto;
 			transform: none !important;
+
+			&:before {
+				content: '';
+				position: fixed;
+				top: auto;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				display: block;
+				height: 40rem;
+				background-image: linear-gradient(0deg, var(--background-dark), transparent);
+				z-index: -1;
+			}
 		}
 	}
 </style>
