@@ -1,6 +1,5 @@
 <template>
-	<nav id="map-context-menu" v-show="menuVisible" ref="menuElement" :style="style">
-		<div tabindex="0" ref="focusMover" class="focus-mover" aria-label="Context menu"></div>
+	<nav role="none" id="map-context-menu" ref="menuElement" :style="style" @keydown="handleKeydown">
 		<ul class="menu" role="menu">
 			<li role="none">
 				<!--suppress HtmlUnknownAttribute -->
@@ -31,10 +30,11 @@ import {computed, defineComponent, onMounted, onUnmounted, watch} from "@vue/run
 import {LeafletMouseEvent} from "leaflet";
 import {useStore} from "@/store";
 import WorldListItem from "@/components/sidebar/WorldListItem.vue";
-import {ref} from "vue";
+import {CSSProperties, ref} from "vue";
 import {getUrlForLocation} from "@/util";
 import {notify} from "@kyvg/vue3-notification";
 import {nextTick} from 'vue';
+import {handleKeyboardEvent} from "@/util/events";
 
 export default defineComponent({
 	name: "MapContextMenu",
@@ -55,7 +55,6 @@ export default defineComponent({
 			messageCenterHere = computed(() => store.state.messages.contextMenuCenterHere),
 
 			menuElement = ref<HTMLInputElement | null>(null),
-			focusMover = ref<HTMLInputElement | null>(null),
 			menuVisible = computed(() => !!event.value),
 
 			currentProjection = computed(() => store.state.currentProjection),
@@ -94,17 +93,20 @@ export default defineComponent({
 			}),
 
 			style = computed(() => {
-				if (!menuElement.value || !event.value) {
-					return {};
+				if (!event.value) {
+					return {
+						'visibility': 'hidden',
+						'left': '-1000px',
+					} as CSSProperties;
 				}
 
 				//Don't position offscreen
 				const x = Math.min(
-					window.innerWidth - menuElement.value.offsetWidth - 10,
+					window.innerWidth - menuElement.value!.offsetWidth - 10,
 					event.value.originalEvent.clientX
 					),
 					y = Math.min(
-						window.innerHeight - menuElement.value.offsetHeight - 10,
+						window.innerHeight - menuElement.value!.offsetHeight - 10,
 						event.value.originalEvent.clientY
 					);
 
@@ -114,30 +116,47 @@ export default defineComponent({
 			});
 
 		const handleEsc = (e: KeyboardEvent) => {
-				if (e.key === "Escape" && menuVisible.value) {
-					closeContextMenu();
-				}
-			},
-			closeContextMenu = () => {
-				event.value = null;
-			},
-			pan = () => {
-				if (event.value) {
-					props.leaflet.panTo(event.value.latlng);
-					props.leaflet.getContainer().focus();
-				}
-			},
-			copySuccess = () => notify('Copied to clipboard'),
-			copyError = (e: Error) => {
-				notify({ type: 'error', text:'Unable to copy to clipboard'});
-				console.error('Error copying to clipboard', e);
-			};
-
-		watch(menuVisible, value => {
-			if(value) {
-				nextTick(() => focusMover.value && focusMover.value.focus());
+			if (e.key === "Escape" && menuVisible.value) {
+				closeContextMenu();
 			}
-		})
+		};
+
+		const handleKeydown = (e: KeyboardEvent) => {
+			handleKeyboardEvent(e, Array.from(menuElement.value!.querySelectorAll('button, input')));
+		}
+
+		const focusFirstItem = () => {
+			if(menuElement.value) {
+				const firstItem = menuElement.value.querySelector('button');
+
+				if(firstItem) {
+					firstItem.focus();
+				}
+			}
+		};
+
+		const closeContextMenu = () => event.value = null;
+
+		const pan = () => {
+			if (event.value) {
+				props.leaflet.panTo(event.value.latlng);
+				props.leaflet.getContainer().focus();
+			}
+		}
+
+		const copySuccess = () => notify('Copied to clipboard');
+		const copyError = (e: Error) => {
+			notify({ type: 'error', text:'Unable to copy to clipboard'});
+			console.error('Error copying to clipboard', e);
+		};
+
+		watch(event, value => {
+			if(value) {
+				props.leaflet.closePopup();
+				props.leaflet.closeTooltip();
+				nextTick(() => menuElement.value && focusFirstItem());
+			}
+		});
 
 		onMounted(() => {
 			window.addEventListener('click', closeContextMenu);
@@ -180,13 +199,6 @@ export default defineComponent({
 			}
 		});
 
-		watch(event, value => {
-			if(value) {
-				props.leaflet.closePopup();
-				props.leaflet.closeTooltip();
-			}
-		});
-
 		return {
 			messageCopyLink,
 			messageCenterHere,
@@ -196,7 +208,6 @@ export default defineComponent({
 
 			menuVisible,
 			menuElement,
-			focusMover,
 			url,
 
 			locationLabel,
@@ -205,6 +216,7 @@ export default defineComponent({
 			style,
 
 			pan,
+			handleKeydown,
 		}
 	},
 })
