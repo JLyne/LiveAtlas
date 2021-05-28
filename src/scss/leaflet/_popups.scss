@@ -18,12 +18,14 @@
 	.leaflet-popup-content-wrapper, .leaflet-popup-tip {
 		background-color: var(--background-base);
 		color: var(--text-base);
+		box-shadow: var(--box-shadow);
 	}
 
 	.leaflet-popup-content-wrapper {
 		max-height: 50vh;
 		display: flex;
 		border-radius: var(--border-radius);
+		box-shadow: var(--box-shadow);
 	}
 
 	.leaflet-popup-content {
