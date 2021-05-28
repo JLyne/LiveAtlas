@@ -153,6 +153,11 @@ export default defineComponent({
 		props.leaflet.on('zoomstart', closeContextMenu);
 
 		props.leaflet.on('contextmenu', (e: LeafletMouseEvent) => {
+			//Ignore right-clicks on controls
+			if(e.originalEvent.target && (e.originalEvent.target as HTMLElement).closest('.leaflet-control')) {
+				return;
+			}
+
 			e.originalEvent.stopImmediatePropagation();
 			e.originalEvent.preventDefault();
 			event.value = e;
