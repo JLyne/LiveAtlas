@@ -18,7 +18,7 @@
 	<CollapsibleSection name="players">
 		<template v-slot:heading>{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</template>
 		<template v-slot:default>
-			<RadioList class="section__content" v-if="players.size">
+			<RadioList class="section__content" v-if="players.size" aria-labelledby="players-heading">
 				<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
 			</RadioList>
 			<div v-else class="section__skeleton">{{ skeletonPlayers }}</div>
