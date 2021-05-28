@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
+import {handleKeyboardEvent} from "@/util/events";
 
 export default defineComponent({
 	name: 'RadioList',
@@ -30,36 +31,7 @@ export default defineComponent({
 
 	methods: {
 		onKeydown(e: KeyboardEvent) {
-			if(e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-				const fieldset = e.currentTarget as HTMLFieldSetElement,
-					position = Array.from(fieldset.elements).indexOf(e.target as HTMLElement);
-
-				if(position < 0) {
-					return;
-				}
-
-				let newPosition = (e.key === 'ArrowUp' || e.key === 'ArrowLeft') ? position - 1 : position + 1;
-
-				if(newPosition < 0) {
-					newPosition = fieldset.elements.length - 1;
-				} else if (newPosition >= fieldset.elements.length) {
-					newPosition = 0;
-				}
-
-				(fieldset.elements[newPosition] as HTMLElement).focus();
-				e.preventDefault();
-			} else if(e.key === 'Enter') {
-				if(e.target instanceof HTMLInputElement && e.target.type === 'radio') {
-					const mouseEvent = new MouseEvent('click', {
-						ctrlKey: e.ctrlKey,
-						shiftKey: e.shiftKey,
-						metaKey: e.metaKey,
-						altKey: e.altKey,
-					});
-
-					e.target.dispatchEvent(mouseEvent);
-				}
-			}
+			handleKeyboardEvent(e, Array.from((e.currentTarget as HTMLFieldSetElement).elements) as HTMLElement[])
 		}
 	}
 });

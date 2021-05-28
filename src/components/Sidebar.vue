@@ -50,6 +50,7 @@ import {MutationTypes} from "@/store/mutation-types";
 import "@/assets/icons/players.svg";
 import "@/assets/icons/maps.svg";
 import {nextTick} from "vue";
+import {handleKeyboardEvent} from "@/util/events";
 
 export default defineComponent({
 	components: {
@@ -113,41 +114,8 @@ export default defineComponent({
 				return;
 			}
 
-			const sectionHeadings: HTMLElement[] = Array.from(this.$el.querySelectorAll('.section__heading button')),
-				position = sectionHeadings.indexOf(e.target as HTMLElement);
-
-			if(position === -1) {
-				return;
-			}
-
-			let newPosition;
-
-			switch(e.key) {
-				case 'ArrowDown':
-					newPosition = position + 1;
-					break;
-				case 'ArrowUp':
-					newPosition = position - 1;
-					break;
-				case 'Home':
-					newPosition = 0;
-					break;
-				case 'End':
-					newPosition = sectionHeadings.length - 1;
-					break;
-				default:
-					return;
-			}
-
-			if(newPosition >= sectionHeadings.length) {
-				newPosition = 0
-			} else if(newPosition < 0) {
-				newPosition = sectionHeadings.length - 1;
-			}
-
-			e.preventDefault();
-			e.stopImmediatePropagation();
-			sectionHeadings[newPosition].focus();
+			const sectionHeadings: HTMLElement[] = Array.from(this.$el.querySelectorAll('.section__heading button'));
+			handleKeyboardEvent(e, sectionHeadings);
 		},
 		togglePlayers() {
 			useStore().commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'players');
