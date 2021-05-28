@@ -59,6 +59,8 @@ interface LiveAtlasMessageConfig {
 	toggleTitle: string;
 	mapTitle: string;
 	layersTitle: string;
+	copyToClipboardSuccess: string;
+	copyToClipboardError: string;
 }
 
 export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps' | 'settings';

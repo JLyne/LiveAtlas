@@ -98,6 +98,8 @@ function buildMessagesConfig(response: any): LiveAtlasMessageConfig {
 		toggleTitle: liveAtlasMessages.toggleTitle || '',
 		mapTitle: liveAtlasMessages.mapTitle || '',
 		layersTitle: liveAtlasMessages.layersTitle || '',
+		copyToClipboardSuccess: liveAtlasMessages.copyToClipboardSuccess || '',
+		copyToClipboardError: liveAtlasMessages.copyToClipboardError || '',
 	}
 }
 

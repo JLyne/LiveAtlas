@@ -22,6 +22,7 @@ import {useStore} from "@/store";
 import '@/assets/icons/link.svg';
 import { toClipboard } from '@soerenmartius/vue3-clipboard';
 import {notify} from "@kyvg/vue3-notification";
+import {computed} from "@vue/runtime-core";
 
 export class LinkControl extends Control {
 	// @ts-ignore
@@ -32,7 +33,10 @@ export class LinkControl extends Control {
 	}
 
 	onAdd() {
-		const linkButton = DomUtil.create('button', 'leaflet-control-link') as HTMLButtonElement;
+		const store = useStore(),
+			linkButton = DomUtil.create('button', 'leaflet-control-link') as HTMLButtonElement,
+			copySuccessMessage = computed(() => store.state.messages.copyToClipboardSuccess),
+			copyErrorMessage = computed(() => store.state.messages.copyToClipboardError);
 
 		linkButton.type = 'button';
 		linkButton.title = useStore().state.messages.linkTitle;
@@ -44,9 +48,9 @@ export class LinkControl extends Control {
 		linkButton.addEventListener('click', e => {
 			e.preventDefault();
 			toClipboard(window.location.href.split("#")[0] + useStore().getters.url).then(() => {
-				notify('Copied to clipboard');
+				notify(copySuccessMessage.value);
 			}).catch((e) => {
-				notify({ type: 'error', text:'Unable to copy to clipboard'});
+				notify({ type: 'error', text: copyErrorMessage.value });
 				console.error('Error copying to clipboard', e);
 			});
 

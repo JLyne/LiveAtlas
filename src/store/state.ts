@@ -133,6 +133,8 @@ export const state: State = {
 		toggleTitle: '',
 		mapTitle: '',
 		layersTitle: '',
+		copyToClipboardSuccess: '',
+		copyToClipboardError: '',
 	},
 
 	loggedIn: false,

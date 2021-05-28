@@ -53,6 +53,8 @@ export default defineComponent({
 
 			messageCopyLink = computed(() => store.state.messages.contextMenuCopyLink),
 			messageCenterHere = computed(() => store.state.messages.contextMenuCenterHere),
+			messageCopySuccess = computed(() => store.state.messages.copyToClipboardSuccess),
+			messageCopyError = computed(() => store.state.messages.copyToClipboardError),
 
 			menuElement = ref<HTMLInputElement | null>(null),
 			menuVisible = computed(() => !!event.value),
@@ -144,9 +146,9 @@ export default defineComponent({
 			}
 		}
 
-		const copySuccess = () => notify('Copied to clipboard');
+		const copySuccess = () => notify(messageCopySuccess.value);
 		const copyError = (e: Error) => {
-			notify({ type: 'error', text:'Unable to copy to clipboard'});
+			notify({ type: 'error', text: messageCopyError.value });
 			console.error('Error copying to clipboard', e);
 		};
 
