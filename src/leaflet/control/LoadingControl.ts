@@ -132,8 +132,8 @@ export class LoadingControl extends Control {
 		// Check for a target 'layer' that contains multiple layers, such as
 		// L.LayerGroup. This will happen if you have an L.LayerGroup in an
 		// L.Control.Layers.
-		if (e.propagatedFrom && e.propagatedFrom.eachLayer && typeof e.propagatedFrom.eachLayer === 'function') {
-			e.propagatedFrom.eachLayer((layer: Layer) => {
+		if (e.layer && e.layer.eachLayer && typeof e.layer.eachLayer === 'function') {
+			e.layer.eachLayer((layer: Layer) => {
 				this._handleBaseLayerChange({ layer: layer } as LeafletEvent);
 			});
 		}
@@ -153,35 +153,35 @@ export class LoadingControl extends Control {
 	}
 
 	_layerAdd(e: LeafletEvent) {
-		if(!(e.propagatedFrom instanceof TileLayer)) {
+		if(!(e.layer instanceof TileLayer)) {
 			return;
 		}
 
 		try {
-			if(e.propagatedFrom.isLoading()) {
-				this.addLoader((e.propagatedFrom as any)._leaflet_id);
+			if(e.layer.isLoading()) {
+				this.addLoader((e.layer as any)._leaflet_id);
 			}
 
-			e.propagatedFrom.on('loading', this._handleLoading, this);
-			e.propagatedFrom.on('load', this._handleLoad, this);
+			e.layer.on('loading', this._handleLoading, this);
+			e.layer.on('load', this._handleLoad, this);
 		} catch (exception) {
 			console.warn('L.Control.Loading: Tried and failed to add ' +
-				' event handlers to layer', e.propagatedFrom);
+				' event handlers to layer', e.layer);
 			console.warn('L.Control.Loading: Full details', exception);
 		}
 	}
 
 	_layerRemove(e: LeafletEvent) {
-		if(!(e.propagatedFrom instanceof TileLayer)) {
+		if(!(e.layer instanceof TileLayer)) {
 			return;
 		}
 
 		try {
-			e.propagatedFrom.off('loading', this._handleLoading, this);
-			e.propagatedFrom.off('load', this._handleLoad, this);
+			e.layer.off('loading', this._handleLoading, this);
+			e.layer.off('load', this._handleLoad, this);
 		} catch (exception) {
 			console.warn('L.Control.Loading: Tried and failed to remove ' +
-				'event handlers from layer', e.propagatedFrom);
+				'event handlers from layer', e.layer);
 			console.warn('L.Control.Loading: Full details', exception);
 		}
 	}
