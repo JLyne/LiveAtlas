@@ -210,6 +210,7 @@
 	top: 0;
 	bottom: 7rem;
 	align-items: flex-start;
+	z-index: 1003;
 
 	.leaflet-control {
 		order: 2;
@@ -281,6 +282,7 @@
 .leaflet-bottom {
 	padding-bottom: 1rem;
 	align-items: stretch;
+	z-index: 1002;
 
 	.leaflet-control {
 		order: 2;
@@ -305,6 +307,7 @@
 	right: 0;
 	justify-content: center;
 	flex-direction: row;
+	z-index: 1001;
 
 	.leaflet-control {
 		margin: 0;
