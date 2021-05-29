@@ -1,7 +1,7 @@
 # LiveAtlas 
 A [Dynmap](https://github.com/webbukkit/dynmap) frontend for the modern web, built with [Vue.js](https://github.com/vuejs/vue) and typescript.
 
-![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas.jpg)
+![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas2.jpg)
 
 LiveAtlas is a drop-in replacement for the original Dynmap frontend, which aims to provide a more modern interface and improved performance for busy maps.
 
