@@ -14,7 +14,7 @@
     "@kyvg/vue3-notification": "^2.3.0",
     "@soerenmartius/vue3-clipboard": "^0.1.2",
     "focus-visible": "^5.2.0",
-    "leaflet": "^1.7.1",
+    "leaflet": "git+https://github.com/JLyne/leaflet.git",
     "normalize-scss": "^7.0.1",
     "vue": "^3.0.11",
     "vuex": "^4.0.0"
