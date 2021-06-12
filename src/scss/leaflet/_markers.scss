@@ -49,14 +49,12 @@
 		font-size: 1.5rem;
 		line-height: 1;
 
-		white-space: nowrap;
+		white-space: pre-line;
 
 		color: var(--text-base);
 		background: var(--background-dark);
 		padding: 0.2rem;
 		display: none;
-		max-width: 25vw;
-		text-overflow: ellipsis;
 		overflow: hidden;
 
 		@at-root .leaflet-pane--show-labels .marker__label {
