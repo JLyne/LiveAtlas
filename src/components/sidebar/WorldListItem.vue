@@ -81,10 +81,10 @@ export default defineComponent({
 
 			if (/(^|_)nether(_|$)/i.test(this.world.name) || (this.world.name == 'DIM-1')) {
 				worldType = 'nether';
-				mapType = (map.name == 'nether') ? 'surface' : 'flat';
+				mapType = ['surface', 'nether'].includes(map.name) ? 'surface' : 'flat';
 			} else if (/(^|_)end(_|$)/i.test(this.world.name) || (this.world.name == 'DIM1')) {
 				worldType = 'the_end';
-				mapType = (map.name == 'the_end') ? 'surface' : 'flat';
+				mapType = ['surface', 'the_end'].includes(map.name) ? 'surface' : 'flat';
 			} else {
 				worldType = 'world';
 				mapType = ['surface', 'flat', 'biome', 'cave'].includes(map.name) ? map.name : 'flat';
