@@ -43,7 +43,7 @@ export const createArea = (options: DynmapArea, converter: Function): DynmapPoly
 };
 
 export const updateArea = (area: DynmapPolyline | DynmapPolygon | undefined, options: DynmapArea, converter: Function): DynmapPolyline | DynmapPolygon => {
-	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean,
+	const outline = !options.style || !options.style.fillOpacity || (options.style.fillOpacity <= 0) as boolean,
 		points = getPoints(options, converter, outline);
 
 	if (!area) {
