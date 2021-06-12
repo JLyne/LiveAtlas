@@ -104,14 +104,37 @@ function buildMessagesConfig(response: any): LiveAtlasMessageConfig {
 }
 
 function buildWorlds(response: any): Array<DynmapWorld> {
-	const worlds: Array<DynmapWorld> = [];
+	const worlds: Map<string, DynmapWorld> = new Map<string, DynmapWorld>();
+
+	//Get all the worlds first so we can handle append_to_world properly
+	(response.worlds || []).forEach((world: any) => {
+		worlds.set(world.name, {
+			seaLevel: world.sealevel || 64,
+			name: world.name,
+			protected: world.protected || false,
+			title: world.title || '',
+			height: world.height || 256,
+			center: {
+				x: world.center.x || 0,
+				y: world.center.y || 0,
+				z: world.center.z || 0
+			},
+			maps: new Map(),
+		});
+	});
 
 	(response.worlds || []).forEach((world: any) => {
-		const maps: Map<string, DynmapWorldMap> = new Map();
-
 		(world.maps || []).forEach((map: any) => {
-			maps.set(map.name, {
-				world: world,
+			const worldName = map.append_to_world || world.name,
+				w = worlds.get(worldName);
+
+			if(!w) {
+				console.warn(`Ignoring map '${map.name}' associated with non-existent world '${worldName}'`);
+				return;
+			}
+
+			w.maps.set(map.name, {
+				world: world, //Ignore append_to_world here otherwise things break
 				background: map.background || '#000000',
 				backgroundDay: map.backgroundday || '#000000',
 				backgroundNight: map.backgroundnight || '#000000',
@@ -128,23 +151,9 @@ function buildWorlds(response: any): Array<DynmapWorld> {
 				extraZoomLevels: map.mapzoomin || 0,
 			});
 		});
-
-		worlds.push({
-			seaLevel: world.sealevel || 64,
-			name: world.name || '(Unnamed world)',
-			protected: world.protected || false,
-			title: world.title || '',
-			height: world.height || 256,
-			center: {
-				x: world.center.x || 0,
-				y: world.center.y || 0,
-				z: world.center.z || 0
-			},
-			maps,
-		});
 	});
 
-	return worlds;
+	return Array.from(worlds.values());
 }
 
 function buildComponents(response: any): DynmapComponentConfig {

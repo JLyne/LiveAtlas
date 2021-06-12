@@ -66,7 +66,7 @@ export default defineComponent({
 		currentMap: {
 			get() {
 				const store = useStore();
-				return store.state.currentMap ? [store.state.currentMap.world.name, store.state.currentMap.name] : undefined;
+				return store.state.currentMap ? [store.state.currentWorld.name, store.state.currentMap.name] : undefined;
 			},
 			set(value: string[]) {
 				useStore().commit(MutationTypes.SET_CURRENT_MAP, {worldName: value[0], mapName: value[1]});
