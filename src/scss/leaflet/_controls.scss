@@ -154,7 +154,7 @@
 		left: 6rem;
 		overflow: auto;
 		max-width: calc(100vw - 14rem);
-    	box-sizing: border-box;
+		box-sizing: border-box;
 
 		@media screen and (max-width: 400px) {
 			max-width: calc(100vw - 13rem);
@@ -162,7 +162,7 @@
 
 		.leaflet-control-layers-overlays {
 			width: 100%;
-    		max-width: 30rem;
+			max-width: 30rem;
 		}
 
 		.layer {
@@ -329,7 +329,7 @@
 	cursor: wait;
 	animation: fade 0.3s linear;
 	animation-fill-mode: forwards;
-	
+
 	&:hover, &:active {
 		background-color: var(--background-base);
 	}
