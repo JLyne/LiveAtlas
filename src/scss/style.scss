@@ -154,6 +154,10 @@ input {
 	span {
 		color: var(--text-subtle);
 		padding-left: 3rem;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: block;
 	}
 }
 

@@ -153,6 +153,17 @@
 		top: 0;
 		left: 6rem;
 		overflow: auto;
+		max-width: calc(100vw - 14rem);
+    	box-sizing: border-box;
+
+		@media screen and (max-width: 400px) {
+			max-width: calc(100vw - 13rem);
+		}
+
+		.leaflet-control-layers-overlays {
+			width: 100%;
+    		max-width: 30rem;
+		}
 
 		.layer {
 			cursor: pointer;
