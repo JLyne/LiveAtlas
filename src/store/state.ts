@@ -22,7 +22,13 @@ import {
 	DynmapWorld, DynmapWorldState, Coordinate, DynmapParsedUrl, DynmapChat
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import {LiveAtlasMessageConfig, LiveAtlasServerDefinition, LiveAtlasSidebarSection, LiveAtlasUIElement} from "@/index";
+import {
+	LiveAtlasMessageConfig,
+	LiveAtlasServerDefinition,
+	LiveAtlasSidebarSection,
+	LiveAtlasSortedPlayers,
+	LiveAtlasUIElement
+} from "@/index";
 
 export type State = {
 	version: string;
@@ -37,6 +43,7 @@ export type State = {
 	worlds: Map<string, DynmapWorld>;
 	maps: Map<string, DynmapWorldMap>;
 	players: Map<string, DynmapPlayer>;
+	sortedPlayers: LiveAtlasSortedPlayers;
 	markerSets: Map<string, DynmapMarkerSet>;
 
 	chat: {
@@ -142,6 +149,7 @@ export const state: State = {
 	worlds: new Map(), //Defined (loaded) worlds with maps from configuration.json
 	maps: new Map(), //Defined maps from configuration.json
 	players: new Map(), //Online players from world.json
+	sortedPlayers: [] as LiveAtlasSortedPlayers, //Online players from world.json, sorted by their sort property then alphabetically
 
 	chat: {
 		unread: 0,

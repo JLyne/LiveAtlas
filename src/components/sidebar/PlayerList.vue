@@ -16,10 +16,10 @@
 
 <template>
 	<CollapsibleSection name="players">
-		<template v-slot:heading>{{ heading }} [{{ players.size }}/{{ maxPlayers }}]</template>
+		<template v-slot:heading>{{ heading }} [{{ players.length }}/{{ maxPlayers }}]</template>
 		<template v-slot:default>
-			<RadioList class="section__content" v-if="players.size" aria-labelledby="players-heading">
-				<PlayerListItem v-for="[account, player] in players" :key="account" :player="player"></PlayerListItem>
+			<RadioList class="section__content" v-if="players.length" aria-labelledby="players-heading">
+				<PlayerListItem v-for="player in players" :key="player.account" :player="player"></PlayerListItem>
 			</RadioList>
 			<div v-else class="section__content section__skeleton">{{ skeletonPlayers }}</div>
 		</template>
@@ -50,7 +50,7 @@ export default defineComponent({
 		},
 
 		players() {
-			return useStore().state.players;
+			return useStore().state.sortedPlayers;
 		},
 
 		maxPlayers(): number {

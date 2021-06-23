@@ -31,7 +31,13 @@ import {
 	DynmapWorldState, DynmapParsedUrl, DynmapChat
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import {LiveAtlasMessageConfig, LiveAtlasServerDefinition, LiveAtlasSidebarSection, LiveAtlasUIElement} from "@/index";
+import {
+	LiveAtlasMessageConfig,
+	LiveAtlasServerDefinition,
+	LiveAtlasSidebarSection,
+	LiveAtlasSortedPlayers,
+	LiveAtlasUIElement
+} from "@/index";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -381,7 +387,12 @@ export const mutations: MutationTree<State> & Mutations = {
 				existing!.hidden = player.hidden;
 				existing!.name = player.name;
 				existing!.sort = player.sort;
+
+				if(existing!.name !== player.name || existing!.sort !== player.sort) {
+					state.sortedPlayers.dirty = true;
+				}
 			} else {
+				state.sortedPlayers.dirty = true;
 				state.players.set(player.account, {
 					account: player.account,
 					health: player.health,
@@ -400,6 +411,17 @@ export const mutations: MutationTree<State> & Mutations = {
 			}
 		}
 
+		//Re-sort sortedPlayers array if needed
+		if(!players.size && state.sortedPlayers.dirty) {
+			state.sortedPlayers = [...state.players.values()].sort((a, b) => {
+				if(a.sort !== b.sort) {
+					return a.sort - b.sort;
+				}
+
+				return a.account.toLowerCase().localeCompare(b.account.toLowerCase());
+			}) as LiveAtlasSortedPlayers;
+		}
+
 		return players;
 	},
 
@@ -407,6 +429,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.SYNC_PLAYERS](state: State, keep: Set<string>) {
 		for(const [key, player] of state.players) {
 			if(!keep.has(player.account)) {
+				state.sortedPlayers.splice(state.sortedPlayers.indexOf(player), 1);
 				state.players.delete(key);
 			}
 		}
@@ -417,6 +440,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.followTarget = undefined;
 		state.panTarget = undefined;
 		state.players.clear();
+		state.sortedPlayers.splice(0, state.sortedPlayers.length);
 	},
 
 	//Sets the currently active server

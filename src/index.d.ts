@@ -1,5 +1,5 @@
 import {State} from "@/store";
-import {DynmapUrlConfig} from "@/dynmap";
+import {DynmapPlayer, DynmapUrlConfig} from "@/dynmap";
 
 declare module "*.png" {
    const value: any;
@@ -65,3 +65,7 @@ interface LiveAtlasMessageConfig {
 
 export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps' | 'settings';
 export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';
+
+interface LiveAtlasSortedPlayers extends Array<DynmapPlayer> {
+	dirty?: boolean;
+}
