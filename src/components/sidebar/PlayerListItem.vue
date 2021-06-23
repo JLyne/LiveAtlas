@@ -134,13 +134,19 @@ export default defineComponent({
 			}
 		}
 
-		&.player--other-world {
+		&.player--other-world:not(:hover) {
 			.player__icon {
 				opacity: 0.5;
 			}
 
 			.player__name {
 				color: var(--text-disabled);
+			}
+		}
+
+		&:hover, &:focus, &:active, &.player--other-world {
+			.player__name ::v-deep(span) {
+				color: inherit !important;
 			}
 		}
 	}
