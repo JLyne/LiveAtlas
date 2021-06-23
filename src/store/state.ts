@@ -222,7 +222,7 @@ export const state: State = {
 
 	ui: {
 		smallScreen: false,
-		visibleElements:new Set(),
+		visibleElements: new Set(),
 		previouslyVisibleElements: new Set(),
 
 		sidebar: {

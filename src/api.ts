@@ -690,13 +690,14 @@ export default {
 		});
 
 		//Extra fake players for testing
-		// for(let i = 0; i < 150; i++) {
+		// for(let i = 0; i < 450; i++) {
 		// 	players.add({
 		// 		account: "VIDEO GAMES " + i,
 		// 		health: Math.round(Math.random() * 10),
 		// 		armor: Math.round(Math.random() * 10),
 		// 		name: "VIDEO GAMES " + i,
-		// 		sort: 0,
+		// 		sort: Math.round(Math.random() * 10),
+		// 		hidden: false,
 		// 		location: {
 		// 			x: Math.round(Math.random() * 1000) - 500,
 		// 			y: 64,
