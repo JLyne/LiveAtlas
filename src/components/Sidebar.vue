@@ -271,6 +271,7 @@ export default defineComponent({
 		.section__content {
 			padding: 0 0.5rem;
 			margin: 0 -.5rem 1rem;
+			min-width: 0;
 
 			&:last-child {
 				margin-bottom: 0;
