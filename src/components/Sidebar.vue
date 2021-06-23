@@ -21,15 +21,17 @@
 					:aria-label="messageWorlds" :aria-expanded="mapsVisible" @keydown="handleMapsKeydown">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
-			<button :class="{'button--players': true}" @click="togglePlayers" :title="messagePlayers"
-					:aria-label="messagePlayers" :aria-expanded="playersVisible" @keydown="handlePlayersKeydown">
+			<button v-if="playerMakersEnabled" :class="{'button--players': true}" @click="togglePlayers"
+			        title="messagePlayers" :aria-label="messagePlayers" :aria-expanded="playersVisible"
+			        @keydown="handlePlayersKeydown">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
 		</header>
 		<div class="sidebar__content" @keydown="handleSidebarKeydown">
 			<ServerList v-if="serverCount > 1" v-show="mapsVisible"></ServerList>
 			<WorldList v-if="mapCount > 1" v-show="mapsVisible"></WorldList>
-			<PlayerList id="players" v-if="previouslyVisible.has('players')" v-show="playersVisible"></PlayerList>
+			<PlayerList id="players" v-if="playerMakersEnabled && previouslyVisible.has('players')"
+			            v-show="playersVisible"></PlayerList>
 			<FollowTarget v-if="following" v-show="followVisible" :target="following"></FollowTarget>
 		</div>
 	</section>
@@ -72,6 +74,8 @@ export default defineComponent({
 
 			messageWorlds = computed(() => store.state.messages.worldsHeading),
 			messagePlayers = computed(() => store.state.messages.playersHeading),
+
+			playerMakersEnabled = computed(() => !!store.state.components.playerMarkers),
 
 			playersVisible = computed(() => currentlyVisible.value.has('players')),
 			mapsVisible = computed(() => currentlyVisible.value.has('maps')),
@@ -128,6 +132,7 @@ export default defineComponent({
 			playersVisible,
 			mapsVisible,
 			followVisible,
+			playerMakersEnabled,
 
 			handleSidebarKeydown,
 			handleMapsKeydown,
