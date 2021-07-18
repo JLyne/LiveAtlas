@@ -192,6 +192,7 @@ input {
 
 		& + label {
 			@include button;
+			background-color: transparent;
 			margin-bottom: 0.1rem;
 		}
 
