@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo VITE_VERSION=git-${GITHUB_SHA::6} > .env
+      - run: cat .env
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run: npm install
+      - run: npm run build
+      - run: find dist/live-atlas/assets -type f -iname \*.svg -delete
+      - run: cp LICENSE.md dist
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: 'live-atlas'
+          path: 'dist/'
+          if-no-files-found: error

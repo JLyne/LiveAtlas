@@ -38,6 +38,11 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Opera 53+
 - Safari 11.1+
 
+## Download
+LiveAtlas is available on [SpigotMC](https://www.spigotmc.org/resources/liveatlas-a-dynmap-frontend-for-the-modern-web.86939/)
+
+Dev builds are available in [Github actions](https://github.com/JLyne/LiveAtlas/actions/workflows/main.yml)
+
 ## Installation
 Using an [external webserver](https://github.com/webbukkit/dynmap/wiki/External-Webserver-Basics) is recommended.
 
