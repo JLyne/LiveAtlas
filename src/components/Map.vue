@@ -44,11 +44,12 @@ import LinkControl from "@/components/map/control/LinkControl.vue";
 import ChatControl from "@/components/map/control/ChatControl.vue";
 import LogoControl from "@/components/map/control/LogoControl.vue";
 import {MutationTypes} from "@/store/mutation-types";
-import {Coordinate, DynmapPlayer} from "@/dynmap";
+import {DynmapPlayer} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import DynmapMap from "@/leaflet/DynmapMap";
 import {LoadingControl} from "@/leaflet/control/LoadingControl";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
+import {Coordinate} from "@/index";
 
 export default defineComponent({
 	components: {

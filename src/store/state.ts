@@ -15,19 +15,19 @@
  */
 
 import {
-	DynmapComponentConfig,
-	DynmapWorldMap, DynmapMarkerSet, DynmapMarkerSetUpdates,
+	DynmapComponentConfig, DynmapMarkerSet, DynmapMarkerSetUpdates,
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
-	DynmapWorld, DynmapWorldState, Coordinate, DynmapParsedUrl, DynmapChat
+	DynmapChat
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {
+	Coordinate, LiveAtlasWorldState,
 	LiveAtlasMessageConfig,
 	LiveAtlasServerDefinition,
 	LiveAtlasSidebarSection,
 	LiveAtlasSortedPlayers,
-	LiveAtlasUIElement
+	LiveAtlasUIElement, LiveAtlasWorld, LiveAtlasWorldMap, LiveAtlasParsedUrl
 } from "@/index";
 
 export type State = {
@@ -40,8 +40,8 @@ export type State = {
 
 	loggedIn: boolean;
 
-	worlds: Map<string, DynmapWorld>;
-	maps: Map<string, DynmapWorldMap>;
+	worlds: Map<string, LiveAtlasWorld>;
+	maps: Map<string, LiveAtlasWorldMap>;
 	players: Map<string, DynmapPlayer>;
 	sortedPlayers: LiveAtlasSortedPlayers;
 	markerSets: Map<string, DynmapMarkerSet>;
@@ -58,9 +58,9 @@ export type State = {
 	panTarget?: DynmapPlayer;
 
 	currentServer?: LiveAtlasServerDefinition;
-	currentWorldState: DynmapWorldState;
-	currentWorld?: DynmapWorld;
-	currentMap?: DynmapWorldMap;
+	currentWorldState: LiveAtlasWorldState;
+	currentWorld?: LiveAtlasWorld;
+	currentMap?: LiveAtlasWorldMap;
 	currentLocation: Coordinate;
 	currentZoom: number;
 	currentProjection: DynmapProjection;
@@ -78,7 +78,7 @@ export type State = {
 		}
 	};
 
-	parsedUrl: DynmapParsedUrl;
+	parsedUrl: LiveAtlasParsedUrl;
 }
 
 export const state: State = {

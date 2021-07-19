@@ -19,7 +19,7 @@
 
 import {ControlOptions, LeafletMouseEvent, Control, Map, DomUtil, Util} from 'leaflet';
 import {useStore} from "@/store";
-import {Coordinate} from "@/dynmap";
+import {Coordinate} from "@/index";
 
 const store = useStore();
 

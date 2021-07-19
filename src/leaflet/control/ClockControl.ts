@@ -19,7 +19,6 @@
 
 import {ControlOptions, DomUtil, Util, Control} from 'leaflet';
 import {getMinecraftTime} from '@/util';
-import {DynmapWorldState} from "@/dynmap";
 
 import {watch} from "@vue/runtime-core";
 import {useStore} from "@/store";
@@ -30,6 +29,7 @@ import "@/assets/icons/clock_moon_storm.svg";
 import "@/assets/icons/clock_sun.svg";
 import "@/assets/icons/clock_sun_rain.svg";
 import "@/assets/icons/clock_sun_storm.svg";
+import {LiveAtlasWorldState} from "@/index";
 
 export interface ClockControlOptions extends ControlOptions {
 	showTimeOfDay: boolean;
@@ -92,7 +92,7 @@ export class ClockControl extends Control {
 		}
 	}
 
-	_update(worldState: DynmapWorldState) {
+	_update(worldState: LiveAtlasWorldState) {
 		const timeOfDay = worldState.timeOfDay;
 		let sunAngle;
 

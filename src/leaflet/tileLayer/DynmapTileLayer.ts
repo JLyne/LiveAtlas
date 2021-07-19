@@ -19,11 +19,11 @@
 
 import {TileLayer, Coords, DoneCallback, TileLayerOptions, DomUtil, Util, LatLng} from 'leaflet';
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
-import {Coordinate, DynmapWorldMap} from "@/dynmap";
 import {store} from "@/store";
+import {Coordinate, LiveAtlasWorldMap} from "@/index";
 
 export interface DynmapTileLayerOptions extends TileLayerOptions {
-	mapSettings: DynmapWorldMap;
+	mapSettings: LiveAtlasWorldMap;
 	errorTileUrl: string;
 	night?: boolean;
 }
@@ -31,7 +31,7 @@ export interface DynmapTileLayerOptions extends TileLayerOptions {
 export interface DynmapTileLayer extends TileLayer {
 	options: DynmapTileLayerOptions;
 	_projection: DynmapProjection;
-	_mapSettings: DynmapWorldMap;
+	_mapSettings: LiveAtlasWorldMap;
 	_cachedTileUrls: Map<string, string>;
 	_namedTiles: Map<string, DynmapTileElement>;
 	_tileTemplate: DynmapTileElement;

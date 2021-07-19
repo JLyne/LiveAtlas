@@ -16,13 +16,13 @@
 
 <script lang="ts">
 import {defineComponent, onUnmounted, computed, watch} from "@vue/runtime-core";
-import {DynmapWorldMap} from "@/dynmap";
 import {Map} from 'leaflet';
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import {getMinecraftTime} from "@/util";
 import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
+import {LiveAtlasWorldMap} from "@/index";
 
 export default defineComponent({
 	props: {
@@ -31,7 +31,7 @@ export default defineComponent({
 			required: true
 		},
 		map: {
-			type: Object as () => DynmapWorldMap,
+			type: Object as () => LiveAtlasWorldMap,
 			required: true
 		},
 		leaflet: {

@@ -29,13 +29,11 @@ import {
 	DynmapTileUpdate,
 	DynmapUpdate,
 	DynmapUpdateResponse,
-	DynmapUpdates,
-	DynmapWorld,
-	DynmapWorldMap
+	DynmapUpdates
 } from "@/dynmap";
 import {useStore} from "@/store";
 import ChatError from "@/errors/ChatError";
-import {LiveAtlasMessageConfig} from "@/index";
+import {LiveAtlasMessageConfig, LiveAtlasWorld} from "@/index";
 
 const titleColours = /§[0-9a-f]/ig;
 
@@ -103,8 +101,8 @@ function buildMessagesConfig(response: any): LiveAtlasMessageConfig {
 	}
 }
 
-function buildWorlds(response: any): Array<DynmapWorld> {
-	const worlds: Map<string, DynmapWorld> = new Map<string, DynmapWorld>();
+function buildWorlds(response: any): Array<LiveAtlasWorld> {
+	const worlds: Map<string, LiveAtlasWorld> = new Map<string, LiveAtlasWorld>();
 
 	//Get all the worlds first so we can handle append_to_world properly
 	(response.worlds || []).forEach((world: any) => {

@@ -1,5 +1,5 @@
 import {State} from "@/store";
-import {DynmapPlayer, DynmapUrlConfig} from "@/dynmap";
+import {DynmapPlayer, DynmapUrlConfig, LiveAtlasWorldMap} from "@/dynmap";
 
 declare module "*.png" {
    const value: any;
@@ -7,9 +7,22 @@ declare module "*.png" {
 }
 
 declare module '*.vue' {
-  import type { DefineComponent } from 'vue'
-  const component: DefineComponent<{}, {}, any>
+	import type {DefineComponent} from 'vue'
+	const component: DefineComponent<{}, {}, any>
   export default component
+}
+
+interface Coordinate {
+	x: number;
+	y: number;
+	z: number;
+}
+
+interface LiveAtlasLocation {
+	x: number;
+	y: number;
+	z: number;
+	world?: string;
 }
 
 interface LiveAtlasServerDefinition {
@@ -68,4 +81,46 @@ export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';
 
 interface LiveAtlasSortedPlayers extends Array<DynmapPlayer> {
 	dirty?: boolean;
+}
+
+interface LiveAtlasWorld {
+	seaLevel: number;
+	name: string;
+	protected: boolean;
+	title: string;
+	height: number;
+	center: Coordinate;
+	maps: Map<string, LiveAtlasWorldMap>;
+}
+
+interface LiveAtlasWorldState {
+	raining: boolean;
+	thundering: boolean;
+	timeOfDay: number;
+}
+
+interface LiveAtlasWorldMap {
+	world: LiveAtlasWorld;
+	name: string;
+	icon: string;
+	title: string;
+	background: string;
+	nightAndDay: boolean;
+	backgroundDay?: string;
+	backgroundNight?: string;
+	imageFormat: string;
+	prefix: string;
+	protected: boolean;
+	mapToWorld: [number, number, number, number, number, number, number, number, number];
+	worldToMap: [number, number, number, number, number, number, number, number, number];
+	nativeZoomLevels: number;
+	extraZoomLevels: number;
+}
+
+interface LiveAtlasParsedUrl {
+	world?: string;
+	map?: string;
+	location?: Coordinate;
+	zoom?: number;
+	legacy: boolean;
 }

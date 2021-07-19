@@ -18,7 +18,7 @@ import {PathOptions, PointTuple, PolylineOptions} from "leaflet";
 import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
-import {LiveAtlasMessageConfig} from "@/index";
+import {Coordinate, LiveAtlasLocation, LiveAtlasMessageConfig, LiveAtlasWorld, LiveAtlasWorldState} from "@/index";
 
 declare global {
 	// noinspection JSUnusedGlobalSymbols
@@ -94,63 +94,16 @@ interface DynmapChatSendingConfig {
 	cooldown: number;
 }
 
-interface DynmapWorld {
-	seaLevel: number;
-	name: string;
-	protected: boolean;
-	title: string;
-	height: number;
-	center: Coordinate;
-	maps: Map<string, DynmapWorldMap>;
-}
-
-interface DynmapWorldMap {
-	world: DynmapWorld;
-	name: string;
-	icon: string;
-	title: string;
-	background: string;
-	nightAndDay: boolean;
-	backgroundDay?: string;
-	backgroundNight?: string;
-	imageFormat: string;
-	prefix: string;
-	protected: boolean;
-	mapToWorld: [number, number, number, number, number, number, number, number, number];
-	worldToMap: [number, number, number, number, number, number, number, number, number];
-	nativeZoomLevels: number;
-	extraZoomLevels: number;
-}
-
-interface DynmapWorldState {
-	raining: boolean;
-	thundering: boolean;
-	timeOfDay: number;
-}
-
-interface Coordinate {
-	x: number;
-	y: number;
-	z: number;
-}
-
-interface DynmapLocation {
-	x: number;
-	y: number;
-	z: number;
-	world?: string;
-}
-
 interface DynmapConfigurationResponse {
 	config: DynmapServerConfig,
 	messages: LiveAtlasMessageConfig,
-	worlds: Array<DynmapWorld>,
+	worlds: Array<LiveAtlasWorld>,
 	components: DynmapComponentConfig,
 	loggedIn: boolean,
 }
 
 interface DynmapUpdateResponse {
-	worldState: DynmapWorldState;
+	worldState: LiveAtlasWorldState;
 	configHash: number;
 	playerCount: number;
 	players: Set<DynmapPlayer>;
@@ -165,7 +118,7 @@ interface DynmapPlayer {
 	name: string;
 	sort: number;
 	hidden: boolean;
-	location: DynmapLocation;
+	location: LiveAtlasLocation;
 }
 
 interface DynmapMarkerSet {
@@ -275,14 +228,6 @@ interface DynmapLineUpdate extends DynmapUpdate {
 interface DynmapTileUpdate {
 	name: string
 	timestamp: number
-}
-
-interface DynmapParsedUrl {
-	world?: string;
-	map?: string;
-	location?: Coordinate;
-	zoom?: number;
-	legacy: boolean;
 }
 
 interface DynmapChat {

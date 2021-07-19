@@ -21,22 +21,21 @@ import {
 	DynmapArea,
 	DynmapCircle,
 	DynmapComponentConfig,
-	DynmapLine, Coordinate,
-	DynmapMarker,
+	DynmapLine, DynmapMarker,
 	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
 	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
-	DynmapWorld,
-	DynmapWorldState, DynmapParsedUrl, DynmapChat
+	DynmapChat
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {
+	Coordinate, LiveAtlasWorldState,
 	LiveAtlasMessageConfig,
 	LiveAtlasServerDefinition,
 	LiveAtlasSidebarSection,
 	LiveAtlasSortedPlayers,
-	LiveAtlasUIElement
+	LiveAtlasUIElement, LiveAtlasWorld, LiveAtlasParsedUrl
 } from "@/index";
 
 export type CurrentMapPayload = {
@@ -51,13 +50,13 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_CONFIGURATION_HASH](state: S, hash: number): void
 	[MutationTypes.CLEAR_CONFIGURATION_HASH](state: S): void
 	[MutationTypes.SET_MESSAGES](state: S, messages: LiveAtlasMessageConfig): void
-	[MutationTypes.SET_WORLDS](state: S, worlds: Array<DynmapWorld>): void
+	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorld>): void
 	[MutationTypes.CLEAR_WORLDS](state: S): void
 	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, DynmapMarkerSet>): void
 	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
-	[MutationTypes.ADD_WORLD](state: S, world: DynmapWorld): void
-	[MutationTypes.SET_WORLD_STATE](state: S, worldState: DynmapWorldState): void
+	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorld): void
+	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
 	[MutationTypes.SET_UPDATE_TIMESTAMP](state: S, time: Date): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
 	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
@@ -78,7 +77,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_CURRENT_PROJECTION](state: S, payload: DynmapProjection): void
 	[MutationTypes.SET_CURRENT_LOCATION](state: S, payload: Coordinate): void
 	[MutationTypes.SET_CURRENT_ZOOM](state: S, payload: number): void
-	[MutationTypes.SET_PARSED_URL](state: S, payload: DynmapParsedUrl): void
+	[MutationTypes.SET_PARSED_URL](state: S, payload: LiveAtlasParsedUrl): void
 	[MutationTypes.CLEAR_PARSED_URL](state: S): void
 	[MutationTypes.CLEAR_CURRENT_MAP](state: S): void
 	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: DynmapPlayer): void
@@ -136,7 +135,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Sets the list of worlds, and their settings, from the initial config fetch
-	[MutationTypes.SET_WORLDS](state: State, worlds: Array<DynmapWorld>) {
+	[MutationTypes.SET_WORLDS](state: State, worlds: Array<LiveAtlasWorld>) {
 		state.worlds.clear();
 		state.maps.clear();
 
@@ -205,12 +204,12 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.pendingSetUpdates.clear();
 	},
 
-	[MutationTypes.ADD_WORLD](state: State, world: DynmapWorld) {
+	[MutationTypes.ADD_WORLD](state: State, world: LiveAtlasWorld) {
 		state.worlds.set(world.name, world);
 	},
 
 	//Sets the current world state an update fetch
-	[MutationTypes.SET_WORLD_STATE](state: State, worldState: DynmapWorldState) {
+	[MutationTypes.SET_WORLD_STATE](state: State, worldState: LiveAtlasWorldState) {
 		state.currentWorldState = Object.assign(state.currentWorldState, worldState);
 	},
 
@@ -492,7 +491,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Sets the result of parsing the current map url, if present and valid
-	[MutationTypes.SET_PARSED_URL](state: State, payload: DynmapParsedUrl) {
+	[MutationTypes.SET_PARSED_URL](state: State, payload: LiveAtlasParsedUrl) {
 		state.parsedUrl = payload;
 	},
 

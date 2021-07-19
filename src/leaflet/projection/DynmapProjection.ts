@@ -18,7 +18,7 @@
  */
 
 import {Util, LatLng, Class} from 'leaflet';
-import {Coordinate} from "@/dynmap";
+import {Coordinate} from "@/index";
 
 export interface DynmapProjectionOptions {
 	mapToWorld: [number, number, number, number, number, number, number, number, number],

@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import {useStore} from "@/store";
-import {DynmapWorld, DynmapWorldMap} from "@/dynmap";
 import {defineComponent} from 'vue';
 import {MutationTypes} from "@/store/mutation-types";
 import SvgIcon from "@/components/SvgIcon.vue";
@@ -47,13 +46,14 @@ import "@/assets/icons/block_the_end_surface.svg";
 import "@/assets/icons/block_other.svg";
 import "@/assets/icons/block_other_flat.svg";
 import "@/assets/icons/block_skylands.svg";
+import {LiveAtlasWorld, LiveAtlasWorldMap} from "@/index";
 
 export default defineComponent({
 	name: 'WorldListItem',
 	components: {SvgIcon},
 	props: {
 		world: {
-			type: Object as () => DynmapWorld,
+			type: Object as () => LiveAtlasWorld,
 			required: true
 		},
 		name: {
@@ -75,7 +75,7 @@ export default defineComponent({
 	},
 
 	methods: {
-		getMapIcon(map: DynmapWorldMap): string {
+		getMapIcon(map: LiveAtlasWorldMap): string {
 			let worldType: string,
 				mapType: string;
 

@@ -15,8 +15,9 @@
  */
 
 import API from '@/api';
-import {DynmapPlayer, DynmapWorld, DynmapWorldMap} from "@/dynmap";
+import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
+import {LiveAtlasWorld, LiveAtlasWorldMap} from "@/index";
 
 interface HeadQueueEntry {
 	cacheKey: string;
@@ -214,7 +215,7 @@ export const getAPI = () => {
 	return API;
 }
 
-export const getUrlForLocation = (world: DynmapWorld, map: DynmapWorldMap, location: {
+export const getUrlForLocation = (world: LiveAtlasWorld, map: LiveAtlasWorldMap, location: {
 	x: number,
 	y: number,
 	z: number }, zoom: number): string => {

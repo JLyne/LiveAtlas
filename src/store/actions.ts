@@ -25,9 +25,10 @@ import {
 	DynmapMarkerSet,
 	DynmapMarkerUpdate,
 	DynmapPlayer, DynmapTileUpdate,
-	DynmapUpdateResponse, DynmapWorld
+	DynmapUpdateResponse
 } from "@/dynmap";
 import {getAPI} from "@/util";
+import {LiveAtlasWorld} from "@/index";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(
@@ -118,7 +119,7 @@ export const actions: ActionTree<State, State> & Actions = {
 		}
 
 		if(worldName) {
-			const world = state.worlds.get(worldName) as DynmapWorld;
+			const world = state.worlds.get(worldName) as LiveAtlasWorld;
 
 			// Use config default map if it exists
 			if(config.config.defaultMap && world.maps.has(config.config.defaultMap)) {
