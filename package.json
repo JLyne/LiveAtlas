@@ -11,7 +11,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@kyvg/vue3-notification": "2.3.0",
+    "@kyvg/vue3-notification": "2.3.3",
     "@soerenmartius/vue3-clipboard": "^0.1",
     "focus-visible": "^5.2",
     "leaflet": "1.7.1",
