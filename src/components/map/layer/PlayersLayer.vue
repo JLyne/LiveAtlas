@@ -42,12 +42,17 @@ export default defineComponent({
 			playerPane = props.leaflet.createPane('players'),
 			players = computed(() => store.state.players),
 			playerCount = computed(() => store.state.players.size),
+			playersAboveMarkers = computed(() => store.state.ui.playersAboveMarkers),
 			componentSettings = computed(() => store.state.components.playerMarkers),
 			layerGroup = new LayerGroup([],{
 				pane: 'players'
 			});
 
-		watch(playerCount, (newValue) => playerPane.classList.toggle('no-animations', newValue > 150))
+		watch(playerCount, (newValue) => playerPane.classList.toggle('no-animations', newValue > 150));
+
+		if(playersAboveMarkers.value) {
+			playerPane.style.zIndex = '600';
+		}
 
 		return {
 			players,
@@ -80,7 +85,3 @@ export default defineComponent({
 	}
 })
 </script>
-
-<style scoped>
-
-</style>

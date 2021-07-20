@@ -57,7 +57,7 @@ function buildServerConfig(response: any): DynmapServerConfig {
 }
 
 function buildMessagesConfig(response: any): LiveAtlasMessageConfig {
-	const liveAtlasMessages = window.liveAtlasConfig ? window.liveAtlasConfig.messages || {} : {};
+	const liveAtlasMessages = window.liveAtlasConfig?.messages || {};
 
 	return {
 		chatPlayerJoin: response.joinmessage || '',

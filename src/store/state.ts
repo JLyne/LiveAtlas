@@ -69,6 +69,7 @@ export type State = {
 	updateTimestamp: Date;
 
 	ui: {
+		playersAboveMarkers: boolean;
 		smallScreen: boolean;
 		visibleElements: Set<LiveAtlasUIElement>;
 		previouslyVisibleElements: Set<LiveAtlasUIElement>;
@@ -221,6 +222,8 @@ export const state: State = {
 	updateTimestamp: new Date(),
 
 	ui: {
+		playersAboveMarkers: window.liveAtlasConfig?.ui?.playersAboveMarkers || false,
+
 		smallScreen: false,
 		visibleElements: new Set(),
 		previouslyVisibleElements: new Set(),
