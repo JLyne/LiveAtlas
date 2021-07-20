@@ -507,13 +507,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
 	//Clear any existing parsed url
 	[MutationTypes.CLEAR_PARSED_URL](state: State) {
-		state.parsedUrl = {
-			world: undefined,
-			map: undefined,
-			location: undefined,
-			zoom: undefined,
-			legacy: false,
-		};
+		state.parsedUrl = undefined;
 	},
 
 	//Set the follow target, which the map will automatically pan to keep in view

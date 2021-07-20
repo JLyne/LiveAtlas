@@ -160,6 +160,14 @@ export default defineComponent({
 
 				e.preventDefault();
 				store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, element);
+			},
+
+			onUrlChange = () => {
+				const parsedUrl = parseUrl();
+
+				if(parsedUrl) {
+					store.commit(MutationTypes.SET_PARSED_URL, parsedUrl);
+				}
 			};
 
 		watch(title, (title) => document.title = title);
@@ -200,10 +208,12 @@ export default defineComponent({
 		onMounted(() => {
 			window.addEventListener('resize', onResize);
 			window.addEventListener('keydown', onKeydown);
+			window.addEventListener('hashchange', onUrlChange);
 		});
 		onUnmounted(() => {
 			window.addEventListener('resize', onResize);
 			window.addEventListener('keydown', onKeydown);
+			window.addEventListener('hashchange', onUrlChange);
 		});
 
 		return {

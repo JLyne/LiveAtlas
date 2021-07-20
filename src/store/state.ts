@@ -78,7 +78,7 @@ export type State = {
 		}
 	};
 
-	parsedUrl: LiveAtlasParsedUrl;
+	parsedUrl?: LiveAtlasParsedUrl;
 }
 
 export const state: State = {
@@ -228,13 +228,5 @@ export const state: State = {
 		sidebar: {
 			collapsedSections: new Set(),
 		},
-	},
-
-	parsedUrl: {
-		world: undefined,
-		map: undefined,
-		location: undefined,
-		zoom: undefined,
-		legacy: false,
 	}
 };

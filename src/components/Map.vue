@@ -86,6 +86,7 @@ export default defineComponent({
 
 			followTarget = computed(() => store.state.followTarget),
 			panTarget = computed(() => store.state.panTarget),
+			parsedUrl = computed(() => store.state.parsedUrl),
 
 			//Location and zoom to pan to upon next projection change
 			scheduledPan = ref<Coordinate|null>(null),
@@ -108,6 +109,7 @@ export default defineComponent({
 			logoControls,
 			followTarget,
 			panTarget,
+			parsedUrl,
 			mapBackground,
 
 			currentWorld,
@@ -167,30 +169,69 @@ export default defineComponent({
 
 				store.dispatch(ActionTypes.GET_MARKER_SETS, undefined);
 
-				//Abort if follow target is present, to avoid panning twice
+				// Abort if follow target is present, to avoid panning twice
 				if(store.state.followTarget && store.state.followTarget.location.world === newValue.name) {
 					return;
-				//Abort if pan target is present, to avoid panning to the wrong place.
+				// Abort if pan target is present, to avoid panning to the wrong place.
 				// Also clear it to allow repeated panning.
 				} else if(store.state.panTarget && store.state.panTarget.location.world === newValue.name) {
 					store.commit(MutationTypes.CLEAR_PAN_TARGET, undefined);
 					return;
-				//Otherwise pan to url location, if present and if we have just loaded
-				} else if(!oldValue && store.state.parsedUrl.location) {
+				// Otherwise pan to url location, if present
+				} else if(store.state.parsedUrl?.location) {
 					location = store.state.parsedUrl.location;
-				//Otherwise pan to world center
+					store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
+				// Otherwise pan to world center
 				} else {
 					location = newValue.center;
 				}
 
 				if(!oldValue) {
-					this.scheduledZoom = typeof store.state.parsedUrl.zoom !== 'undefined' ?
-						store.state.parsedUrl.zoom : store.state.configuration.defaultZoom;
+					this.scheduledZoom = store.state.parsedUrl?.zoom || store.state.configuration.defaultZoom;
 				}
 
 				//Set pan location for when the projection changes
 				this.scheduledPan = location;
 			}
+		},
+		parsedUrl: {
+			handler(newValue) {
+				if(!newValue || !this.currentWorld || !this.leaflet) {
+					return;
+				}
+
+				//URL points to different map
+				if(newValue.world !== this.currentWorld.name || newValue.map !== this.currentMap!.name) {
+					//Set scheduled pan for after map change
+					this.scheduledPan = newValue.location;
+					this.scheduledZoom = newValue.zoom;
+
+					try {
+						useStore().commit(MutationTypes.SET_CURRENT_MAP, {
+							worldName: newValue.world,
+							mapName: newValue.map
+						});
+					} catch(e) {
+						//Clear scheduled pan if change fails
+						console.warn(`Failed to handle URL change`, e);
+						this.scheduledPan = null;
+						this.scheduledZoom = null;
+					}
+				} else { //Same map, just pan
+					this.scheduledPan = null;
+					this.scheduledZoom = null;
+
+					this.leaflet.setZoom(newValue.zoom, {
+						animate: false,
+					});
+
+					this.leaflet.panTo(this.currentProjection.locationToLatLng(newValue.location), {
+						animate: false,
+						noMoveStart: true,
+					});
+				}
+			},
+			deep: true,
 		}
 	},
 

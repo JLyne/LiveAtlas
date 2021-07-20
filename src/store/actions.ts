@@ -109,7 +109,7 @@ export const actions: ActionTree<State, State> & Actions = {
 		}
 
 		// Prefer world from parsed url if present and it exists
-		if(state.parsedUrl.world && state.worlds.has(state.parsedUrl.world)) {
+		if(state.parsedUrl?.world && state.worlds.has(state.parsedUrl.world)) {
 			worldName = state.parsedUrl.world;
 		}
 
@@ -127,7 +127,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			}
 
 			// Prefer map from parsed url if present and it exists
-			if(state.parsedUrl.map && world.maps.has(state.parsedUrl.map)) {
+			if(state.parsedUrl?.map && world.maps.has(state.parsedUrl.map)) {
 				mapName = state.parsedUrl.map;
 			}
 
