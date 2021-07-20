@@ -1,4 +1,4 @@
-import {LiveAtlasDynmapServerDefinition, LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasDynmapServerDefinition, LiveAtlasGlobalConfig, LiveAtlasServerDefinition} from "@/index";
 import ConfigurationError from "@/errors/ConfigurationError";
 import {DynmapUrlConfig} from "@/dynmap";
 
@@ -102,14 +102,15 @@ const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveA
 	return result;
 };
 
-export const validateConfiguration = (): Map<string, LiveAtlasServerDefinition> => {
-	if (!window.liveAtlasConfig) {
+export const getServerDefinitions = (config: LiveAtlasGlobalConfig): Map<string, LiveAtlasServerDefinition> => {
+	if (!config) {
 		throw new ConfigurationError(`Configuration object is missing`);
 	}
 
-	if (typeof window.liveAtlasConfig.servers !== 'undefined') {
-		return validateLiveAtlasConfiguration(window.liveAtlasConfig.servers || {});
+	if (typeof config !== 'undefined') {
+		return validateLiveAtlasConfiguration(config.servers || {});
 	}
 
 	return validateDynmapConfiguration(window.config?.url || null);
 };
+

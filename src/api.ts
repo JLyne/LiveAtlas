@@ -33,7 +33,7 @@ import {
 } from "@/dynmap";
 import {useStore} from "@/store";
 import ChatError from "@/errors/ChatError";
-import {LiveAtlasMessageConfig, LiveAtlasWorld} from "@/index";
+import {LiveAtlasServerMessageConfig, LiveAtlasWorld} from "@/index";
 
 const titleColours = /§[0-9a-f]/ig;
 
@@ -56,48 +56,17 @@ function buildServerConfig(response: any): DynmapServerConfig {
 	};
 }
 
-function buildMessagesConfig(response: any): LiveAtlasMessageConfig {
-	const liveAtlasMessages = window.liveAtlasConfig?.messages || {};
-
+function buildMessagesConfig(response: any): LiveAtlasServerMessageConfig {
 	return {
 		chatPlayerJoin: response.joinmessage || '',
 		chatPlayerQuit: response.quitmessage || '',
 		chatAnonymousJoin: response['msg-hiddennamejoin'] || '',
 		chatAnonymousQuit: response['msg-hiddennamequit'] || '',
-		chatTitle: liveAtlasMessages.chatTitle || '',
-		chatLogin: liveAtlasMessages.chatLogin || '',
-		chatLoginLink: liveAtlasMessages.chatLoginLink || '',
-		chatNoMessages: liveAtlasMessages.chatNoMessages || '',
-		chatSend: liveAtlasMessages.chatSend || '',
-		chatPlaceholder: liveAtlasMessages.chatPlaceholder || '',
 		chatErrorNotAllowed: response['msg-chatnotallowed'] || '',
 		chatErrorRequiresLogin: response['msg-chatrequireslogin'] || '',
 		chatErrorCooldown: response.spammessage || '',
-		chatErrorDisabled: liveAtlasMessages.chatErrorDisabled || '',
-		chatErrorUnknown: liveAtlasMessages.chatErrorUnknown || '',
-		serversHeading: liveAtlasMessages.serversHeading || '',
 		worldsHeading: response['msg-maptypes'] || '',
-		worldsSkeleton: liveAtlasMessages.worldsSkeleton || '',
 		playersHeading: response['msg-players'] || '',
-		playersSkeleton: liveAtlasMessages.playersSkeleton || '',
-		playersTitle: liveAtlasMessages.playersTitle || '',
-		playersTitleHidden: liveAtlasMessages.playersTitleHidden || '',
-		playersTitleOtherWorld: liveAtlasMessages.playersTitleOtherWorld || '',
-		followingHeading: liveAtlasMessages.followingHeading || '',
-		followingHidden: liveAtlasMessages.followingHidden || '',
-		followingUnfollow: liveAtlasMessages.followingUnfollow || '',
-		followingTitleUnfollow: liveAtlasMessages.followingTitleUnfollow || '',
-		linkTitle: liveAtlasMessages.linkTitle || '',
-		loadingTitle: liveAtlasMessages.loadingTitle || '',
-		locationRegion: liveAtlasMessages.locationRegion || '',
-		locationChunk: liveAtlasMessages.locationChunk || '',
-		contextMenuCopyLink: liveAtlasMessages.contextMenuCopyLink || '',
-		contextMenuCenterHere: liveAtlasMessages.contextMenuCenterHere || '',
-		toggleTitle: liveAtlasMessages.toggleTitle || '',
-		mapTitle: liveAtlasMessages.mapTitle || '',
-		layersTitle: liveAtlasMessages.layersTitle || '',
-		copyToClipboardSuccess: liveAtlasMessages.copyToClipboardSuccess || '',
-		copyToClipboardError: liveAtlasMessages.copyToClipboardError || '',
 	}
 }
 

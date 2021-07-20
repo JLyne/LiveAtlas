@@ -24,10 +24,10 @@ import '@/scss/style.scss';
 
 import 'focus-visible';
 import {MutationTypes} from "@/store/mutation-types";
-import {validateConfiguration} from "@/util/config";
 import {showSplashError} from "@/util/splash";
 import { VueClipboard } from '@soerenmartius/vue3-clipboard';
 import Notifications from '@kyvg/vue3-notification'
+import {getServerDefinitions} from "@/util/config";
 
 const splash = document.getElementById('splash'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
@@ -49,14 +49,14 @@ store.subscribe((mutation, state) => {
 });
 
 try {
-	const config = validateConfiguration();
+	const config = window.liveAtlasConfig;
+	config.servers = getServerDefinitions(config);
 
-	store.commit(MutationTypes.INIT, undefined);
-	store.commit(MutationTypes.SET_SERVERS, config);
+	store.commit(MutationTypes.INIT, config);
 
-	if(config.size > 1) {
+	if(store.state.servers.size > 1) {
 		const lastSegment = window.location.pathname.split('/').pop(),
-			serverName = lastSegment && config.has(lastSegment) ? lastSegment : config.keys().next().value;
+			serverName = lastSegment && store.state.servers.has(lastSegment) ? lastSegment : store.state.servers.keys().next().value;
 
 		//Update url if server doesn't exist
 		if(serverName !== lastSegment) {
@@ -65,7 +65,7 @@ try {
 
 		store.commit(MutationTypes.SET_CURRENT_SERVER, serverName);
 	} else {
-		store.commit(MutationTypes.SET_CURRENT_SERVER, config.keys().next().value);
+		store.commit(MutationTypes.SET_CURRENT_SERVER, store.state.servers.keys().next().value);
 	}
 
 	const app = createApp(App)

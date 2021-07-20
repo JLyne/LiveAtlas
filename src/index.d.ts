@@ -12,6 +12,13 @@ declare module '*.vue' {
   export default component
 }
 
+declare global {
+	// noinspection JSUnusedGlobalSymbols
+	interface Window {
+		liveAtlasConfig: LiveAtlasGlobalConfig,
+	}
+}
+
 interface Coordinate {
 	x: number;
 	y: number;
@@ -25,6 +32,12 @@ interface LiveAtlasLocation {
 	world?: string;
 }
 
+interface LiveAtlasGlobalConfig {
+	servers: Map<string, LiveAtlasServerDefinition>;
+	messages: LiveAtlasGlobalMessageConfig;
+	ui: LiveAtlasUIConfig;
+}
+
 interface LiveAtlasServerDefinition {
 	id: string
 	label?: string
@@ -35,27 +48,19 @@ interface LiveAtlasDynmapServerDefinition extends LiveAtlasServerDefinition {
 	dynmap: DynmapUrlConfig,
 }
 
-interface LiveAtlasMessageConfig {
-	chatPlayerJoin: string;
-	chatPlayerQuit: string;
-	chatAnonymousJoin: string;
-	chatAnonymousQuit: string;
+// Messages defined directly in LiveAtlas and used for all servers
+interface LiveAtlasGlobalMessageConfig {
 	chatNoMessages: string;
 	chatTitle: string;
 	chatLogin: string;
 	chatLoginLink: string;
 	chatSend: string;
 	chatPlaceholder: string;
-	chatErrorNotAllowed: string;
-	chatErrorRequiresLogin: string;
-	chatErrorCooldown: string;
 	chatErrorDisabled: string;
 	chatErrorUnknown: string;
 	serversHeading: string;
-	worldsHeading: string;
 	worldsSkeleton: string;
 	playersSkeleton: string;
-	playersHeading: string;
 	playersTitle: string;
 	playersTitleHidden: string;
 	playersTitleOtherWorld: string;
@@ -74,6 +79,25 @@ interface LiveAtlasMessageConfig {
 	layersTitle: string;
 	copyToClipboardSuccess: string;
 	copyToClipboardError: string;
+}
+
+// Messages defined by dynmap configuration responses and can vary per server
+interface LiveAtlasServerMessageConfig {
+	chatPlayerJoin: string;
+	chatPlayerQuit: string;
+	chatAnonymousJoin: string;
+	chatAnonymousQuit: string;
+	chatErrorNotAllowed: string;
+	chatErrorRequiresLogin: string;
+	chatErrorCooldown: string;
+	worldsHeading: string;
+	playersHeading: string;
+}
+
+type LiveAtlasMessageConfig = LiveAtlasGlobalMessageConfig & LiveAtlasServerMessageConfig;
+
+interface LiveAtlasUIConfig {
+	playersAboveMarkers: boolean;
 }
 
 export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps' | 'settings';

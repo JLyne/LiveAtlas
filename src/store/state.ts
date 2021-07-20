@@ -22,12 +22,16 @@ import {
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {
-	Coordinate, LiveAtlasWorldState,
-	LiveAtlasMessageConfig,
+	Coordinate,
+	LiveAtlasWorldState,
 	LiveAtlasServerDefinition,
 	LiveAtlasSidebarSection,
 	LiveAtlasSortedPlayers,
-	LiveAtlasUIElement, LiveAtlasWorld, LiveAtlasWorldMap, LiveAtlasParsedUrl
+	LiveAtlasUIElement,
+	LiveAtlasWorld,
+	LiveAtlasWorldMap,
+	LiveAtlasParsedUrl,
+	LiveAtlasMessageConfig
 } from "@/index";
 
 export type State = {
@@ -222,7 +226,7 @@ export const state: State = {
 	updateTimestamp: new Date(),
 
 	ui: {
-		playersAboveMarkers: window.liveAtlasConfig?.ui?.playersAboveMarkers || false,
+		playersAboveMarkers: true,
 
 		smallScreen: false,
 		visibleElements: new Set(),

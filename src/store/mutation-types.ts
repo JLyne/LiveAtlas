@@ -17,11 +17,10 @@
 export enum MutationTypes {
 	INIT ='init',
 
-	SET_SERVERS ='setServers',
-	SET_CONFIGURATION = 'setConfiguration',
-	SET_CONFIGURATION_HASH = 'setConfigurationHash',
-	CLEAR_CONFIGURATION_HASH = 'clearConfigurationHash',
-	SET_MESSAGES = 'setMessages',
+	SET_SERVER_CONFIGURATION = 'setServerConfiguration',
+	SET_SERVER_CONFIGURATION_HASH = 'setServerConfigurationHash',
+	CLEAR_SERVER_CONFIGURATION_HASH = 'clearServerConfigurationHash',
+	SET_SERVER_MESSAGES = 'setServerMessages',
 	SET_WORLDS = 'setWorlds',
 	CLEAR_WORLDS = 'clearWorlds',
 	SET_COMPONENTS = 'setComponents',

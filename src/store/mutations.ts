@@ -30,12 +30,16 @@ import {
 } from "@/dynmap";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {
-	Coordinate, LiveAtlasWorldState,
-	LiveAtlasMessageConfig,
-	LiveAtlasServerDefinition,
+	Coordinate,
+	LiveAtlasWorldState,
 	LiveAtlasSidebarSection,
 	LiveAtlasSortedPlayers,
-	LiveAtlasUIElement, LiveAtlasWorld, LiveAtlasParsedUrl
+	LiveAtlasUIElement,
+	LiveAtlasWorld,
+	LiveAtlasParsedUrl,
+	LiveAtlasGlobalConfig,
+	LiveAtlasGlobalMessageConfig,
+	LiveAtlasServerMessageConfig
 } from "@/index";
 
 export type CurrentMapPayload = {
@@ -44,12 +48,11 @@ export type CurrentMapPayload = {
 }
 
 export type Mutations<S = State> = {
-	[MutationTypes.INIT](state: S): void
-	[MutationTypes.SET_SERVERS](state: S, servers: Map<string, LiveAtlasServerDefinition>): void
-	[MutationTypes.SET_CONFIGURATION](state: S, config: DynmapServerConfig): void
-	[MutationTypes.SET_CONFIGURATION_HASH](state: S, hash: number): void
-	[MutationTypes.CLEAR_CONFIGURATION_HASH](state: S): void
-	[MutationTypes.SET_MESSAGES](state: S, messages: LiveAtlasMessageConfig): void
+	[MutationTypes.INIT](state: S, config: LiveAtlasGlobalConfig): void
+	[MutationTypes.SET_SERVER_CONFIGURATION](state: S, config: DynmapServerConfig): void
+	[MutationTypes.SET_SERVER_CONFIGURATION_HASH](state: S, hash: number): void
+	[MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH](state: S): void
+	[MutationTypes.SET_SERVER_MESSAGES](state: S, messages: LiveAtlasServerMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorld>): void
 	[MutationTypes.CLEAR_WORLDS](state: S): void
 	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
@@ -96,17 +99,54 @@ export type Mutations<S = State> = {
 }
 
 export const mutations: MutationTree<State> & Mutations = {
-	[MutationTypes.INIT](state: State) {
-		const collapsedSections = localStorage.getItem('collapsedSections');
+	[MutationTypes.INIT](state: State, config: LiveAtlasGlobalConfig) {
+		const collapsedSections = localStorage.getItem('collapsedSections'),
+			messageConfig = config?.messages || {},
+			uiConfig = config?.ui || {};
 
 		if(collapsedSections) {
 			state.ui.sidebar.collapsedSections = new Set(JSON.parse(collapsedSections));
 		}
-	},
 
-	// Sets configuration options from the initial config fetch
-	[MutationTypes.SET_SERVERS](state: State, config: Map<string, LiveAtlasServerDefinition>) {
-		state.servers = config;
+		const messages: LiveAtlasGlobalMessageConfig = {
+			chatTitle: messageConfig.chatTitle || '',
+			chatLogin: messageConfig.chatLogin || '',
+			chatLoginLink: messageConfig.chatLoginLink || '',
+			chatNoMessages: messageConfig.chatNoMessages || '',
+			chatSend: messageConfig.chatSend || '',
+			chatPlaceholder: messageConfig.chatPlaceholder || '',
+			chatErrorDisabled: messageConfig.chatErrorDisabled || '',
+			chatErrorUnknown: messageConfig.chatErrorUnknown || '',
+			serversHeading: messageConfig.serversHeading || '',
+			worldsSkeleton: messageConfig.worldsSkeleton || '',
+			playersSkeleton: messageConfig.playersSkeleton || '',
+			playersTitle: messageConfig.playersTitle || '',
+			playersTitleHidden: messageConfig.playersTitleHidden || '',
+			playersTitleOtherWorld: messageConfig.playersTitleOtherWorld || '',
+			followingHeading: messageConfig.followingHeading || '',
+			followingHidden: messageConfig.followingHidden || '',
+			followingUnfollow: messageConfig.followingUnfollow || '',
+			followingTitleUnfollow: messageConfig.followingTitleUnfollow || '',
+			linkTitle: messageConfig.linkTitle || '',
+			loadingTitle: messageConfig.loadingTitle || '',
+			locationRegion: messageConfig.locationRegion || '',
+			locationChunk: messageConfig.locationChunk || '',
+			contextMenuCopyLink: messageConfig.contextMenuCopyLink || '',
+			contextMenuCenterHere: messageConfig.contextMenuCenterHere || '',
+			toggleTitle: messageConfig.toggleTitle || '',
+			mapTitle: messageConfig.mapTitle || '',
+			layersTitle: messageConfig.layersTitle || '',
+			copyToClipboardSuccess: messageConfig.copyToClipboardSuccess || '',
+			copyToClipboardError: messageConfig.copyToClipboardError || '',
+		}
+
+		state.messages = Object.assign(state.messages, messages);
+
+		if(typeof uiConfig.playersAboveMarkers === 'boolean') {
+			state.ui.playersAboveMarkers = uiConfig.playersAboveMarkers;
+		}
+
+		state.servers = config.servers;
 
 		if(state.currentServer && !state.servers.has(state.currentServer.id)) {
 			state.currentServer = undefined;
@@ -114,23 +154,23 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	// Sets configuration options from the initial config fetch
-	[MutationTypes.SET_CONFIGURATION](state: State, config: DynmapServerConfig) {
+	[MutationTypes.SET_SERVER_CONFIGURATION](state: State, config: DynmapServerConfig) {
 		state.configuration = Object.assign(state.configuration, config);
 		state.configurationHash = config.hash;
 	},
 
 	// Sets configuration hash
-	[MutationTypes.SET_CONFIGURATION_HASH](state: State, hash: number) {
+	[MutationTypes.SET_SERVER_CONFIGURATION_HASH](state: State, hash: number) {
 		state.configurationHash = hash;
 	},
 
 	// Sets configuration hash
-	[MutationTypes.CLEAR_CONFIGURATION_HASH](state: State) {
+	[MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH](state: State) {
 		state.configurationHash = undefined;
 	},
 
-	//Set messages from the initial config fetch
-	[MutationTypes.SET_MESSAGES](state: State, messages: LiveAtlasMessageConfig) {
+	// Sets messages from the initial config fetch
+	[MutationTypes.SET_SERVER_MESSAGES](state: State, messages: LiveAtlasServerMessageConfig) {
 		state.messages = Object.assign(state.messages, messages);
 	},
 

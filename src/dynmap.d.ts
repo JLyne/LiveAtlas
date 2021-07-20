@@ -18,13 +18,18 @@ import {PathOptions, PointTuple, PolylineOptions} from "leaflet";
 import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
-import {Coordinate, LiveAtlasLocation, LiveAtlasMessageConfig, LiveAtlasWorld, LiveAtlasWorldState} from "@/index";
+import {
+	Coordinate,
+	LiveAtlasLocation,
+	LiveAtlasServerMessageConfig,
+	LiveAtlasWorld,
+	LiveAtlasWorldState
+} from "@/index";
 
 declare global {
 	// noinspection JSUnusedGlobalSymbols
 	interface Window {
 		config: { url: DynmapUrlConfig };
-		liveAtlasConfig: any,
 	}
 }
 
@@ -96,7 +101,7 @@ interface DynmapChatSendingConfig {
 
 interface DynmapConfigurationResponse {
 	config: DynmapServerConfig,
-	messages: LiveAtlasMessageConfig,
+	messages: LiveAtlasServerMessageConfig,
 	worlds: Array<LiveAtlasWorld>,
 	components: DynmapComponentConfig,
 	loggedIn: boolean,
