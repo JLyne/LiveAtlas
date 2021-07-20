@@ -129,7 +129,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.configurationHash = undefined;
 	},
 
-	//Set messsages from the initial config fetch
+	//Set messages from the initial config fetch
 	[MutationTypes.SET_MESSAGES](state: State, messages: LiveAtlasMessageConfig) {
 		state.messages = Object.assign(state.messages, messages);
 	},
