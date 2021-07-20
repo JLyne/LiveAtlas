@@ -45,6 +45,7 @@ export default defineComponent({
 		const store = useStore(),
 			otherWorld = computed(() => {
 				return store.state.configuration.grayHiddenPlayers
+					&& !props.player.hidden
 					&& (!store.state.currentWorld || store.state.currentWorld.name !== props.player.location.world);
 			}),
 
@@ -127,24 +128,20 @@ export default defineComponent({
 			padding-left: 2.7rem;
 		}
 
+		&.player--hidden:not(:hover),
+		&.player--other-world:not(:hover) {
+			.player__name {
+				opacity: 0.5;
+			}
+		}
+
 		&.player--hidden {
 			.player__icon {
 				filter: grayscale(1);
-				opacity: 0.5;
 			}
 		}
 
-		&.player--other-world:not(:hover) {
-			.player__icon {
-				opacity: 0.5;
-			}
-
-			.player__name {
-				color: var(--text-disabled);
-			}
-		}
-
-		&:hover, &:focus, &:active, &.player--other-world {
+		&:hover, &:focus, &:active {
 			.player__name ::v-deep(span) {
 				color: inherit !important;
 			}
