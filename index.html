@@ -98,6 +98,8 @@
                 playersTitle: 'Click to center on player\nDouble-click to follow player',
                 playersTitleHidden: 'This player is currently hidden from the map\nDouble-click to follow player when they become visible',
                 playersTitleOtherWorld: 'This player is in another world.\nClick to center on player\nDouble-click to follow player',
+                playersSearchPlaceholder: 'Search players...',
+                playersSearchSkeleton: 'No matching players found',
                 followingHeading: 'Following',
                 followingUnfollow: 'Unfollow',
                 followingTitleUnfollow: 'Stop following this player',
@@ -117,7 +119,10 @@
 
             ui: {
             	// If true, player markers will always be displayed in front of other marker types
-            	playersAboveMarkers: true
+            	playersAboveMarkers: true,
+
+                // Whether to enable the player list search box
+                playersSearch: true
             }
         };
     </script>

@@ -15,23 +15,30 @@
   -->
 
 <template>
-	<CollapsibleSection name="players">
-		<template v-slot:heading>{{ heading }} [{{ players.length }}/{{ maxPlayers }}]</template>
+	<CollapsibleSection name="players" class="players">
+		<template v-slot:heading>{{ messageHeading }} [{{ players.length }}/{{ maxPlayers }}]</template>
 		<template v-slot:default>
-			<RadioList class="section__content" v-if="players.length" aria-labelledby="players-heading">
-				<PlayerListItem v-for="player in players" :key="player.account" :player="player"></PlayerListItem>
-			</RadioList>
-			<div v-else class="section__content section__skeleton">{{ skeletonPlayers }}</div>
+			<div class="section__content">
+				<input v-if="players && searchEnabled" id="players__search" type="text" name="search"
+				       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
+				<RadioList v-if="filteredPlayers.length" aria-labelledby="players-heading">
+					<PlayerListItem v-for="player in filteredPlayers" :key="player.account"
+					                :player="player"></PlayerListItem>
+				</RadioList>
+				<div v-else-if="searchQuery" class="section__skeleton">{{ messageSkeletonPlayersSearch }}</div>
+				<div v-else class="section__skeleton">{{ messageSkeletonPlayers }}</div>
+			</div>
 		</template>
 	</CollapsibleSection>
 </template>
 
 <script lang="ts">
 import PlayerListItem from "./PlayerListItem.vue";
-import {defineComponent} from "@vue/runtime-core";
+import {computed, defineComponent} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
 import RadioList from "@/components/util/RadioList.vue";
+import {ref} from "vue";
 
 export default defineComponent({
 	components: {
@@ -40,22 +47,59 @@ export default defineComponent({
 		PlayerListItem
 	},
 
-	computed: {
-		heading() {
-			return useStore().state.messages.playersHeading;
-		},
+	setup() {
+		const store = useStore(),
+			messageHeading = computed(() => store.state.messages.playersHeading),
+			messageSkeletonPlayers = computed(() => store.state.messages.playersSkeleton),
+			messageSkeletonPlayersSearch = computed(() => store.state.messages.playersSearchSkeleton),
+			messagePlayersSearchPlaceholder = computed(() => store.state.messages.playersSearchPlaceholder),
 
-		skeletonPlayers() {
-			return useStore().state.messages.playersSkeleton;
-		},
+			searchEnabled = computed(() => store.state.ui.playersSearch),
+			searchQuery = ref(""),
 
-		players() {
-			return useStore().state.sortedPlayers;
-		},
+			players = computed(() => store.state.sortedPlayers),
+			filteredPlayers = computed(() => {
+				const query = searchQuery.value.toLowerCase();
 
-		maxPlayers(): number {
-			return useStore().state.configuration.maxPlayers;
+				return query ? store.state.sortedPlayers.filter(p => {
+					return p.account.toLowerCase().indexOf(query) > -1;
+				}) : store.state.sortedPlayers;
+			}),
+			maxPlayers = computed(() => store.state.configuration.maxPlayers),
+
+			onKeydown = (e: KeyboardEvent) => {
+				e.stopImmediatePropagation();
+			};
+
+		return {
+			messageHeading,
+			messageSkeletonPlayers,
+			messageSkeletonPlayersSearch,
+			messagePlayersSearchPlaceholder,
+
+			searchEnabled,
+			searchQuery,
+
+			players,
+			filteredPlayers,
+			maxPlayers,
+			onKeydown
 		}
 	}
 });
 </script>
+
+<style lang="scss" scoped>
+	.players {
+		#players__search {
+			margin-bottom: 1.5rem;
+			padding: 0.5rem 1rem;
+			box-sizing: border-box;
+			width: 100%;
+
+			& + .section__skeleton {
+				margin-top: 0;
+			}
+		}
+	}
+</style>

@@ -123,6 +123,8 @@ export const mutations: MutationTree<State> & Mutations = {
 			playersTitle: messageConfig.playersTitle || '',
 			playersTitleHidden: messageConfig.playersTitleHidden || '',
 			playersTitleOtherWorld: messageConfig.playersTitleOtherWorld || '',
+			playersSearchPlaceholder: messageConfig.playersSearchPlaceholder || '',
+			playersSearchSkeleton: messageConfig.playersSearchSkeleton || '',
 			followingHeading: messageConfig.followingHeading || '',
 			followingHidden: messageConfig.followingHidden || '',
 			followingUnfollow: messageConfig.followingUnfollow || '',
@@ -144,6 +146,10 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		if(typeof uiConfig.playersAboveMarkers === 'boolean') {
 			state.ui.playersAboveMarkers = uiConfig.playersAboveMarkers;
+		}
+
+		if(typeof uiConfig.playersSearch === 'boolean') {
+			state.ui.playersSearch = uiConfig.playersSearch;
 		}
 
 		state.servers = config.servers;

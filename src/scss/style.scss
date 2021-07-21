@@ -71,7 +71,7 @@ input {
 	font-size: 1.6rem;
 	padding: 1rem;
 	border: 0.2rem solid var(--border-color);
-	border-radius: 0;
+	border-radius: 0.3rem;
 
 	@include focus {
 		color: var(--text-emphasis);

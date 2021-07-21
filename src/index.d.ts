@@ -64,6 +64,8 @@ interface LiveAtlasGlobalMessageConfig {
 	playersTitle: string;
 	playersTitleHidden: string;
 	playersTitleOtherWorld: string;
+	playersSearchPlaceholder: string;
+	playersSearchSkeleton: string;
 	followingHeading: string;
 	followingUnfollow: string;
 	followingTitleUnfollow: string;
@@ -98,6 +100,7 @@ type LiveAtlasMessageConfig = LiveAtlasGlobalMessageConfig & LiveAtlasServerMess
 
 interface LiveAtlasUIConfig {
 	playersAboveMarkers: boolean;
+	playersSearch: boolean;
 }
 
 export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps' | 'settings';
