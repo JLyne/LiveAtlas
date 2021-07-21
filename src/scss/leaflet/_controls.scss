@@ -168,6 +168,14 @@
 		.layer {
 			cursor: pointer;
 			padding: 0.8rem 0 0.7rem;
+
+			&:first-child {
+				margin-top: -0.4rem;
+			}
+
+			&:last-child {
+				margin-bottom: -0.4rem;
+			}
 		}
 	}
 }
