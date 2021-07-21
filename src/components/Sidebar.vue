@@ -305,11 +305,12 @@ export default defineComponent({
 
 	@media (max-width: 480px) {
 		padding-right: 7rem;
+		padding-top: 0.8rem;
 	}
 
 	@media (max-width: 400px), (max-height: 480px) {
-		padding-top: 0.5rem;
-		padding-bottom: 0.5rem;
+		padding-top: 0.3rem;
+		padding-bottom: 0.3rem;
 		padding-left: 0.5rem;
 	}
 
