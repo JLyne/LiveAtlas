@@ -105,6 +105,7 @@ interface LiveAtlasUIConfig {
 
 export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps' | 'settings';
 export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';
+export type LiveAtlasDimension = 'overworld' | 'nether' | 'end';
 
 interface LiveAtlasSortedPlayers extends Array<DynmapPlayer> {
 	dirty?: boolean;
@@ -113,6 +114,7 @@ interface LiveAtlasSortedPlayers extends Array<DynmapPlayer> {
 interface LiveAtlasWorld {
 	seaLevel: number;
 	name: string;
+	dimension: LiveAtlasDimension;
 	protected: boolean;
 	title: string;
 	height: number;

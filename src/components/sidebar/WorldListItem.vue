@@ -79,15 +79,22 @@ export default defineComponent({
 			let worldType: string,
 				mapType: string;
 
-			if (/(^|_)nether(_|$)/i.test(this.world.name) || (this.world.name == 'DIM-1')) {
-				worldType = 'nether';
-				mapType = ['surface', 'nether'].includes(map.name) ? 'surface' : 'flat';
-			} else if (/(^|_)end(_|$)/i.test(this.world.name) || (this.world.name == 'DIM1')) {
-				worldType = 'the_end';
-				mapType = ['surface', 'the_end'].includes(map.name) ? 'surface' : 'flat';
-			} else {
-				worldType = 'world';
-				mapType = ['surface', 'flat', 'biome', 'cave'].includes(map.name) ? map.name : 'flat';
+			switch(this.world.dimension) {
+				case 'nether':
+					worldType = 'nether';
+					mapType = ['surface', 'nether'].includes(map.name) ? 'surface' : 'flat';
+					break;
+
+				case 'end':
+					worldType = 'the_end';
+					mapType = ['surface', 'the_end'].includes(map.name) ? 'surface' : 'flat';
+					break;
+
+				case 'overworld':
+				default:
+					worldType = 'world';
+					mapType = ['surface', 'flat', 'biome', 'cave'].includes(map.name) ? map.name : 'flat';
+					break;
 			}
 
 			return `block_${worldType}_${mapType}`;

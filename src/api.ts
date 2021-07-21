@@ -33,9 +33,11 @@ import {
 } from "@/dynmap";
 import {useStore} from "@/store";
 import ChatError from "@/errors/ChatError";
-import {LiveAtlasServerMessageConfig, LiveAtlasWorld} from "@/index";
+import {LiveAtlasDimension, LiveAtlasServerMessageConfig, LiveAtlasWorld} from "@/index";
 
-const titleColours = /§[0-9a-f]/ig;
+const titleColours = /§[0-9a-f]/ig,
+	netherWorldName = /(^|_)nether(_|$)/i,
+	endWorldName = /(^|_)end(_|$)/i;
 
 function buildServerConfig(response: any): DynmapServerConfig {
 	return {
@@ -75,9 +77,18 @@ function buildWorlds(response: any): Array<LiveAtlasWorld> {
 
 	//Get all the worlds first so we can handle append_to_world properly
 	(response.worlds || []).forEach((world: any) => {
+		let worldType: LiveAtlasDimension = 'overworld';
+
+		if (netherWorldName.test(world.name) || (world.name == 'DIM-1')) {
+			worldType = 'nether';
+		} else if (endWorldName.test(world.name) || (world.name == 'DIM1')) {
+			worldType = 'end';
+		}
+
 		worlds.set(world.name, {
 			seaLevel: world.sealevel || 64,
 			name: world.name,
+			dimension: worldType,
 			protected: world.protected || false,
 			title: world.title || '',
 			height: world.height || 256,
