@@ -36,7 +36,7 @@ import ChatError from "@/errors/ChatError";
 import {LiveAtlasDimension, LiveAtlasServerMessageConfig, LiveAtlasWorld} from "@/index";
 
 const titleColours = /§[0-9a-f]/ig,
-	netherWorldName = /(^|_)nether(_|$)/i,
+	netherWorldName = /_?nether(_|$)/i,
 	endWorldName = /(^|_)end(_|$)/i;
 
 function buildServerConfig(response: any): DynmapServerConfig {
