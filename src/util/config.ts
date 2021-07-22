@@ -107,8 +107,8 @@ export const getServerDefinitions = (config: LiveAtlasGlobalConfig): Map<string,
 		throw new ConfigurationError(`Configuration object is missing`);
 	}
 
-	if (typeof config !== 'undefined') {
-		return validateLiveAtlasConfiguration(config.servers || {});
+	if (typeof config.servers !== 'undefined') {
+		return validateLiveAtlasConfiguration(config.servers);
 	}
 
 	return validateDynmapConfiguration(window.config?.url || null);
