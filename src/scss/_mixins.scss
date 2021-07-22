@@ -1,12 +1,6 @@
-/*
- Adds styles for both :focus-visible and .focus-visible for maximum browser support.
-*/
-@mixin focus() {
-	&:focus-visible {
-		@content;
-	}
-
-	&.focus-visible {
+/* Mixin for resetting :focus styles on browsers supporting :focus-visible */
+@mixin focus-reset() {
+	&:focus:not(:focus-visible) {
 		@content;
 	}
 }
@@ -67,12 +61,7 @@
 	color: var(--text-disabled);
 	cursor: not-allowed;
 
-	&:hover, &:active {
-		background-color: var(--background-disabled);
-		color: var(--text-disabled);
-	}
-
-	@include focus {
+	&:hover, &:active, &:focus {
 		background-color: var(--background-disabled);
 		color: var(--text-disabled);
 	}

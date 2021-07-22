@@ -338,11 +338,7 @@
 	animation: fade 0.3s linear;
 	animation-fill-mode: forwards;
 
-	&:hover, &:active {
-		background-color: var(--background-base);
-	}
-
-	@include focus {
+	&:hover, &:active, &:focus {
 		background-color: var(--background-base);
 	}
 

@@ -351,18 +351,22 @@ export default defineComponent({
 		box-sizing: border-box;
 		position: relative;
 
-		@include focus {
+		&:focus:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			border: 0.2rem solid #cccccc;
+			display: block;
+			z-index: 2000;
+			pointer-events: none;
+		}
+
+		@include focus-reset {
 			&:before {
-				content: '';
-				position: absolute;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				left: 0;
-				border: 0.2rem solid #cccccc;
-				display: block;
-				z-index: 2000;
-				pointer-events: none;
+				content: none;
 			}
 		}
 	}

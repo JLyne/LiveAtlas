@@ -23,8 +23,13 @@
 		@include button-hovered;
 	}
 
-	@include focus {
+	&:focus {
 		@include button-focused;
+	}
+
+	&:focus:not(:focus-visible) {
+		outline-style: none;
+		z-index: auto;
 	}
 
 	&:active {

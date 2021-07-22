@@ -73,9 +73,13 @@ input {
 	border: 0.2rem solid var(--border-color);
 	border-radius: 0.3rem;
 
-	@include focus {
+	&:focus {
 		color: var(--text-emphasis);
 		outline-color: var(--text-emphasis);
+	}
+
+	@include focus-reset {
+		color: var(--text-base);
 	}
 
 	&[disabled] {
@@ -85,8 +89,16 @@ input {
 	}
 }
 
-.js-focus-visible :focus:not(.focus-visible):not(:focus-visible) {
-  outline: none;
+:focus:not(:focus-visible) {
+	outline: none !important;
+}
+
+:focus {
+	outline: var(--outline-focus) auto thick !important;
+}
+
+:focus-visible {
+	outline: var(--outline-focus) auto thick !important;
 }
 
 .checkbox {
@@ -131,16 +143,20 @@ input {
 			}
 		}
 
-		@include focus {
+		&:focus ~ span:after {
+			content: '';
+			outline: var(--outline-focus) auto thick;
+			position: absolute;
+			top: 0;
+			right: -0.5rem;
+			bottom: 0;
+			left: -0.5rem;
+			border-radius: 0.5rem;
+		}
+
+		@include focus-reset {
 			& ~ span:after {
-				content: '';
-				outline: var(--outline-focus) 2px solid;
-				position: absolute;
-				top: 0;
-				right: -0.5rem;
-				bottom: 0;
-				left: -0.5rem;
-				border-radius: 0.5rem;
+				content: none;
 			}
 		}
 	}
@@ -204,6 +220,11 @@ input {
 
 		&:focus + label {
 			@include button-focused;
+		}
+
+		&:focus:not(:focus-visible) + label {
+			z-index: auto;
+			outline: none !important;
 		}
 
 		&:active + label {

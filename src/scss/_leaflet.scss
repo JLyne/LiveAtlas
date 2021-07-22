@@ -10,8 +10,12 @@
 
 	/* Workaround for focus outlines until https://github.com/Leaflet/Leaflet/pull/7259 gets released */
 	* {
-		@include focus {
+		&:focus {
 			outline-style: auto !important;
+		}
+
+		@include focus-reset {
+			outline-style: none !important;
 		}
 	}
 }

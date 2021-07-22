@@ -58,15 +58,11 @@
 		overflow: hidden;
 
 		@at-root .leaflet-pane--show-labels .marker__label {
-			display: block;
+			display: block !important;
 		}
 	}
 
-	&:hover {
-		z-index: 1000;
-	}
-
-	@include focus {
+	&:hover, &:focus {
 		z-index: 1000;
 
 		.marker__label {
@@ -75,8 +71,16 @@
 		}
 	}
 
-	&:hover .marker__label {
-		display: block;
+	&:focus .marker__label {
+		outline: auto;
+	}
+
+	@include focus-reset {
+		z-index: auto;
+
+		.marker__label {
+			display: none;
+		}
 	}
 
 	@at-root {
