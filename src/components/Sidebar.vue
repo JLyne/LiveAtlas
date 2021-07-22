@@ -22,7 +22,7 @@
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
 			<button v-if="playerMakersEnabled" :class="{'button--players': true}" @click="togglePlayers"
-			        title="messagePlayers" :aria-label="messagePlayers" :aria-expanded="playersVisible"
+			        :title="messagePlayers" :aria-label="messagePlayers" :aria-expanded="playersVisible"
 			        @keydown="handlePlayersKeydown">
 				<SvgIcon name="players"></SvgIcon>
 			</button>
