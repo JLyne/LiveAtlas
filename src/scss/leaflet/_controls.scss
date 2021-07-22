@@ -27,6 +27,12 @@
 		@extend %button;
 	}
 
+	/* Avoid applying the base background colour twice, in case its semi-transparent */
+	> a:not(:hover):not(:focus):not(:active),
+	> button:not(:hover):not(:focus):not(:active) {
+		background-color: transparent;
+	}
+
 	@media print {
 		display: none !important;
 	}
