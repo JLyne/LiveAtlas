@@ -309,13 +309,15 @@ export default defineComponent({
 	}
 
 	@media (max-width: 400px), (max-height: 480px) {
-		padding-top: 0.3rem;
-		padding-bottom: 0.3rem;
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
 		padding-left: 0.5rem;
 	}
 
 	@media (max-width: 400px) {
 		padding-right: 6.5rem;
+		padding-top: 0.3rem;
+		padding-bottom: 0.3rem;
 	}
 
 	@media print {
