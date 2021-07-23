@@ -20,11 +20,10 @@
 import {LeafletMouseEvent, Marker} from "leaflet";
 import {DynmapMarker} from "@/dynmap";
 import {DynmapIcon} from "@/leaflet/icon/DynmapIcon";
-import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 
-export const createMarker = (options: DynmapMarker, projection: DynmapProjection): Marker => {
-	const marker = new GenericMarker(projection.locationToLatLng(options.location), {
+export const createMarker = (options: DynmapMarker, converter: Function): Marker => {
+	const marker = new GenericMarker(converter(options.location.x, options.location.y, options.location.z), {
 		icon: new DynmapIcon({
 			icon: options.icon,
 			label: options.label,
@@ -46,13 +45,13 @@ export const createMarker = (options: DynmapMarker, projection: DynmapProjection
 	return marker;
 };
 
-export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, projection: DynmapProjection): Marker => {
+export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, converter: Function): Marker => {
 	if (!marker) {
-		return createMarker(options, projection);
+		return createMarker(options, converter);
 	}
 
 	const oldLocation = marker.getLatLng(),
-		newLocation = projection.locationToLatLng(options.location);
+		newLocation = converter(options.location.x, options.location.y, options.location.z);
 
 	if(!oldLocation.equals(newLocation)) {
 		marker.setLatLng(newLocation);

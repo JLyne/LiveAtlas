@@ -39,7 +39,7 @@ export default defineComponent({
 
 		const store = useStore(),
 			componentSettings = computed(() => store.state.components.playerMarkers),
-			currentProjection = computed(() => store.state.currentProjection),
+			currentMap = computed(() => store.state.currentMap),
 			currentWorld = computed(() => store.state.currentWorld),
 			chatBalloonsEnabled = computed(() => store.state.components.chatBalloons),
 
@@ -147,8 +147,8 @@ export default defineComponent({
 			},
 
 			enableLayer = () => {
-				if(!markerVisible.value) {
-					const latLng = currentProjection.value.locationToLatLng(props.player.location);
+				if(currentMap.value && !markerVisible.value) {
+					const latLng = currentMap.value.locationToLatLng(props.player.location);
 
 					props.layerGroup.addLayer(marker);
 					marker.setLatLng(latLng);
@@ -174,7 +174,7 @@ export default defineComponent({
 			};
 
 		onMounted(() => {
-			if(currentWorld.value && currentWorld.value.name === props.player.location.world) {
+			if(currentMap.value && currentWorld.value!.name === props.player.location.world) {
 				enableLayer();
 			}
 		});
@@ -183,7 +183,7 @@ export default defineComponent({
 
 		return {
 			componentSettings,
-			currentProjection,
+			currentMap,
 			currentWorld,
 			chatBalloonsEnabled,
 
@@ -203,11 +203,11 @@ export default defineComponent({
 		player: {
 			deep: true,
 			handler(newValue) {
-				if(this.currentWorld && newValue.location.world === this.currentWorld.name) {
+				if(this.currentMap && newValue.location.world === this.currentWorld!.name) {
 					if(!this.markerVisible) {
 						this.enableLayer();
 					} else {
-						const latLng = this.currentProjection.locationToLatLng(newValue.location);
+						const latLng = this.currentMap.locationToLatLng(newValue.location);
 
 						this.marker.setLatLng(latLng);
 						this.chatBalloon.setLatLng(latLng);
@@ -232,11 +232,13 @@ export default defineComponent({
 				this.disableLayer();
 			}
 		},
-		currentProjection() {
-			const latLng = this.currentProjection.locationToLatLng(this.player.location);
+		currentMap(newValue) {
+			if(newValue) {
+				const latLng = newValue.locationToLatLng(this.player.location);
 
-			this.marker.setLatLng(latLng);
-			this.chatBalloon.setLatLng(latLng);
+				this.marker.setLatLng(latLng);
+				this.chatBalloon.setLatLng(latLng);
+			}
 		}
 	},
 

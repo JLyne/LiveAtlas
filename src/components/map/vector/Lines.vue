@@ -40,7 +40,7 @@ export default defineComponent({
 		let updateFrame = 0;
 
 		const store = useStore(),
-			currentProjection = computed(() => store.state.currentProjection),
+			currentMap = computed(() => store.state.currentMap),
 			pendingUpdates = computed(() => {
 				const markerSetUpdates = store.state.pendingSetUpdates.get(props.set.id);
 
@@ -101,11 +101,13 @@ export default defineComponent({
 			};
 
 		//FIXME: Prevent unnecessary repositioning when changing worlds
-		watch(currentProjection, () => {
-			const converter = getPointConverter();
+		watch(currentMap, (newValue) => {
+			if(newValue) {
+				const converter = getPointConverter();
 
-			for (const [id, line] of props.set.lines) {
-				updateLine(layers.get(id), line, converter);
+				for (const [id, line] of props.set.lines) {
+					updateLine(layers.get(id), line, converter);
+				}
 			}
 		});
 

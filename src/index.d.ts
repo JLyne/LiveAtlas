@@ -1,5 +1,6 @@
 import {State} from "@/store";
-import {DynmapPlayer, DynmapUrlConfig, LiveAtlasWorldMap} from "@/dynmap";
+import {DynmapPlayer, DynmapUrlConfig} from "@/dynmap";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 declare module "*.png" {
    const value: any;
@@ -111,7 +112,7 @@ interface LiveAtlasSortedPlayers extends Array<DynmapPlayer> {
 	dirty?: boolean;
 }
 
-interface LiveAtlasWorld {
+interface LiveAtlasWorldDefinition {
 	seaLevel: number;
 	name: string;
 	dimension: LiveAtlasDimension;
@@ -119,31 +120,13 @@ interface LiveAtlasWorld {
 	title: string;
 	height: number;
 	center: Coordinate;
-	maps: Map<string, LiveAtlasWorldMap>;
+	maps: Map<string, LiveAtlasMapDefinition>;
 }
 
 interface LiveAtlasWorldState {
 	raining: boolean;
 	thundering: boolean;
 	timeOfDay: number;
-}
-
-interface LiveAtlasWorldMap {
-	world: LiveAtlasWorld;
-	name: string;
-	icon: string;
-	title: string;
-	background: string;
-	nightAndDay: boolean;
-	backgroundDay?: string;
-	backgroundNight?: string;
-	imageFormat: string;
-	prefix: string;
-	protected: boolean;
-	mapToWorld: [number, number, number, number, number, number, number, number, number];
-	worldToMap: [number, number, number, number, number, number, number, number, number];
-	nativeZoomLevels: number;
-	extraZoomLevels: number;
 }
 
 interface LiveAtlasParsedUrl {

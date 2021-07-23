@@ -81,7 +81,6 @@ export default defineComponent({
 
 			currentWorld = computed(() => store.state.currentWorld),
 			currentMap = computed(() => store.state.currentMap),
-			currentProjection = computed(() => store.state.currentProjection),
 			mapBackground = computed(() => store.getters.mapBackground),
 
 			followTarget = computed(() => store.state.followTarget),
@@ -114,7 +113,6 @@ export default defineComponent({
 
 			currentWorld,
 			currentMap,
-			currentProjection,
 
 			scheduledPan,
 			scheduledZoom,
@@ -142,7 +140,7 @@ export default defineComponent({
 				this.updateFollow(newValue, false);
 			}
 		},
-		currentProjection(newValue, oldValue) {
+		currentMap(newValue, oldValue) {
 			if(this.leaflet && newValue && oldValue) {
 				const panTarget = this.scheduledPan || oldValue.latLngToLocation(this.leaflet.getCenter(), 64);
 
@@ -196,12 +194,12 @@ export default defineComponent({
 		},
 		parsedUrl: {
 			handler(newValue) {
-				if(!newValue || !this.currentWorld || !this.leaflet) {
+				if(!newValue || !this.currentMap || !this.leaflet) {
 					return;
 				}
 
 				//URL points to different map
-				if(newValue.world !== this.currentWorld.name || newValue.map !== this.currentMap!.name) {
+				if(newValue.world !== this.currentWorld!.name || newValue.map !== this.currentMap!.name) {
 					//Set scheduled pan for after map change
 					this.scheduledPan = newValue.location;
 					this.scheduledZoom = newValue.zoom;
@@ -225,7 +223,7 @@ export default defineComponent({
 						animate: false,
 					});
 
-					this.leaflet.panTo(this.currentProjection.locationToLatLng(newValue.location), {
+					this.leaflet.panTo(this.currentMap.locationToLatLng(newValue.location), {
 						animate: false,
 						noMoveStart: true,
 					});
@@ -259,7 +257,10 @@ export default defineComponent({
 		}));
 
 		this.leaflet.on('moveend', () => {
-			useStore().commit(MutationTypes.SET_CURRENT_LOCATION, this.currentProjection.latLngToLocation(this.leaflet!.getCenter(), 64));
+			if(this.currentMap) {
+				useStore().commit(MutationTypes.SET_CURRENT_LOCATION, this.currentMap
+					.latLngToLocation(this.leaflet!.getCenter(), 64));
+			}
 		});
 
 		this.leaflet.on('zoomend', () => {
@@ -327,7 +328,7 @@ export default defineComponent({
 				console.log(`Switching map to match player ${targetWorld.name} ${map.name}`);
 				store.commit(MutationTypes.SET_CURRENT_MAP, {worldName: targetWorld.name, mapName: map.name});
 			} else {
-				this.leaflet!.panTo(store.state.currentProjection.locationToLatLng(player.location));
+				this.leaflet!.panTo(store.state.currentMap?.locationToLatLng(player.location));
 
 				if(newFollow) {
 					console.log(`Setting zoom for new follow ${store.state.configuration.followZoom}`);

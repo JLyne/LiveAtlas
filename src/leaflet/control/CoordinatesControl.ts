@@ -90,11 +90,11 @@ export class CoordinatesControl extends Control {
 	}
 
 	_onMouseMove(event: LeafletMouseEvent) {
-		if (!this._map || !store.state.currentWorld) {
+		if (!this._map || !store.state.currentMap) {
 			return;
 		}
 
-		this._location = store.state.currentProjection.latLngToLocation(event.latlng, store.state.currentWorld.seaLevel + 1);
+		this._location = store.state.currentMap.latLngToLocation(event.latlng, store.state.currentWorld!.seaLevel + 1);
 
 		if(!this._locationChanged) {
 			this._locationChanged = true;

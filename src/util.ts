@@ -17,7 +17,7 @@
 import API from '@/api';
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
-import {LiveAtlasWorld, LiveAtlasWorldMap} from "@/index";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 interface HeadQueueEntry {
 	cacheKey: string;
@@ -115,11 +115,17 @@ export const concatURL = (base: string, addition: string) => {
 }
 
 export const getPointConverter = () => {
-	const projection = useStore().state.currentProjection;
+	const map = useStore().state.currentMap;
 
-	return (x: number, y: number, z: number) => {
-		return projection.locationToLatLng({x, y, z});
-	};
+	if(map) {
+		return (x: number, y: number, z: number) => {
+			return map.locationToLatLng({x, y, z});
+		};
+	} else {
+		return (x: number, y: number, z: number) => {
+			return LiveAtlasMapDefinition.defaultProjection.locationToLatLng({x, y, z});
+		};
+	}
 }
 
 export const parseUrl = () => {
@@ -215,7 +221,7 @@ export const getAPI = () => {
 	return API;
 }
 
-export const getUrlForLocation = (world: LiveAtlasWorld, map: LiveAtlasWorldMap, location: {
+export const getUrlForLocation = (map: LiveAtlasMapDefinition, location: {
 	x: number,
 	y: number,
 	z: number }, zoom: number): string => {
@@ -224,11 +230,11 @@ export const getUrlForLocation = (world: LiveAtlasWorld, map: LiveAtlasWorldMap,
 			z = Math.round(location.z),
 			locationString = `${x},${y},${z}`;
 
-		if(!world || !map) {
+		if(!map) {
 			return '';
 		}
 
-		return `#${world.name};${map.name};${locationString};${zoom}`;
+		return `#${map.world.name};${map.name};${locationString};${zoom}`;
 }
 
 export const focus = (selector: string) => {

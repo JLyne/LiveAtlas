@@ -18,11 +18,10 @@
 import {defineComponent, onUnmounted, computed, watch} from "@vue/runtime-core";
 import {Map} from 'leaflet';
 import {useStore} from "@/store";
-import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import {getMinecraftTime} from "@/util";
 import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
-import {LiveAtlasWorldMap} from "@/index";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default defineComponent({
 	props: {
@@ -31,7 +30,7 @@ export default defineComponent({
 			required: true
 		},
 		map: {
-			type: Object as () => LiveAtlasWorldMap,
+			type: Object as () => LiveAtlasMapDefinition,
 			required: true
 		},
 		leaflet: {
@@ -55,7 +54,6 @@ export default defineComponent({
 			active = computed(() => props.map === store.state.currentMap),
 
 			enableLayer = () => {
-				useStore().commit(MutationTypes.SET_CURRENT_PROJECTION, layer.getProjection());
 				props.leaflet.addLayer(layer);
 
 				stopUpdateWatch = watch(pendingUpdates, (newValue, oldValue) => {

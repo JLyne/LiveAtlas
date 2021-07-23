@@ -28,14 +28,13 @@ import {
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapChat
 } from "@/dynmap";
-import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {
 	Coordinate,
 	LiveAtlasWorldState,
 	LiveAtlasSidebarSection,
 	LiveAtlasSortedPlayers,
 	LiveAtlasUIElement,
-	LiveAtlasWorld,
+	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
 	LiveAtlasGlobalConfig,
 	LiveAtlasGlobalMessageConfig,
@@ -53,12 +52,12 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_SERVER_CONFIGURATION_HASH](state: S, hash: number): void
 	[MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH](state: S): void
 	[MutationTypes.SET_SERVER_MESSAGES](state: S, messages: LiveAtlasServerMessageConfig): void
-	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorld>): void
+	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
 	[MutationTypes.CLEAR_WORLDS](state: S): void
 	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, DynmapMarkerSet>): void
 	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
-	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorld): void
+	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorldDefinition): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
 	[MutationTypes.SET_UPDATE_TIMESTAMP](state: S, time: Date): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
@@ -77,7 +76,6 @@ export type Mutations<S = State> = {
 	[MutationTypes.CLEAR_PLAYERS](state: S): void
 	[MutationTypes.SET_CURRENT_SERVER](state: S, server: string): void
 	[MutationTypes.SET_CURRENT_MAP](state: S, payload: CurrentMapPayload): void
-	[MutationTypes.SET_CURRENT_PROJECTION](state: S, payload: DynmapProjection): void
 	[MutationTypes.SET_CURRENT_LOCATION](state: S, payload: Coordinate): void
 	[MutationTypes.SET_CURRENT_ZOOM](state: S, payload: number): void
 	[MutationTypes.SET_PARSED_URL](state: S, payload: LiveAtlasParsedUrl): void
@@ -181,7 +179,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Sets the list of worlds, and their settings, from the initial config fetch
-	[MutationTypes.SET_WORLDS](state: State, worlds: Array<LiveAtlasWorld>) {
+	[MutationTypes.SET_WORLDS](state: State, worlds: Array<LiveAtlasWorldDefinition>) {
 		state.worlds.clear();
 		state.maps.clear();
 
@@ -250,7 +248,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.pendingSetUpdates.clear();
 	},
 
-	[MutationTypes.ADD_WORLD](state: State, world: LiveAtlasWorld) {
+	[MutationTypes.ADD_WORLD](state: State, world: LiveAtlasWorldDefinition) {
 		state.worlds.set(world.name, world);
 	},
 
@@ -519,11 +517,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 
 		state.currentMap = state.maps.get(mapName);
-	},
-
-	//Sets the projection to use for coordinate conversion in the current map
-	[MutationTypes.SET_CURRENT_PROJECTION](state: State, projection) {
-		state.currentProjection = projection;
 	},
 
 	//Sets the current location the map is showing. This is called by the map itself, and calling elsewhere will not update the map.
