@@ -22,7 +22,7 @@ import {
 	Coordinate,
 	LiveAtlasLocation,
 	LiveAtlasServerMessageConfig,
-	LiveAtlasWorld,
+	LiveAtlasWorldDefinition,
 	LiveAtlasWorldState
 } from "@/index";
 
@@ -102,7 +102,7 @@ interface DynmapChatSendingConfig {
 interface DynmapConfigurationResponse {
 	config: DynmapServerConfig,
 	messages: LiveAtlasServerMessageConfig,
-	worlds: Array<LiveAtlasWorld>,
+	worlds: Array<LiveAtlasWorldDefinition>,
 	components: DynmapComponentConfig,
 	loggedIn: boolean,
 }

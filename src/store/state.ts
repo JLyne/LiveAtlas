@@ -20,7 +20,6 @@ import {
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapChat
 } from "@/dynmap";
-import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {
 	Coordinate,
 	LiveAtlasWorldState,
@@ -28,11 +27,11 @@ import {
 	LiveAtlasSidebarSection,
 	LiveAtlasSortedPlayers,
 	LiveAtlasUIElement,
-	LiveAtlasWorld,
-	LiveAtlasWorldMap,
+	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
 	LiveAtlasMessageConfig
 } from "@/index";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export type State = {
 	version: string;
@@ -44,8 +43,8 @@ export type State = {
 
 	loggedIn: boolean;
 
-	worlds: Map<string, LiveAtlasWorld>;
-	maps: Map<string, LiveAtlasWorldMap>;
+	worlds: Map<string, LiveAtlasWorldDefinition>;
+	maps: Map<string, LiveAtlasMapDefinition>;
 	players: Map<string, DynmapPlayer>;
 	sortedPlayers: LiveAtlasSortedPlayers;
 	markerSets: Map<string, DynmapMarkerSet>;
@@ -63,11 +62,10 @@ export type State = {
 
 	currentServer?: LiveAtlasServerDefinition;
 	currentWorldState: LiveAtlasWorldState;
-	currentWorld?: LiveAtlasWorld;
-	currentMap?: LiveAtlasWorldMap;
+	currentWorld?: LiveAtlasWorldDefinition;
+	currentMap?: LiveAtlasMapDefinition;
 	currentLocation: Coordinate;
 	currentZoom: number;
-	currentProjection: DynmapProjection;
 
 	updateRequestId: number;
 	updateTimestamp: Date;
@@ -214,12 +212,6 @@ export const state: State = {
 		z: 0,
 	},
 	currentZoom: 0,
-
-	currentProjection: new DynmapProjection({
-		mapToWorld: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-		worldToMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-		nativeZoomLevels: 1
-	}), //Projection for converting location <-> latlg. Object itself isn't reactive for performance reasons
 	currentWorldState: {
 		raining: false,
 		thundering: false,

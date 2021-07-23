@@ -17,27 +17,24 @@
  *    limitations under the License.
  */
 
-import {Util, LatLng, Class} from 'leaflet';
+import {LatLng} from 'leaflet';
 import {Coordinate} from "@/index";
 
-export interface DynmapProjectionOptions {
+export interface LiveAtlasProjectionOptions {
 	mapToWorld: [number, number, number, number, number, number, number, number, number],
 	worldToMap: [number, number, number, number, number, number, number, number, number],
 	nativeZoomLevels: number
 }
 
-export interface DynmapProjection {
-	options: DynmapProjectionOptions
-	locationToLatLng(location: Coordinate): LatLng;
-	latLngToLocation(latLng: LatLng, y: number): Coordinate;
-}
+export class LiveAtlasProjection {
+	private readonly options: LiveAtlasProjectionOptions
 
-// noinspection JSUnusedGlobalSymbols
-export class DynmapProjection extends Class {
-
-	constructor(options: DynmapProjectionOptions) {
-		super();
-		Util.setOptions(this, options);
+	constructor(options: LiveAtlasProjectionOptions) {
+		this.options = {
+			mapToWorld: options.mapToWorld || [0, 0, 0, 0, 0, 0, 0, 0],
+			worldToMap: options.worldToMap || [0, 0, 0, 0, 0, 0, 0, 0],
+			nativeZoomLevels: options.nativeZoomLevels || 1
+		}
 	}
 
 	locationToLatLng(location: Coordinate): LatLng {

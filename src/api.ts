@@ -33,7 +33,8 @@ import {
 } from "@/dynmap";
 import {useStore} from "@/store";
 import ChatError from "@/errors/ChatError";
-import {LiveAtlasDimension, LiveAtlasServerMessageConfig, LiveAtlasWorld} from "@/index";
+import {LiveAtlasDimension, LiveAtlasServerMessageConfig, LiveAtlasWorldDefinition} from "@/index";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 const titleColours = /§[0-9a-f]/ig,
 	netherWorldName = /_?nether(_|$)/i,
@@ -72,8 +73,8 @@ function buildMessagesConfig(response: any): LiveAtlasServerMessageConfig {
 	}
 }
 
-function buildWorlds(response: any): Array<LiveAtlasWorld> {
-	const worlds: Map<string, LiveAtlasWorld> = new Map<string, LiveAtlasWorld>();
+function buildWorlds(response: any): Array<LiveAtlasWorldDefinition> {
+	const worlds: Map<string, LiveAtlasWorldDefinition> = new Map<string, LiveAtlasWorldDefinition>();
 
 	//Get all the worlds first so we can handle append_to_world properly
 	(response.worlds || []).forEach((world: any) => {
@@ -111,7 +112,7 @@ function buildWorlds(response: any): Array<LiveAtlasWorld> {
 				return;
 			}
 
-			w.maps.set(map.name, {
+			w.maps.set(map.name, new LiveAtlasMapDefinition({
 				world: world, //Ignore append_to_world here otherwise things break
 				background: map.background || '#000000',
 				backgroundDay: map.backgroundday || '#000000',
@@ -123,11 +124,11 @@ function buildWorlds(response: any): Array<LiveAtlasWorld> {
 				prefix: map.prefix || '',
 				protected: map.protected || false,
 				title: map.title || '',
-				mapToWorld: map.maptoworld || [0, 0, 0, 0, 0, 0, 0, 0, 0],
-				worldToMap: map.worldtomap || [0, 0, 0, 0, 0, 0, 0, 0, 0],
+				mapToWorld: map.maptoworld || undefined,
+				worldToMap: map.worldtomap || undefined,
 				nativeZoomLevels: map.mapzoomout || 1,
-				extraZoomLevels: map.mapzoomin || 0,
-			});
+				extraZoomLevels: map.mapzoomin || 0
+			}));
 		});
 	});
 

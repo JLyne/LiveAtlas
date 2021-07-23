@@ -59,18 +59,17 @@ export default defineComponent({
 			menuElement = ref<HTMLInputElement | null>(null),
 			menuVisible = computed(() => !!event.value),
 
-			currentProjection = computed(() => store.state.currentProjection),
 			currentWorld = computed(() => store.state.currentWorld),
 			currentMap = computed(() => store.state.currentMap),
 			currentZoom = computed(() => store.state.currentZoom),
 			mapCount = computed(() => currentWorld.value ? currentWorld.value.maps.size : 0),
 
 			location = computed(() => {
-				if (!event.value) {
+				if (!event.value || !currentMap.value) {
 					return {x: 0, y: 0, z: 0}
 				}
 
-				return currentProjection.value.latLngToLocation(event.value.latlng, 64);
+				return currentMap.value.latLngToLocation(event.value.latlng, 64);
 			}),
 
 			//Label for location button
@@ -85,12 +84,12 @@ export default defineComponent({
 
 			//Url to copy
 			url = computed(() => {
-				if (!currentWorld.value || !currentMap.value) {
+				if (!currentMap.value) {
 					return '';
 				}
 
 				const url = new URL(window.location.href);
-				url.hash = getUrlForLocation(currentWorld.value, currentMap.value, location.value, currentZoom.value);
+				url.hash = getUrlForLocation(currentMap.value, location.value, currentZoom.value);
 
 				return url;
 			}),

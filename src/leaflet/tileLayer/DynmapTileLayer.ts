@@ -18,20 +18,19 @@
  */
 
 import {TileLayer, Coords, DoneCallback, TileLayerOptions, DomUtil, Util, LatLng} from 'leaflet';
-import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {store} from "@/store";
-import {Coordinate, LiveAtlasWorldMap} from "@/index";
+import {Coordinate} from "@/index";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export interface DynmapTileLayerOptions extends TileLayerOptions {
-	mapSettings: LiveAtlasWorldMap;
+	mapSettings: LiveAtlasMapDefinition;
 	errorTileUrl: string;
 	night?: boolean;
 }
 
 export interface DynmapTileLayer extends TileLayer {
 	options: DynmapTileLayerOptions;
-	_projection: DynmapProjection;
-	_mapSettings: LiveAtlasWorldMap;
+	_mapSettings: LiveAtlasMapDefinition;
 	_cachedTileUrls: Map<string, string>;
 	_namedTiles: Map<string, DynmapTileElement>;
 	_tileTemplate: DynmapTileElement;
@@ -87,11 +86,6 @@ export class DynmapTileLayer extends TileLayer {
 			throw new TypeError("mapSettings missing");
 		}
 
-		this._projection = new DynmapProjection({
-			mapToWorld: this._mapSettings.mapToWorld,
-			worldToMap: this._mapSettings.worldToMap,
-			nativeZoomLevels: this._mapSettings.nativeZoomLevels,
-		});
 		this._cachedTileUrls = Object.seal(new Map());
 		this._namedTiles = Object.seal(new Map());
 		this._loadQueue = [];
@@ -274,10 +268,6 @@ export class DynmapTileLayer extends TileLayer {
 			y: y,
 			fmt: this._mapSettings.imageFormat || 'png'
 		};
-	}
-
-	getProjection(): DynmapProjection {
-		return this._projection;
 	}
 
 	setNight(night: boolean) {

@@ -22,6 +22,7 @@ import {DynmapMarker, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createMarker, updateMarker} from "@/util/markers";
 import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
+import {getPointConverter} from "@/util";
 
 export default defineComponent({
 	props: {
@@ -39,7 +40,7 @@ export default defineComponent({
 		let updateFrame = 0;
 
 		const store = useStore(),
-			currentProjection = computed(() => store.state.currentProjection),
+			currentMap = computed(() => store.state.currentMap),
 			pendingUpdates = computed(() => {
 				const markerSetUpdates = store.state.pendingSetUpdates.get(props.set.id);
 
@@ -48,10 +49,10 @@ export default defineComponent({
 			layers = Object.freeze(new Map()) as Map<string, Marker>,
 
 			createMarkers = () => {
-				const projection = currentProjection.value;
+				const converter = getPointConverter();
 
 				props.set.markers.forEach((marker: DynmapMarker, id: string) => {
-					const layer = createMarker(marker, projection);
+					const layer = createMarker(marker, converter);
 
 					layers.set(id, layer);
 					props.layerGroup.addLayer(layer);
@@ -75,13 +76,13 @@ export default defineComponent({
 					amount: 10,
 				});
 
-				const projection = currentProjection.value;
+				const converter = getPointConverter();
 
 				for(const update of updates) {
 					if(update.removed) {
 						deleteMarker(update.id);
 					} else {
-						const layer = updateMarker(layers.get(update.id), update.payload as DynmapMarker, projection);
+						const layer = updateMarker(layers.get(update.id), update.payload as DynmapMarker, converter);
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);
@@ -100,11 +101,11 @@ export default defineComponent({
 			};
 
 		//FIXME: Prevent unnecessary repositioning when changing worlds
-		watch(currentProjection, () => {
-			const projection = currentProjection.value;
-
-			for (const [id, marker] of props.set.markers) {
-				updateMarker(layers.get(id), marker, projection);
+		watch(currentMap, (newValue) => {
+			if(newValue) {
+				for (const [id, marker] of props.set.markers) {
+					updateMarker(layers.get(id), marker, getPointConverter());
+				}
 			}
 		});
 

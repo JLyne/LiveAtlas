@@ -72,7 +72,7 @@ export const getters: GetterTree<State, State> & Getters = {
 			return '';
 		}
 
-		return getUrlForLocation(state.currentWorld, state.currentMap, {x,y,z}, zoom);
+		return getUrlForLocation(state.currentMap, {x,y,z}, zoom);
 	},
 
 	serverConfig(state: State): LiveAtlasDynmapServerDefinition {

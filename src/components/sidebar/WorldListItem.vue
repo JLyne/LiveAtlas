@@ -23,7 +23,7 @@
 				       v-bind:value="[world.name,map.name]" v-model="currentMap"
 				       :aria-labelledby="`${name}-${world.name}-${key}-label`">
 				<label :id="`${name}-${world.name}-${key}-label`" class="map" :for="`${name}-${world.name}-${key}`" :title="`${world.title} - ${map.title}`">
-					<SvgIcon :name="getMapIcon(map)"></SvgIcon>
+					<SvgIcon :name="map.getIcon()"></SvgIcon>
 				</label>
 			</template>
 		</div>
@@ -46,14 +46,14 @@ import "@/assets/icons/block_the_end_surface.svg";
 import "@/assets/icons/block_other.svg";
 import "@/assets/icons/block_other_flat.svg";
 import "@/assets/icons/block_skylands.svg";
-import {LiveAtlasWorld, LiveAtlasWorldMap} from "@/index";
+import {LiveAtlasWorldDefinition} from "@/index";
 
 export default defineComponent({
 	name: 'WorldListItem',
 	components: {SvgIcon},
 	props: {
 		world: {
-			type: Object as () => LiveAtlasWorld,
+			type: Object as () => LiveAtlasWorldDefinition,
 			required: true
 		},
 		name: {
@@ -71,33 +71,6 @@ export default defineComponent({
 			set(value: string[]) {
 				useStore().commit(MutationTypes.SET_CURRENT_MAP, {worldName: value[0], mapName: value[1]});
 			}
-		}
-	},
-
-	methods: {
-		getMapIcon(map: LiveAtlasWorldMap): string {
-			let worldType: string,
-				mapType: string;
-
-			switch(this.world.dimension) {
-				case 'nether':
-					worldType = 'nether';
-					mapType = ['surface', 'nether'].includes(map.name) ? 'surface' : 'flat';
-					break;
-
-				case 'end':
-					worldType = 'the_end';
-					mapType = ['surface', 'the_end'].includes(map.name) ? 'surface' : 'flat';
-					break;
-
-				case 'overworld':
-				default:
-					worldType = 'world';
-					mapType = ['surface', 'flat', 'biome', 'cave'].includes(map.name) ? map.name : 'flat';
-					break;
-			}
-
-			return `block_${worldType}_${mapType}`;
 		}
 	}
 });
