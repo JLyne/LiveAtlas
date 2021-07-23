@@ -19,17 +19,17 @@
 
 import {DynmapCircle} from "@/dynmap";
 import {LatLngExpression} from "leaflet";
-import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
-import DynmapPolygon from "@/leaflet/vector/DynmapPolygon";
+import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
+import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 
-export const createCircle = (options: DynmapCircle, converter: Function): DynmapPolyline | DynmapPolygon => {
+export const createCircle = (options: DynmapCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getCirclePoints(options, converter, outline),
-		circle = outline ? new DynmapPolyline(points, {
+		circle = outline ? new LiveAtlasPolyline(points, {
 			...options.style,
 			minZoom: options.minZoom,
 			maxZoom: options.maxZoom,
-		}) : new DynmapPolygon(points, {
+		}) : new LiveAtlasPolygon(points, {
 			...options.style,
 			minZoom: options.minZoom,
 			maxZoom: options.maxZoom,
@@ -42,7 +42,7 @@ export const createCircle = (options: DynmapCircle, converter: Function): Dynmap
 	return circle;
 };
 
-export const updateCircle = (circle: DynmapPolyline | DynmapPolygon | undefined, options: DynmapCircle, converter: Function): DynmapPolyline | DynmapPolygon => {
+export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: DynmapCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean,
 		points = getCirclePoints(options, converter, outline);
 

@@ -19,12 +19,12 @@
 
 import {LeafletMouseEvent, Marker} from "leaflet";
 import {DynmapMarker} from "@/dynmap";
-import {DynmapIcon} from "@/leaflet/icon/DynmapIcon";
+import {GenericIcon} from "@/leaflet/icon/GenericIcon";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 
 export const createMarker = (options: DynmapMarker, converter: Function): Marker => {
 	const marker = new GenericMarker(converter(options.location.x, options.location.y, options.location.z), {
-		icon: new DynmapIcon({
+		icon: new GenericIcon({
 			icon: options.icon,
 			label: options.label,
 			iconSize: options.dimensions,
@@ -60,7 +60,7 @@ export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, 
 	if(marker instanceof GenericMarker) {
 		const icon = marker.getIcon();
 
-		if(icon && icon instanceof DynmapIcon) {
+		if(icon && icon instanceof GenericIcon) {
 			icon.update({
 				icon: options.icon,
 				label: options.label,

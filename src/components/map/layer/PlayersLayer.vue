@@ -23,7 +23,7 @@ import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
 import {defineComponent, computed, watch} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import {LayerGroup} from 'leaflet';
-import DynmapMap from "@/leaflet/DynmapMap";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 export default defineComponent({
 	components: {
@@ -32,7 +32,7 @@ export default defineComponent({
 
 	props: {
 		leaflet: {
-			type: Object as () => DynmapMap,
+			type: Object as () => LiveAtlasLeafletMap,
 			required: true,
 		}
 	},

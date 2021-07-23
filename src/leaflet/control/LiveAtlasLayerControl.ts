@@ -31,7 +31,7 @@ import Layers = Control.Layers;
 
 const store = useStore();
 
-export class DynmapLayerControl extends Control.Layers {
+export class LiveAtlasLayerControl extends Control.Layers {
 	private _layersButton?: HTMLElement;
 	private _map ?: LeafletMap;
 	private _overlaysList?: HTMLElement;

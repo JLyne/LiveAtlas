@@ -16,7 +16,7 @@
 
 import {Layer, Map as LeafletMap, LayerGroup, LayerOptions, Util, Marker, Path} from "leaflet";
 
-export interface DynmapLayerGroupOptions extends LayerOptions {
+export interface LiveAtlasLayerGroupOptions extends LayerOptions {
 	id: string; //Added to the name of layer group panes
 	showLabels: boolean;
 	priority: number; //Added to the z-index of layer group panes
@@ -26,16 +26,16 @@ export interface DynmapLayerGroupOptions extends LayerOptions {
 	maxZoom?: number;
 }
 
-export default class DynmapLayerGroup extends LayerGroup {
+export default class LiveAtlasLayerGroup extends LayerGroup {
 	// @ts-ignore
-	options: DynmapLayerGroupOptions;
+	options: LiveAtlasLayerGroupOptions;
 	_zoomLimitedLayers: Set<Layer>; //Layers which are zoom limited and should be checked on zoom
 	_layers: any;
 	_markerPane?: HTMLElement;
 
 	_zoomEndCallback = () => this._updateLayerVisibility();
 
-	constructor(options: DynmapLayerGroupOptions) {
+	constructor(options: LiveAtlasLayerGroupOptions) {
 		super([], options);
 		Util.setOptions(this, options);
 
@@ -105,7 +105,7 @@ export default class DynmapLayerGroup extends LayerGroup {
 		return super.removeLayer(layer);
 	}
 
-	update(options: DynmapLayerGroupOptions) {
+	update(options: LiveAtlasLayerGroupOptions) {
 		this.options.showLabels = options.showLabels;
 
 		if(this._markerPane) {

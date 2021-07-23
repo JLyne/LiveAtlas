@@ -21,9 +21,9 @@ import {DynmapCircle, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createCircle, updateCircle} from "@/util/circles";
 import {getPointConverter} from '@/util';
-import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
-import DynmapPolygon from "@/leaflet/vector/DynmapPolygon";
-import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
+import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
+import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
+import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 
 export default defineComponent({
 	props: {
@@ -32,7 +32,7 @@ export default defineComponent({
 			required: true,
 		},
 		layerGroup: {
-			type: Object as () => DynmapLayerGroup,
+			type: Object as () => LiveAtlasLayerGroup,
 			required: true
 		}
 	},
@@ -47,7 +47,7 @@ export default defineComponent({
 
 				return markerSetUpdates && markerSetUpdates.circleUpdates.length;
 			}),
-			layers = Object.freeze(new Map<string, DynmapPolyline | DynmapPolygon>()),
+			layers = Object.freeze(new Map<string, LiveAtlasPolyline | LiveAtlasPolygon>()),
 
 			createCircles = () => {
 				const converter = getPointConverter();
@@ -61,7 +61,7 @@ export default defineComponent({
 			},
 
 			deleteCircle = (id: string) => {
-				let circle = layers.get(id) as DynmapPolyline;
+				let circle = layers.get(id) as LiveAtlasPolyline;
 
 				if (!circle) {
 					return;

@@ -21,8 +21,8 @@ import {DynmapLine, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createLine, updateLine} from "@/util/lines";
 import {getPointConverter} from '@/util';
-import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
-import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
+import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
+import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 
 export default defineComponent({
 	props: {
@@ -31,7 +31,7 @@ export default defineComponent({
 			required: true,
 		},
 		layerGroup: {
-			type: Object as () => DynmapLayerGroup,
+			type: Object as () => LiveAtlasLayerGroup,
 			required: true
 		}
 	},
@@ -46,7 +46,7 @@ export default defineComponent({
 
 				return markerSetUpdates && markerSetUpdates.lineUpdates.length;
 			}),
-			layers = Object.freeze(new Map<string, DynmapPolyline>()),
+			layers = Object.freeze(new Map<string, LiveAtlasPolyline>()),
 
 			createLines = () => {
 				const converter = getPointConverter();
@@ -60,7 +60,7 @@ export default defineComponent({
 			},
 
 			deleteLine = (id: string) => {
-				let line = layers.get(id) as DynmapPolyline;
+				let line = layers.get(id) as LiveAtlasPolyline;
 
 				if (!line) {
 					return;

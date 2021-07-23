@@ -15,19 +15,19 @@
  */
 
 import {Map, Layer} from 'leaflet';
-import {DynmapLayerControl} from "@/leaflet/control/DynmapLayerControl";
+import {LiveAtlasLayerControl} from "@/leaflet/control/LiveAtlasLayerControl";
 import {watch} from "vue";
 import {useStore} from "@/store";
 import {computed} from "@vue/runtime-core";
 
 export default class LayerManager {
-	private readonly layerControl: DynmapLayerControl;
+	private readonly layerControl: LiveAtlasLayerControl;
 	private readonly map: Map;
 
 	constructor(map: Map) {
 		const showControl = computed(() => useStore().state.configuration.showLayerControl);
 		this.map = map;
-		this.layerControl = new DynmapLayerControl({}, {},{
+		this.layerControl = new LiveAtlasLayerControl({}, {},{
 			position: 'topleft',
 		});
 

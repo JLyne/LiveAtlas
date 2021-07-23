@@ -19,17 +19,17 @@
 
 import {LatLngExpression} from "leaflet";
 import {DynmapArea} from "@/dynmap";
-import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
-import DynmapPolygon from "@/leaflet/vector/DynmapPolygon";
+import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
+import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 
-export const createArea = (options: DynmapArea, converter: Function): DynmapPolyline | DynmapPolygon => {
+export const createArea = (options: DynmapArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getPoints(options, converter, outline),
-		area = outline ? new DynmapPolyline(points, {
+		area = outline ? new LiveAtlasPolyline(points, {
 			...options.style,
 			minZoom: options.minZoom,
 			maxZoom: options.maxZoom,
-		}) : new DynmapPolygon(points, {
+		}) : new LiveAtlasPolygon(points, {
 			...options.style,
 			minZoom: options.minZoom,
 			maxZoom: options.maxZoom,
@@ -42,7 +42,7 @@ export const createArea = (options: DynmapArea, converter: Function): DynmapPoly
 	return area;
 };
 
-export const updateArea = (area: DynmapPolyline | DynmapPolygon | undefined, options: DynmapArea, converter: Function): DynmapPolyline | DynmapPolygon => {
+export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: DynmapArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style || !options.style.fillOpacity || (options.style.fillOpacity <= 0) as boolean,
 		points = getPoints(options, converter, outline);
 

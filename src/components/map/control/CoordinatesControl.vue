@@ -18,13 +18,13 @@
 import {computed, defineComponent, onMounted, onUnmounted} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import {CoordinatesControl, CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
-import DynmapMap from "@/leaflet/DynmapMap";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {watch} from "vue";
 
 export default defineComponent({
 	props: {
 		leaflet: {
-			type: Object as () => DynmapMap,
+			type: Object as () => LiveAtlasLeafletMap,
 			required: true,
 		}
 	},
