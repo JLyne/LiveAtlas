@@ -17,7 +17,7 @@
 import {Map, DomUtil, MapOptions} from 'leaflet';
 import LayerManager from "@/leaflet/layer/LayerManager";
 
-export default class DynmapMap extends Map {
+export default class LiveAtlasLeafletMap extends Map {
 	private readonly _layerManager: LayerManager;
 	private _controlCorners: any;
 	private	_controlContainer?: HTMLElement;

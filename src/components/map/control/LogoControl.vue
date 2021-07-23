@@ -17,7 +17,7 @@
 <script lang="ts">
 import {defineComponent} from "@vue/runtime-core";
 import {LogoControl, LogoControlOptions} from "@/leaflet/control/LogoControl";
-import DynmapMap from "@/leaflet/DynmapMap";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 export default defineComponent({
 	props: {
@@ -26,7 +26,7 @@ export default defineComponent({
 			required: true,
 		},
 		leaflet: {
-			type: Object as () => DynmapMap,
+			type: Object as () => LiveAtlasLeafletMap,
 			required: true,
 		}
 	},

@@ -21,7 +21,7 @@ import {useStore} from "@/store";
 import {DynmapMarker, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createMarker, updateMarker} from "@/util/markers";
-import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
+import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import {getPointConverter} from "@/util";
 
 export default defineComponent({
@@ -31,7 +31,7 @@ export default defineComponent({
 			required: true,
 		},
 		layerGroup: {
-			type: Object as () => DynmapLayerGroup,
+			type: Object as () => LiveAtlasLayerGroup,
 			required: true
 		}
 	},

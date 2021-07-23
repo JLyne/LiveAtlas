@@ -19,11 +19,11 @@
 
 import {DynmapLine} from "@/dynmap";
 import {LatLngExpression} from "leaflet";
-import DynmapPolyline from "@/leaflet/vector/DynmapPolyline";
+import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 
-export const createLine = (options: DynmapLine, converter: Function): DynmapPolyline => {
+export const createLine = (options: DynmapLine, converter: Function): LiveAtlasPolyline => {
 	const points = getLinePoints(options, converter),
-		line = new DynmapPolyline(points, {
+		line = new LiveAtlasPolyline(points, {
 			...options.style,
 			minZoom: options.minZoom,
 			maxZoom: options.maxZoom,
@@ -36,7 +36,7 @@ export const createLine = (options: DynmapLine, converter: Function): DynmapPoly
 	return line;
 };
 
-export const updateLine = (line: DynmapPolyline | undefined, options: DynmapLine, converter: Function): DynmapPolyline => {
+export const updateLine = (line: LiveAtlasPolyline | undefined, options: DynmapLine, converter: Function): LiveAtlasPolyline => {
 	const points = getLinePoints(options, converter);
 
 	if (!line) {

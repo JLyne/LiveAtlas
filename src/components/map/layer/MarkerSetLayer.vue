@@ -29,8 +29,8 @@ import Areas from "@/components/map/vector/Areas.vue";
 import Circles from "@/components/map/vector/Circles.vue";
 import Lines from "@/components/map/vector/Lines.vue";
 import Markers from "@/components/map/vector/Markers.vue";
-import DynmapMap from "@/leaflet/DynmapMap";
-import DynmapLayerGroup from "@/leaflet/layer/DynmapLayerGroup";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
+import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 
 export default defineComponent({
 	components: {
@@ -42,7 +42,7 @@ export default defineComponent({
 
 	props: {
 		leaflet: {
-			type: Object as () => DynmapMap,
+			type: Object as () => LiveAtlasLeafletMap,
 			required: true,
 		},
 
@@ -55,7 +55,7 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore(),
 			markerSettings = computed(() => store.state.components.markers),
-			layerGroup = new DynmapLayerGroup({
+			layerGroup = new LiveAtlasLayerGroup({
 				id: props.markerSet.id,
 				minZoom: props.markerSet.minZoom,
 				maxZoom: props.markerSet.maxZoom,

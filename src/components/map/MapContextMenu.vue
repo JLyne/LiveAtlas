@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import DynmapMap from "@/leaflet/DynmapMap";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {computed, defineComponent, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import {LeafletMouseEvent} from "leaflet";
 import {useStore} from "@/store";
@@ -41,7 +41,7 @@ export default defineComponent({
 	components: {WorldListItem},
 	props: {
 		leaflet: {
-			type: Object as () => DynmapMap,
+			type: Object as () => LiveAtlasLeafletMap,
 			required: true,
 		}
 	},

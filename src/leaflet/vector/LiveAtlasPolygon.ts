@@ -14,15 +14,15 @@
  *    limitations under the License.
  */
 
-import {LatLngExpression, Polyline, PolylineOptions, Util} from "leaflet";
+import {LatLngExpression, Polygon, PolylineOptions, Util} from "leaflet";
 
-export interface DynmapPolylineOptions extends PolylineOptions {
+export interface LiveAtlasPolygonOptions extends PolylineOptions {
 	minZoom?: number;
 	maxZoom?: number;
 }
 
-export default class DynmapPolyline extends Polyline {
-	constructor(latlngs: LatLngExpression[] | LatLngExpression[][], options?: DynmapPolylineOptions) {
+export default class LiveAtlasPolygon extends Polygon {
+	constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: LiveAtlasPolygonOptions) {
 		super(latlngs, options);
 		Util.setOptions(this, options);
 	}

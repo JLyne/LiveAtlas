@@ -20,7 +20,7 @@
 import {DivIconOptions, PointExpression, Icon, DivIcon, DomUtil, point} from 'leaflet';
 import {useStore} from "@/store";
 
-export interface DynmapIconOptions extends DivIconOptions {
+export interface GenericIconOptions extends DivIconOptions {
 	icon: string;
 	label: string;
 	isHtml?: boolean;
@@ -36,8 +36,8 @@ markerIcon.className = 'marker__icon';
 const markerLabel: HTMLSpanElement = document.createElement('span');
 markerLabel.className = 'marker__label';
 
-export class DynmapIcon extends DivIcon {
-	static defaultOptions: DynmapIconOptions = {
+export class GenericIcon extends DivIcon {
+	static defaultOptions: GenericIconOptions = {
 		icon: 'default',
 		label: '',
 		iconSize: [16, 16],
@@ -46,12 +46,12 @@ export class DynmapIcon extends DivIcon {
 	};
 
 	// @ts-ignore
-	options: DynmapIconOptions;
+	options: GenericIconOptions;
 	_image?: HTMLImageElement;
 	_label?: HTMLSpanElement;
 
-	constructor(options: DynmapIconOptions) {
-		super(Object.assign(DynmapIcon.defaultOptions, options));
+	constructor(options: GenericIconOptions) {
+		super(Object.assign(GenericIcon.defaultOptions, options));
 	}
 
 	createIcon(oldIcon: HTMLElement) {
@@ -94,7 +94,7 @@ export class DynmapIcon extends DivIcon {
 		return div;
 	}
 
-	update(options: DynmapIconOptions) {
+	update(options: GenericIconOptions) {
 		if(this._image && options.icon !== this.options.icon) {
 			this._image!.src = `${useStore().getters.serverConfig.dynmap.markers}_markers_/${options.icon}.png`;
 			this.options.icon = options.icon;

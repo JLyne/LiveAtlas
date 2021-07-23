@@ -46,7 +46,7 @@ import LogoControl from "@/components/map/control/LogoControl.vue";
 import {MutationTypes} from "@/store/mutation-types";
 import {DynmapPlayer} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
-import DynmapMap from "@/leaflet/DynmapMap";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {LoadingControl} from "@/leaflet/control/LoadingControl";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
 import {Coordinate} from "@/index";
@@ -234,7 +234,7 @@ export default defineComponent({
 	},
 
 	mounted() {
-		this.leaflet = new DynmapMap(this.$el.nextElementSibling, Object.freeze({
+		this.leaflet = new LiveAtlasLeafletMap(this.$el.nextElementSibling, Object.freeze({
 			zoom: this.configuration.defaultZoom,
 			center: new LatLng(0, 0),
 			fadeAnimation: false,
@@ -245,7 +245,7 @@ export default defineComponent({
 			crs: CRS.Simple,
 			worldCopyJump: false,
 			// markerZoomAnimation: false,
-		})) as DynmapMap;
+		})) as LiveAtlasLeafletMap;
 
 		window.addEventListener('keydown', this.handleKeydown);
 
