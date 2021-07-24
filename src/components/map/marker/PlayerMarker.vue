@@ -17,15 +17,16 @@
 <script lang="ts">
 import {defineComponent, computed, ref, onMounted, onUnmounted} from "@vue/runtime-core";
 import {LayerGroup} from 'leaflet';
-import {DynmapChat, DynmapPlayer} from "@/dynmap";
+import {DynmapChat} from "@/dynmap";
 import {useStore} from "@/store";
 import {PlayerMarker} from "@/leaflet/marker/PlayerMarker";
 import {Popup} from "leaflet";
+import {LiveAtlasPlayer} from "@/index";
 
 export default defineComponent({
 	props: {
 		player: {
-			type: Object as () => DynmapPlayer,
+			type: Object as () => LiveAtlasPlayer,
 			required: true
 		},
 		layerGroup: {
@@ -96,7 +97,7 @@ export default defineComponent({
 						break;
 					}
 
-					if(message.type === 'chat' && message.playerAccount === props.player.account) {
+					if(message.type === 'chat' && message.playerAccount === props.player.name) {
 						messages.push(message);
 					}
 				}

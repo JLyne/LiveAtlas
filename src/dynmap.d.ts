@@ -20,7 +20,7 @@ import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 import {
 	Coordinate,
-	LiveAtlasLocation,
+	LiveAtlasPlayer,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition,
 	LiveAtlasWorldState
@@ -110,19 +110,9 @@ interface DynmapUpdateResponse {
 	worldState: LiveAtlasWorldState;
 	configHash: number;
 	playerCount: number;
-	players: Set<DynmapPlayer>;
+	players: Set<LiveAtlasPlayer>;
 	updates: DynmapUpdates;
 	timestamp: number;
-}
-
-interface DynmapPlayer {
-	account: string;
-	armor: number;
-	health: number;
-	name: string;
-	sort: number;
-	hidden: boolean;
-	location: LiveAtlasLocation;
 }
 
 interface DynmapMarkerSet {

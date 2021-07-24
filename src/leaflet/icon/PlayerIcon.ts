@@ -18,9 +18,9 @@
  */
 
 import {MarkerOptions, DivIcon, DomUtil} from 'leaflet';
-import {DynmapPlayer} from "@/dynmap";
 import {getMinecraftHead} from '@/util';
 import playerImage from '@/assets/images/player_face.png';
+import {LiveAtlasPlayer} from "@/index";
 
 const noSkinImage: HTMLImageElement = document.createElement('img');
 noSkinImage.height = 16;
@@ -49,7 +49,7 @@ export interface PlayerIconOptions extends MarkerOptions {
 }
 
 export class PlayerIcon extends DivIcon {
-	private readonly _player: DynmapPlayer;
+	private readonly _player: LiveAtlasPlayer;
 	private _container?: HTMLDivElement;
 	private _playerImage?: HTMLImageElement;
 	private _playerInfo?: HTMLSpanElement;
@@ -65,7 +65,7 @@ export class PlayerIcon extends DivIcon {
 	// @ts-ignore
 	options: PlayerIconOptions;
 
-	constructor(player: DynmapPlayer, options: PlayerIconOptions) {
+	constructor(player: LiveAtlasPlayer, options: PlayerIconOptions) {
 		super(options);
 		this._player = player;
 	}
@@ -87,7 +87,7 @@ export class PlayerIcon extends DivIcon {
 
 		this._playerName = document.createElement('span');
 		this._playerName.className = 'player__name';
-		this._playerName.innerHTML = this._currentName = player.name;
+		this._playerName.innerHTML = this._currentName = player.displayName;
 
 		if (this.options.showSkinFace) {
 			let size;
@@ -151,8 +151,8 @@ export class PlayerIcon extends DivIcon {
 			return;
 		}
 
-		if(this._player!.name !== this._currentName) {
-			this._playerName!.innerHTML = this._currentName = this._player!.name;
+		if(this._player!.displayName !== this._currentName) {
+			this._playerName!.innerHTML = this._currentName = this._player!.displayName;
 		}
 
 		if(this.options.showHealth) {

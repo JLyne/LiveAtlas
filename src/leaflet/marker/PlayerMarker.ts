@@ -15,8 +15,8 @@
  */
 
 import {LatLng, MarkerOptions, Marker, Util} from 'leaflet';
-import {DynmapPlayer} from "@/dynmap";
 import {PlayerIcon} from "@/leaflet/icon/PlayerIcon";
+import {LiveAtlasPlayer} from "@/index";
 
 export interface PlayerMarkerOptions extends MarkerOptions {
 	smallFace: boolean,
@@ -26,9 +26,9 @@ export interface PlayerMarkerOptions extends MarkerOptions {
 }
 
 export class PlayerMarker extends Marker {
-	private _player: DynmapPlayer;
+	private _player: LiveAtlasPlayer;
 
-	constructor(player: DynmapPlayer, options: PlayerMarkerOptions) {
+	constructor(player: LiveAtlasPlayer, options: PlayerMarkerOptions) {
 		super(new LatLng(0, 0), options);
 		this._player = player;
 		options.draggable = false;

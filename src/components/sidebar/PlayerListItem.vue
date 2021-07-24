@@ -15,29 +15,29 @@
   -->
 
 <template>
-	<input :id="`player-${player.account}`" type="radio" name="player" v-bind:value="player.account" v-model="followTarget"
+	<input :id="`player-${player.name}`" type="radio" name="player" v-bind:value="player.name" v-model="followTarget"
 	       @click.prevent="onInputClick" />
-	<label :for="`player-${player.account}`"
+	<label :for="`player-${player.name}`"
 	       :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}" :title="title"
 	       @click.prevent="onLabelClick">
 		<img width="16" height="16" class="player__icon" :src="image" alt="" aria-hidden="true" />
-		<span class="player__name" v-html="player.name"></span>
+		<span class="player__name" v-html="player.displayName"></span>
 	</label>
 </template>
 
 <script lang="ts">
 import {defineComponent, computed, ref, onMounted} from 'vue';
-import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {getMinecraftHead} from '@/util';
 import defaultImage from '@/assets/images/player_face.png';
+import {LiveAtlasPlayer} from "@/index";
 
 export default defineComponent({
 	name: 'PlayerListItem',
 	props: {
 		player: {
-			type: Object as () => DynmapPlayer,
+			type: Object as () => LiveAtlasPlayer,
 			required: true
 		}
 	},
@@ -59,7 +59,7 @@ export default defineComponent({
 				}
 			}),
 
-			followTarget = computed(() => store.state.followTarget ? store.state.followTarget.account : undefined),
+			followTarget = computed(() => store.state.followTarget ? store.state.followTarget.name : undefined),
 
 			pan = () => {
 				if(!props.player.hidden) {

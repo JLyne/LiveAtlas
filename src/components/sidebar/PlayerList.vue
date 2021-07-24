@@ -62,7 +62,7 @@ export default defineComponent({
 				const query = searchQuery.value.toLowerCase();
 
 				return query ? store.state.sortedPlayers.filter(p => {
-					return p.account.toLowerCase().indexOf(query) > -1;
+					return p.name.toLowerCase().indexOf(query) > -1;
 				}) : store.state.sortedPlayers;
 			}),
 			maxPlayers = computed(() => store.state.configuration.maxPlayers),

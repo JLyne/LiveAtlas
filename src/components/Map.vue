@@ -44,11 +44,10 @@ import LinkControl from "@/components/map/control/LinkControl.vue";
 import ChatControl from "@/components/map/control/ChatControl.vue";
 import LogoControl from "@/components/map/control/LogoControl.vue";
 import {MutationTypes} from "@/store/mutation-types";
-import {DynmapPlayer} from "@/dynmap";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {LoadingControl} from "@/leaflet/control/LoadingControl";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
-import {Coordinate} from "@/index";
+import {Coordinate, LiveAtlasPlayer} from "@/index";
 
 export default defineComponent({
 	components: {
@@ -277,7 +276,7 @@ export default defineComponent({
 				this.leaflet.getContainer().focus();
 			}
 		},
-		updateFollow(player: DynmapPlayer, newFollow: boolean) {
+		updateFollow(player: LiveAtlasPlayer, newFollow: boolean) {
 			const store = useStore(),
 				followMapName = store.state.configuration.followMap,
 				currentWorld = store.state.currentWorld;
@@ -285,17 +284,17 @@ export default defineComponent({
 			let targetWorld = null;
 
 			if(!this.leaflet) {
-				console.warn(`Cannot follow ${player.account}. Map not yet initialized.`);
+				console.warn(`Cannot follow ${player.name}. Map not yet initialized.`);
 				return;
 			}
 
 			if(player.hidden) {
-				console.warn(`Cannot follow ${player.account}. Player is hidden from the map.`);
+				console.warn(`Cannot follow ${player.name}. Player is hidden from the map.`);
 				return;
 			}
 
 			if(!player.location.world) {
-				console.warn(`Cannot follow ${player.account}. Player isn't in a known world.`);
+				console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
 				return;
 			}
 
@@ -306,7 +305,7 @@ export default defineComponent({
 			}
 
 			if (!targetWorld) {
-				console.warn(`Cannot follow ${player.account}. Player isn't in a known world.`);
+				console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
 				return;
 			}
 

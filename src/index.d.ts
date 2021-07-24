@@ -1,5 +1,5 @@
 import {State} from "@/store";
-import {DynmapPlayer, DynmapUrlConfig} from "@/dynmap";
+import {DynmapUrlConfig} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 declare module "*.png" {
@@ -108,7 +108,18 @@ export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps' | 'setti
 export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';
 export type LiveAtlasDimension = 'overworld' | 'nether' | 'end';
 
-interface LiveAtlasSortedPlayers extends Array<DynmapPlayer> {
+interface LiveAtlasPlayer {
+	name: string;
+	displayName: string;
+	uuid?: string;
+	armor: number;
+	health: number;
+	sort: number;
+	hidden: boolean;
+	location: LiveAtlasLocation;
+}
+
+interface LiveAtlasSortedPlayers extends Array<LiveAtlasPlayer> {
 	dirty?: boolean;
 }
 

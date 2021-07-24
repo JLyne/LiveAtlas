@@ -14,9 +14,9 @@
  *    limitations under the License.
  */
 
-import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {LiveAtlasPlayer} from "@/index";
 
 interface HeadQueueEntry {
 	cacheKey: string;
@@ -52,8 +52,8 @@ export const getMinecraftTime = (serverTime: number) => {
 	};
 }
 
-export const getMinecraftHead = (player: DynmapPlayer | string, size: string): Promise<HTMLImageElement> => {
-	const account = typeof  player === 'string' ? player : player.account,
+export const getMinecraftHead = (player: LiveAtlasPlayer | string, size: string): Promise<HTMLImageElement> => {
+	const account = typeof  player === 'string' ? player : player.name,
 		cacheKey = `${account}-${size}`;
 
 	if(headCache.has(cacheKey)) {

@@ -16,7 +16,7 @@
 
 import {
 	LiveAtlasDimension,
-	LiveAtlasDynmapServerDefinition, LiveAtlasServerDefinition,
+	LiveAtlasDynmapServerDefinition, LiveAtlasPlayer, LiveAtlasServerDefinition,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
 } from "@/index";
@@ -25,8 +25,7 @@ import {
 	DynmapCircle,
 	DynmapComponentConfig,
 	DynmapLine,
-	DynmapMarker, DynmapMarkerSet, DynmapMarkerSetUpdates, DynmapPlayer,
-	DynmapServerConfig, DynmapTileUpdate, DynmapUpdate, DynmapUpdateResponse,
+	DynmapMarker, DynmapMarkerSet, DynmapMarkerSetUpdates, DynmapServerConfig, DynmapTileUpdate, DynmapUpdate, DynmapUpdateResponse,
 	DynmapUpdates
 } from "@/dynmap";
 import {useStore} from "@/store";
@@ -698,16 +697,16 @@ export default class DynmapMapProvider extends MapProvider {
 		this.updateAbort = new AbortController();
 
 		const response = await DynmapMapProvider.fetchJSON(url, this.updateAbort.signal);
-		const players: Set<DynmapPlayer> = new Set();
+		const players: Set<LiveAtlasPlayer> = new Set();
 
 		(response.players || []).forEach((player: any) => {
 			const world = player.world && player.world !== '-some-other-bogus-world-' ? player.world : undefined;
 
 			players.add({
-				account: player.account || "",
+				name: player.account || "",
+				displayName: player.name || "",
 				health: player.health || 0,
 				armor: player.armor || 0,
-				name: player.name || "",
 				sort: player.sort || 0,
 				hidden: !world,
 				location: {

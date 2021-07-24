@@ -23,9 +23,9 @@ import {
 	DynmapAreaUpdate, DynmapCircleUpdate, DynmapLineUpdate,
 	DynmapMarkerSet,
 	DynmapMarkerUpdate,
-	DynmapPlayer, DynmapTileUpdate,
+	DynmapTileUpdate,
 } from "@/dynmap";
-import {LiveAtlasWorldDefinition} from "@/index";
+import {LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(
@@ -46,7 +46,7 @@ export interface Actions {
 	):Promise<void>
 	[ActionTypes.SET_PLAYERS](
 		{commit}: AugmentedActionContext,
-		payload: Set<DynmapPlayer>
+		payload: Set<LiveAtlasPlayer>
 	):Promise<Map<string, DynmapMarkerSet>>
 	[ActionTypes.POP_MARKER_UPDATES](
 		{commit}: AugmentedActionContext,
@@ -156,17 +156,17 @@ export const actions: ActionTree<State, State> & Actions = {
 		state.currentMapProvider!.stopUpdates();
 	},
 
-	[ActionTypes.SET_PLAYERS]({commit, state}, players: Set<DynmapPlayer>) {
+	[ActionTypes.SET_PLAYERS]({commit, state}, players: Set<LiveAtlasPlayer>) {
 		const keep: Set<string> = new Set();
 
 		for(const player of players) {
-			keep.add(player.account);
+			keep.add(player.name);
 		}
 
 		//Remove any players that aren't in the set
 		commit(MutationTypes.SYNC_PLAYERS, keep);
 
-		const processQueue = (players: Set<DynmapPlayer>, resolve: Function) => {
+		const processQueue = (players: Set<LiveAtlasPlayer>, resolve: Function) => {
 			commit(MutationTypes.SET_PLAYERS_ASYNC, players);
 
 			if(!players.size) {

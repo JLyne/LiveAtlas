@@ -24,7 +24,6 @@ import {
 	DynmapLine, DynmapMarker,
 	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
-	DynmapPlayer,
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapChat
 } from "@/dynmap";
@@ -38,7 +37,7 @@ import {
 	LiveAtlasParsedUrl,
 	LiveAtlasGlobalConfig,
 	LiveAtlasGlobalMessageConfig,
-	LiveAtlasServerMessageConfig, LiveAtlasDynmapServerDefinition
+	LiveAtlasServerMessageConfig, LiveAtlasDynmapServerDefinition, LiveAtlasPlayer
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
@@ -70,7 +69,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.POP_LINE_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
 	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): void
 
-	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<DynmapPlayer>): Set<DynmapPlayer>
+	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer>
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
 	[MutationTypes.CLEAR_PLAYERS](state: S): void
 	[MutationTypes.SET_CURRENT_SERVER](state: S, server: string): void
@@ -80,8 +79,8 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_PARSED_URL](state: S, payload: LiveAtlasParsedUrl): void
 	[MutationTypes.CLEAR_PARSED_URL](state: S): void
 	[MutationTypes.CLEAR_CURRENT_MAP](state: S): void
-	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: DynmapPlayer): void
-	[MutationTypes.SET_PAN_TARGET](state: S, payload: DynmapPlayer): void
+	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: LiveAtlasPlayer): void
+	[MutationTypes.SET_PAN_TARGET](state: S, payload: LiveAtlasPlayer): void
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: S, a?: void): void
 	[MutationTypes.CLEAR_PAN_TARGET](state: S, a?: void): void
 
@@ -406,31 +405,31 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	// Set up to 10 players at once
-	[MutationTypes.SET_PLAYERS_ASYNC](state: State, players: Set<DynmapPlayer>): Set<DynmapPlayer> {
+	[MutationTypes.SET_PLAYERS_ASYNC](state: State, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer> {
 		let count = 0;
 
 		for(const player of players) {
-			if(state.players.has(player.account)) {
-				const existing = state.players.get(player.account);
+			if(state.players.has(player.name)) {
+				const existing = state.players.get(player.name);
 
 				existing!.health = player.health;
 				existing!.armor = player.armor;
 				existing!.location = Object.assign(existing!.location, player.location);
 				existing!.hidden = player.hidden;
-				existing!.name = player.name;
+				existing!.displayName = player.displayName;
 				existing!.sort = player.sort;
 
-				if(existing!.name !== player.name || existing!.sort !== player.sort) {
+				if(existing!.displayName !== player.displayName || existing!.sort !== player.sort) {
 					state.sortedPlayers.dirty = true;
 				}
 			} else {
 				state.sortedPlayers.dirty = true;
-				state.players.set(player.account, {
-					account: player.account,
+				state.players.set(player.name, {
+					name: player.name,
 					health: player.health,
 					armor: player.armor,
 					location: player.location,
-					name: player.name,
+					displayName: player.displayName,
 					sort: player.sort,
 					hidden: player.hidden,
 				});
@@ -450,7 +449,7 @@ export const mutations: MutationTree<State> & Mutations = {
 					return a.sort - b.sort;
 				}
 
-				return a.account.toLowerCase().localeCompare(b.account.toLowerCase());
+				return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
 			}) as LiveAtlasSortedPlayers;
 		}
 
@@ -460,7 +459,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Removes all players not found in the provided keep set
 	[MutationTypes.SYNC_PLAYERS](state: State, keep: Set<string>) {
 		for(const [key, player] of state.players) {
-			if(!keep.has(player.account)) {
+			if(!keep.has(player.name)) {
 				state.sortedPlayers.splice(state.sortedPlayers.indexOf(player), 1);
 				state.players.delete(key);
 			}
@@ -547,12 +546,12 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Set the follow target, which the map will automatically pan to keep in view
-	[MutationTypes.SET_FOLLOW_TARGET](state: State, player: DynmapPlayer) {
+	[MutationTypes.SET_FOLLOW_TARGET](state: State, player: LiveAtlasPlayer) {
 		state.followTarget = player;
 	},
 
 	//Set the pan target, which the map will immediately pan to once
-	[MutationTypes.SET_PAN_TARGET](state: State, player: DynmapPlayer) {
+	[MutationTypes.SET_PAN_TARGET](state: State, player: LiveAtlasPlayer) {
 		state.panTarget = player;
 	},
 
