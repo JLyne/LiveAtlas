@@ -45,7 +45,6 @@ import ChatControl from "@/components/map/control/ChatControl.vue";
 import LogoControl from "@/components/map/control/LogoControl.vue";
 import {MutationTypes} from "@/store/mutation-types";
 import {DynmapPlayer} from "@/dynmap";
-import {ActionTypes} from "@/store/action-types";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {LoadingControl} from "@/leaflet/control/LoadingControl";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
@@ -164,8 +163,6 @@ export default defineComponent({
 
 			if(newValue) {
 				let location: Coordinate | null = this.scheduledPan;
-
-				store.dispatch(ActionTypes.GET_MARKER_SETS, undefined);
 
 				// Abort if follow target is present, to avoid panning twice
 				if(store.state.followTarget && store.state.followTarget.location.world === newValue.name) {

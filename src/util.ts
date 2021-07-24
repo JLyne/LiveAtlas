@@ -14,7 +14,6 @@
  *    limitations under the License.
  */
 
-import API from '@/api';
 import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
@@ -31,6 +30,10 @@ const headCache = new Map<string, HTMLImageElement>(),
 	headsLoading = new Set<string>(),
 
 	headQueue: HeadQueueEntry[] = [];
+
+export const titleColoursRegex = /§[0-9a-f]/ig;
+export const netherWorldNameRegex = /_?nether(_|$)/i;
+export const endWorldNameRegex = /(^|_)end(_|$)/i;
 
 export const getMinecraftTime = (serverTime: number) => {
 	const day = serverTime >= 0 && serverTime < 13700;
@@ -209,16 +212,6 @@ export const parseMapSearchParams = (query: URLSearchParams) => {
 		zoom,
 		legacy: true,
 	}
-}
-
-export const getAPI = () => {
-	const store = useStore();
-
-	if(!store.state.currentServer) {
-		throw new RangeError("No current server");
-	}
-
-	return API;
 }
 
 export const getUrlForLocation = (map: LiveAtlasMapDefinition, location: {

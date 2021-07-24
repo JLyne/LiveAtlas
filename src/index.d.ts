@@ -136,3 +136,12 @@ interface LiveAtlasParsedUrl {
 	zoom?: number;
 	legacy: boolean;
 }
+
+interface LiveAtlasMapProvider {
+	loadServerConfiguration(): Promise<void>;
+	loadWorldConfiguration(world: LiveAtlasWorldDefinition): Promise<void>;
+	startUpdates(): void;
+	stopUpdates(): void;
+	sendChatMessage(message: string): void;
+	destroy(): void;
+}

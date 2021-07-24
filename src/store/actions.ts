@@ -20,14 +20,11 @@ import {State} from "@/store/state";
 import {ActionTypes} from "@/store/action-types";
 import {Mutations} from "@/store/mutations";
 import {
-	DynmapAreaUpdate, DynmapCircleUpdate,
-	DynmapConfigurationResponse, DynmapLineUpdate,
+	DynmapAreaUpdate, DynmapCircleUpdate, DynmapLineUpdate,
 	DynmapMarkerSet,
 	DynmapMarkerUpdate,
 	DynmapPlayer, DynmapTileUpdate,
-	DynmapUpdateResponse
 } from "@/dynmap";
-import {getAPI} from "@/util";
 import {LiveAtlasWorldDefinition} from "@/index";
 
 type AugmentedActionContext = {
@@ -40,13 +37,13 @@ type AugmentedActionContext = {
 export interface Actions {
 	[ActionTypes.LOAD_CONFIGURATION](
 		{commit}: AugmentedActionContext,
-	):Promise<DynmapConfigurationResponse>
-	[ActionTypes.GET_UPDATE](
+	):Promise<void>
+	[ActionTypes.START_UPDATES](
 		{commit}: AugmentedActionContext,
-	):Promise<DynmapUpdateResponse>
-	[ActionTypes.GET_MARKER_SETS](
+	):Promise<void>
+	[ActionTypes.STOP_UPDATES](
 		{commit}: AugmentedActionContext,
-	):Promise<Map<string, DynmapMarkerSet>>
+	):Promise<void>
 	[ActionTypes.SET_PLAYERS](
 		{commit}: AugmentedActionContext,
 		payload: Set<DynmapPlayer>
@@ -78,21 +75,20 @@ export interface Actions {
 }
 
 export const actions: ActionTree<State, State> & Actions = {
-	async [ActionTypes.LOAD_CONFIGURATION]({commit, state}): Promise<DynmapConfigurationResponse> {
+	async [ActionTypes.LOAD_CONFIGURATION]({commit, state}): Promise<void> {
 		//Clear any existing has to avoid triggering a second config load, after this load changes the hash
 		commit(MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH, undefined);
 
-		const config = await getAPI().getConfiguration();
+		if(!state.currentServer) {
+			console.warn('No current server');
+			return;
+		}
 
-		commit(MutationTypes.SET_SERVER_CONFIGURATION, config.config);
-		commit(MutationTypes.SET_SERVER_MESSAGES, config.messages);
-		commit(MutationTypes.SET_WORLDS, config.worlds);
-		commit(MutationTypes.SET_COMPONENTS, config.components);
-		commit(MutationTypes.SET_LOGGED_IN, config.loggedIn);
+		await state.currentMapProvider!.loadServerConfiguration();
 
 		//Skip default map/ui visibility logic if we already have a map selected (i.e config reload after hash change)
 		if(state.currentMap) {
-			return config;
+			return;
 		}
 
 		//Make UI visible if configured, there's enough space to do so, and this is the first config load
@@ -104,8 +100,8 @@ export const actions: ActionTree<State, State> & Actions = {
 		let worldName, mapName;
 
 		// Use config default world if it exists
-		if(config.config.defaultWorld && state.worlds.has(config.config.defaultWorld)) {
-			worldName = config.config.defaultWorld;
+		if(state.configuration.defaultWorld && state.worlds.has(state.configuration.defaultWorld)) {
+			worldName = state.configuration.defaultWorld;
 		}
 
 		// Prefer world from parsed url if present and it exists
@@ -122,8 +118,8 @@ export const actions: ActionTree<State, State> & Actions = {
 			const world = state.worlds.get(worldName) as LiveAtlasWorldDefinition;
 
 			// Use config default map if it exists
-			if(config.config.defaultMap && world.maps.has(config.config.defaultMap)) {
-				mapName = config.config.defaultMap;
+			if(state.configuration.defaultMap && world.maps.has(state.configuration.defaultMap)) {
+				mapName = state.configuration.defaultMap;
 			}
 
 			// Prefer map from parsed url if present and it exists
@@ -142,27 +138,22 @@ export const actions: ActionTree<State, State> & Actions = {
 				worldName, mapName
 			});
 		}
-
-		return config;
 	},
 
-	async [ActionTypes.GET_UPDATE]({commit, dispatch, state}) {
+	async [ActionTypes.START_UPDATES]({state}) {
 		if(!state.currentWorld) {
 			return Promise.reject("No current world");
 		}
 
-		const update = await getAPI().getUpdate(state.updateRequestId, state.currentWorld.name, state.updateTimestamp.valueOf());
+		state.currentMapProvider!.startUpdates();
+	},
 
-		commit(MutationTypes.SET_WORLD_STATE, update.worldState);
-		commit(MutationTypes.SET_UPDATE_TIMESTAMP, new Date(update.timestamp));
-		commit(MutationTypes.INCREMENT_REQUEST_ID, undefined);
-		commit(MutationTypes.ADD_MARKER_SET_UPDATES, update.updates.markerSets);
-		commit(MutationTypes.ADD_TILE_UPDATES, update.updates.tiles);
-		commit(MutationTypes.ADD_CHAT, update.updates.chat);
-		commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, update.configHash);
+	async [ActionTypes.STOP_UPDATES]({state}) {
+		if(!state.currentWorld) {
+			return Promise.reject("No current world");
+		}
 
-		await dispatch(ActionTypes.SET_PLAYERS, update.players);
-		return update;
+		state.currentMapProvider!.stopUpdates();
 	},
 
 	[ActionTypes.SET_PLAYERS]({commit, state}, players: Set<DynmapPlayer>) {
@@ -189,17 +180,6 @@ export const actions: ActionTree<State, State> & Actions = {
 		return new Promise((resolve) => {
 			requestAnimationFrame(() => processQueue(players, resolve));
 		});
-	},
-
-	async [ActionTypes.GET_MARKER_SETS]({commit, state}) {
-		if(!state.currentWorld) {
-			throw new Error("No current world");
-		}
-
-		const markerSets = await getAPI().getMarkerSets(state.currentWorld.name)
-		commit(MutationTypes.SET_MARKER_SETS, markerSets);
-
-		return markerSets;
 	},
 
 	async [ActionTypes.POP_MARKER_UPDATES]({commit, state}, {markerSet, amount}: {markerSet: string, amount: number}): Promise<DynmapMarkerUpdate[]> {
@@ -263,6 +243,6 @@ export const actions: ActionTree<State, State> & Actions = {
 	},
 
 	async [ActionTypes.SEND_CHAT_MESSAGE]({commit, state}, message: string): Promise<void> {
-		await getAPI().sendChatMessage(message);
+		await state.currentMapProvider!.sendChatMessage(message);
 	},
 }

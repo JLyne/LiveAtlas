@@ -43,21 +43,19 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			updateInterval = computed(() => store.state.configuration.updateInterval),
 			title = computed(() => store.state.configuration.title),
 			currentUrl = computed(() => store.getters.url),
 			currentServer = computed(() => store.state.currentServer),
 			configurationHash = computed(() => store.state.configurationHash),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
-			updatesEnabled = ref(false),
-			updateTimeout = ref(0),
 			configAttempts = ref(0),
 
 			loadConfiguration = async () => {
 				try {
 					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
-					startUpdates();
+					await store.dispatch(ActionTypes.START_UPDATES, undefined);
+
 					requestAnimationFrame(() => {
 						hideSplash();
 
@@ -78,36 +76,6 @@ export default defineComponent({
 					showSplashError(`${error}\n${e}`, false, ++configAttempts.value);
 					setTimeout(() => loadConfiguration(), 1000);
 				}
-			},
-
-			startUpdates = () => {
-				updatesEnabled.value = true;
-				update();
-			},
-
-			update = async () => {
-				//TODO: Error notification for repeated failures?
-				try {
-					await store.dispatch(ActionTypes.GET_UPDATE, undefined);
-				} finally {
-					if(updatesEnabled.value) {
-						if(updateTimeout.value) {
-							clearTimeout(updateTimeout.value);
-						}
-
-						updateTimeout.value = setTimeout(() => update(), updateInterval.value);
-					}
-				}
-			},
-
-			stopUpdates = () => {
-				updatesEnabled.value = false;
-
-				if (updateTimeout.value) {
-					clearTimeout(updateTimeout.value);
-				}
-
-				updateTimeout.value = 0;
 			},
 
 			handleUrl = () => {
@@ -174,7 +142,6 @@ export default defineComponent({
 		watch(currentUrl, (url) => window.history.replaceState({}, '', url));
 		watch(currentServer, (newServer?: LiveAtlasServerDefinition) => {
 			showSplash();
-			stopUpdates();
 
 			if(!newServer) {
 				return;
@@ -190,17 +157,17 @@ export default defineComponent({
 			window.history.replaceState({}, '', newServer.id);
 			loadConfiguration();
 		}, {deep: true});
-		watch(configurationHash, (newHash, oldHash) => {
+		watch(configurationHash, async (newHash, oldHash) => {
 			if(newHash && oldHash) {
 				showSplash();
-				stopUpdates();
 				store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
-				loadConfiguration();
+				await store.dispatch(ActionTypes.STOP_UPDATES, undefined);
+				await loadConfiguration();
 			}
 		});
 
 		onMounted(() => loadConfiguration());
-		onBeforeUnmount(() => stopUpdates());
+		onBeforeUnmount(() => store.dispatch(ActionTypes.STOP_UPDATES, undefined));
 
 		handleUrl();
 		onResize();

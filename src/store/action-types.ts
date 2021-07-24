@@ -16,8 +16,8 @@
 
 export enum ActionTypes {
 	LOAD_CONFIGURATION = "loadConfiguration",
-	GET_UPDATE = "getUpdate",
-	GET_MARKER_SETS = "getMarkerSets",
+	START_UPDATES = "startUpdates",
+	STOP_UPDATES = "stopUpdates",
 	SET_PLAYERS = "setPlayers",
 	POP_MARKER_UPDATES = "popMarkerUpdates",
 	POP_AREA_UPDATES = "popAreaUpdates",

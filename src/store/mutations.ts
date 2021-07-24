@@ -38,8 +38,9 @@ import {
 	LiveAtlasParsedUrl,
 	LiveAtlasGlobalConfig,
 	LiveAtlasGlobalMessageConfig,
-	LiveAtlasServerMessageConfig
+	LiveAtlasServerMessageConfig, LiveAtlasDynmapServerDefinition
 } from "@/index";
+import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -59,7 +60,6 @@ export type Mutations<S = State> = {
 	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
 	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorldDefinition): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
-	[MutationTypes.SET_UPDATE_TIMESTAMP](state: S, time: Date): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
 	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>): void
@@ -70,7 +70,6 @@ export type Mutations<S = State> = {
 	[MutationTypes.POP_LINE_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
 	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): void
 
-	[MutationTypes.INCREMENT_REQUEST_ID](state: S): void
 	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<DynmapPlayer>): Set<DynmapPlayer>
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
 	[MutationTypes.CLEAR_PLAYERS](state: S): void
@@ -257,11 +256,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentWorldState = Object.assign(state.currentWorldState, worldState);
 	},
 
-	//Sets the timestamp of the last update fetch
-	[MutationTypes.SET_UPDATE_TIMESTAMP](state: State, timestamp: Date) {
-		state.updateTimestamp = timestamp;
-	},
-
 	//Adds markerset related updates from an update fetch to the pending updates list
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: State, updates: Map<string, DynmapMarkerSetUpdates>) {
 		for(const entry of updates) {
@@ -411,11 +405,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.pendingTileUpdates.splice(0, amount);
 	},
 
-	//Increments the request id for the next update fetch
-	[MutationTypes.INCREMENT_REQUEST_ID](state: State) {
-		state.updateRequestId++;
-	},
-
 	// Set up to 10 players at once
 	[MutationTypes.SET_PLAYERS_ASYNC](state: State, players: Set<DynmapPlayer>): Set<DynmapPlayer> {
 		let count = 0;
@@ -493,6 +482,14 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 
 		state.currentServer = state.servers.get(serverName);
+
+		if(state.currentMapProvider) {
+			state.currentMapProvider.stopUpdates();
+			state.currentMapProvider.destroy();
+		}
+
+		state.currentMapProvider = Object.seal(
+			new DynmapMapProvider(state.servers.get(serverName) as LiveAtlasDynmapServerDefinition));
 	},
 
 	//Sets the currently active map/world

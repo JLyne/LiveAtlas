@@ -29,7 +29,7 @@ import {
 	LiveAtlasUIElement,
 	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
-	LiveAtlasMessageConfig
+	LiveAtlasMessageConfig, LiveAtlasMapProvider
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
@@ -60,15 +60,13 @@ export type State = {
 	followTarget?: DynmapPlayer;
 	panTarget?: DynmapPlayer;
 
+	currentMapProvider?: Readonly<LiveAtlasMapProvider>;
 	currentServer?: LiveAtlasServerDefinition;
 	currentWorldState: LiveAtlasWorldState;
 	currentWorld?: LiveAtlasWorldDefinition;
 	currentMap?: LiveAtlasMapDefinition;
 	currentLocation: Coordinate;
 	currentZoom: number;
-
-	updateRequestId: number;
-	updateTimestamp: Date;
 
 	ui: {
 		playersAboveMarkers: boolean;
@@ -203,6 +201,7 @@ export const state: State = {
 	followTarget: undefined,
 	panTarget: undefined,
 
+	currentMapProvider: undefined,
 	currentServer: undefined,
 	currentWorld: undefined,
 	currentMap: undefined,
@@ -217,9 +216,6 @@ export const state: State = {
 		thundering: false,
 		timeOfDay: 0,
 	},
-
-	updateRequestId: 0,
-	updateTimestamp: new Date(),
 
 	ui: {
 		playersAboveMarkers: true,
