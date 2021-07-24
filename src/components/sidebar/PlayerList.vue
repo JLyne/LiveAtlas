@@ -22,7 +22,7 @@
 				<input v-if="players && searchEnabled" id="players__search" type="text" name="search"
 				       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
 				<RadioList v-if="filteredPlayers.length" aria-labelledby="players-heading">
-					<PlayerListItem v-for="player in filteredPlayers" :key="player.account"
+					<PlayerListItem v-for="player in filteredPlayers" :key="player.name"
 					                :player="player"></PlayerListItem>
 				</RadioList>
 				<div v-else-if="searchQuery" class="section__skeleton">{{ messageSkeletonPlayersSearch }}</div>

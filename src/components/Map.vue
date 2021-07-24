@@ -123,7 +123,7 @@ export default defineComponent({
 		followTarget: {
 			handler(newValue, oldValue) {
 				if (newValue) {
-					this.updateFollow(newValue, !oldValue || newValue.account !== oldValue.account);
+					this.updateFollow(newValue, !oldValue || newValue.name !== oldValue.name);
 				}
 			},
 			deep: true
