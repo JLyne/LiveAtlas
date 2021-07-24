@@ -394,7 +394,7 @@ export default class DynmapMapProvider extends MapProvider {
 		};
 	}
 
-	private buildUpdates(data: Array<any>): DynmapUpdates {
+	private buildUpdates(data: Array<any>) {
 		const updates = {
 				markerSets: new Map<string, DynmapMarkerSetUpdates>(),
 				tiles: [] as DynmapTileUpdate[],
@@ -683,7 +683,7 @@ export default class DynmapMapProvider extends MapProvider {
 		useStore().commit(MutationTypes.SET_MARKER_SETS, markerSets);
 	}
 
-	async getUpdate(): Promise<DynmapUpdateResponse> {
+	private async getUpdate(): Promise<void> {
 		let url = useStore().getters.serverConfig.dynmap.update;
 		url = url.replace('{world}', this.store.state.currentWorld!.name);
 		url = url.replace('{timestamp}', this.updateTimestamp.getTime().toString());
@@ -695,7 +695,13 @@ export default class DynmapMapProvider extends MapProvider {
 		this.updateAbort = new AbortController();
 
 		const response = await DynmapMapProvider.fetchJSON(url, this.updateAbort.signal);
-		const players: Set<LiveAtlasPlayer> = new Set();
+		const players: Set<LiveAtlasPlayer> = new Set(),
+			updates = this.buildUpdates(response.updates || []),
+			worldState = {
+				timeOfDay: response.servertime || 0,
+				thundering: response.isThundering || false,
+				raining: response.hasStorm || false,
+			};
 
 		(response.players || []).forEach((player: any) => {
 			const world = player.world && player.world !== '-some-other-bogus-world-' ? player.world : undefined;
@@ -735,18 +741,15 @@ export default class DynmapMapProvider extends MapProvider {
 		// 	});
 		// }
 
-		return {
-			worldState: {
-				timeOfDay: response.servertime || 0,
-				thundering: response.isThundering || false,
-				raining: response.hasStorm || false,
-			},
-			playerCount: response.count || 0,
-			configHash: response.confighash || 0,
-			timestamp: response.timestamp || 0,
-			players,
-			updates: this.buildUpdates(response.updates || []),
-		}
+		this.updateTimestamp = new Date(response.timestamp || 0);
+
+		this.store.commit(MutationTypes.SET_WORLD_STATE, worldState);
+		this.store.commit(MutationTypes.ADD_MARKER_SET_UPDATES, updates.markerSets);
+		this.store.commit(MutationTypes.ADD_TILE_UPDATES, updates.tiles);
+		this.store.commit(MutationTypes.ADD_CHAT, updates.chat);
+		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, response.confighash || 0);
+
+		await this.store.dispatch(ActionTypes.SET_PLAYERS, players);
 	}
 
 	sendChatMessage(message: string) {
@@ -794,17 +797,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 	private async update() {
 		try {
-			const update = await this.getUpdate();
-
-			this.updateTimestamp = new Date(update.timestamp);
-
-			this.store.commit(MutationTypes.SET_WORLD_STATE, update.worldState);
-			this.store.commit(MutationTypes.ADD_MARKER_SET_UPDATES, update.updates.markerSets);
-			this.store.commit(MutationTypes.ADD_TILE_UPDATES, update.updates.tiles);
-			this.store.commit(MutationTypes.ADD_CHAT, update.updates.chat);
-			this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, update.configHash);
-
-			await this.store.dispatch(ActionTypes.SET_PLAYERS, update.players);
+			await this.getUpdate();
 		} finally {
 			if(this.updatesEnabled) {
 				if(this.updateTimeout) {
