@@ -15,7 +15,7 @@
  */
 
 import {
-	DynmapComponentConfig, DynmapMarkerSet, DynmapMarkerSetUpdates,
+	DynmapComponentConfig, DynmapMarkerSetUpdates,
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapChat
 } from "@/dynmap";
@@ -28,7 +28,7 @@ import {
 	LiveAtlasUIElement,
 	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
-	LiveAtlasMessageConfig, LiveAtlasMapProvider, LiveAtlasPlayer
+	LiveAtlasMessageConfig, LiveAtlasMapProvider, LiveAtlasPlayer, LiveAtlasMarkerSet
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
@@ -46,7 +46,7 @@ export type State = {
 	maps: Map<string, LiveAtlasMapDefinition>;
 	players: Map<string, LiveAtlasPlayer>;
 	sortedPlayers: LiveAtlasSortedPlayers;
-	markerSets: Map<string, DynmapMarkerSet>;
+	markerSets: Map<string, LiveAtlasMarkerSet>;
 
 	chat: {
 		unread: number;

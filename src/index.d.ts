@@ -1,6 +1,7 @@
 import {State} from "@/store";
 import {DynmapUrlConfig} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {PathOptions, PointTuple, PolylineOptions} from "leaflet";
 
 declare module "*.png" {
    const value: any;
@@ -155,4 +156,64 @@ interface LiveAtlasMapProvider {
 	stopUpdates(): void;
 	sendChatMessage(message: string): void;
 	destroy(): void;
+}
+
+interface LiveAtlasMarkerSet {
+	id: string,
+	label: string;
+	hidden: boolean;
+	priority: number;
+	minZoom?: number;
+	maxZoom?: number;
+	showLabels?: boolean;
+	markers: Map<string, LiveAtlasMarker>;
+	areas: Map<string, LiveAtlasArea>;
+	lines: Map<string, LiveAtlasLine>;
+	circles: Map<string, LiveAtlasCircle>;
+}
+
+interface LiveAtlasMarker {
+	dimensions: PointTuple;
+	icon: string;
+	label: string;
+	isHTML: boolean;
+	location: Coordinate;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
+}
+
+interface LiveAtlasArea {
+	style: PolylineOptions;
+	label: string;
+	isHTML: boolean;
+	x: Array<number>;
+	y: PointTuple;
+	z: Array<number>;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
+}
+
+interface LiveAtlasLine {
+	x: Array<number>;
+	y: Array<number>;
+	z: Array<number>;
+	style: PolylineOptions;
+	label: string;
+	isHTML: boolean;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
+}
+
+interface LiveAtlasCircle {
+	location: Coordinate;
+	radius: PointTuple;
+	style: PathOptions;
+	label: string;
+	isHTML: boolean;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
 }

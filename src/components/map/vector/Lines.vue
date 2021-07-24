@@ -17,17 +17,17 @@
 <script lang="ts">
 import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import {DynmapLine, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createLine, updateLine} from "@/util/lines";
 import {getPointConverter} from '@/util';
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
+import {LiveAtlasLine, LiveAtlasMarkerSet} from "@/index";
 
 export default defineComponent({
 	props: {
 		set: {
-			type: Object as () => DynmapMarkerSet,
+			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
 		},
 		layerGroup: {
@@ -51,7 +51,7 @@ export default defineComponent({
 			createLines = () => {
 				const converter = getPointConverter();
 
-				props.set.lines.forEach((line: DynmapLine, id: string) => {
+				props.set.lines.forEach((line: LiveAtlasLine, id: string) => {
 					const layer = createLine(line, converter);
 
 					layers.set(id, layer);
@@ -82,7 +82,7 @@ export default defineComponent({
 					if(update.removed) {
 						deleteLine(update.id);
 					} else {
-						const layer = updateLine(layers.get(update.id), update.payload as DynmapLine, converter)
+						const layer = updateLine(layers.get(update.id), update.payload as LiveAtlasLine, converter)
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);

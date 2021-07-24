@@ -18,11 +18,7 @@ import {MutationTree} from "vuex";
 import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
 import {
-	DynmapArea,
-	DynmapCircle,
 	DynmapComponentConfig,
-	DynmapLine, DynmapMarker,
-	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
 	DynmapServerConfig, DynmapTileUpdate,
 	DynmapChat
@@ -37,7 +33,12 @@ import {
 	LiveAtlasParsedUrl,
 	LiveAtlasGlobalConfig,
 	LiveAtlasGlobalMessageConfig,
-	LiveAtlasServerMessageConfig, LiveAtlasDynmapServerDefinition, LiveAtlasPlayer
+	LiveAtlasServerMessageConfig,
+	LiveAtlasDynmapServerDefinition,
+	LiveAtlasPlayer,
+	LiveAtlasCircle,
+	LiveAtlasLine,
+	LiveAtlasArea, LiveAtlasMarker, LiveAtlasMarkerSet
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
@@ -55,7 +56,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
 	[MutationTypes.CLEAR_WORLDS](state: S): void
 	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
-	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, DynmapMarkerSet>): void
+	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, LiveAtlasMarkerSet>): void
 	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
 	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorldDefinition): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
@@ -225,7 +226,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Sets the existing marker sets from the last marker fetch
-	[MutationTypes.SET_MARKER_SETS](state: State, markerSets: Map<string, DynmapMarkerSet>) {
+	[MutationTypes.SET_MARKER_SETS](state: State, markerSets: Map<string, LiveAtlasMarkerSet>) {
 		state.markerSets.clear();
 		state.pendingSetUpdates.clear();
 
@@ -269,10 +270,10 @@ export const mutations: MutationTree<State> & Mutations = {
 						priority: entry[1].payload.priority,
 						label: entry[1].payload.label,
 						hidden: entry[1].payload.hidden,
-						markers: Object.freeze(new Map()) as Map<string, DynmapMarker>,
-						areas: Object.freeze(new Map()) as Map<string, DynmapArea>,
-						circles: Object.freeze(new Map()) as Map<string, DynmapCircle>,
-						lines: Object.freeze(new Map()) as Map<string, DynmapLine>,
+						markers: Object.freeze(new Map()) as Map<string, LiveAtlasMarker>,
+						areas: Object.freeze(new Map()) as Map<string, LiveAtlasArea>,
+						circles: Object.freeze(new Map()) as Map<string, LiveAtlasCircle>,
+						lines: Object.freeze(new Map()) as Map<string, LiveAtlasLine>,
 					});
 
 					state.pendingSetUpdates.set(entry[0], {
@@ -287,7 +288,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				}
 			}
 
-			const set = state.markerSets.get(entry[0]) as DynmapMarkerSet,
+			const set = state.markerSets.get(entry[0]) as LiveAtlasMarkerSet,
 				setUpdates = state.pendingSetUpdates.get(entry[0]) as DynmapMarkerSetUpdates;
 
 			//Delete the set if it has been deleted
@@ -312,7 +313,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					set.markers.delete(update.id);
 				} else {
-					set.markers.set(update.id, update.payload as DynmapMarker);
+					set.markers.set(update.id, update.payload as LiveAtlasMarker);
 				}
 			}
 
@@ -320,7 +321,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					set.areas.delete(update.id);
 				} else {
-					set.areas.set(update.id, update.payload as DynmapArea);
+					set.areas.set(update.id, update.payload as LiveAtlasArea);
 				}
 			}
 
@@ -328,7 +329,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					set.circles.delete(update.id);
 				} else {
-					set.circles.set(update.id, update.payload as DynmapCircle);
+					set.circles.set(update.id, update.payload as LiveAtlasCircle);
 				}
 			}
 
@@ -336,7 +337,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					set.lines.delete(update.id);
 				} else {
-					set.lines.set(update.id, update.payload as DynmapLine);
+					set.lines.set(update.id, update.payload as LiveAtlasLine);
 				}
 			}
 

@@ -21,11 +21,10 @@ import {ActionTypes} from "@/store/action-types";
 import {Mutations} from "@/store/mutations";
 import {
 	DynmapAreaUpdate, DynmapCircleUpdate, DynmapLineUpdate,
-	DynmapMarkerSet,
 	DynmapMarkerUpdate,
 	DynmapTileUpdate,
 } from "@/dynmap";
-import {LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
+import {LiveAtlasMarkerSet, LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(
@@ -47,7 +46,7 @@ export interface Actions {
 	[ActionTypes.SET_PLAYERS](
 		{commit}: AugmentedActionContext,
 		payload: Set<LiveAtlasPlayer>
-	):Promise<Map<string, DynmapMarkerSet>>
+	):Promise<Map<string, LiveAtlasMarkerSet>>
 	[ActionTypes.POP_MARKER_UPDATES](
 		{commit}: AugmentedActionContext,
 		payload: {markerSet: string, amount: number}

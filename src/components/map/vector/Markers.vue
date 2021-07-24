@@ -18,16 +18,16 @@
 import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import {Marker} from 'leaflet';
 import {useStore} from "@/store";
-import {DynmapMarker, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createMarker, updateMarker} from "@/util/markers";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import {getPointConverter} from "@/util";
+import {LiveAtlasMarker, LiveAtlasMarkerSet} from "@/index";
 
 export default defineComponent({
 	props: {
 		set: {
-			type: Object as () => DynmapMarkerSet,
+			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
 		},
 		layerGroup: {
@@ -51,7 +51,7 @@ export default defineComponent({
 			createMarkers = () => {
 				const converter = getPointConverter();
 
-				props.set.markers.forEach((marker: DynmapMarker, id: string) => {
+				props.set.markers.forEach((marker: LiveAtlasMarker, id: string) => {
 					const layer = createMarker(marker, converter);
 
 					layers.set(id, layer);
@@ -82,7 +82,7 @@ export default defineComponent({
 					if(update.removed) {
 						deleteMarker(update.id);
 					} else {
-						const layer = updateMarker(layers.get(update.id), update.payload as DynmapMarker, converter);
+						const layer = updateMarker(layers.get(update.id), update.payload as LiveAtlasMarker, converter);
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);

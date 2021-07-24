@@ -18,11 +18,11 @@
  */
 
 import {LeafletMouseEvent, Marker} from "leaflet";
-import {DynmapMarker} from "@/dynmap";
 import {GenericIcon} from "@/leaflet/icon/GenericIcon";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
+import {LiveAtlasMarker} from "@/index";
 
-export const createMarker = (options: DynmapMarker, converter: Function): Marker => {
+export const createMarker = (options: LiveAtlasMarker, converter: Function): Marker => {
 	const marker = new GenericMarker(converter(options.location.x, options.location.y, options.location.z), {
 		icon: new GenericIcon({
 			icon: options.icon,
@@ -45,7 +45,7 @@ export const createMarker = (options: DynmapMarker, converter: Function): Marker
 	return marker;
 };
 
-export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, converter: Function): Marker => {
+export const updateMarker = (marker: Marker | undefined, options: LiveAtlasMarker, converter: Function): Marker => {
 	if (!marker) {
 		return createMarker(options, converter);
 	}
@@ -80,7 +80,7 @@ export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, 
 	return marker;
 };
 
-export const createPopup = (options: DynmapMarker) => {
+export const createPopup = (options: LiveAtlasMarker) => {
 	const popup = document.createElement('span');
 
 	if (options.popupContent) {

@@ -17,18 +17,18 @@
 <script lang="ts">
 import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import {DynmapArea, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createArea, updateArea} from "@/util/areas";
 import {getPointConverter} from '@/util';
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
+import {LiveAtlasArea, LiveAtlasMarkerSet} from "@/index";
 
 export default defineComponent({
 	props: {
 		set: {
-			type: Object as () => DynmapMarkerSet,
+			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
 		},
 		layerGroup: {
@@ -52,7 +52,7 @@ export default defineComponent({
 			createAreas = () => {
 				const converter = getPointConverter();
 
-				props.set.areas.forEach((area: DynmapArea, id: string) => {
+				props.set.areas.forEach((area: LiveAtlasArea, id: string) => {
 					const layer = createArea(area, converter);
 
 					layers.set(id, layer);
@@ -83,7 +83,7 @@ export default defineComponent({
 					if(update.removed) {
 						deleteArea(update.id);
 					} else {
-						const layer = updateArea(layers.get(update.id), update.payload as DynmapArea, converter)
+						const layer = updateArea(layers.get(update.id), update.payload as LiveAtlasArea, converter)
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);

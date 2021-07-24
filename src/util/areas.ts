@@ -18,11 +18,11 @@
  */
 
 import {LatLngExpression} from "leaflet";
-import {DynmapArea} from "@/dynmap";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
+import {LiveAtlasArea} from "@/index";
 
-export const createArea = (options: DynmapArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const createArea = (options: LiveAtlasArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getPoints(options, converter, outline),
 		area = outline ? new LiveAtlasPolyline(points, {
@@ -42,7 +42,7 @@ export const createArea = (options: DynmapArea, converter: Function): LiveAtlasP
 	return area;
 };
 
-export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: DynmapArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style || !options.style.fillOpacity || (options.style.fillOpacity <= 0) as boolean,
 		points = getPoints(options, converter, outline);
 
@@ -88,7 +88,7 @@ const isStyleEqual = (oldStyle: any, newStyle: any) => {
 		&& (oldStyle.fillOpacity === newStyle.fillOpacity)
 }
 
-export const createPopup = (options: DynmapArea): HTMLElement => {
+export const createPopup = (options: LiveAtlasArea): HTMLElement => {
 	const popup = document.createElement('span');
 
 	if (options.popupContent) {
@@ -104,7 +104,7 @@ export const createPopup = (options: DynmapArea): HTMLElement => {
 	return popup;
 };
 
-export const getPoints = (options: DynmapArea, converter: Function, outline: boolean): LatLngExpression[] | LatLngExpression[][] => {
+export const getPoints = (options: LiveAtlasArea, converter: Function, outline: boolean): LatLngExpression[] | LatLngExpression[][] => {
 	if (options.x.length === 2) {	/* Only 2 points */
 		if (options.y[0] === options.y[1]) {
 			return get2DBoxPoints(options, converter, outline);
@@ -120,7 +120,7 @@ export const getPoints = (options: DynmapArea, converter: Function, outline: boo
 	}
 };
 
-export const get3DBoxPoints = (options: DynmapArea, converter: Function): LatLngExpression[][] => {
+export const get3DBoxPoints = (options: LiveAtlasArea, converter: Function): LatLngExpression[][] => {
 	const maxX = options.x[0],
 		minX = options.x[1],
 		maxY = options.y[0],
@@ -163,7 +163,7 @@ export const get3DBoxPoints = (options: DynmapArea, converter: Function): LatLng
 	];
 };
 
-export const get2DBoxPoints = (options: DynmapArea, converter: Function, outline: boolean): LatLngExpression[] => {
+export const get2DBoxPoints = (options: LiveAtlasArea, converter: Function, outline: boolean): LatLngExpression[] => {
 	const maxX = options.x[0],
 		minX = options.x[1],
 		minY = options.y[1],
@@ -188,7 +188,7 @@ export const get2DBoxPoints = (options: DynmapArea, converter: Function, outline
 	}
 };
 
-export const get3DShapePoints = (options: DynmapArea, converter: Function): LatLngExpression[][] => {
+export const get3DShapePoints = (options: LiveAtlasArea, converter: Function): LatLngExpression[][] => {
 	const toplist = [],
 		botlist = [],
 		polylist = [];
@@ -213,7 +213,7 @@ export const get3DShapePoints = (options: DynmapArea, converter: Function): LatL
 	return polylist;
 };
 
-export const get2DShapePoints = (options: DynmapArea, converter: Function, outline: boolean): LatLngExpression[] => {
+export const get2DShapePoints = (options: LiveAtlasArea, converter: Function, outline: boolean): LatLngExpression[] => {
 	const points = [];
 
 	for (let i = 0; i < options.x.length; i++) {

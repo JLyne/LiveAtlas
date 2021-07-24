@@ -17,11 +17,11 @@
  *    limitations under the License.
  */
 
-import {DynmapLine} from "@/dynmap";
 import {LatLngExpression} from "leaflet";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
+import {LiveAtlasLine} from "@/index";
 
-export const createLine = (options: DynmapLine, converter: Function): LiveAtlasPolyline => {
+export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
 	const points = getLinePoints(options, converter),
 		line = new LiveAtlasPolyline(points, {
 			...options.style,
@@ -36,7 +36,7 @@ export const createLine = (options: DynmapLine, converter: Function): LiveAtlasP
 	return line;
 };
 
-export const updateLine = (line: LiveAtlasPolyline | undefined, options: DynmapLine, converter: Function): LiveAtlasPolyline => {
+export const updateLine = (line: LiveAtlasPolyline | undefined, options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
 	const points = getLinePoints(options, converter);
 
 	if (!line) {
@@ -53,7 +53,7 @@ export const updateLine = (line: LiveAtlasPolyline | undefined, options: DynmapL
 	return line;
 }
 
-export const createPopup = (options: DynmapLine) => {
+export const createPopup = (options: LiveAtlasLine) => {
 	const popup = document.createElement('span');
 
 	if (options.popupContent) {
@@ -69,7 +69,7 @@ export const createPopup = (options: DynmapLine) => {
 	return popup;
 }
 
-export const getLinePoints = (options: DynmapLine, converter: Function): LatLngExpression[] => {
+export const getLinePoints = (options: LiveAtlasLine, converter: Function): LatLngExpression[] => {
 	const points = [];
 
 	for(let i = 0; i < options.x.length; i++) {

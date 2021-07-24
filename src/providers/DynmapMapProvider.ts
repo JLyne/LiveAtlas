@@ -15,18 +15,22 @@
  */
 
 import {
+	LiveAtlasArea,
+	LiveAtlasCircle,
 	LiveAtlasDimension,
-	LiveAtlasDynmapServerDefinition, LiveAtlasPlayer, LiveAtlasServerDefinition,
+	LiveAtlasDynmapServerDefinition,
+	LiveAtlasLine,
+	LiveAtlasMarker,
+	LiveAtlasMarkerSet,
+	LiveAtlasPlayer,
+	LiveAtlasServerDefinition,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {
-	DynmapArea, DynmapChat,
-	DynmapCircle,
+	DynmapChat,
 	DynmapComponentConfig,
-	DynmapLine,
-	DynmapMarker, DynmapMarkerSet, DynmapMarkerSetUpdates, DynmapServerConfig, DynmapTileUpdate, DynmapUpdate, DynmapUpdateResponse,
-	DynmapUpdates
+	DynmapMarkerSetUpdates, DynmapServerConfig, DynmapTileUpdate, DynmapUpdate
 } from "@/dynmap";
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
@@ -259,8 +263,8 @@ export default class DynmapMapProvider extends MapProvider {
 		}
 	}
 
-	private static buildMarkers(data: any): Map<string, DynmapMarker> {
-		const markers = Object.freeze(new Map()) as Map<string, DynmapMarker>;
+	private static buildMarkers(data: any): Map<string, LiveAtlasMarker> {
+		const markers = Object.freeze(new Map()) as Map<string, LiveAtlasMarker>;
 
 		for (const key in data) {
 			if (!Object.prototype.hasOwnProperty.call(data, key)) {
@@ -273,7 +277,7 @@ export default class DynmapMapProvider extends MapProvider {
 		return markers;
 	}
 
-	private static buildMarker(marker: any): DynmapMarker {
+	private static buildMarker(marker: any): LiveAtlasMarker {
 		return {
 			label: marker.label || '',
 			location: {
@@ -290,8 +294,8 @@ export default class DynmapMapProvider extends MapProvider {
 		};
 	}
 
-	private static buildAreas(data: any): Map<string, DynmapArea> {
-		const areas = Object.freeze(new Map()) as Map<string, DynmapArea>;
+	private static buildAreas(data: any): Map<string, LiveAtlasArea> {
+		const areas = Object.freeze(new Map()) as Map<string, LiveAtlasArea>;
 
 		for (const key in data) {
 			if (!Object.prototype.hasOwnProperty.call(data, key)) {
@@ -304,7 +308,7 @@ export default class DynmapMapProvider extends MapProvider {
 		return areas;
 	}
 
-	private static buildArea(area: any): DynmapArea {
+	private static buildArea(area: any): LiveAtlasArea {
 		return {
 			style: {
 				color: area.color || '#ff0000',
@@ -324,8 +328,8 @@ export default class DynmapMapProvider extends MapProvider {
 		};
 	}
 
-	private static buildLines(data: any): Map<string, DynmapLine> {
-		const lines = Object.freeze(new Map()) as Map<string, DynmapLine>;
+	private static buildLines(data: any): Map<string, LiveAtlasLine> {
+		const lines = Object.freeze(new Map()) as Map<string, LiveAtlasLine>;
 
 		for (const key in data) {
 			if (!Object.prototype.hasOwnProperty.call(data, key)) {
@@ -338,7 +342,7 @@ export default class DynmapMapProvider extends MapProvider {
 		return lines;
 	}
 
-	private static buildLine(line: any): DynmapLine {
+	private static buildLine(line: any): LiveAtlasLine {
 		return {
 			x: line.x || [0, 0],
 			y: line.y || [0, 0],
@@ -356,8 +360,8 @@ export default class DynmapMapProvider extends MapProvider {
 		};
 	}
 
-	private static buildCircles(data: any): Map<string, DynmapCircle> {
-		const circles = Object.freeze(new Map()) as Map<string, DynmapCircle>;
+	private static buildCircles(data: any): Map<string, LiveAtlasCircle> {
+		const circles = Object.freeze(new Map()) as Map<string, LiveAtlasCircle>;
 
 		for (const key in data) {
 			if (!Object.prototype.hasOwnProperty.call(data, key)) {
@@ -370,7 +374,7 @@ export default class DynmapMapProvider extends MapProvider {
 		return circles;
 	}
 
-	private static buildCircle(circle: any): DynmapCircle {
+	private static buildCircle(circle: any): LiveAtlasCircle {
 		return {
 			location: {
 				x: circle.x || 0,
@@ -612,7 +616,7 @@ export default class DynmapMapProvider extends MapProvider {
 		return json;
 	}
 
-	private async getMarkerSets(world: string): Promise<Map<string, DynmapMarkerSet>> {
+	private async getMarkerSets(world: string): Promise<Map<string, LiveAtlasMarkerSet>> {
 		const url = `${useStore().getters.serverConfig.dynmap.markers}_markers_/marker_${world}.json`;
 
 		if(this.markersAbort) {
@@ -622,7 +626,7 @@ export default class DynmapMapProvider extends MapProvider {
 		this.markersAbort = new AbortController();
 
 		const response = await DynmapMapProvider.fetchJSON(url, this.markersAbort.signal);
-		const sets: Map<string, DynmapMarkerSet> = new Map();
+		const sets: Map<string, LiveAtlasMarkerSet> = new Map();
 
 		response.sets = response.sets || {};
 

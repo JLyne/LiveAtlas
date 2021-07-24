@@ -17,12 +17,12 @@
  *    limitations under the License.
  */
 
-import {DynmapCircle} from "@/dynmap";
 import {LatLngExpression} from "leaflet";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
+import {LiveAtlasCircle} from "@/index";
 
-export const createCircle = (options: DynmapCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const createCircle = (options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getCirclePoints(options, converter, outline),
 		circle = outline ? new LiveAtlasPolyline(points, {
@@ -42,7 +42,7 @@ export const createCircle = (options: DynmapCircle, converter: Function): LiveAt
 	return circle;
 };
 
-export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: DynmapCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean,
 		points = getCirclePoints(options, converter, outline);
 
@@ -60,7 +60,7 @@ export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | unde
 	return circle;
 }
 
-export const createPopup = (options: DynmapCircle) => {
+export const createPopup = (options: LiveAtlasCircle) => {
 	const popup = document.createElement('span');
 
 	if (options.popupContent) {
@@ -76,7 +76,7 @@ export const createPopup = (options: DynmapCircle) => {
 	return popup;
 }
 
-export const getCirclePoints = (options: DynmapCircle, converter: Function, outline: boolean): LatLngExpression[] => {
+export const getCirclePoints = (options: LiveAtlasCircle, converter: Function, outline: boolean): LatLngExpression[] => {
 	const points = [];
 
 	for(let i = 0; i < 360; i++) {

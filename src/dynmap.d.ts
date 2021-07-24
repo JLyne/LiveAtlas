@@ -14,17 +14,10 @@
  *    limitations under the License.
  */
 
-import {PathOptions, PointTuple, PolylineOptions} from "leaflet";
 import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
-import {
-	Coordinate,
-	LiveAtlasPlayer,
-	LiveAtlasServerMessageConfig,
-	LiveAtlasWorldDefinition,
-	LiveAtlasWorldState
-} from "@/index";
+import {LiveAtlasArea, LiveAtlasCircle, LiveAtlasLine, LiveAtlasMarker} from "@/index";
 
 declare global {
 	// noinspection JSUnusedGlobalSymbols
@@ -96,89 +89,6 @@ interface DynmapChatSendingConfig {
 	cooldown: number;
 }
 
-interface DynmapConfigurationResponse {
-	config: DynmapServerConfig,
-	messages: LiveAtlasServerMessageConfig,
-	worlds: Array<LiveAtlasWorldDefinition>,
-	components: DynmapComponentConfig,
-	loggedIn: boolean,
-}
-
-interface DynmapUpdateResponse {
-	worldState: LiveAtlasWorldState;
-	configHash: number;
-	playerCount: number;
-	players: Set<LiveAtlasPlayer>;
-	updates: DynmapUpdates;
-	timestamp: number;
-}
-
-interface DynmapMarkerSet {
-	id: string,
-	label: string;
-	hidden: boolean;
-	priority: number;
-	minZoom?: number;
-	maxZoom?: number;
-	showLabels?: boolean;
-	markers: Map<string, DynmapMarker>;
-	areas: Map<string, DynmapArea>;
-	lines: Map<string, DynmapLine>;
-	circles: Map<string, DynmapCircle>;
-}
-
-interface DynmapMarker {
-	dimensions: PointTuple;
-	icon: string;
-	label: string;
-	isHTML: boolean;
-	location: Coordinate;
-	minZoom?: number;
-	maxZoom?: number;
-	popupContent?: string;
-}
-
-interface DynmapArea {
-	style: PolylineOptions;
-	label: string;
-	isHTML: boolean;
-	x: Array<number>;
-	y: PointTuple;
-	z: Array<number>;
-	minZoom?: number;
-	maxZoom?: number;
-	popupContent?: string;
-}
-
-interface DynmapLine {
-	x: Array<number>;
-	y: Array<number>;
-	z: Array<number>;
-	style: PolylineOptions;
-	label: string;
-	isHTML: boolean;
-	minZoom?: number;
-	maxZoom?: number;
-	popupContent?: string;
-}
-
-interface DynmapCircle {
-	location: Coordinate;
-	radius: PointTuple;
-	style: PathOptions;
-	label: string;
-	isHTML: boolean;
-	minZoom?: number;
-	maxZoom?: number;
-	popupContent?: string;
-}
-
-interface DynmapUpdates {
-	markerSets: Map<string, DynmapMarkerSetUpdates>,
-	tiles: Array<DynmapTileUpdate>,
-	chat: Array<any> //TODO
-}
-
 interface DynmapMarkerSetUpdates {
 	markerUpdates: Array<DynmapMarkerUpdate>
 	areaUpdates: Array<DynmapAreaUpdate>
@@ -202,19 +112,19 @@ interface DynmapUpdate {
 }
 
 interface DynmapMarkerUpdate extends DynmapUpdate {
-	payload?: DynmapMarker
+	payload?: LiveAtlasMarker
 }
 
 interface DynmapAreaUpdate extends DynmapUpdate {
-	payload?: DynmapArea
+	payload?: LiveAtlasArea
 }
 
 interface DynmapCircleUpdate extends DynmapUpdate {
-	payload?: DynmapCircle
+	payload?: LiveAtlasCircle
 }
 
 interface DynmapLineUpdate extends DynmapUpdate {
-	payload?: DynmapLine
+	payload?: LiveAtlasLine
 }
 
 interface DynmapTileUpdate {

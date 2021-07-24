@@ -17,18 +17,18 @@
 <script lang="ts">
 import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import {DynmapCircle, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createCircle, updateCircle} from "@/util/circles";
 import {getPointConverter} from '@/util';
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
+import {LiveAtlasCircle, LiveAtlasMarkerSet} from "@/index";
 
 export default defineComponent({
 	props: {
 		set: {
-			type: Object as () => DynmapMarkerSet,
+			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
 		},
 		layerGroup: {
@@ -52,7 +52,7 @@ export default defineComponent({
 			createCircles = () => {
 				const converter = getPointConverter();
 
-				props.set.circles.forEach((circle: DynmapCircle, id: string) => {
+				props.set.circles.forEach((circle: LiveAtlasCircle, id: string) => {
 					const layer = createCircle(circle, converter);
 
 					layers.set(id, layer);
@@ -83,7 +83,7 @@ export default defineComponent({
 					if(update.removed) {
 						deleteCircle(update.id);
 					} else {
-						const layer = updateCircle(layers.get(update.id), update.payload as DynmapCircle, converter)
+						const layer = updateCircle(layers.get(update.id), update.payload as LiveAtlasCircle, converter)
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);
