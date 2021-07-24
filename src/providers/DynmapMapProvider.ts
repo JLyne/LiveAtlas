@@ -52,19 +52,16 @@ export default class DynmapMapProvider extends MapProvider {
 
 	private static buildServerConfig(response: any): DynmapServerConfig {
 		return {
-			version: response.dynmapversion || '',
 			grayHiddenPlayers: response.grayplayerswhenhidden || false,
 			defaultMap: response.defaultmap || undefined,
 			defaultWorld: response.defaultworld || undefined,
 			defaultZoom: response.defaultzoom || 0,
 			followMap: response.followmap || undefined,
 			followZoom: response.followzoom || 0,
-			showLayerControl: response.showlayercontrol && response.showlayercontrol !== 'false', //Sent as a string for some reason
 			title: response.title.replace(titleColoursRegex, '') || 'Dynmap',
 			loginEnabled: response['login-enabled'] || false,
 			maxPlayers: response.maxcount || 0,
 			expandUI: response.sidebaropened && response.sidebaropened !== 'false', //Sent as a string for some reason
-			hash: response.confighash || 0,
 		};
 	}
 
@@ -153,6 +150,7 @@ export default class DynmapMapProvider extends MapProvider {
 			chatBalloons: false,
 			playerMarkers: undefined,
 			coordinatesControl: undefined,
+			layerControl: response.showlayercontrol && response.showlayercontrol !== 'false', //Sent as a string for some reason
 			linkControl: false,
 			clockControl: undefined,
 			logoControls: [],
@@ -667,16 +665,16 @@ export default class DynmapMapProvider extends MapProvider {
 			throw new Error(response.error);
 		}
 
-		const store = useStore(),
-			config = DynmapMapProvider.buildServerConfig(response);
+		const config = DynmapMapProvider.buildServerConfig(response);
 
 		this.updateInterval = response.updaterate || 3000;
 
-		store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
-		store.commit(MutationTypes.SET_SERVER_MESSAGES, DynmapMapProvider.buildMessagesConfig(response));
-		store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(response));
-		store.commit(MutationTypes.SET_COMPONENTS, this.buildComponents(response));
-		store.commit(MutationTypes.SET_LOGGED_IN, response.loggedin || false);
+		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
+		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, response.confighash || 0);
+		this.store.commit(MutationTypes.SET_SERVER_MESSAGES, DynmapMapProvider.buildMessagesConfig(response));
+		this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(response));
+		this.store.commit(MutationTypes.SET_COMPONENTS, this.buildComponents(response));
+		this.store.commit(MutationTypes.SET_LOGGED_IN, response.loggedin || false);
 	}
 
 	async loadWorldConfiguration(): Promise<void> {

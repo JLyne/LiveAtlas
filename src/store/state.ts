@@ -88,19 +88,16 @@ export const state: State = {
 	servers: new Map(),
 
 	configuration: {
-		version: '',
 		defaultMap: '',
 		defaultWorld: '',
 		defaultZoom: 0,
 		followMap: '',
 		followZoom: 0,
-		showLayerControl: false,
 		title: '',
 		loginEnabled: false,
 		maxPlayers: 0,
 		grayHiddenPlayers: false,
 		expandUI: false,
-		hash: 0,
 	},
 	configurationHash: undefined,
 
@@ -182,6 +179,9 @@ export const state: State = {
 
 		//Optional "link" component. Adds button to copy url for current position
 		linkControl: false,
+
+		//Layers control
+		layerControl: false,
 
 		//Optional "logo" controls.
 		logoControls: [],

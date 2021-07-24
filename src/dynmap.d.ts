@@ -44,19 +44,16 @@ type DynmapUrlConfig = {
 }
 
 interface DynmapServerConfig {
-	version: string;
 	defaultMap?: string;
 	defaultWorld?: string;
 	defaultZoom: number;
 	followMap?: string;
 	followZoom: number;
-	showLayerControl: boolean;
 	title: string;
 	loginEnabled: boolean;
 	maxPlayers: number;
 	grayHiddenPlayers: boolean;
 	expandUI: boolean;
-	hash: number;
 }
 
 interface DynmapComponentConfig {
@@ -65,6 +62,7 @@ interface DynmapComponentConfig {
 	coordinatesControl?: CoordinatesControlOptions;
 	clockControl ?: ClockControlOptions;
 	linkControl: boolean;
+	layerControl: boolean;
 	logoControls: Array<LogoControlOptions>;
 	chatBox?: DynmapChatBoxConfig;
 	chatSending?: DynmapChatSendingConfig;

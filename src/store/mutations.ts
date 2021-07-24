@@ -158,7 +158,6 @@ export const mutations: MutationTree<State> & Mutations = {
 	// Sets configuration options from the initial config fetch
 	[MutationTypes.SET_SERVER_CONFIGURATION](state: State, config: DynmapServerConfig) {
 		state.configuration = Object.assign(state.configuration, config);
-		state.configurationHash = config.hash;
 	},
 
 	// Sets configuration hash
