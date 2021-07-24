@@ -95,7 +95,6 @@ export const state: State = {
 		defaultZoom: 0,
 		followMap: '',
 		followZoom: 0,
-		updateInterval: 3000,
 		showLayerControl: false,
 		title: '',
 		loginEnabled: false,

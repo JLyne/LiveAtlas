@@ -60,7 +60,6 @@ export default class DynmapMapProvider extends MapProvider {
 			defaultZoom: response.defaultzoom || 0,
 			followMap: response.followmap || undefined,
 			followZoom: response.followzoom || 0,
-			updateInterval: response.updaterate || 3000,
 			showLayerControl: response.showlayercontrol && response.showlayercontrol !== 'false', //Sent as a string for some reason
 			title: response.title.replace(titleColoursRegex, '') || 'Dynmap',
 			loginEnabled: response['login-enabled'] || false,
@@ -672,7 +671,7 @@ export default class DynmapMapProvider extends MapProvider {
 		const store = useStore(),
 			config = DynmapMapProvider.buildServerConfig(response);
 
-		this.updateInterval = config.updateInterval;
+		this.updateInterval = response.updaterate || 3000;
 
 		store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
 		store.commit(MutationTypes.SET_SERVER_MESSAGES, DynmapMapProvider.buildMessagesConfig(response));

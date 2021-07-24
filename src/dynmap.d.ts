@@ -50,7 +50,6 @@ interface DynmapServerConfig {
 	defaultZoom: number;
 	followMap?: string;
 	followZoom: number;
-	updateInterval: number;
 	showLayerControl: boolean;
 	title: string;
 	loginEnabled: boolean;
