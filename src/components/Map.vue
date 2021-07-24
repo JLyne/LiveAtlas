@@ -139,8 +139,14 @@ export default defineComponent({
 			}
 		},
 		currentMap(newValue, oldValue) {
-			if(this.leaflet && newValue && oldValue) {
-				const panTarget = this.scheduledPan || oldValue.latLngToLocation(this.leaflet.getCenter(), 64);
+			if(this.leaflet && newValue) {
+				let panTarget = this.scheduledPan;
+
+				if(!panTarget && oldValue) {
+					panTarget = oldValue.latLngToLocation(this.leaflet.getCenter(), 64);
+				} else if(!panTarget) {
+					panTarget = {x: 0, y: 0, z: 0};
+				}
 
 				if(this.scheduledZoom) {
 					this.leaflet!.setZoom(this.scheduledZoom, {
