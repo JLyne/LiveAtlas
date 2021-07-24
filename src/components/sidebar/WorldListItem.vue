@@ -16,13 +16,13 @@
 
 <template>
 	<div class="world">
-		<span class="world__name" aria-hidden="true">{{ world.title }}</span>
+		<span class="world__name" aria-hidden="true">{{ world.displayName }}</span>
 		<div class="world__maps menu">
 			<template v-for="[key, map] in world.maps" :key="`${world.name}_${key}`">
 				<input :id="`${name}-${world.name}-${key}`" type="radio" :name="name"
 				       v-bind:value="[world.name,map.name]" v-model="currentMap"
 				       :aria-labelledby="`${name}-${world.name}-${key}-label`">
-				<label :id="`${name}-${world.name}-${key}-label`" class="map" :for="`${name}-${world.name}-${key}`" :title="`${world.title} - ${map.title}`">
+				<label :id="`${name}-${world.name}-${key}-label`" class="map" :for="`${name}-${world.name}-${key}`" :title="`${world.displayName} - ${map.displayName}`">
 					<SvgIcon :name="map.getIcon()"></SvgIcon>
 				</label>
 			</template>

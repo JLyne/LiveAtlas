@@ -96,12 +96,12 @@ export default class DynmapMapProvider extends MapProvider {
 			}
 
 			worlds.set(world.name, {
-				seaLevel: world.sealevel || 64,
 				name: world.name,
+				displayName: world.title || '',
 				dimension: worldType,
 				protected: world.protected || false,
-				title: world.title || '',
 				height: world.height || 256,
+				seaLevel: world.sealevel || 64,
 				center: {
 					x: world.center.x || 0,
 					y: world.center.y || 0,
@@ -132,7 +132,7 @@ export default class DynmapMapProvider extends MapProvider {
 					nightAndDay: map.nightandday || false,
 					prefix: map.prefix || '',
 					protected: map.protected || false,
-					title: map.title || '',
+					displayName: map.title || '',
 					mapToWorld: map.maptoworld || undefined,
 					worldToMap: map.worldtomap || undefined,
 					nativeZoomLevels: map.mapzoomout || 1,

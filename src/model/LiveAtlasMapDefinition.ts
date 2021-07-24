@@ -21,7 +21,7 @@ import {LiveAtlasProjection} from "@/model/LiveAtlasProjection";
 export interface LiveAtlasMapDefinitionOptions {
 	world: LiveAtlasWorldDefinition;
 	name: string;
-	title?: string;
+	displayName?: string;
 	icon?: string;
 	background?: string;
 	nightAndDay?: boolean;
@@ -40,7 +40,7 @@ export default class LiveAtlasMapDefinition {
 	readonly world: LiveAtlasWorldDefinition;
 	readonly name: string;
 	readonly icon?: string;
-	readonly title: string;
+	readonly displayName: string;
 	readonly background: string;
 	readonly nightAndDay: boolean;
 	readonly backgroundDay?: string;
@@ -57,7 +57,7 @@ export default class LiveAtlasMapDefinition {
 		this.world = options.world; //Ignore append_to_world here otherwise things break
 		this.name = options.name;
 		this.icon = options.icon || undefined;
-		this.title = options.title || '';
+		this.displayName = options.displayName || '';
 
 		this.background = options.background || '#000000';
 		this.nightAndDay = options.nightAndDay || false;

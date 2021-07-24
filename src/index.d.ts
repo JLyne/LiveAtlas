@@ -127,9 +127,9 @@ interface LiveAtlasSortedPlayers extends Array<LiveAtlasPlayer> {
 interface LiveAtlasWorldDefinition {
 	seaLevel: number;
 	name: string;
+	displayName: string;
 	dimension: LiveAtlasDimension;
 	protected: boolean;
-	title: string;
 	height: number;
 	center: Coordinate;
 	maps: Map<string, LiveAtlasMapDefinition>;
