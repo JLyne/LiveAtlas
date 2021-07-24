@@ -582,40 +582,6 @@ export default class DynmapMapProvider extends MapProvider {
 		return updates;
 	}
 
-	private static async fetchJSON(url: string, signal: AbortSignal) {
-		let response, json;
-
-		try {
-			response = await fetch(url, {signal});
-		} catch(e) {
-			if(e instanceof DOMException && e.name === 'AbortError') {
-				console.warn(`Request aborted (${url}`);
-				throw e;
-			} else {
-				console.error(e);
-			}
-
-			throw new Error(`Network request failed`);
-		}
-
-		if (!response.ok) {
-			throw new Error(`Network request failed (${response.statusText || 'Unknown'})`);
-		}
-
-		try {
-			json = await response.json();
-		} catch(e) {
-			if(e instanceof DOMException && e.name === 'AbortError') {
-				console.warn(`Request aborted (${url}`);
-				throw e;
-			} else {
-				throw new Error('Request returned invalid json');
-			}
-		}
-
-		return json;
-	}
-
 	private async getMarkerSets(world: string): Promise<Map<string, LiveAtlasMarkerSet>> {
 		const url = `${useStore().getters.serverConfig.dynmap.markers}_markers_/marker_${world}.json`;
 
