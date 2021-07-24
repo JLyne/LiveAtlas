@@ -94,7 +94,6 @@ export const state: State = {
 		followMap: '',
 		followZoom: 0,
 		title: '',
-		loginEnabled: false,
 		maxPlayers: 0,
 		grayHiddenPlayers: false,
 		expandUI: false,
@@ -193,7 +192,10 @@ export const state: State = {
 		chatBox: undefined,
 
 		//Chat balloons showing messages above player markers
-		chatBalloons: false
+		chatBalloons: false,
+
+		//Login/registering (not currently implemented)
+		login: false,
 	},
 
 	followTarget: undefined,

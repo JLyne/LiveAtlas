@@ -63,7 +63,6 @@ export default class DynmapMapProvider extends MapProvider {
 			followMap: response.followmap || undefined,
 			followZoom: response.followzoom || 0,
 			title: response.title.replace(titleColoursRegex, '') || 'Dynmap',
-			loginEnabled: response['login-enabled'] || false,
 			maxPlayers: response.maxcount || 0,
 			expandUI: response.sidebaropened && response.sidebaropened !== 'false', //Sent as a string for some reason
 		};
@@ -158,6 +157,7 @@ export default class DynmapMapProvider extends MapProvider {
 			linkControl: false,
 			clockControl: undefined,
 			logoControls: [],
+			login: response['login-enabled'] || false,
 		};
 
 		(response.components || []).forEach((component: any) => {

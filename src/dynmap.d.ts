@@ -43,7 +43,6 @@ interface DynmapServerConfig {
 	followMap?: string;
 	followZoom: number;
 	title: string;
-	loginEnabled: boolean;
 	maxPlayers: number;
 	grayHiddenPlayers: boolean;
 	expandUI: boolean;
@@ -60,6 +59,7 @@ interface DynmapComponentConfig {
 	chatBox?: DynmapChatBoxConfig;
 	chatSending?: DynmapChatSendingConfig;
 	chatBalloons: boolean;
+	login: boolean;
 }
 
 interface DynmapMarkersConfig {
