@@ -17,7 +17,7 @@
  *    limitations under the License.
  */
 
-import {TileLayer, Coords, DoneCallback, TileLayerOptions, DomUtil, Util, LatLng} from 'leaflet';
+import {TileLayer, Coords, DoneCallback, TileLayerOptions, DomUtil, Util} from 'leaflet';
 import {store} from "@/store";
 import {Coordinate} from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
@@ -26,20 +26,6 @@ export interface DynmapTileLayerOptions extends TileLayerOptions {
 	mapSettings: LiveAtlasMapDefinition;
 	errorTileUrl: string;
 	night?: boolean;
-}
-
-export interface DynmapTileLayer extends TileLayer {
-	options: DynmapTileLayerOptions;
-	_mapSettings: LiveAtlasMapDefinition;
-	_cachedTileUrls: Map<string, string>;
-	_namedTiles: Map<string, DynmapTileElement>;
-	_tileTemplate: DynmapTileElement;
-	_loadQueue: DynmapTileElement[];
-	_loadingTiles: Set<DynmapTileElement>;
-
-	locationToLatLng(location: Coordinate): LatLng;
-
-	latLngToLocation(latLng: LatLng): Coordinate;
 }
 
 export interface DynmapTile {
@@ -70,6 +56,14 @@ export interface TileInfo {
 
 // noinspection JSUnusedGlobalSymbols
 export class DynmapTileLayer extends TileLayer {
+	private readonly _mapSettings: LiveAtlasMapDefinition;
+	private readonly _cachedTileUrls: Map<any, any> = Object.seal(new Map());
+	private readonly _namedTiles: Map<any, any> = Object.seal(new Map());
+	private readonly _loadQueue: DynmapTileElement[] = [];
+	private readonly _loadingTiles: Set<DynmapTileElement> = Object.seal(new Set());
+	private readonly _tileTemplate: DynmapTileElement;
+	declare readonly options: DynmapTileLayerOptions;
+
 	constructor(options: DynmapTileLayerOptions) {
 		super('', options);
 
@@ -85,11 +79,6 @@ export class DynmapTileLayer extends TileLayer {
 		if (options.mapSettings === null) {
 			throw new TypeError("mapSettings missing");
 		}
-
-		this._cachedTileUrls = Object.seal(new Map());
-		this._namedTiles = Object.seal(new Map());
-		this._loadQueue = [];
-		this._loadingTiles = Object.seal(new Set());
 
 		this._tileTemplate = DomUtil.create('img', 'leaflet-tile') as DynmapTileElement;
 		this._tileTemplate.style.width = this._tileTemplate.style.height = this.options.tileSize + 'px';
