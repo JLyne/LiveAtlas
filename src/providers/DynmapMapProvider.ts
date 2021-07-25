@@ -19,7 +19,6 @@ import {
 	LiveAtlasArea,
 	LiveAtlasCircle,
 	LiveAtlasDimension,
-	LiveAtlasDynmapServerDefinition,
 	LiveAtlasLine,
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet,
@@ -51,8 +50,8 @@ export default class DynmapMapProvider extends MapProvider {
 	private updateTimestamp: Date = new Date();
 	private updateInterval: number = 3000;
 
-	constructor(config: LiveAtlasDynmapServerDefinition) {
-		super(config as LiveAtlasServerDefinition);
+	constructor(config: LiveAtlasServerDefinition) {
+		super(config);
 	}
 
 	private static buildServerConfig(response: any): DynmapServerConfig {

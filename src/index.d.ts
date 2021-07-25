@@ -41,13 +41,10 @@ interface LiveAtlasGlobalConfig {
 }
 
 interface LiveAtlasServerDefinition {
-	id: string
-	label?: string
-}
-
-interface LiveAtlasDynmapServerDefinition extends LiveAtlasServerDefinition {
-	type: 'dynmap',
-	dynmap: DynmapUrlConfig,
+	id: string;
+	label?: string;
+	type: 'dynmap'
+	dynmap: DynmapUrlConfig;
 }
 
 // Messages defined directly in LiveAtlas and used for all servers

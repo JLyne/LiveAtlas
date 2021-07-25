@@ -1,4 +1,4 @@
-import {LiveAtlasDynmapServerDefinition, LiveAtlasGlobalConfig, LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasGlobalConfig, LiveAtlasServerDefinition} from "@/index";
 import ConfigurationError from "@/errors/ConfigurationError";
 import {DynmapUrlConfig} from "@/dynmap";
 
@@ -64,7 +64,7 @@ const validateLiveAtlasConfiguration = (config: any): Map<string, LiveAtlasServe
 	return result;
 };
 
-const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveAtlasDynmapServerDefinition> => {
+const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveAtlasServerDefinition> => {
 	const check = '\nCheck your standalone/config.js file exists and is being loaded correctly.';
 
 	if (!config) {
@@ -91,7 +91,7 @@ const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveA
 		throw new ConfigurationError(`Dynmap sendmessage URL is missing. ${check}`);
 	}
 
-	const result = new Map<string, LiveAtlasDynmapServerDefinition>();
+	const result = new Map<string, LiveAtlasServerDefinition>();
 	result.set('dynmap', {
 		id: 'dynmap',
 		label: 'dynmap',

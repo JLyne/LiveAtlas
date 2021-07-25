@@ -34,11 +34,10 @@ import {
 	LiveAtlasGlobalConfig,
 	LiveAtlasGlobalMessageConfig,
 	LiveAtlasServerMessageConfig,
-	LiveAtlasDynmapServerDefinition,
 	LiveAtlasPlayer,
 	LiveAtlasCircle,
 	LiveAtlasLine,
-	LiveAtlasArea, LiveAtlasMarker, LiveAtlasMarkerSet
+	LiveAtlasArea, LiveAtlasMarker, LiveAtlasMarkerSet, LiveAtlasServerDefinition
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
