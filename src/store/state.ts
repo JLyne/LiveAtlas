@@ -15,9 +15,8 @@
  */
 
 import {
-	DynmapComponentConfig, DynmapMarkerSetUpdates,
-	DynmapServerConfig, DynmapTileUpdate,
-	DynmapChat
+	DynmapMarkerSetUpdates,
+	DynmapTileUpdate
 } from "@/dynmap";
 import {
 	Coordinate,
@@ -28,17 +27,22 @@ import {
 	LiveAtlasUIElement,
 	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
-	LiveAtlasMessageConfig, LiveAtlasMapProvider, LiveAtlasPlayer, LiveAtlasMarkerSet
+	LiveAtlasMessageConfig,
+	LiveAtlasMapProvider,
+	LiveAtlasPlayer,
+	LiveAtlasMarkerSet,
+	LiveAtlasComponentConfig,
+	LiveAtlasServerConfig, LiveAtlasChat
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export type State = {
 	version: string;
 	servers: Map<string, LiveAtlasServerDefinition>;
-	configuration: DynmapServerConfig;
+	configuration: LiveAtlasServerConfig;
 	configurationHash: number | undefined;
 	messages: LiveAtlasMessageConfig;
-	components: DynmapComponentConfig;
+	components: LiveAtlasComponentConfig;
 
 	loggedIn: boolean;
 
@@ -50,7 +54,7 @@ export type State = {
 
 	chat: {
 		unread: number;
-		messages: DynmapChat[];
+		messages: LiveAtlasChat[];
 	};
 
 	pendingSetUpdates: Map<string, DynmapMarkerSetUpdates>;

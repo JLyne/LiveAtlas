@@ -24,15 +24,15 @@
 
 <script lang="ts">
 	import {defineComponent, ref, onMounted, computed} from "@vue/runtime-core";
-	import {DynmapChat} from "@/dynmap";
 	import {getMinecraftHead} from '@/util';
 	import {useStore} from "@/store";
 	import defaultImage from '@/assets/images/player_face.png';
+	import {LiveAtlasChat} from "@/index";
 
 	export default defineComponent({
 		props: {
 			message: {
-				type: Object as () => DynmapChat,
+				type: Object as () => LiveAtlasChat,
 				required: true,
 			}
 		},

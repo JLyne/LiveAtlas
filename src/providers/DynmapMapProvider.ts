@@ -16,21 +16,19 @@
 
 import {
 	HeadQueueEntry,
-	LiveAtlasArea,
-	LiveAtlasCircle,
+	LiveAtlasArea, LiveAtlasChat,
+	LiveAtlasCircle, LiveAtlasComponentConfig,
 	LiveAtlasDimension,
 	LiveAtlasLine,
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet,
-	LiveAtlasPlayer,
+	LiveAtlasPlayer, LiveAtlasServerConfig,
 	LiveAtlasServerDefinition,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {
-	DynmapChat,
-	DynmapComponentConfig,
-	DynmapMarkerSetUpdates, DynmapServerConfig, DynmapTileUpdate, DynmapUpdate
+	DynmapMarkerSetUpdates, DynmapTileUpdate, DynmapUpdate
 } from "@/dynmap";
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
@@ -54,7 +52,7 @@ export default class DynmapMapProvider extends MapProvider {
 		super(config);
 	}
 
-	private static buildServerConfig(response: any): DynmapServerConfig {
+	private static buildServerConfig(response: any): LiveAtlasServerConfig {
 		return {
 			grayHiddenPlayers: response.grayplayerswhenhidden || false,
 			defaultMap: response.defaultmap || undefined,
@@ -144,8 +142,8 @@ export default class DynmapMapProvider extends MapProvider {
 		return Array.from(worlds.values());
 	}
 
-	private buildComponents(response: any): DynmapComponentConfig {
-		const components: DynmapComponentConfig = {
+	private buildComponents(response: any): LiveAtlasComponentConfig {
+		const components: LiveAtlasComponentConfig = {
 			markers: {
 				showLabels: false,
 			},
@@ -402,7 +400,7 @@ export default class DynmapMapProvider extends MapProvider {
 		const updates = {
 				markerSets: new Map<string, DynmapMarkerSetUpdates>(),
 				tiles: [] as DynmapTileUpdate[],
-				chat: [] as DynmapChat[],
+				chat: [] as LiveAtlasChat[],
 			},
 			dropped = {
 				stale: 0,

@@ -2,6 +2,9 @@ import {State} from "@/store";
 import {DynmapUrlConfig} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {PathOptions, PointTuple, PolylineOptions} from "leaflet";
+import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
+import {ClockControlOptions} from "@/leaflet/control/ClockControl";
+import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 
 declare module "*.png" {
    const value: any;
@@ -225,4 +228,65 @@ interface HeadQueueEntry {
 	uuid?: string;
 	size: string;
 	image: HTMLImageElement;
+}
+
+interface LiveAtlasServerConfig {
+	defaultMap?: string;
+	defaultWorld?: string;
+	defaultZoom: number;
+	followMap?: string;
+	followZoom: number;
+	title: string;
+	maxPlayers: number;
+	grayHiddenPlayers: boolean;
+	expandUI: boolean;
+}
+
+interface LiveAtlasComponentConfig {
+	markers: {
+		showLabels: boolean;
+	};
+	playerMarkers?: LiveAtlasPlayerMarkerConfig;
+	coordinatesControl?: CoordinatesControlOptions;
+	clockControl?: ClockControlOptions;
+	linkControl: boolean;
+	layerControl: boolean;
+	logoControls: Array<LogoControlOptions>;
+	chatBox?: LiveAtlasChatBoxConfig;
+	chatSending?: LiveAtlasChatSendingConfig;
+	chatBalloons: boolean;
+	login: boolean;
+}
+
+interface LiveAtlasPlayerMarkerConfig {
+	hideByDefault: boolean;
+	layerName: string;
+	layerPriority: number;
+	showBodies: boolean;
+	showSkinFaces: boolean;
+	showHealth: boolean;
+	smallFaces: boolean;
+}
+
+interface LiveAtlasChatBoxConfig {
+	allowUrlName: boolean;
+	showPlayerFaces: boolean;
+	messageLifetime: number;
+	messageHistory: number;
+}
+
+interface LiveAtlasChatSendingConfig {
+	loginRequired: boolean;
+	maxLength: number;
+	cooldown: number;
+}
+
+interface LiveAtlasChat {
+	type: 'chat' | 'playerjoin' | 'playerleave';
+	playerAccount?: string;
+	playerName?: string;
+	channel?: string;
+	message?: string;
+	source?: string;
+	timestamp: number;
 }

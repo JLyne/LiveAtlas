@@ -18,10 +18,8 @@ import {MutationTree} from "vuex";
 import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
 import {
-	DynmapComponentConfig,
 	DynmapMarkerSetUpdates,
-	DynmapServerConfig, DynmapTileUpdate,
-	DynmapChat
+	DynmapTileUpdate
 } from "@/dynmap";
 import {
 	Coordinate,
@@ -37,7 +35,12 @@ import {
 	LiveAtlasPlayer,
 	LiveAtlasCircle,
 	LiveAtlasLine,
-	LiveAtlasArea, LiveAtlasMarker, LiveAtlasMarkerSet, LiveAtlasServerDefinition
+	LiveAtlasArea,
+	LiveAtlasMarker,
+	LiveAtlasMarkerSet,
+	LiveAtlasServerDefinition,
+	LiveAtlasComponentConfig,
+	LiveAtlasServerConfig, LiveAtlasChat
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
@@ -48,20 +51,20 @@ export type CurrentMapPayload = {
 
 export type Mutations<S = State> = {
 	[MutationTypes.INIT](state: S, config: LiveAtlasGlobalConfig): void
-	[MutationTypes.SET_SERVER_CONFIGURATION](state: S, config: DynmapServerConfig): void
+	[MutationTypes.SET_SERVER_CONFIGURATION](state: S, config: LiveAtlasServerConfig): void
 	[MutationTypes.SET_SERVER_CONFIGURATION_HASH](state: S, hash: number): void
 	[MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH](state: S): void
 	[MutationTypes.SET_SERVER_MESSAGES](state: S, messages: LiveAtlasServerMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
 	[MutationTypes.CLEAR_WORLDS](state: S): void
-	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
+	[MutationTypes.SET_COMPONENTS](state: S, worlds: LiveAtlasComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, LiveAtlasMarkerSet>): void
 	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
 	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorldDefinition): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
 	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
-	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>): void
+	[MutationTypes.ADD_CHAT](state: State, chat: Array<LiveAtlasChat>): void
 
 	[MutationTypes.POP_MARKER_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
 	[MutationTypes.POP_AREA_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
@@ -156,7 +159,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	// Sets configuration options from the initial config fetch
-	[MutationTypes.SET_SERVER_CONFIGURATION](state: State, config: DynmapServerConfig) {
+	[MutationTypes.SET_SERVER_CONFIGURATION](state: State, config: LiveAtlasServerConfig) {
 		state.configuration = Object.assign(state.configuration, config);
 	},
 
@@ -220,7 +223,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Sets the state and settings of optional components, from the initial config fetch
-	[MutationTypes.SET_COMPONENTS](state: State, components: DynmapComponentConfig) {
+	[MutationTypes.SET_COMPONENTS](state: State, components: LiveAtlasComponentConfig) {
 		state.components = Object.assign(state.components, components);
 	},
 
@@ -354,7 +357,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Adds chat messages from an update fetch to the chat history
-	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>) {
+	[MutationTypes.ADD_CHAT](state: State, chat: Array<LiveAtlasChat>) {
 		state.chat.messages.unshift(...chat);
 	},
 

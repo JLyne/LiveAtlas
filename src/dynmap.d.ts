@@ -14,9 +14,6 @@
  *    limitations under the License.
  */
 
-import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
-import {LogoControlOptions} from "@/leaflet/control/LogoControl";
-import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 import {LiveAtlasArea, LiveAtlasCircle, LiveAtlasLine, LiveAtlasMarker} from "@/index";
 
 declare global {
@@ -34,59 +31,6 @@ type DynmapUrlConfig = {
 	register: string;
 	tiles: string;
 	markers: string;
-}
-
-interface DynmapServerConfig {
-	defaultMap?: string;
-	defaultWorld?: string;
-	defaultZoom: number;
-	followMap?: string;
-	followZoom: number;
-	title: string;
-	maxPlayers: number;
-	grayHiddenPlayers: boolean;
-	expandUI: boolean;
-}
-
-interface DynmapComponentConfig {
-	markers: DynmapMarkersConfig;
-	playerMarkers?: DynmapPlayerMarkersConfig;
-	coordinatesControl?: CoordinatesControlOptions;
-	clockControl ?: ClockControlOptions;
-	linkControl: boolean;
-	layerControl: boolean;
-	logoControls: Array<LogoControlOptions>;
-	chatBox?: DynmapChatBoxConfig;
-	chatSending?: DynmapChatSendingConfig;
-	chatBalloons: boolean;
-	login: boolean;
-}
-
-interface DynmapMarkersConfig {
-	showLabels: boolean
-}
-
-interface DynmapPlayerMarkersConfig {
-	hideByDefault: boolean;
-	layerName: string;
-	layerPriority: number;
-	showBodies: boolean;
-	showSkinFaces: boolean;
-	showHealth: boolean;
-	smallFaces: boolean;
-}
-
-interface DynmapChatBoxConfig {
-	allowUrlName: boolean;
-	showPlayerFaces: boolean;
-	messageLifetime: number;
-	messageHistory: number;
-}
-
-interface DynmapChatSendingConfig {
-	loginRequired: boolean;
-	maxLength: number;
-	cooldown: number;
 }
 
 interface DynmapMarkerSetUpdates {
@@ -130,14 +74,4 @@ interface DynmapLineUpdate extends DynmapUpdate {
 interface DynmapTileUpdate {
 	name: string
 	timestamp: number
-}
-
-interface DynmapChat {
-	type: 'chat' | 'playerjoin' | 'playerleave';
-	playerAccount?: string;
-	playerName?: string;
-	channel?: string;
-	message?: string;
-	source?: string;
-	timestamp: number;
 }

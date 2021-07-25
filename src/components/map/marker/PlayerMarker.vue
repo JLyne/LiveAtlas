@@ -17,11 +17,10 @@
 <script lang="ts">
 import {defineComponent, computed, ref, onMounted, onUnmounted} from "@vue/runtime-core";
 import {LayerGroup} from 'leaflet';
-import {DynmapChat} from "@/dynmap";
 import {useStore} from "@/store";
 import {PlayerMarker} from "@/leaflet/marker/PlayerMarker";
 import {Popup} from "leaflet";
-import {LiveAtlasPlayer} from "@/index";
+import {LiveAtlasChat, LiveAtlasPlayer} from "@/index";
 
 export default defineComponent({
 	props: {
@@ -80,7 +79,7 @@ export default defineComponent({
 
 			//Chat messages to show in the popup
 			playerChat = computed(() => {
-				const messages: DynmapChat[] = [];
+				const messages: LiveAtlasChat[] = [];
 
 				if(!chatBalloonsEnabled.value) {
 					return messages;
@@ -219,7 +218,7 @@ export default defineComponent({
 				}
 			},
 		},
-		playerChat(newValue: DynmapChat[]) {
+		playerChat(newValue: LiveAtlasChat[]) {
 			if(!this.chatBalloonsEnabled || !this.markerVisible || !newValue.length) {
 				return;
 			}
