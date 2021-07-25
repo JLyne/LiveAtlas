@@ -62,6 +62,7 @@ export class DynmapTileLayer extends TileLayer {
 	private readonly _loadQueue: DynmapTileElement[] = [];
 	private readonly _loadingTiles: Set<DynmapTileElement> = Object.seal(new Set());
 	private readonly _tileTemplate: DynmapTileElement;
+	private readonly _baseUrl: string;
 	declare readonly options: DynmapTileLayerOptions;
 
 	constructor(options: DynmapTileLayerOptions) {
@@ -85,6 +86,7 @@ export class DynmapTileLayer extends TileLayer {
 		this._tileTemplate.alt = '';
 		this._tileTemplate.tileName = '';
 		this._tileTemplate.setAttribute('role', 'presentation');
+		this._baseUrl = store.state.currentMapProvider!.getTilesUrl();
 
 		Object.seal(this._tileTemplate);
 
@@ -110,7 +112,7 @@ export class DynmapTileLayer extends TileLayer {
 
 		if (!url) {
 			const path = escape(`${this._mapSettings.world.name}/${name}`);
-			url = `${store.getters.serverConfig.dynmap.tiles}${path}`;
+			url = `${this._baseUrl}${path}`;
 
 			if(typeof timestamp !== 'undefined') {
 				url += (url.indexOf('?') === -1 ? `?timestamp=${timestamp}` : `&timestamp=${timestamp}`);

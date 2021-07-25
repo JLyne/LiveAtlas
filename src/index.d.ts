@@ -151,11 +151,15 @@ interface LiveAtlasParsedUrl {
 
 interface LiveAtlasMapProvider {
 	loadServerConfiguration(): Promise<void>;
-	loadWorldConfiguration(world: LiveAtlasWorldDefinition): Promise<void>;
+	populateWorld(world: LiveAtlasWorldDefinition): Promise<void>;
 	startUpdates(): void;
 	stopUpdates(): void;
 	sendChatMessage(message: string): void;
 	destroy(): void;
+
+	getPlayerHeadUrl(entry: HeadQueueEntry): string;
+	getTilesUrl(): string;
+	getMarkerIconUrl(icon: string): string;
 }
 
 interface LiveAtlasMarkerSet {
@@ -216,4 +220,12 @@ interface LiveAtlasCircle {
 	minZoom?: number;
 	maxZoom?: number;
 	popupContent?: string;
+}
+
+interface HeadQueueEntry {
+	cacheKey: string;
+	name: string;
+	uuid?: string;
+	size: string;
+	image: HTMLImageElement;
 }

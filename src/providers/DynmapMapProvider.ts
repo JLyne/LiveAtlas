@@ -15,6 +15,7 @@
  */
 
 import {
+	HeadQueueEntry,
 	LiveAtlasArea,
 	LiveAtlasCircle,
 	LiveAtlasDimension,
@@ -582,8 +583,8 @@ export default class DynmapMapProvider extends MapProvider {
 		return updates;
 	}
 
-	private async getMarkerSets(world: string): Promise<Map<string, LiveAtlasMarkerSet>> {
-		const url = `${useStore().getters.serverConfig.dynmap.markers}_markers_/marker_${world}.json`;
+	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<Map<string, LiveAtlasMarkerSet>> {
+		const url = `${this.config.dynmap!.markers}_markers_/marker_${world.name}.json`;
 
 		if(this.markersAbort) {
 			this.markersAbort.abort();
@@ -619,7 +620,6 @@ export default class DynmapMapProvider extends MapProvider {
 		return sets;
 	}
 
-
 	async loadServerConfiguration(): Promise<void> {
 		if(this.configurationAbort) {
 			this.configurationAbort.abort();
@@ -627,7 +627,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 		this.configurationAbort = new AbortController();
 
-		const response = await DynmapMapProvider.fetchJSON(useStore().getters.serverConfig.dynmap.configuration, this.configurationAbort.signal);
+		const response = await DynmapMapProvider.fetchJSON(this.config.dynmap!.configuration, this.configurationAbort.signal);
 
 		if (response.error === 'login-required') {
 			throw new Error("Login required");
@@ -647,14 +647,14 @@ export default class DynmapMapProvider extends MapProvider {
 		this.store.commit(MutationTypes.SET_LOGGED_IN, response.loggedin || false);
 	}
 
-	async loadWorldConfiguration(): Promise<void> {
-		const markerSets = await this.getMarkerSets(this.store.state.currentWorld!.name);
+	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {
+		const markerSets = await this.getMarkerSets(world);
 
 		useStore().commit(MutationTypes.SET_MARKER_SETS, markerSets);
 	}
 
 	private async getUpdate(): Promise<void> {
-		let url = useStore().getters.serverConfig.dynmap.update;
+		let url = this.config.dynmap!.update;
 		url = url.replace('{world}', this.store.state.currentWorld!.name);
 		url = url.replace('{timestamp}', this.updateTimestamp.getTime().toString());
 
@@ -729,7 +729,7 @@ export default class DynmapMapProvider extends MapProvider {
 			return Promise.reject(store.state.messages.chatErrorDisabled);
 		}
 
-		return fetch(useStore().getters.serverConfig.dynmap.sendmessage, {
+		return fetch(this.config.dynmap!.sendmessage, {
 			method: 'POST',
 			body: JSON.stringify({
 				name: null,
@@ -789,7 +789,23 @@ export default class DynmapMapProvider extends MapProvider {
 		this.updateTimeout = 0;
 	}
 
+	getTilesUrl(): string {
+        return this.config.dynmap!.tiles;
+    }
+
+	getPlayerHeadUrl(head: HeadQueueEntry): string {
+		const icon = (head.size === 'body') ? `faces/body/${head.name}.png` :`faces/${head.size}x${head.size}/${head.name}.png`
+
+        return this.getMarkerIconUrl(icon);
+    }
+
+    getMarkerIconUrl(icon: string): string {
+        return `${this.config.dynmap!.markers}_markers_/${icon}.png`;
+    }
+
 	destroy() {
+		super.destroy();
+
 		if(this.configurationAbort) {
 			this.configurationAbort.abort();
 		}

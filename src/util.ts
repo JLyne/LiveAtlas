@@ -16,14 +16,7 @@
 
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {LiveAtlasPlayer} from "@/index";
-
-interface HeadQueueEntry {
-	cacheKey: string;
-	account: string;
-	size: string;
-	image: HTMLImageElement;
-}
+import {HeadQueueEntry, LiveAtlasPlayer} from "@/index";
 
 const headCache = new Map<string, HTMLImageElement>(),
 	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>(),
@@ -54,6 +47,7 @@ export const getMinecraftTime = (serverTime: number) => {
 
 export const getMinecraftHead = (player: LiveAtlasPlayer | string, size: string): Promise<HTMLImageElement> => {
 	const account = typeof  player === 'string' ? player : player.name,
+		uuid = typeof  player === 'string' ? undefined : player.uuid,
 		cacheKey = `${account}-${size}`;
 
 	if(headCache.has(cacheKey)) {
@@ -82,7 +76,8 @@ export const getMinecraftHead = (player: LiveAtlasPlayer | string, size: string)
 		};
 
 		headQueue.push({
-			account,
+			name: account,
+			uuid,
 			size,
 			cacheKey,
 			image: faceImage,
@@ -100,21 +95,12 @@ const tickHeadQueue = () => {
 		return;
 	}
 
-	const head = headQueue.pop() as HeadQueueEntry,
-		src = (head.size === 'body') ? `faces/body/${head.account}.png` :`faces/${head.size}x${head.size}/${head.account}.png`;
+	const head = headQueue.pop() as HeadQueueEntry;
 
 	headsLoading.add(head.cacheKey);
-	head.image.src = concatURL(useStore().getters.serverConfig.dynmap.markers, src);
+	head.image.src = useStore().state.currentMapProvider!.getPlayerHeadUrl(head);
 
 	tickHeadQueue();
-}
-
-export const concatURL = (base: string, addition: string) => {
-	if(base.indexOf('?') >= 0) {
-		return base + escape(addition);
-	}
-
-	return base + addition;
 }
 
 export const getPointConverter = () => {

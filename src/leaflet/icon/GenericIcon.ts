@@ -60,7 +60,7 @@ export class GenericIcon extends DivIcon {
 		}
 
 		const div = markerContainer.cloneNode(false) as HTMLDivElement,
-			url = `${useStore().getters.serverConfig.dynmap.markers}_markers_/${this.options.icon}.png`,
+			url = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon),
 			size = point(this.options.iconSize as PointExpression);
 
 		this._image = markerIcon.cloneNode(false) as HTMLImageElement;
@@ -96,7 +96,7 @@ export class GenericIcon extends DivIcon {
 
 	update(options: GenericIconOptions) {
 		if(this._image && options.icon !== this.options.icon) {
-			this._image!.src = `${useStore().getters.serverConfig.dynmap.markers}_markers_/${options.icon}.png`;
+			this._image!.src = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon);
 			this.options.icon = options.icon;
 		}
 

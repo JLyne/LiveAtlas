@@ -1,27 +1,43 @@
-import {LiveAtlasMapProvider, LiveAtlasServerDefinition, LiveAtlasWorldDefinition} from "@/index";
+import {
+	HeadQueueEntry,
+	LiveAtlasMapProvider,
+	LiveAtlasServerDefinition,
+	LiveAtlasWorldDefinition
+} from "@/index";
 import {useStore} from "@/store";
-import {watch} from "vue";
-import {computed} from "@vue/runtime-core";
+import {computed, watch} from "@vue/runtime-core";
+import {WatchStopHandle} from "vue";
 
 export default abstract class MapProvider implements LiveAtlasMapProvider {
 	protected readonly store = useStore();
+	protected readonly config: LiveAtlasServerDefinition;
+	private readonly currentWorldUnwatch: WatchStopHandle;
 
 	protected constructor(config: LiveAtlasServerDefinition) {
+		this.config = config;
 		const currentWorld = computed(() => this.store.state.currentWorld);
 
-		watch(currentWorld, (newValue) => {
-			if(newValue) {
-				this.loadWorldConfiguration(newValue);
+		this.currentWorldUnwatch = watch(currentWorld, (newValue) => {
+			if (newValue) {
+				this.populateWorld(newValue);
 			}
 		});
 	}
 
 	abstract loadServerConfiguration(): Promise<void>;
-	abstract loadWorldConfiguration(world: LiveAtlasWorldDefinition): Promise<void>;
+	abstract populateWorld(world: LiveAtlasWorldDefinition): Promise<void>;
 	abstract sendChatMessage(message: string): void;
+
 	abstract startUpdates(): void;
 	abstract stopUpdates(): void;
-	abstract destroy(): void;
+
+	abstract getPlayerHeadUrl(head: HeadQueueEntry): string;
+    abstract getTilesUrl(): string;
+    abstract getMarkerIconUrl(icon: string): string;
+
+	destroy() {
+		this.currentWorldUnwatch();
+	}
 
 	protected static async fetchJSON(url: string, signal: AbortSignal) {
 		let response, json;
