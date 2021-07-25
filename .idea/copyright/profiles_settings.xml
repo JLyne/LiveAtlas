@@ -1,0 +1,8 @@
+<component name="CopyrightManager">
+  <settings>
+    <module2copyright>
+      <element module="Dynmap" copyright="Dynmap" />
+      <element module="Original" copyright="Original" />
+    </module2copyright>
+  </settings>
+</component>
