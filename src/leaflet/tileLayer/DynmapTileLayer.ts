@@ -17,10 +17,14 @@
  *    limitations under the License.
  */
 
-import {TileLayer, Coords, DoneCallback, TileLayerOptions, DomUtil, Util} from 'leaflet';
-import {store} from "@/store";
+import {Coords, DoneCallback, DomUtil, TileLayerOptions, TileLayer, Util} from 'leaflet';
+import {useStore} from "@/store";
 import {Coordinate} from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {computed, watch} from "@vue/runtime-core";
+import {ComputedRef} from "@vue/reactivity";
+import {WatchStopHandle} from "vue";
+import {ActionTypes} from "@/store/action-types";
 
 export interface DynmapTileLayerOptions extends TileLayerOptions {
 	mapSettings: LiveAtlasMapDefinition;
@@ -54,6 +58,8 @@ export interface TileInfo {
 	fmt: string;
 }
 
+const store = useStore();
+
 // noinspection JSUnusedGlobalSymbols
 export class DynmapTileLayer extends TileLayer {
 	private readonly _mapSettings: LiveAtlasMapDefinition;
@@ -63,7 +69,15 @@ export class DynmapTileLayer extends TileLayer {
 	private readonly _loadingTiles: Set<DynmapTileElement> = Object.seal(new Set());
 	private readonly _tileTemplate: DynmapTileElement;
 	private readonly _baseUrl: string;
-	declare readonly options: DynmapTileLayerOptions;
+
+	private readonly _night: ComputedRef<boolean>;
+	private readonly _pendingUpdates: ComputedRef<boolean>;
+	private readonly _nightUnwatch: WatchStopHandle;
+	private readonly _updateUnwatch: WatchStopHandle;
+	private _updateFrame: number = 0;
+
+	// @ts-ignore
+	declare options: DynmapTileLayerOptions;
 
 	constructor(options: DynmapTileLayerOptions) {
 		super('', options);
@@ -93,9 +107,23 @@ export class DynmapTileLayer extends TileLayer {
 		if(this.options.crossOrigin || this.options.crossOrigin === '') {
 			this._tileTemplate.crossOrigin = this.options.crossOrigin === true ? '' : this.options.crossOrigin;
 		}
+
+		this._pendingUpdates = computed(() => !!store.state.pendingTileUpdates.length);
+		this._updateUnwatch = watch(this._pendingUpdates, (newValue, oldValue) => {
+			if(newValue && !oldValue && !this._updateFrame) {
+				this.handlePendingUpdates();
+			}
+		});
+
+		this._night = computed(() => store.getters.night);
+		this._nightUnwatch = watch(this._night, () =>  {
+			if(this._mapSettings.nightAndDay) {
+				this.redraw();
+			}
+		});
 	}
 
-	getTileName(coords: Coordinate) {
+	private getTileName(coords: Coordinate) {
 		const info = this.getTileInfo(coords);
 		// Y is inverted for HD-map.
 		info.y = -info.y;
@@ -107,7 +135,7 @@ export class DynmapTileLayer extends TileLayer {
 		return this.getTileUrlFromName(this.getTileName(coords));
 	}
 
-	getTileUrlFromName(name: string, timestamp?: number) {
+	private getTileUrlFromName(name: string, timestamp?: number) {
 		let url = this._cachedTileUrls.get(name);
 
 		if (!url) {
@@ -124,7 +152,7 @@ export class DynmapTileLayer extends TileLayer {
 		return url;
 	}
 
-	updateNamedTile(name: string, timestamp: number) {
+	private updateNamedTile(name: string, timestamp: number) {
 		const tile = this._namedTiles.get(name);
 		this._cachedTileUrls.delete(name);
 
@@ -231,14 +259,14 @@ export class DynmapTileLayer extends TileLayer {
 	}
 
 	// Some helper functions.
-	zoomprefix(amount: number) {
+	private zoomprefix(amount: number) {
 		// amount == 0 -> ''
 		// amount == 1 -> 'z_'
 		// amount == 2 -> 'zz_'
 		return 'z'.repeat(amount) + (amount === 0 ? '' : '_');
 	}
 
-	getTileInfo(coords: Coordinate): TileInfo {
+	private getTileInfo(coords: Coordinate): TileInfo {
 		// zoom: max zoomed in = this.options.maxZoom, max zoomed out = 0
 		// izoom: max zoomed in = 0, max zoomed out = this.options.maxZoom
 		// zoomoutlevel: izoom < mapzoomin -> 0, else -> izoom - mapzoomin (which ranges from 0 till mapzoomout)
@@ -250,7 +278,7 @@ export class DynmapTileLayer extends TileLayer {
 
 		return {
 			prefix: this._mapSettings.prefix,
-			nightday: (this._mapSettings.nightAndDay && !this.options.night) ? '_day' : '',
+			nightday: (this._mapSettings.nightAndDay && !this._night.value) ? '_day' : '',
 			scaledx: x >> 5,
 			scaledy: y >> 5,
 			zoom: this.zoomprefix(zoomoutlevel),
@@ -261,10 +289,34 @@ export class DynmapTileLayer extends TileLayer {
 		};
 	}
 
-	setNight(night: boolean) {
-		if(this.options.night !== night) {
-			this.options.night = night;
-			this.redraw();
+	private async handlePendingUpdates() {
+		const updates = await store.dispatch(ActionTypes.POP_TILE_UPDATES, 10);
+
+		for(const update of updates) {
+			this.updateNamedTile(update.name, update.timestamp);
 		}
+
+		if(this._pendingUpdates.value) {
+			// eslint-disable-next-line no-unused-vars
+			this._updateFrame = requestAnimationFrame(() => this.handlePendingUpdates());
+		} else {
+			this._updateFrame = 0;
+		}
+	}
+
+	remove() {
+		super.remove();
+
+		this._nightUnwatch();
+
+		if(this._updateFrame) {
+			cancelAnimationFrame(this._updateFrame);
+		}
+
+		if(this._updateUnwatch) {
+			this._updateUnwatch();
+		}
+
+		return this;
 	}
 }

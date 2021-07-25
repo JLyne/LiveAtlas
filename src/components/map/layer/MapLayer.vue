@@ -18,8 +18,6 @@
 import {defineComponent, onUnmounted, computed, watch} from "@vue/runtime-core";
 import {Map} from 'leaflet';
 import {useStore} from "@/store";
-import {ActionTypes} from "@/store/action-types";
-import {getMinecraftTime} from "@/util";
 import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
@@ -40,58 +38,22 @@ export default defineComponent({
 	},
 
 	setup(props) {
-		let updateFrame = 0,
-			stopUpdateWatch: Function;
-
 		const store = useStore(),
-			night = computed(() => getMinecraftTime(store.state.currentWorldState.timeOfDay).night),
 			layer = new DynmapTileLayer({
 				errorTileUrl: 'images/blank.png',
 				mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map))),
-				night: night.value,
 			}),
-			pendingUpdates = computed(() => !!store.state.pendingTileUpdates.length),
-			active = computed(() => props.map === store.state.currentMap),
+			active = computed(() => props.map === store.state.currentMap);
 
-			enableLayer = () => {
+		const enableLayer = () => {
 				props.leaflet.addLayer(layer);
-
-				stopUpdateWatch = watch(pendingUpdates, (newValue, oldValue) => {
-					if(newValue && !oldValue && !updateFrame) {
-						handlePendingUpdates();
-					}
-				});
 			},
 
 			disableLayer = () => {
 				layer.remove();
-
-				if(stopUpdateWatch) {
-					stopUpdateWatch();
-				}
-			},
-
-			handlePendingUpdates = async () => {
-				const updates = await useStore().dispatch(ActionTypes.POP_TILE_UPDATES, 10);
-
-				for(const update of updates) {
-					layer.updateNamedTile(update.name, update.timestamp);
-				}
-
-				if(pendingUpdates.value) {
-					// eslint-disable-next-line no-unused-vars
-					updateFrame = requestAnimationFrame(() => handlePendingUpdates());
-				} else {
-					updateFrame = 0;
-				}
 			};
 
 		watch(active, (newValue) => newValue ? enableLayer() : disableLayer());
-		watch(night, (newValue) =>  {
-			if(props.map.nightAndDay) {
-				layer.setNight(newValue);
-			}
-		});
 
 		if(active.value) {
 			enableLayer();
@@ -99,10 +61,6 @@ export default defineComponent({
 
 		onUnmounted(() => {
 			disableLayer();
-
-			if(updateFrame) {
-				cancelAnimationFrame(updateFrame);
-			}
 		});
 	},
 
