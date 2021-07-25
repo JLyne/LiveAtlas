@@ -120,7 +120,7 @@ export default class DynmapMapProvider extends MapProvider {
 				}
 
 				w.maps.set(map.name, new LiveAtlasMapDefinition({
-					world: world, //Ignore append_to_world here otherwise things break
+					world: w, //Ignore append_to_world here otherwise things break
 					background: map.background || '#000000',
 					backgroundDay: map.backgroundday || '#000000',
 					backgroundNight: map.backgroundnight || '#000000',
