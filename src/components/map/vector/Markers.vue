@@ -100,9 +100,8 @@ export default defineComponent({
 				}
 			};
 
-		//FIXME: Prevent unnecessary repositioning when changing worlds
-		watch(currentMap, (newValue) => {
-			if(newValue) {
+		watch(currentMap, (newValue, oldValue) => {
+			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
 				for (const [id, marker] of props.set.markers) {
 					updateMarker(layers.get(id), marker, getPointConverter());
 				}
