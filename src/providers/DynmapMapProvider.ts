@@ -119,7 +119,7 @@ export default class DynmapMapProvider extends MapProvider {
 					return;
 				}
 
-				w.maps.set(map.name, new LiveAtlasMapDefinition({
+				w.maps.set(map.name, Object.freeze(new LiveAtlasMapDefinition({
 					world: w, //Ignore append_to_world here otherwise things break
 					background: map.background || '#000000',
 					backgroundDay: map.backgroundday || '#000000',
@@ -135,7 +135,7 @@ export default class DynmapMapProvider extends MapProvider {
 					worldToMap: map.worldtomap || undefined,
 					nativeZoomLevels: map.mapzoomout || 1,
 					extraZoomLevels: map.mapzoomin || 0
-				}));
+				})));
 			});
 		});
 

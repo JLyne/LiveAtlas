@@ -73,11 +73,11 @@ export default class LiveAtlasMapDefinition {
 		this.scale = (1 / Math.pow(2, this.nativeZoomLevels));
 
 		if(options.mapToWorld || options.worldToMap) {
-			this.projection = Object.freeze(new LiveAtlasProjection({
+			this.projection = new LiveAtlasProjection({
 				mapToWorld: options.mapToWorld || [0, 0, 0, 0, 0, 0, 0, 0, 0],
 				worldToMap: options.worldToMap || [0, 0, 0, 0, 0, 0, 0, 0, 0],
 				nativeZoomLevels: this.nativeZoomLevels,
-			}));
+			});
 		}
 	}
 
