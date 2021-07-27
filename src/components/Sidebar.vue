@@ -17,8 +17,9 @@
 <template>
 	<section class="sidebar" role="none" ref="sidebar">
 		<header class="sidebar__buttons">
-			<button v-if="mapCount > 1" :class="{'button--maps': true}" @click="toggleMaps" :title="messageWorlds"
-					:aria-label="messageWorlds" :aria-expanded="mapsVisible" @keydown="handleMapsKeydown">
+			<button v-if="mapCount > 1 || serverCount > 1" :class="{'button--maps': true}" @click="toggleMaps"
+			        :title="messageWorlds" :aria-label="messageWorlds" :aria-expanded="mapsVisible"
+			        @keydown="handleMapsKeydown">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
 			<button v-if="playerMakersEnabled" :class="{'button--players': true}" @click="togglePlayers"
