@@ -241,7 +241,7 @@ interface LiveAtlasServerConfig {
 	defaultWorld?: string;
 	defaultZoom: number;
 	followMap?: string;
-	followZoom: number;
+	followZoom?: number;
 	title: string;
 	grayHiddenPlayers: boolean;
 	expandUI: boolean;

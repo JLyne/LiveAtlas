@@ -322,7 +322,7 @@ export default defineComponent({
 			if(map !== store.state.currentMap && (targetWorld !== currentWorld || newFollow)) {
 				this.scheduledPan = player.location;
 
-				if(newFollow) {
+				if(newFollow && store.state.configuration.followZoom) {
 					console.log(`Setting zoom for new follow ${store.state.configuration.followZoom}`);
 					this.scheduledZoom = store.state.configuration.followZoom;
 				}
@@ -332,7 +332,7 @@ export default defineComponent({
 			} else {
 				this.leaflet!.panTo(store.state.currentMap?.locationToLatLng(player.location));
 
-				if(newFollow) {
+				if(newFollow && store.state.configuration.followZoom) {
 					console.log(`Setting zoom for new follow ${store.state.configuration.followZoom}`);
 					this.leaflet!.setZoom(store.state.configuration.followZoom);
 				}

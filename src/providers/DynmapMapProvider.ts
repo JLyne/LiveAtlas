@@ -60,7 +60,7 @@ export default class DynmapMapProvider extends MapProvider {
 			defaultWorld: response.defaultworld || undefined,
 			defaultZoom: response.defaultzoom || 0,
 			followMap: response.followmap || undefined,
-			followZoom: response.followzoom || 0,
+			followZoom: response.followzoom,
 			title: response.title.replace(titleColoursRegex, '') || 'Dynmap',
 			expandUI: response.sidebaropened && response.sidebaropened !== 'false', //Sent as a string for some reason
 		};
