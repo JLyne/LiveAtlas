@@ -416,6 +416,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				const existing = state.players.get(player.name);
 
 				existing!.health = player.health;
+				existing!.uuid = player.uuid;
 				existing!.armor = player.armor;
 				existing!.location = Object.assign(existing!.location, player.location);
 				existing!.hidden = player.hidden;
@@ -429,6 +430,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				state.sortedPlayers.dirty = true;
 				state.players.set(player.name, {
 					name: player.name,
+					uuid: player.uuid,
 					health: player.health,
 					armor: player.armor,
 					location: player.location,
