@@ -264,6 +264,22 @@ interface LiveAtlasComponentConfig {
 	login: boolean;
 }
 
+interface LiveAtlasPartialComponentConfig {
+	markers?: {
+		showLabels: boolean;
+	};
+	playerMarkers?: LiveAtlasPlayerMarkerConfig;
+	coordinatesControl?: CoordinatesControlOptions;
+	clockControl?: ClockControlOptions;
+	linkControl?: boolean;
+	layerControl?: boolean;
+	logoControls?: Array<LogoControlOptions>;
+	chatBox?: LiveAtlasChatBoxConfig;
+	chatSending?: LiveAtlasChatSendingConfig;
+	chatBalloons?: boolean;
+	login?: boolean;
+}
+
 interface LiveAtlasPlayerMarkerConfig {
 	hideByDefault: boolean;
 	layerName: string;

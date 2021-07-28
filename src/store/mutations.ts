@@ -39,8 +39,7 @@ import {
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasServerDefinition,
-	LiveAtlasComponentConfig,
-	LiveAtlasServerConfig, LiveAtlasChat
+	LiveAtlasServerConfig, LiveAtlasChat, LiveAtlasPartialComponentConfig, LiveAtlasComponentConfig
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
@@ -57,7 +56,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_SERVER_MESSAGES](state: S, messages: LiveAtlasServerMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
 	[MutationTypes.CLEAR_WORLDS](state: S): void
-	[MutationTypes.SET_COMPONENTS](state: S, worlds: LiveAtlasComponentConfig): void
+	[MutationTypes.SET_COMPONENTS](state: S, components: LiveAtlasPartialComponentConfig | LiveAtlasComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, LiveAtlasMarkerSet>): void
 	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
 	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorldDefinition): void
@@ -222,8 +221,10 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentWorldState.thundering = false;
 	},
 
-	//Sets the state and settings of optional components, from the initial config fetch
-	[MutationTypes.SET_COMPONENTS](state: State, components: LiveAtlasComponentConfig) {
+	//Updates the state of optional components (chat, link button, etc)
+	//Can be called with a LiveAtlasComponentConfig object to replace the whole state
+	//or a LiveAtlasPartialComponentConfig object for partial updates to the existing state
+	[MutationTypes.SET_COMPONENTS](state: State, components: LiveAtlasPartialComponentConfig | LiveAtlasComponentConfig) {
 		state.components = Object.assign(state.components, components);
 	},
 
