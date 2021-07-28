@@ -203,39 +203,30 @@ interface LiveAtlasMarker {
 	popupContent?: string;
 }
 
-interface LiveAtlasArea {
-	style: PolylineOptions;
-	label: string;
-	isHTML: boolean;
-	x: Array<number>;
-	y: PointTuple;
-	z: Array<number>;
-	minZoom?: number;
-	maxZoom?: number;
-	popupContent?: string;
-}
-
-interface LiveAtlasLine {
-	x: Array<number>;
-	y: Array<number>;
-	z: Array<number>;
-	style: PolylineOptions;
-	label: string;
-	isHTML: boolean;
-	minZoom?: number;
-	maxZoom?: number;
-	popupContent?: string;
-}
-
-interface LiveAtlasCircle {
-	location: Coordinate;
-	radius: PointTuple;
+interface LiveAtlasPath {
 	style: PathOptions;
 	label: string;
 	isHTML: boolean;
 	minZoom?: number;
 	maxZoom?: number;
 	popupContent?: string;
+}
+
+interface LiveAtlasArea extends LiveAtlasPath {
+	style: PolylineOptions;
+	outline: boolean;
+	points: Coordinate[] | Coordinate[][] | Coordinate[][][]
+}
+
+interface LiveAtlasLine extends LiveAtlasPath {
+	points: Coordinate[];
+	style: PolylineOptions;
+}
+
+interface LiveAtlasCircle extends LiveAtlasPath {
+	location: Coordinate;
+	radius: PointTuple;
+	style: PathOptions;
 }
 
 interface HeadQueueEntry {

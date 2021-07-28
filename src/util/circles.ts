@@ -84,7 +84,7 @@ export const getCirclePoints = (options: LiveAtlasCircle, converter: Function, o
 			x = options.radius[0] * Math.sin(rad) + options.location.x,
 			z = options.radius[1] * Math.cos(rad) + options.location.z;
 
-		points.push(converter(x, options.location.y, z));
+		points.push(converter({x, y:options.location.y, z}));
 	}
 
 	if(outline && points.length) {

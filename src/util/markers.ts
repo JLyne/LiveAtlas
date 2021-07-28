@@ -23,7 +23,7 @@ import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 import {LiveAtlasMarker} from "@/index";
 
 export const createMarker = (options: LiveAtlasMarker, converter: Function): Marker => {
-	const marker = new GenericMarker(converter(options.location.x, options.location.y, options.location.z), {
+	const marker = new GenericMarker(converter(options.location), {
 		icon: new GenericIcon({
 			icon: options.icon,
 			label: options.label,
@@ -51,7 +51,7 @@ export const updateMarker = (marker: Marker | undefined, options: LiveAtlasMarke
 	}
 
 	const oldLocation = marker.getLatLng(),
-		newLocation = converter(options.location.x, options.location.y, options.location.z);
+		newLocation = converter(options.location);
 
 	if(!oldLocation.equals(newLocation)) {
 		marker.setLatLng(newLocation);

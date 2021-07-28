@@ -19,7 +19,6 @@ import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/run
 import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
 import {createArea, updateArea} from "@/util/areas";
-import {getPointConverter} from '@/util';
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
@@ -50,7 +49,7 @@ export default defineComponent({
 			layers = Object.freeze(new Map()) as Map<string, LiveAtlasPolygon | LiveAtlasPolyline>,
 
 			createAreas = () => {
-				const converter = getPointConverter();
+				const converter = currentMap.value!.locationToLatLng.bind(currentMap.value);
 
 				props.set.areas.forEach((area: LiveAtlasArea, id: string) => {
 					const layer = createArea(area, converter);
@@ -72,18 +71,17 @@ export default defineComponent({
 			},
 
 			handlePendingUpdates = async () => {
-				const updates = await useStore().dispatch(ActionTypes.POP_AREA_UPDATES, {
+				const updates = await store.dispatch(ActionTypes.POP_AREA_UPDATES, {
 					markerSet: props.set.id,
 					amount: 10,
-				});
-
-				const converter = getPointConverter();
+				}),
+					converter = currentMap.value!.locationToLatLng.bind(currentMap.value);
 
 				for(const update of updates) {
 					if(update.removed) {
 						deleteArea(update.id);
 					} else {
-						const layer = updateArea(layers.get(update.id), update.payload as LiveAtlasArea, converter)
+						const layer = updateArea(layers.get(update.id), update.payload as LiveAtlasArea, converter);
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);
@@ -103,7 +101,7 @@ export default defineComponent({
 
 		watch(currentMap, (newValue, oldValue) => {
 			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
-				const converter = getPointConverter();
+				const converter = newValue.locationToLatLng.bind(newValue);
 
 				for (const [id, area] of props.set.areas) {
 					updateArea(layers.get(id), area, converter);

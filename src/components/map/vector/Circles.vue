@@ -19,7 +19,6 @@ import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/run
 import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
 import {createCircle, updateCircle} from "@/util/circles";
-import {getPointConverter} from '@/util';
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
@@ -50,7 +49,7 @@ export default defineComponent({
 			layers = Object.freeze(new Map<string, LiveAtlasPolyline | LiveAtlasPolygon>()),
 
 			createCircles = () => {
-				const converter = getPointConverter();
+				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				props.set.circles.forEach((circle: LiveAtlasCircle, id: string) => {
 					const layer = createCircle(circle, converter);
@@ -75,9 +74,8 @@ export default defineComponent({
 				const updates = await useStore().dispatch(ActionTypes.POP_CIRCLE_UPDATES, {
 					markerSet: props.set.id,
 					amount: 10,
-				});
-
-				const converter = getPointConverter();
+				}),
+					converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				for(const update of updates) {
 					if(update.removed) {
@@ -103,7 +101,7 @@ export default defineComponent({
 
 		watch(currentMap, (newValue, oldValue) => {
 			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
-				const converter = getPointConverter();
+				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				for (const [id, circle] of props.set.circles) {
 					updateCircle(layers.get(id), circle, converter);

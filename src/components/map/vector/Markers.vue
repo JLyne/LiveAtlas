@@ -21,7 +21,6 @@ import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
 import {createMarker, updateMarker} from "@/util/markers";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
-import {getPointConverter} from "@/util";
 import {LiveAtlasMarker, LiveAtlasMarkerSet} from "@/index";
 
 export default defineComponent({
@@ -49,7 +48,7 @@ export default defineComponent({
 			layers = Object.freeze(new Map()) as Map<string, Marker>,
 
 			createMarkers = () => {
-				const converter = getPointConverter();
+				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				props.set.markers.forEach((marker: LiveAtlasMarker, id: string) => {
 					const layer = createMarker(marker, converter);
@@ -74,9 +73,8 @@ export default defineComponent({
 				const updates = await useStore().dispatch(ActionTypes.POP_MARKER_UPDATES, {
 					markerSet: props.set.id,
 					amount: 10,
-				});
-
-				const converter = getPointConverter();
+				}),
+					converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				for(const update of updates) {
 					if(update.removed) {
@@ -102,8 +100,10 @@ export default defineComponent({
 
 		watch(currentMap, (newValue, oldValue) => {
 			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
+				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
+
 				for (const [id, marker] of props.set.markers) {
-					updateMarker(layers.get(id), marker, getPointConverter());
+					updateMarker(layers.get(id), marker, converter);
 				}
 			}
 		});

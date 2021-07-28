@@ -103,20 +103,6 @@ const tickHeadQueue = () => {
 	tickHeadQueue();
 }
 
-export const getPointConverter = () => {
-	const map = useStore().state.currentMap;
-
-	if(map) {
-		return (x: number, y: number, z: number) => {
-			return map.locationToLatLng({x, y, z});
-		};
-	} else {
-		return (x: number, y: number, z: number) => {
-			return LiveAtlasMapDefinition.defaultProjection.locationToLatLng({x, y, z});
-		};
-	}
-}
-
 export const parseUrl = () => {
 	const query = new URLSearchParams(window.location.search),
 		hash = window.location.hash.replace('#', '');

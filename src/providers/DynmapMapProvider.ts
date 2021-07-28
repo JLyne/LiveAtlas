@@ -37,6 +37,8 @@ import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {ActionTypes} from "@/store/action-types";
 import {endWorldNameRegex, netherWorldNameRegex, titleColoursRegex} from "@/util";
+import {getPoints} from "@/util/areas";
+import {getLinePoints} from "@/util/lines";
 
 export default class DynmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -307,6 +309,11 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	private static buildArea(area: any): LiveAtlasArea {
+		const opacity = area.fillopacity || 0,
+			x = area.x || [0, 0],
+			y: [number, number] = [area.ybottom || 0, area.ytop || 0],
+			z = area.z || [0, 0];
+
 		return {
 			style: {
 				color: area.color || '#ff0000',
@@ -315,11 +322,10 @@ export default class DynmapMapProvider extends MapProvider {
 				fillColor: area.fillcolor || '#ff0000',
 				fillOpacity: area.fillopacity || 0,
 			},
+			outline: !opacity,
 			label: area.label || '',
 			isHTML: area.markup || false,
-			x: area.x || [0, 0],
-			y: [area.ybottom || 0, area.ytop || 0],
-			z: area.z || [0, 0],
+			points: getPoints(x, y, z, !opacity),
 			minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
 			maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
 			popupContent: area.desc || undefined,
@@ -342,9 +348,6 @@ export default class DynmapMapProvider extends MapProvider {
 
 	private static buildLine(line: any): LiveAtlasLine {
 		return {
-			x: line.x || [0, 0],
-			y: line.y || [0, 0],
-			z: line.z || [0, 0],
 			style: {
 				color: line.color || '#ff0000',
 				opacity: line.opacity || 1,
@@ -352,6 +355,7 @@ export default class DynmapMapProvider extends MapProvider {
 			},
 			label: line.label || '',
 			isHTML: line.markup || false,
+			points: getLinePoints(line.x || [0, 0], line.y || [0, 0], line.z || [0, 0]),
 			minZoom: typeof line.minzoom !== 'undefined' && line.minzoom > -1 ? line.minzoom : undefined,
 			maxZoom: typeof line.maxzoom !== 'undefined' && line.maxzoom > -1 ? line.maxzoom : undefined,
 			popupContent: line.desc || undefined,

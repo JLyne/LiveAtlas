@@ -17,12 +17,12 @@
  * limitations under the License.
  */
 
-import {LatLngExpression} from "leaflet";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
-import {LiveAtlasLine} from "@/index";
+import {Coordinate, LiveAtlasLine} from "@/index";
+import {LatLngExpression} from "leaflet";
 
 export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
-	const points = getLinePoints(options, converter),
+	const points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[],
 		line = new LiveAtlasPolyline(points, {
 			...options.style,
 			minZoom: options.minZoom,
@@ -37,7 +37,7 @@ export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtl
 };
 
 export const updateLine = (line: LiveAtlasPolyline | undefined, options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
-	const points = getLinePoints(options, converter);
+	const points = options.points.map(projectPointsMapCallback, converter);
 
 	if (!line) {
 		return createLine(options, converter);
@@ -52,6 +52,15 @@ export const updateLine = (line: LiveAtlasPolyline | undefined, options: LiveAtl
 
 	return line;
 }
+
+const projectPointsMapCallback = function(point: Coordinate): LatLngExpression {
+	if(Array.isArray(point)) {
+		return projectPointsMapCallback(point);
+	} else {
+		// @ts-ignore
+		return this(point);
+	}
+};
 
 export const createPopup = (options: LiveAtlasLine) => {
 	const popup = document.createElement('span');
@@ -69,11 +78,11 @@ export const createPopup = (options: LiveAtlasLine) => {
 	return popup;
 }
 
-export const getLinePoints = (options: LiveAtlasLine, converter: Function): LatLngExpression[] => {
+export const getLinePoints = (x: number[], y: number[], z: number[]): Coordinate[] => {
 	const points = [];
 
-	for(let i = 0; i < options.x.length; i++) {
-		points.push(converter(options.x[i], options.y[i], options.z[i]));
+	for(let i = 0; i < x.length; i++) {
+		points.push({x: x[i], y: y[i], z: z[i]});
 	}
 
 	return points;
