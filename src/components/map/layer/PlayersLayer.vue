@@ -77,7 +77,7 @@ export default defineComponent({
 	},
 
 	unmounted() {
-		this.leaflet.removeLayer(this.layerGroup);
+		this.leaflet.getLayerManager().removeLayer(this.layerGroup);
 	},
 
 	render() {
