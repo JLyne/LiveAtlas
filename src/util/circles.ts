@@ -25,15 +25,7 @@ import {LiveAtlasCircle} from "@/index";
 export const createCircle = (options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getCirclePoints(options, converter, outline),
-		circle = outline ? new LiveAtlasPolyline(points, {
-			...options.style,
-			minZoom: options.minZoom,
-			maxZoom: options.maxZoom,
-		}) : new LiveAtlasPolygon(points, {
-			...options.style,
-			minZoom: options.minZoom,
-			maxZoom: options.maxZoom,
-		});
+		circle = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
 
 	if(options.label) {
 		circle.bindPopup(() => createPopup(options));
@@ -43,18 +35,17 @@ export const createCircle = (options: LiveAtlasCircle, converter: Function): Liv
 };
 
 export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
-	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean,
-		points = getCirclePoints(options, converter, outline);
-
 	if (!circle) {
 		return createCircle(options, converter);
 	}
+
+	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean;
 
 	circle.closePopup();
 	circle.unbindPopup();
 	circle.bindPopup(() => createPopup(options));
 	circle.setStyle(options.style);
-	circle.setLatLngs(points);
+	circle.setLatLngs(getCirclePoints(options, converter, outline));
 	circle.redraw();
 
 	return circle;

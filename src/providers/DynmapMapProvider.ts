@@ -314,7 +314,7 @@ export default class DynmapMapProvider extends MapProvider {
 			y: [number, number] = [area.ybottom || 0, area.ytop || 0],
 			z = area.z || [0, 0];
 
-		return {
+		return Object.seal({
 			style: {
 				color: area.color || '#ff0000',
 				opacity: area.opacity || 1,
@@ -329,7 +329,7 @@ export default class DynmapMapProvider extends MapProvider {
 			minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
 			maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
 			popupContent: area.desc || undefined,
-		};
+		});
 	}
 
 	private static buildLines(data: any): Map<string, LiveAtlasLine> {
@@ -347,7 +347,7 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	private static buildLine(line: any): LiveAtlasLine {
-		return {
+		return Object.seal({
 			style: {
 				color: line.color || '#ff0000',
 				opacity: line.opacity || 1,
@@ -359,7 +359,7 @@ export default class DynmapMapProvider extends MapProvider {
 			minZoom: typeof line.minzoom !== 'undefined' && line.minzoom > -1 ? line.minzoom : undefined,
 			maxZoom: typeof line.maxzoom !== 'undefined' && line.maxzoom > -1 ? line.maxzoom : undefined,
 			popupContent: line.desc || undefined,
-		};
+		});
 	}
 
 	private static buildCircles(data: any): Map<string, LiveAtlasCircle> {
@@ -377,7 +377,7 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	private static buildCircle(circle: any): LiveAtlasCircle {
-		return {
+		return Object.seal({
 			location: {
 				x: circle.x || 0,
 				y: circle.y || 0,
@@ -397,7 +397,7 @@ export default class DynmapMapProvider extends MapProvider {
 			minZoom: typeof circle.minzoom !== 'undefined' && circle.minzoom > -1 ? circle.minzoom : undefined,
 			maxZoom: typeof circle.maxzoom !== 'undefined' && circle.maxzoom > -1 ? circle.maxzoom : undefined,
 			popupContent: circle.desc || undefined,
-		};
+		});
 	}
 
 	private buildUpdates(data: Array<any>) {

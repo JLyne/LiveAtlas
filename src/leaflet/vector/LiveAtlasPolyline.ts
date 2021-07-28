@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import {LatLngExpression, Polyline, PolylineOptions, Util} from "leaflet";
+import {LatLngExpression, Polyline, PolylineOptions} from "leaflet";
+import {LiveAtlasPath} from "@/index";
 
 export interface LiveAtlasPolylineOptions extends PolylineOptions {
 	minZoom?: number;
@@ -22,8 +23,11 @@ export interface LiveAtlasPolylineOptions extends PolylineOptions {
 }
 
 export default class LiveAtlasPolyline extends Polyline {
-	constructor(latlngs: LatLngExpression[] | LatLngExpression[][], options?: LiveAtlasPolylineOptions) {
-		super(latlngs, options);
-		Util.setOptions(this, options);
+	declare options: LiveAtlasPolylineOptions;
+
+	constructor(latlngs: LatLngExpression[] | LatLngExpression[][], option: LiveAtlasPath) {
+		super(latlngs, option.style);
+		this.options.minZoom = option.minZoom;
+		this.options.maxZoom = option.maxZoom;
 	}
 }

@@ -25,15 +25,7 @@ import {Coordinate, LiveAtlasArea} from "@/index";
 export const createArea = (options: LiveAtlasArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[] | LatLngExpression[][],
-		area = outline ? new LiveAtlasPolyline(points, {
-			...options.style,
-			minZoom: options.minZoom,
-			maxZoom: options.maxZoom,
-		}) : new LiveAtlasPolygon(points, {
-			...options.style,
-			minZoom: options.minZoom,
-			maxZoom: options.maxZoom,
-		});
+		area = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
 
 	if (options.label) {
 		area.bindPopup(() => createPopup(options));

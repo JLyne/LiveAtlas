@@ -27,30 +27,30 @@ export interface LiveAtlasProjectionOptions {
 }
 
 export class LiveAtlasProjection {
-	private readonly options: LiveAtlasProjectionOptions
+	private readonly mapToWorld: [number, number, number, number, number, number, number, number, number];
+	private readonly worldToMap: [number, number, number, number, number, number, number, number, number];
+	private readonly nativeZoomLevels: number;
 
 	constructor(options: LiveAtlasProjectionOptions) {
-		this.options = {
-			mapToWorld: options.mapToWorld || [0, 0, 0, 0, 0, 0, 0, 0],
-			worldToMap: options.worldToMap || [0, 0, 0, 0, 0, 0, 0, 0],
-			nativeZoomLevels: options.nativeZoomLevels || 1
-		}
+		this.mapToWorld = options.mapToWorld || [0, 0, 0, 0, 0, 0, 0, 0];
+		this.worldToMap = options.worldToMap || [0, 0, 0, 0, 0, 0, 0, 0];
+		this.nativeZoomLevels = options.nativeZoomLevels || 1;
 	}
 
 	locationToLatLng(location: Coordinate): LatLng {
-		const wtp = this.options.worldToMap,
+		const wtp = this.worldToMap,
 			lat = wtp[3] * location.x + wtp[4] * location.y + wtp[5] * location.z,
 			lng = wtp[0] * location.x + wtp[1] * location.y + wtp[2] * location.z;
 
 		return new LatLng(
-			-((128 - lat) / (1 << this.options.nativeZoomLevels)),
-			lng / (1 << this.options.nativeZoomLevels));
+			-((128 - lat) / (1 << this.nativeZoomLevels)),
+			lng / (1 << this.nativeZoomLevels));
 	}
 
 	latLngToLocation(latLng: LatLng, y: number): Coordinate {
-		const ptw = this.options.mapToWorld,
-			lat = latLng.lng * (1 << this.options.nativeZoomLevels),
-			lon = 128 + latLng.lat * (1 << this.options.nativeZoomLevels),
+		const ptw = this.mapToWorld,
+			lat = latLng.lng * (1 << this.nativeZoomLevels),
+			lon = 128 + latLng.lat * (1 << this.nativeZoomLevels),
 			x = ptw[0] * lat + ptw[1] * lon + ptw[2] * y,
 			z = ptw[6] * lat + ptw[7] * lon + ptw[8] * y;
 

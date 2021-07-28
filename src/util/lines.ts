@@ -22,12 +22,8 @@ import {Coordinate, LiveAtlasLine} from "@/index";
 import {LatLngExpression} from "leaflet";
 
 export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
-	const points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[],
-		line = new LiveAtlasPolyline(points, {
-			...options.style,
-			minZoom: options.minZoom,
-			maxZoom: options.maxZoom,
-		});
+	const points = options.points.map(projectPointsMapCallback, converter),
+		line = new LiveAtlasPolyline(points, options);
 
 	if(options.label) {
 		line.bindPopup(() => createPopup(options));
@@ -37,8 +33,6 @@ export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtl
 };
 
 export const updateLine = (line: LiveAtlasPolyline | undefined, options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
-	const points = options.points.map(projectPointsMapCallback, converter);
-
 	if (!line) {
 		return createLine(options, converter);
 	}
@@ -47,7 +41,7 @@ export const updateLine = (line: LiveAtlasPolyline | undefined, options: LiveAtl
 	line.unbindPopup();
 	line.bindPopup(() => createPopup(options));
 	line.setStyle(options.style);
-	line.setLatLngs(points);
+	line.setLatLngs(options.points.map(projectPointsMapCallback, converter));
 	line.redraw();
 
 	return line;
