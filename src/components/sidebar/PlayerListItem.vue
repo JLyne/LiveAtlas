@@ -44,7 +44,7 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore(),
 			otherWorld = computed(() => {
-				return store.state.configuration.grayHiddenPlayers
+				return store.state.components.playerMarkers?.grayHiddenPlayers
 					&& !props.player.hidden
 					&& (!store.state.currentWorld || store.state.currentWorld.name !== props.player.location.world);
 			}),

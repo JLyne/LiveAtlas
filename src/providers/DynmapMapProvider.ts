@@ -56,7 +56,6 @@ export default class DynmapMapProvider extends MapProvider {
 
 	private static buildServerConfig(response: any): LiveAtlasServerConfig {
 		return {
-			grayHiddenPlayers: response.grayplayerswhenhidden || false,
 			defaultMap: response.defaultmap || undefined,
 			defaultWorld: response.defaultworld || undefined,
 			defaultZoom: response.defaultzoom || 0,
@@ -172,6 +171,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 				case "playermarkers":
 					components.playerMarkers = {
+						grayHiddenPlayers: response.grayplayerswhenhidden || false,
 						hideByDefault: component.hidebydefault || false,
 						layerName: component.label || "Players",
 						layerPriority: component.layerprio || 0,

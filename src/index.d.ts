@@ -280,6 +280,7 @@ interface LiveAtlasPartialComponentConfig {
 }
 
 interface LiveAtlasPlayerMarkerConfig {
+	grayHiddenPlayers: boolean;
 	hideByDefault: boolean;
 	layerName: string;
 	layerPriority: number;
