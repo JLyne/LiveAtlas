@@ -69,7 +69,7 @@ export default defineComponent({
 					return p.name.toLowerCase().indexOf(query) > -1;
 				}) : store.state.sortedPlayers;
 			}),
-			maxPlayers = computed(() => store.state.configuration.maxPlayers),
+			maxPlayers = computed(() => store.state.maxPlayers || 0),
 
 			onKeydown = (e: KeyboardEvent) => {
 				e.stopImmediatePropagation();

@@ -149,6 +149,7 @@ export default defineComponent({
 
 			//Cleanup
 			store.commit(MutationTypes.CLEAR_PLAYERS, undefined);
+			store.commit(MutationTypes.SET_MAX_PLAYERS, 0);
 			store.commit(MutationTypes.CLEAR_CURRENT_MAP, undefined);
 			store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
 			store.commit(MutationTypes.CLEAR_WORLDS, undefined);

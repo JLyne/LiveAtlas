@@ -71,6 +71,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.POP_LINE_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
 	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): void
 
+	[MutationTypes.SET_MAX_PLAYERS](state: S, maxPlayers: number): void
 	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer>
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
 	[MutationTypes.CLEAR_PLAYERS](state: S): void
@@ -405,6 +406,10 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Pops the specified number of tile updates from the pending updates list
 	[MutationTypes.POP_TILE_UPDATES](state: State, amount: number) {
 		state.pendingTileUpdates.splice(0, amount);
+	},
+
+	[MutationTypes.SET_MAX_PLAYERS](state: State, maxPlayers: number) {
+		state.maxPlayers = maxPlayers;
 	},
 
 	// Set up to 10 players at once

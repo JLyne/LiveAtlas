@@ -36,6 +36,7 @@ export enum MutationTypes {
 	POP_CIRCLE_UPDATES = 'popCircleUpdates',
 	POP_LINE_UPDATES = 'popLineUpdates',
 	POP_TILE_UPDATES = 'popTileUpdates',
+	SET_MAX_PLAYERS = 'setMaxPlayers',
 	SET_PLAYERS_ASYNC = 'setPlayersAsync',
 	CLEAR_PLAYERS = 'clearPlayers',
 	SYNC_PLAYERS = 'syncPlayers',

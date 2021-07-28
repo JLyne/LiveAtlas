@@ -63,7 +63,6 @@ export default class DynmapMapProvider extends MapProvider {
 			followMap: response.followmap || undefined,
 			followZoom: response.followzoom || 0,
 			title: response.title.replace(titleColoursRegex, '') || 'Dynmap',
-			maxPlayers: response.maxcount || 0,
 			expandUI: response.sidebaropened && response.sidebaropened !== 'false', //Sent as a string for some reason
 		};
 	}
@@ -641,6 +640,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
 		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, response.confighash || 0);
+		this.store.commit(MutationTypes.SET_MAX_PLAYERS, response.maxcount || 0);
 		this.store.commit(MutationTypes.SET_SERVER_MESSAGES, DynmapMapProvider.buildMessagesConfig(response));
 		this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(response));
 		this.store.commit(MutationTypes.SET_COMPONENTS, this.buildComponents(response));

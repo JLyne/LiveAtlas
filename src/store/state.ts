@@ -50,6 +50,7 @@ export type State = {
 	maps: Map<string, LiveAtlasMapDefinition>;
 	players: Map<string, LiveAtlasPlayer>;
 	sortedPlayers: LiveAtlasSortedPlayers;
+	maxPlayers: number;
 	markerSets: Map<string, LiveAtlasMarkerSet>;
 
 	chat: {
@@ -98,7 +99,6 @@ export const state: State = {
 		followMap: '',
 		followZoom: 0,
 		title: '',
-		maxPlayers: 0,
 		grayHiddenPlayers: false,
 		expandUI: false,
 	},
@@ -153,6 +153,7 @@ export const state: State = {
 	maps: new Map(), //Defined maps from configuration.json
 	players: new Map(), //Online players from world.json
 	sortedPlayers: [] as LiveAtlasSortedPlayers, //Online players from world.json, sorted by their sort property then alphabetically
+	maxPlayers: 0,
 
 	chat: {
 		unread: 0,

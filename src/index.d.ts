@@ -243,7 +243,6 @@ interface LiveAtlasServerConfig {
 	followMap?: string;
 	followZoom: number;
 	title: string;
-	maxPlayers: number;
 	grayHiddenPlayers: boolean;
 	expandUI: boolean;
 }
