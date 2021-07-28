@@ -62,16 +62,18 @@ export default defineComponent({
 	},
 
 	mounted() {
+		const store = useStore();
+
 		if(!this.componentSettings!.hideByDefault) {
 			this.leaflet.getLayerManager().addLayer(
 				this.layerGroup,
 				true,
-				useStore().state.messages.playersHeading,
+				store.state.components.playerMarkers.layerName,
 				this.componentSettings!.layerPriority);
 		} else {
 			this.leaflet.getLayerManager().addHiddenLayer(
 				this.layerGroup,
-				useStore().state.messages.playersHeading,
+				store.state.components.playerMarkers.layerName,
 				this.componentSettings!.layerPriority);
 		}
 	},
