@@ -78,7 +78,7 @@ export default class DynmapMapProvider extends MapProvider {
 			chatErrorRequiresLogin: response['msg-chatrequireslogin'] || '',
 			chatErrorCooldown: response.spammessage || '',
 			worldsHeading: response['msg-maptypes'] || '',
-			playersHeading: response['msg-players'] || '',
+			playersHeading: response['msg-players'] ? `${response['msg-players']} ({cur}/{max})` : '',
 		}
 	}
 

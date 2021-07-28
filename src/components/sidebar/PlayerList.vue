@@ -16,7 +16,7 @@
 
 <template>
 	<CollapsibleSection name="players" class="players">
-		<template v-slot:heading>{{ messageHeading }} [{{ players.length }}/{{ maxPlayers }}]</template>
+		<template v-slot:heading>{{ messageHeading }}</template>
 		<template v-slot:default>
 			<div class="section__content">
 				<input v-if="players && searchEnabled" id="players__search" type="text" name="search"
@@ -49,7 +49,11 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			messageHeading = computed(() => store.state.messages.playersHeading),
+			messageHeading = computed(() => {
+				return store.state.messages.playersHeading
+					.replace('{cur}', players.value.length)
+					.replace('{max}', maxPlayers.value);
+			}),
 			messageSkeletonPlayers = computed(() => store.state.messages.playersSkeleton),
 			messageSkeletonPlayersSearch = computed(() => store.state.messages.playersSearchSkeleton),
 			messagePlayersSearchPlaceholder = computed(() => store.state.messages.playersSearchPlaceholder),
