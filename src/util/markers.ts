@@ -28,7 +28,7 @@ export const createMarker = (options: LiveAtlasMarker, converter: Function): Mar
 			icon: options.icon,
 			label: options.label,
 			iconSize: options.dimensions,
-			isHtml: options.isHTML,
+			isHtml: options.isLabelHTML,
 		}),
 		maxZoom: options.maxZoom,
 		minZoom: options.minZoom,
@@ -65,7 +65,7 @@ export const updateMarker = (marker: Marker | undefined, options: LiveAtlasMarke
 				icon: options.icon,
 				label: options.label,
 				iconSize: options.dimensions,
-				isHtml: options.isHTML,
+				isHtml: options.isLabelHTML,
 			});
 		}
 	}
@@ -80,17 +80,12 @@ export const updateMarker = (marker: Marker | undefined, options: LiveAtlasMarke
 	return marker;
 };
 
-export const createPopup = (options: LiveAtlasMarker) => {
+const createPopup = (options: LiveAtlasMarker) => {
 	const popup = document.createElement('span');
 
 	if (options.popupContent) {
 		popup.classList.add('MarkerPopup');
 		popup.insertAdjacentHTML('afterbegin', options.popupContent);
-	} else if (options.isHTML) {
-		popup.classList.add('MarkerPopup');
-		popup.insertAdjacentHTML('afterbegin', options.label);
-	} else {
-		popup.textContent = options.label;
 	}
 
 	return popup;

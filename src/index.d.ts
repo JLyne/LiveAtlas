@@ -196,7 +196,7 @@ interface LiveAtlasMarker {
 	dimensions: PointTuple;
 	icon: string;
 	label: string;
-	isHTML: boolean;
+	isLabelHTML: boolean;
 	location: Coordinate;
 	minZoom?: number;
 	maxZoom?: number;
@@ -205,11 +205,10 @@ interface LiveAtlasMarker {
 
 interface LiveAtlasPath {
 	style: PathOptions;
-	label: string;
-	isHTML: boolean;
 	minZoom?: number;
 	maxZoom?: number;
 	popupContent?: string;
+	isPopupHTML: boolean;
 }
 
 interface LiveAtlasArea extends LiveAtlasPath {

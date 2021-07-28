@@ -20,13 +20,14 @@
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import {Coordinate, LiveAtlasLine} from "@/index";
 import {LatLngExpression} from "leaflet";
+import {createPopup} from "@/util/paths";
 
 export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
 	const points = options.points.map(projectPointsMapCallback, converter),
 		line = new LiveAtlasPolyline(points, options);
 
-	if(options.label) {
-		line.bindPopup(() => createPopup(options));
+	if(options.popupContent) {
+		line.bindPopup(() => createPopup(options, 'LinePopup'));
 	}
 
 	return line;
@@ -39,7 +40,7 @@ export const updateLine = (line: LiveAtlasPolyline | undefined, options: LiveAtl
 
 	line.closePopup();
 	line.unbindPopup();
-	line.bindPopup(() => createPopup(options));
+	line.bindPopup(() => createPopup(options, 'LinePopup'));
 	line.setStyle(options.style);
 	line.setLatLngs(options.points.map(projectPointsMapCallback, converter));
 	line.redraw();
@@ -55,22 +56,6 @@ const projectPointsMapCallback = function(point: Coordinate): LatLngExpression {
 		return this(point);
 	}
 };
-
-export const createPopup = (options: LiveAtlasLine) => {
-	const popup = document.createElement('span');
-
-	if (options.popupContent) {
-		popup.classList.add('LinePopup');
-		popup.insertAdjacentHTML('afterbegin', options.popupContent);
-	} else if (options.isHTML) {
-		popup.classList.add('LinePopup');
-		popup.insertAdjacentHTML('afterbegin', options.label);
-	} else {
-		popup.textContent = options.label;
-	}
-
-	return popup;
-}
 
 export const getLinePoints = (x: number[], y: number[], z: number[]): Coordinate[] => {
 	const points = [];

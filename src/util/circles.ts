@@ -21,14 +21,15 @@ import {LatLngExpression} from "leaflet";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import {LiveAtlasCircle} from "@/index";
+import {createPopup} from "@/util/paths";
 
 export const createCircle = (options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getCirclePoints(options, converter, outline),
 		circle = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
 
-	if(options.label) {
-		circle.bindPopup(() => createPopup(options));
+	if(options.popupContent) {
+		circle.bindPopup(() => createPopup(options, 'CirclePopup'));
 	}
 
 	return circle;
@@ -43,28 +44,12 @@ export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | unde
 
 	circle.closePopup();
 	circle.unbindPopup();
-	circle.bindPopup(() => createPopup(options));
+	circle.bindPopup(() => createPopup(options, 'CirclePopup'));
 	circle.setStyle(options.style);
 	circle.setLatLngs(getCirclePoints(options, converter, outline));
 	circle.redraw();
 
 	return circle;
-}
-
-export const createPopup = (options: LiveAtlasCircle) => {
-	const popup = document.createElement('span');
-
-	if (options.popupContent) {
-		popup.classList.add('CirclePopup');
-		popup.insertAdjacentHTML('afterbegin', options.popupContent);
-	} else if (options.isHTML) {
-		popup.classList.add('CirclePopup');
-		popup.insertAdjacentHTML('afterbegin', options.label);
-	} else {
-		popup.textContent = options.label;
-	}
-
-	return popup;
 }
 
 export const getCirclePoints = (options: LiveAtlasCircle, converter: Function, outline: boolean): LatLngExpression[] => {

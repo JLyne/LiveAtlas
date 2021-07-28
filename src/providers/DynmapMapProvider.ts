@@ -280,6 +280,7 @@ export default class DynmapMapProvider extends MapProvider {
 	private static buildMarker(marker: any): LiveAtlasMarker {
 		return {
 			label: marker.label || '',
+			isLabelHTML: marker.markup || false,
 			location: {
 				x: marker.x || 0,
 				y: marker.y || 0,
@@ -287,7 +288,6 @@ export default class DynmapMapProvider extends MapProvider {
 			},
 			dimensions: marker.dim ? marker.dim.split('x') : [16, 16],
 			icon: marker.icon || "default",
-			isHTML: marker.markup || false,
 			minZoom: typeof marker.minzoom !== 'undefined' && marker.minzoom > -1 ? marker.minzoom : undefined,
 			maxZoom: typeof marker.maxzoom !== 'undefined' && marker.maxzoom > -1 ? marker.maxzoom : undefined,
 			popupContent: marker.desc || undefined,
@@ -323,12 +323,12 @@ export default class DynmapMapProvider extends MapProvider {
 				fillOpacity: area.fillopacity || 0,
 			},
 			outline: !opacity,
-			label: area.label || '',
-			isHTML: area.markup || false,
 			points: getPoints(x, y, z, !opacity),
 			minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
 			maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
-			popupContent: area.desc || undefined,
+
+			isPopupHTML: area.desc ? true : area.markup || false,
+			popupContent: area.desc || area.label || undefined,
 		});
 	}
 
@@ -353,12 +353,12 @@ export default class DynmapMapProvider extends MapProvider {
 				opacity: line.opacity || 1,
 				weight: line.weight || 1,
 			},
-			label: line.label || '',
-			isHTML: line.markup || false,
 			points: getLinePoints(line.x || [0, 0], line.y || [0, 0], line.z || [0, 0]),
 			minZoom: typeof line.minzoom !== 'undefined' && line.minzoom > -1 ? line.minzoom : undefined,
 			maxZoom: typeof line.maxzoom !== 'undefined' && line.maxzoom > -1 ? line.maxzoom : undefined,
-			popupContent: line.desc || undefined,
+
+			isPopupHTML: line.desc ? true : line.markup || false,
+			popupContent: line.desc || line.label || undefined,
 		});
 	}
 
@@ -391,12 +391,11 @@ export default class DynmapMapProvider extends MapProvider {
 				opacity: circle.opacity || 1,
 				weight: circle.weight || 1,
 			},
-			label: circle.label || '',
-			isHTML: circle.markup || false,
-
 			minZoom: typeof circle.minzoom !== 'undefined' && circle.minzoom > -1 ? circle.minzoom : undefined,
 			maxZoom: typeof circle.maxzoom !== 'undefined' && circle.maxzoom > -1 ? circle.maxzoom : undefined,
-			popupContent: circle.desc || undefined,
+
+			isPopupHTML: circle.desc ? true : circle.markup || false,
+			popupContent: circle.desc || circle.label || undefined,
 		});
 	}
 

@@ -21,14 +21,15 @@ import {LatLngExpression} from "leaflet";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import {Coordinate, LiveAtlasArea} from "@/index";
+import {arePointsEqual, createPopup, isStyleEqual} from "@/util/paths";
 
 export const createArea = (options: LiveAtlasArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[] | LatLngExpression[][],
 		area = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
 
-	if (options.label) {
-		area.bindPopup(() => createPopup(options));
+	if (options.popupContent) {
+		area.bindPopup(() => createPopup(options, 'AreaPopup'));
 	}
 
 	return area;
@@ -57,42 +58,13 @@ export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefine
 
 	area.closePopup();
 	area.unbindPopup();
-	area.bindPopup(() => createPopup(options));
+	area.bindPopup(() => createPopup(options, 'AreaPopup'));
 
 	if(dirty) {
 		area.redraw();
 	}
 
 	return area;
-};
-
-const arePointsEqual = (oldPoints: any, newPoints: any) => {
-	return JSON.stringify(oldPoints) === JSON.stringify(newPoints);
-}
-
-const isStyleEqual = (oldStyle: any, newStyle: any) => {
-	return oldStyle && newStyle
-		&& (oldStyle.color === newStyle.color)
-		&& (oldStyle.weight === newStyle.weight)
-		&& (oldStyle.opacity === newStyle.opacity)
-		&& (oldStyle.fillColor === newStyle.fillColor)
-		&& (oldStyle.fillOpacity === newStyle.fillOpacity)
-}
-
-export const createPopup = (options: LiveAtlasArea): HTMLElement => {
-	const popup = document.createElement('span');
-
-	if (options.popupContent) {
-		popup.classList.add('AreaPopup');
-		popup.insertAdjacentHTML('afterbegin', options.popupContent);
-	} else if (options.isHTML) {
-		popup.classList.add('AreaPopup');
-		popup.insertAdjacentHTML('afterbegin', options.label);
-	} else {
-		popup.textContent = options.label;
-	}
-
-	return popup;
 };
 
 const projectPointsMapCallback = function(this: Function, point: Coordinate | Coordinate[] | Coordinate[][]): LatLngExpression | LatLngExpression[] {
