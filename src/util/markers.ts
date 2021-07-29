@@ -23,16 +23,7 @@ import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 import {LiveAtlasMarker} from "@/index";
 
 export const createMarker = (options: LiveAtlasMarker, converter: Function): Marker => {
-	const marker = new GenericMarker(converter(options.location), {
-		icon: new GenericIcon({
-			icon: options.icon,
-			label: options.label,
-			iconSize: options.dimensions,
-			isHtml: options.isLabelHTML,
-		}),
-		maxZoom: options.maxZoom,
-		minZoom: options.minZoom,
-	});
+	const marker = new GenericMarker(converter(options.location), options);
 
 	marker.on('click', (e: LeafletMouseEvent) => {
 		e.target._map.panTo(e.target.getLatLng());

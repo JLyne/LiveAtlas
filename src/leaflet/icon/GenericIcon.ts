@@ -47,8 +47,14 @@ export class GenericIcon extends DivIcon {
 
 	// @ts-ignore
 	options: GenericIconOptions;
-	_image?: HTMLImageElement;
-	_label?: HTMLSpanElement;
+
+	private _image?: HTMLImageElement;
+	private _label?: HTMLSpanElement;
+	private _container?: HTMLDivElement;
+	private _labelCreated: boolean = false;
+	private _onHover: EventListener = () => {
+		this.createLabel();
+	};
 
 	constructor(options: GenericIconOptions) {
 		super(Object.assign(GenericIcon.defaultOptions, options));
@@ -64,13 +70,40 @@ export class GenericIcon extends DivIcon {
 			size = point(this.options.iconSize as PointExpression);
 
 		this._image = markerIcon.cloneNode(false) as HTMLImageElement;
-		this._label = markerLabel.cloneNode(false) as HTMLSpanElement;
-
-		const sizeClass = [size.x, size.y].join('x');
 
 		this._image.width = size.x;
 		this._image.height = size.y;
 		this._image.src = url;
+
+		// @ts-ignore
+		Icon.prototype._setIconStyles.call(this, div, 'icon');
+
+		div.appendChild(this._image);
+		div.classList.add('marker');
+
+		if(this.options.className) {
+			div.classList.add(this.options.className);
+		}
+
+		//Create label lazily on hover
+		this._image.addEventListener('mouseover', this._onHover);
+
+		this._container = div;
+
+		return div;
+	}
+
+	createLabel() {
+		if(!this._container || this._labelCreated) {
+			return;
+		}
+
+		this._image?.removeEventListener('mouseover', this._onHover);
+
+		const size = point(this.options.iconSize as PointExpression),
+			sizeClass = [size.x, size.y].join('x');
+
+		this._label = markerLabel.cloneNode(false) as HTMLSpanElement;
 
 		this._label.classList.add(/*'markerName_' + set.id,*/ `marker__label--${sizeClass}`);
 
@@ -80,18 +113,8 @@ export class GenericIcon extends DivIcon {
 			this._label.textContent = this.options.label;
 		}
 
-		// @ts-ignore
-		Icon.prototype._setIconStyles.call(this, div, 'icon');
-
-		div.appendChild(this._image);
-		div.appendChild(this._label);
-		div.classList.add('marker');
-
-		if(this.options.className) {
-			div.classList.add(this.options.className);
-		}
-
-		return div;
+		this._container!.appendChild(this._label);
+		this._labelCreated = true;
 	}
 
 	update(options: GenericIconOptions) {
