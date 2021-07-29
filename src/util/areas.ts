@@ -33,7 +33,7 @@ export const createArea = (options: LiveAtlasArea, converter: Function): LiveAtl
 	}
 
 	if (options.tooltipContent) {
-		area.bindTooltip(() => options.tooltipContent, tooltipOptions);
+		area.bindTooltip(() => options.tooltipContent as string, tooltipOptions);
 	}
 
 	return area;

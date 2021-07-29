@@ -31,7 +31,7 @@ export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtl
 	}
 
 	if (options.tooltipContent) {
-		line.bindTooltip(() => options.tooltipContent, tooltipOptions);
+		line.bindTooltip(() => options.tooltipContent as string, tooltipOptions);
 	}
 
 	return line;

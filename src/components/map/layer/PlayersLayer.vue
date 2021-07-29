@@ -68,12 +68,12 @@ export default defineComponent({
 			this.leaflet.getLayerManager().addLayer(
 				this.layerGroup,
 				true,
-				store.state.components.playerMarkers.layerName,
+				store.state.components.playerMarkers!.layerName,
 				this.componentSettings!.layerPriority);
 		} else {
 			this.leaflet.getLayerManager().addHiddenLayer(
 				this.layerGroup,
-				store.state.components.playerMarkers.layerName,
+				store.state.components.playerMarkers!.layerName,
 				this.componentSettings!.layerPriority);
 		}
 	},

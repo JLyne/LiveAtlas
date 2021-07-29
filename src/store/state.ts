@@ -99,7 +99,6 @@ export const state: State = {
 		followMap: '',
 		followZoom: 0,
 		title: '',
-		grayHiddenPlayers: false,
 		expandUI: false,
 	},
 	configurationHash: undefined,

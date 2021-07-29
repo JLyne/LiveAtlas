@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import {LatLngExpression, PathOptions} from "leaflet";
+import {Direction, LatLngExpression, PathOptions} from "leaflet";
 import {LiveAtlasPath} from "@/index";
 
 export const tooltipOptions = {
-	direction: 'top',
+	direction: 'top' as Direction,
 	sticky: true,
 	opacity: 1.0,
 	interactive: false,
