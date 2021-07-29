@@ -20,6 +20,8 @@ import {Map} from 'leaflet';
 import {useStore} from "@/store";
 import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {LiveAtlasTileLayer} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 
 export default defineComponent({
 	props: {
@@ -39,11 +41,21 @@ export default defineComponent({
 
 	setup(props) {
 		const store = useStore(),
+			active = computed(() => props.map === store.state.currentMap);
+
+		let layer: LiveAtlasTileLayer;
+
+		if(store.state.currentServer?.type === 'dynmap') {
 			layer = new DynmapTileLayer({
 				errorTileUrl: 'images/blank.png',
 				mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map))),
-			}),
-			active = computed(() => props.map === store.state.currentMap);
+			});
+		} else {
+			layer = new Pl3xmapTileLayer({
+				errorTileUrl: 'images/blank.png',
+				mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map)))
+			});
+		}
 
 		const enableLayer = () => {
 				props.leaflet.addLayer(layer);

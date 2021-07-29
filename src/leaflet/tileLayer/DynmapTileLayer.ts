@@ -17,20 +17,14 @@
  * limitations under the License.
  */
 
-import {Coords, DoneCallback, DomUtil, TileLayerOptions, TileLayer, Util} from 'leaflet';
+import {Coords, DoneCallback, DomUtil} from 'leaflet';
 import {useStore} from "@/store";
 import {Coordinate} from "@/index";
-import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {LiveAtlasTileLayerOptions, LiveAtlasTileLayer} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 import {computed, watch} from "@vue/runtime-core";
 import {ComputedRef} from "@vue/reactivity";
 import {WatchStopHandle} from "vue";
 import {ActionTypes} from "@/store/action-types";
-
-export interface DynmapTileLayerOptions extends TileLayerOptions {
-	mapSettings: LiveAtlasMapDefinition;
-	errorTileUrl: string;
-	night?: boolean;
-}
 
 export interface DynmapTile {
 	active?: boolean;
@@ -61,8 +55,7 @@ export interface TileInfo {
 const store = useStore();
 
 // noinspection JSUnusedGlobalSymbols
-export class DynmapTileLayer extends TileLayer {
-	private readonly _mapSettings: LiveAtlasMapDefinition;
+export class DynmapTileLayer extends LiveAtlasTileLayer {
 	private readonly _cachedTileUrls: Map<any, any> = Object.seal(new Map());
 	private readonly _namedTiles: Map<any, any> = Object.seal(new Map());
 	private readonly _loadQueue: DynmapTileElement[] = [];
@@ -79,22 +72,10 @@ export class DynmapTileLayer extends TileLayer {
 	// @ts-ignore
 	declare options: DynmapTileLayerOptions;
 
-	constructor(options: DynmapTileLayerOptions) {
+	constructor(options: LiveAtlasTileLayerOptions) {
 		super('', options);
 
 		this._mapSettings = options.mapSettings;
-		options.maxZoom = this._mapSettings.nativeZoomLevels + this._mapSettings.extraZoomLevels;
-		options.maxNativeZoom = this._mapSettings.nativeZoomLevels;
-		options.zoomReverse = true;
-		options.tileSize = 128;
-		options.minZoom = 0;
-
-		Util.setOptions(this, options);
-
-		if (options.mapSettings === null) {
-			throw new TypeError("mapSettings missing");
-		}
-
 		this._tileTemplate = DomUtil.create('img', 'leaflet-tile') as DynmapTileElement;
 		this._tileTemplate.style.width = this._tileTemplate.style.height = this.options.tileSize + 'px';
 		this._tileTemplate.alt = '';

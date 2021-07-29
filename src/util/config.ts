@@ -38,40 +38,37 @@ const validateLiveAtlasConfiguration = (config: any): Map<string, LiveAtlasServe
 		}
 
 		serverConfig.id = server;
-		serverConfig.type = serverConfig.type || 'dynmap';
 
-		switch(serverConfig.type) {
-			case 'dynmap':
-				if (!serverConfig.dynmap || serverConfig.dynmap.constructor !== Object) {
-					throw new ConfigurationError(`Server '${server}': Dynmap configuration object missing. ${check}`);
-				}
+		if(typeof serverConfig.pl3xmap !== 'undefined') {
+			serverConfig.type = 'pl3xmap';
+		} else if(typeof serverConfig.dynmap !== 'undefined') {
+			if (!serverConfig.dynmap || serverConfig.dynmap.constructor !== Object) {
+				throw new ConfigurationError(`Server '${server}': Dynmap configuration object missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.configuration) {
-					throw new ConfigurationError(`Server '${server}': Dynmap configuration URL missing. ${check}`);
-				}
+			if (!serverConfig.dynmap.configuration) {
+				throw new ConfigurationError(`Server '${server}': Dynmap configuration URL missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.update) {
-					throw new ConfigurationError(`Server '${server}': Dynmap update URL missing. ${check}`);
-				}
+			if (!serverConfig.dynmap.update) {
+				throw new ConfigurationError(`Server '${server}': Dynmap update URL missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.markers) {
-					throw new ConfigurationError(`Server '${server}': Dynmap markers URL missing. ${check}`);
-				}
+			if (!serverConfig.dynmap.markers) {
+				throw new ConfigurationError(`Server '${server}': Dynmap markers URL missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.tiles) {
-					throw new ConfigurationError(`Server '${server}': Dynmap tiles URL missing. ${check}`);
-				}
+			if (!serverConfig.dynmap.tiles) {
+				throw new ConfigurationError(`Server '${server}': Dynmap tiles URL missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.sendmessage) {
-					throw new ConfigurationError(`Server '${server}': Dynmap sendmessage URL missing. ${check}`);
-				}
-				break;
+			if (!serverConfig.dynmap.sendmessage) {
+				throw new ConfigurationError(`Server '${server}': Dynmap sendmessage URL missing. ${check}`);
+			}
 
-			case 'pl3xmap':
-			case 'plexmap':
-				if (!serverConfig.plexmap || serverConfig.plexmap.constructor !== Object) {
-					throw new ConfigurationError(`Server '${server}': Pl3xmap configuration object missing. ${check}`);
-				}
+			serverConfig.type = 'dynmap';
+		} else {
+			throw new ConfigurationError(`Server '${server}': No Dynmap or Pl3xmap configuration defined. ${check}`);
 		}
 
 		result.set(server, serverConfig);

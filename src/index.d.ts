@@ -62,8 +62,9 @@ interface LiveAtlasGlobalConfig {
 interface LiveAtlasServerDefinition {
 	id: string;
 	label?: string;
-	type: 'dynmap'
-	dynmap: DynmapUrlConfig;
+	type: 'dynmap' | 'pl3xmap';
+	dynmap?: DynmapUrlConfig;
+	pl3xmap?: string;
 }
 
 // Messages defined directly in LiveAtlas and used for all servers
