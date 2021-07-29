@@ -49,11 +49,7 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			messageHeading = computed(() => {
-				return store.state.messages.playersHeading
-					.replace('{cur}', players.value.length.toString())
-					.replace('{max}', maxPlayers.value.toString());
-			}),
+			messageHeading = computed(() => store.getters.playersHeading),
 			messageSkeletonPlayers = computed(() => store.state.messages.playersSkeleton),
 			messageSkeletonPlayersSearch = computed(() => store.state.messages.playersSearchSkeleton),
 			messagePlayersSearchPlaceholder = computed(() => store.state.messages.playersSearchPlaceholder),

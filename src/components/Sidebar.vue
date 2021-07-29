@@ -74,7 +74,7 @@ export default defineComponent({
 			following = computed(() => store.state.followTarget),
 
 			messageWorlds = computed(() => store.state.messages.worldsHeading),
-			messagePlayers = computed(() => store.state.messages.playersHeading),
+			messagePlayers = computed(() => store.getters.playersHeading),
 
 			playerMakersEnabled = computed(() => !!store.state.components.playerMarkers),
 

@@ -25,6 +25,7 @@ export type Getters = {
 	night(state: State): boolean;
 	mapBackground(state: State, getters: GetterTree<State, State> & Getters): string;
 	url(state: State, getters: GetterTree<State, State> & Getters): string;
+	playersHeading(state: State, getters: GetterTree<State, State> & Getters): string;
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -72,4 +73,10 @@ export const getters: GetterTree<State, State> & Getters = {
 
 		return getUrlForLocation(state.currentMap, {x,y,z}, zoom);
 	},
+
+	playersHeading(state: State): string {
+		return state.messages.playersHeading
+					.replace('{cur}', state.players.size.toString())
+					.replace('{max}', state.maxPlayers.toString());
+	}
 }
