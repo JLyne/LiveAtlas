@@ -1,38 +1,29 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
  * Some portions of this file were taken from https://github.com/webbukkit/dynmap.
  * These portions are Copyright 2020 Dynmap Contributors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import {LeafletMouseEvent, Marker} from "leaflet";
-import {DynmapMarker} from "@/dynmap";
 import {GenericIcon} from "@/leaflet/icon/GenericIcon";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
+import {LiveAtlasMarker} from "@/index";
 
-export const createMarker = (options: DynmapMarker, converter: Function): Marker => {
-	const marker = new GenericMarker(converter(options.location.x, options.location.y, options.location.z), {
-		icon: new GenericIcon({
-			icon: options.icon,
-			label: options.label,
-			iconSize: options.dimensions,
-			isHtml: options.isHTML,
-		}),
-		maxZoom: options.maxZoom,
-		minZoom: options.minZoom,
-	});
+export const createMarker = (options: LiveAtlasMarker, converter: Function): Marker => {
+	const marker = new GenericMarker(converter(options.location), options);
 
 	marker.on('click', (e: LeafletMouseEvent) => {
 		e.target._map.panTo(e.target.getLatLng());
@@ -45,13 +36,13 @@ export const createMarker = (options: DynmapMarker, converter: Function): Marker
 	return marker;
 };
 
-export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, converter: Function): Marker => {
+export const updateMarker = (marker: Marker | undefined, options: LiveAtlasMarker, converter: Function): Marker => {
 	if (!marker) {
 		return createMarker(options, converter);
 	}
 
 	const oldLocation = marker.getLatLng(),
-		newLocation = converter(options.location.x, options.location.y, options.location.z);
+		newLocation = converter(options.location);
 
 	if(!oldLocation.equals(newLocation)) {
 		marker.setLatLng(newLocation);
@@ -65,7 +56,7 @@ export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, 
 				icon: options.icon,
 				label: options.label,
 				iconSize: options.dimensions,
-				isHtml: options.isHTML,
+				isHtml: options.isLabelHTML,
 			});
 		}
 	}
@@ -80,17 +71,12 @@ export const updateMarker = (marker: Marker | undefined, options: DynmapMarker, 
 	return marker;
 };
 
-export const createPopup = (options: DynmapMarker) => {
+const createPopup = (options: LiveAtlasMarker) => {
 	const popup = document.createElement('span');
 
 	if (options.popupContent) {
 		popup.classList.add('MarkerPopup');
 		popup.insertAdjacentHTML('afterbegin', options.popupContent);
-	} else if (options.isHTML) {
-		popup.classList.add('MarkerPopup');
-		popup.insertAdjacentHTML('afterbegin', options.label);
-	} else {
-		popup.textContent = options.label;
 	}
 
 	return popup;

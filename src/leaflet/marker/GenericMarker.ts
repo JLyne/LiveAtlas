@@ -1,30 +1,44 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import {MarkerOptions, Marker, Util, LatLngExpression, Icon} from 'leaflet';
+import {LiveAtlasMarker} from "@/index";
+import {GenericIcon} from "@/leaflet/icon/GenericIcon";
 
 export interface GenericMarkerOptions extends MarkerOptions {
+	icon: GenericIcon;
 	minZoom?: number;
 	maxZoom?: number;
 }
 
 export class GenericMarker extends Marker {
-	constructor(latLng: LatLngExpression, options: GenericMarkerOptions) {
-		super(latLng, options);
-		Util.setOptions(this, options);
+	declare options: GenericMarkerOptions;
+
+	constructor(latLng: LatLngExpression, options: LiveAtlasMarker) {
+		super(latLng, {});
+
+		this.options.icon = new GenericIcon({
+			icon: options.icon,
+			label: options.label,
+			iconSize: options.dimensions,
+			isHtml: options.isLabelHTML,
+		});
+
+		this.options.maxZoom = options.maxZoom;
+		this.options.minZoom = options.maxZoom;
 	}
 
 	// noinspection JSUnusedGlobalSymbols
@@ -34,5 +48,9 @@ export class GenericMarker extends Marker {
 
 	getIcon(): Icon.Default {
 		return this.options.icon as Icon.Default;
+	}
+
+	createLabel(): void {
+		this.options.icon.createLabel();
 	}
 }

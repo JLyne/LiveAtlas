@@ -1,17 +1,17 @@
 <!--
-  - Copyright 2020 James Lyne
+  - Copyright 2021 James Lyne
   -
-  -    Licensed under the Apache License, Version 2.0 (the "License");
-  -    you may not use this file except in compliance with the License.
-  -    You may obtain a copy of the License at
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
   -
-  -      http://www.apache.org/licenses/LICENSE-2.0
+  - http://www.apache.org/licenses/LICENSE-2.0
   -
-  -    Unless required by applicable law or agreed to in writing, software
-  -    distributed under the License is distributed on an "AS IS" BASIS,
-  -    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  -    See the License for the specific language governing permissions and
-  -    limitations under the License.
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
   -->
 
 <template>
@@ -43,21 +43,19 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			updateInterval = computed(() => store.state.configuration.updateInterval),
 			title = computed(() => store.state.configuration.title),
 			currentUrl = computed(() => store.getters.url),
 			currentServer = computed(() => store.state.currentServer),
 			configurationHash = computed(() => store.state.configurationHash),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
-			updatesEnabled = ref(false),
-			updateTimeout = ref(0),
 			configAttempts = ref(0),
 
 			loadConfiguration = async () => {
 				try {
 					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
-					startUpdates();
+					await store.dispatch(ActionTypes.START_UPDATES, undefined);
+
 					requestAnimationFrame(() => {
 						hideSplash();
 
@@ -78,36 +76,6 @@ export default defineComponent({
 					showSplashError(`${error}\n${e}`, false, ++configAttempts.value);
 					setTimeout(() => loadConfiguration(), 1000);
 				}
-			},
-
-			startUpdates = () => {
-				updatesEnabled.value = true;
-				update();
-			},
-
-			update = async () => {
-				//TODO: Error notification for repeated failures?
-				try {
-					await store.dispatch(ActionTypes.GET_UPDATE, undefined);
-				} finally {
-					if(updatesEnabled.value) {
-						if(updateTimeout.value) {
-							clearTimeout(updateTimeout.value);
-						}
-
-						updateTimeout.value = setTimeout(() => update(), updateInterval.value);
-					}
-				}
-			},
-
-			stopUpdates = () => {
-				updatesEnabled.value = false;
-
-				if (updateTimeout.value) {
-					clearTimeout(updateTimeout.value);
-				}
-
-				updateTimeout.value = 0;
 			},
 
 			handleUrl = () => {
@@ -174,7 +142,6 @@ export default defineComponent({
 		watch(currentUrl, (url) => window.history.replaceState({}, '', url));
 		watch(currentServer, (newServer?: LiveAtlasServerDefinition) => {
 			showSplash();
-			stopUpdates();
 
 			if(!newServer) {
 				return;
@@ -182,6 +149,7 @@ export default defineComponent({
 
 			//Cleanup
 			store.commit(MutationTypes.CLEAR_PLAYERS, undefined);
+			store.commit(MutationTypes.SET_MAX_PLAYERS, 0);
 			store.commit(MutationTypes.CLEAR_CURRENT_MAP, undefined);
 			store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
 			store.commit(MutationTypes.CLEAR_WORLDS, undefined);
@@ -190,17 +158,17 @@ export default defineComponent({
 			window.history.replaceState({}, '', newServer.id);
 			loadConfiguration();
 		}, {deep: true});
-		watch(configurationHash, (newHash, oldHash) => {
+		watch(configurationHash, async (newHash, oldHash) => {
 			if(newHash && oldHash) {
 				showSplash();
-				stopUpdates();
 				store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
-				loadConfiguration();
+				await store.dispatch(ActionTypes.STOP_UPDATES, undefined);
+				await loadConfiguration();
 			}
 		});
 
 		onMounted(() => loadConfiguration());
-		onBeforeUnmount(() => stopUpdates());
+		onBeforeUnmount(() => store.dispatch(ActionTypes.STOP_UPDATES, undefined));
 
 		handleUrl();
 		onResize();

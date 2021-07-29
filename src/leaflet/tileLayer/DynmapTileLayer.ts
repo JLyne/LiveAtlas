@@ -1,46 +1,30 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
  * Some portions of this file were taken from https://github.com/webbukkit/dynmap.
  * These portions are Copyright 2020 Dynmap Contributors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-import {TileLayer, Coords, DoneCallback, TileLayerOptions, DomUtil, Util, LatLng} from 'leaflet';
-import {store} from "@/store";
+import {Coords, DoneCallback, DomUtil} from 'leaflet';
+import {useStore} from "@/store";
 import {Coordinate} from "@/index";
-import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-
-export interface DynmapTileLayerOptions extends TileLayerOptions {
-	mapSettings: LiveAtlasMapDefinition;
-	errorTileUrl: string;
-	night?: boolean;
-}
-
-export interface DynmapTileLayer extends TileLayer {
-	options: DynmapTileLayerOptions;
-	_mapSettings: LiveAtlasMapDefinition;
-	_cachedTileUrls: Map<string, string>;
-	_namedTiles: Map<string, DynmapTileElement>;
-	_tileTemplate: DynmapTileElement;
-	_loadQueue: DynmapTileElement[];
-	_loadingTiles: Set<DynmapTileElement>;
-
-	locationToLatLng(location: Coordinate): LatLng;
-
-	latLngToLocation(latLng: LatLng): Coordinate;
-}
+import {LiveAtlasTileLayerOptions, LiveAtlasTileLayer} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {computed, watch} from "@vue/runtime-core";
+import {ComputedRef} from "@vue/reactivity";
+import {WatchStopHandle} from "vue";
+import {ActionTypes} from "@/store/action-types";
 
 export interface DynmapTile {
 	active?: boolean;
@@ -68,43 +52,59 @@ export interface TileInfo {
 	fmt: string;
 }
 
+const store = useStore();
+
 // noinspection JSUnusedGlobalSymbols
-export class DynmapTileLayer extends TileLayer {
-	constructor(options: DynmapTileLayerOptions) {
+export class DynmapTileLayer extends LiveAtlasTileLayer {
+	private readonly _cachedTileUrls: Map<any, any> = Object.seal(new Map());
+	private readonly _namedTiles: Map<any, any> = Object.seal(new Map());
+	private readonly _loadQueue: DynmapTileElement[] = [];
+	private readonly _loadingTiles: Set<DynmapTileElement> = Object.seal(new Set());
+	private readonly _tileTemplate: DynmapTileElement;
+	private readonly _baseUrl: string;
+
+	private readonly _night: ComputedRef<boolean>;
+	private readonly _pendingUpdates: ComputedRef<boolean>;
+	private readonly _nightUnwatch: WatchStopHandle;
+	private readonly _updateUnwatch: WatchStopHandle;
+	private _updateFrame: number = 0;
+
+	// @ts-ignore
+	declare options: DynmapTileLayerOptions;
+
+	constructor(options: LiveAtlasTileLayerOptions) {
 		super('', options);
 
 		this._mapSettings = options.mapSettings;
-		options.maxZoom = this._mapSettings.nativeZoomLevels + this._mapSettings.extraZoomLevels;
-		options.maxNativeZoom = this._mapSettings.nativeZoomLevels;
-		options.zoomReverse = true;
-		options.tileSize = 128;
-		options.minZoom = 0;
-
-		Util.setOptions(this, options);
-
-		if (options.mapSettings === null) {
-			throw new TypeError("mapSettings missing");
-		}
-
-		this._cachedTileUrls = Object.seal(new Map());
-		this._namedTiles = Object.seal(new Map());
-		this._loadQueue = [];
-		this._loadingTiles = Object.seal(new Set());
-
 		this._tileTemplate = DomUtil.create('img', 'leaflet-tile') as DynmapTileElement;
 		this._tileTemplate.style.width = this._tileTemplate.style.height = this.options.tileSize + 'px';
 		this._tileTemplate.alt = '';
 		this._tileTemplate.tileName = '';
 		this._tileTemplate.setAttribute('role', 'presentation');
+		this._baseUrl = store.state.currentMapProvider!.getTilesUrl();
 
 		Object.seal(this._tileTemplate);
 
 		if(this.options.crossOrigin || this.options.crossOrigin === '') {
 			this._tileTemplate.crossOrigin = this.options.crossOrigin === true ? '' : this.options.crossOrigin;
 		}
+
+		this._pendingUpdates = computed(() => !!store.state.pendingTileUpdates.length);
+		this._updateUnwatch = watch(this._pendingUpdates, (newValue, oldValue) => {
+			if(newValue && !oldValue && !this._updateFrame) {
+				this.handlePendingUpdates();
+			}
+		});
+
+		this._night = computed(() => store.getters.night);
+		this._nightUnwatch = watch(this._night, () =>  {
+			if(this._mapSettings.nightAndDay) {
+				this.redraw();
+			}
+		});
 	}
 
-	getTileName(coords: Coordinate) {
+	private getTileName(coords: Coordinate) {
 		const info = this.getTileInfo(coords);
 		// Y is inverted for HD-map.
 		info.y = -info.y;
@@ -116,12 +116,12 @@ export class DynmapTileLayer extends TileLayer {
 		return this.getTileUrlFromName(this.getTileName(coords));
 	}
 
-	getTileUrlFromName(name: string, timestamp?: number) {
+	private getTileUrlFromName(name: string, timestamp?: number) {
 		let url = this._cachedTileUrls.get(name);
 
 		if (!url) {
 			const path = escape(`${this._mapSettings.world.name}/${name}`);
-			url = `${store.getters.serverConfig.dynmap.tiles}${path}`;
+			url = `${this._baseUrl}${path}`;
 
 			if(typeof timestamp !== 'undefined') {
 				url += (url.indexOf('?') === -1 ? `?timestamp=${timestamp}` : `&timestamp=${timestamp}`);
@@ -133,7 +133,7 @@ export class DynmapTileLayer extends TileLayer {
 		return url;
 	}
 
-	updateNamedTile(name: string, timestamp: number) {
+	private updateNamedTile(name: string, timestamp: number) {
 		const tile = this._namedTiles.get(name);
 		this._cachedTileUrls.delete(name);
 
@@ -240,14 +240,14 @@ export class DynmapTileLayer extends TileLayer {
 	}
 
 	// Some helper functions.
-	zoomprefix(amount: number) {
+	private zoomprefix(amount: number) {
 		// amount == 0 -> ''
 		// amount == 1 -> 'z_'
 		// amount == 2 -> 'zz_'
 		return 'z'.repeat(amount) + (amount === 0 ? '' : '_');
 	}
 
-	getTileInfo(coords: Coordinate): TileInfo {
+	private getTileInfo(coords: Coordinate): TileInfo {
 		// zoom: max zoomed in = this.options.maxZoom, max zoomed out = 0
 		// izoom: max zoomed in = 0, max zoomed out = this.options.maxZoom
 		// zoomoutlevel: izoom < mapzoomin -> 0, else -> izoom - mapzoomin (which ranges from 0 till mapzoomout)
@@ -259,7 +259,7 @@ export class DynmapTileLayer extends TileLayer {
 
 		return {
 			prefix: this._mapSettings.prefix,
-			nightday: (this._mapSettings.nightAndDay && !this.options.night) ? '_day' : '',
+			nightday: (this._mapSettings.nightAndDay && !this._night.value) ? '_day' : '',
 			scaledx: x >> 5,
 			scaledy: y >> 5,
 			zoom: this.zoomprefix(zoomoutlevel),
@@ -270,10 +270,34 @@ export class DynmapTileLayer extends TileLayer {
 		};
 	}
 
-	setNight(night: boolean) {
-		if(this.options.night !== night) {
-			this.options.night = night;
-			this.redraw();
+	private async handlePendingUpdates() {
+		const updates = await store.dispatch(ActionTypes.POP_TILE_UPDATES, 10);
+
+		for(const update of updates) {
+			this.updateNamedTile(update.name, update.timestamp);
 		}
+
+		if(this._pendingUpdates.value) {
+			// eslint-disable-next-line no-unused-vars
+			this._updateFrame = requestAnimationFrame(() => this.handlePendingUpdates());
+		} else {
+			this._updateFrame = 0;
+		}
+	}
+
+	remove() {
+		super.remove();
+
+		this._nightUnwatch();
+
+		if(this._updateFrame) {
+			cancelAnimationFrame(this._updateFrame);
+		}
+
+		if(this._updateUnwatch) {
+			this._updateUnwatch();
+		}
+
+		return this;
 	}
 }

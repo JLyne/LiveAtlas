@@ -1,56 +1,52 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
  * Some portions of this file were taken from https://github.com/webbukkit/dynmap.
  * These portions are Copyright 2020 Dynmap Contributors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import {LatLngExpression} from "leaflet";
-import {DynmapArea} from "@/dynmap";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
+import {Coordinate, LiveAtlasArea} from "@/index";
+import {arePointsEqual, createPopup, isStyleEqual, tooltipOptions} from "@/util/paths";
 
-export const createArea = (options: DynmapArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const createArea = (options: LiveAtlasArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
-		points = getPoints(options, converter, outline),
-		area = outline ? new LiveAtlasPolyline(points, {
-			...options.style,
-			minZoom: options.minZoom,
-			maxZoom: options.maxZoom,
-		}) : new LiveAtlasPolygon(points, {
-			...options.style,
-			minZoom: options.minZoom,
-			maxZoom: options.maxZoom,
-		});
+		points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[] | LatLngExpression[][],
+		area = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
 
-	if (options.label) {
-		area.bindPopup(() => createPopup(options));
+	if (options.popupContent) {
+		area.bindPopup(() => createPopup(options, 'AreaPopup'));
+	}
+
+	if (options.tooltipContent) {
+		area.bindTooltip(() => options.tooltipContent as string, tooltipOptions);
 	}
 
 	return area;
 };
 
-export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: DynmapArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
-	const outline = !options.style || !options.style.fillOpacity || (options.style.fillOpacity <= 0) as boolean,
-		points = getPoints(options, converter, outline);
-
+export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasArea, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	if (!area) {
 		return createArea(options, converter);
 	}
 
-	const oldPoints = area.getLatLngs();
+	const points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[] | LatLngExpression[][],
+		oldPoints = area.getLatLngs();
+
 	let dirty = false;
 
 	//Avoid pointless setStyle() redrawing by checking if styles have actually changed
@@ -66,7 +62,7 @@ export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefine
 
 	area.closePopup();
 	area.unbindPopup();
-	area.bindPopup(() => createPopup(options));
+	area.bindPopup(() => createPopup(options, 'AreaPopup'));
 
 	if(dirty) {
 		area.redraw();
@@ -75,149 +71,129 @@ export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefine
 	return area;
 };
 
-const arePointsEqual = (oldPoints: any, newPoints: any) => {
-	return JSON.stringify(oldPoints) === JSON.stringify(newPoints);
-}
-
-const isStyleEqual = (oldStyle: any, newStyle: any) => {
-	return oldStyle && newStyle
-		&& (oldStyle.color === newStyle.color)
-		&& (oldStyle.weight === newStyle.weight)
-		&& (oldStyle.opacity === newStyle.opacity)
-		&& (oldStyle.fillColor === newStyle.fillColor)
-		&& (oldStyle.fillOpacity === newStyle.fillOpacity)
-}
-
-export const createPopup = (options: DynmapArea): HTMLElement => {
-	const popup = document.createElement('span');
-
-	if (options.popupContent) {
-		popup.classList.add('AreaPopup');
-		popup.insertAdjacentHTML('afterbegin', options.popupContent);
-	} else if (options.isHTML) {
-		popup.classList.add('AreaPopup');
-		popup.insertAdjacentHTML('afterbegin', options.label);
+const projectPointsMapCallback = function(this: Function, point: Coordinate | Coordinate[] | Coordinate[][]): LatLngExpression | LatLngExpression[] {
+	if(Array.isArray(point)) {
+		return point.map(projectPointsMapCallback, this) as LatLngExpression[];
 	} else {
-		popup.textContent = options.label;
+		// @ts-ignore
+		return this(point);
 	}
-
-	return popup;
 };
 
-export const getPoints = (options: DynmapArea, converter: Function, outline: boolean): LatLngExpression[] | LatLngExpression[][] => {
-	if (options.x.length === 2) {	/* Only 2 points */
-		if (options.y[0] === options.y[1]) {
-			return get2DBoxPoints(options, converter, outline);
+export const getPoints = (x: number[], y: [number, number], z: number[], outline: boolean): Coordinate[] | Coordinate[][] => {
+	if (x.length === 2) {	/* Only 2 points */
+		if (y[0] === y[1]) {
+			return get2DBoxPoints(x, y, z, outline);
 		} else {
-			return get3DBoxPoints(options, converter);
+			return get3DBoxPoints(x, y, z);
 		}
 	} else {
-		if (options.y[0] === options.y[1]) {
-			return get2DShapePoints(options, converter, outline);
+		if (y[0] === y[1]) {
+			return get2DShapePoints(x, y, z, outline);
 		} else {
-			return get3DShapePoints(options, converter);
+			return get3DShapePoints(x, y, z);
 		}
 	}
 };
 
-export const get3DBoxPoints = (options: DynmapArea, converter: Function): LatLngExpression[][] => {
-	const maxX = options.x[0],
-		minX = options.x[1],
-		maxY = options.y[0],
-		minY = options.y[1],
-		maxZ = options.z[0],
-		minZ = options.z[1];
+export const get3DBoxPoints = (x: number[], y: [number, number], z: number[]): Coordinate[][] => {
+	const maxX = x[0],
+		minX = x[1],
+		maxY = y[0],
+		minY = y[1],
+		maxZ = z[0],
+		minZ = z[1];
 
 	return [
 		[
-			converter(minX, minY, minZ),
-			converter(maxX, minY, minZ),
-			converter(maxX, minY, maxZ),
-			converter(minX, minY, maxZ)
+			{x: minX, y: minY, z: minZ},
+			{x: maxX, y: minY, z: minZ},
+			{x: maxX, y: minY, z: maxZ},
+			{x: minX, y: minY, z: maxZ}
 		], [
-			converter(minX, maxY, minZ),
-			converter(maxX, maxY, minZ),
-			converter(maxX, maxY, maxZ),
-			converter(minX, maxY, maxZ)
+			{x: minX, y: maxY, z: minZ},
+			{x: maxX, y: maxY, z: minZ},
+			{x: maxX, y: maxY, z: maxZ},
+			{x: minX, y: maxY, z: maxZ}
 		], [
-			converter(minX, minY, minZ),
-			converter(minX, maxY, minZ),
-			converter(maxX, maxY, minZ),
-			converter(maxX, minY, minZ)
+			{x: minX, y: minY, z: minZ},
+			{x: minX, y: maxY, z: minZ},
+			{x: maxX, y: maxY, z: minZ},
+			{x: maxX, y: minY, z: minZ}
 		], [
-			converter(maxX, minY, minZ),
-			converter(maxX, maxY, minZ),
-			converter(maxX, maxY, maxZ),
-			converter(maxX, minY, maxZ)
+			{x: maxX, y: minY, z: minZ},
+			{x: maxX, y: maxY, z: minZ},
+			{x: maxX, y: maxY, z: maxZ},
+			{x: maxX, y: minY, z: maxZ}
 		], [
-			converter(minX, minY, maxZ),
-			converter(minX, maxY, maxZ),
-			converter(maxX, maxY, maxZ),
-			converter(maxX, minY, maxZ)
+			{x: minX, y: minY, z: maxZ},
+			{x: minX, y: maxY, z: maxZ},
+			{x: maxX, y: maxY, z: maxZ},
+			{x: maxX, y: minY, z: maxZ}
 		], [
-			converter(minX, minY, minZ),
-			converter(minX, maxY, minZ),
-			converter(minX, maxY, maxZ),
-			converter(minX, minY, maxZ)
+			{x: minX, y: minY, z: minZ},
+			{x: minX, y: maxY, z: minZ},
+			{x: minX, y: maxY, z: maxZ},
+			{x: minX, y: minY, z: maxZ}
 		]
 	];
 };
 
-export const get2DBoxPoints = (options: DynmapArea, converter: Function, outline: boolean): LatLngExpression[] => {
-	const maxX = options.x[0],
-		minX = options.x[1],
-		minY = options.y[1],
-		maxZ = options.z[0],
-		minZ = options.z[1];
+export const get2DBoxPoints = (x: number[], y: [number, number], z: number[], outline: boolean): Coordinate[] => {
+	const maxX = x[0],
+		minX = x[1],
+		minY = y[1],
+		maxZ = z[0],
+		minZ = z[1];
 
 	if (outline) {
 		return [
-			converter(minX, minY, minZ),
-			converter(maxX, minY, minZ),
-			converter(maxX, minY, maxZ),
-			converter(minX, minY, maxZ),
-			converter(minX, minY, minZ)
+			{x: minX, y: minY, z: minZ},
+			{x: maxX, y: minY, z: minZ},
+			{x: maxX, y: minY, z: maxZ},
+			{x: minX, y: minY, z: maxZ},
+			{x: minX, y: minY, z: minZ}
 		];
 	} else {
 		return [
-			converter(minX, minY, minZ),
-			converter(maxX, minY, minZ),
-			converter(maxX, minY, maxZ),
-			converter(minX, minY, maxZ)
+			{x: minX, y: minY, z: minZ},
+			{x: maxX, y: minY, z: minZ},
+			{x: maxX, y: minY, z: maxZ},
+			{x: minX, y: minY, z: maxZ}
 		];
 	}
 };
 
-export const get3DShapePoints = (options: DynmapArea, converter: Function): LatLngExpression[][] => {
+export const get3DShapePoints = (x: number[], y: [number, number], z: number[]): Coordinate[][] => {
 	const toplist = [],
 		botlist = [],
 		polylist = [];
 
-	for (let i = 0; i < options.x.length; i++) {
-		toplist[i] = converter(options.x[i], options.y[0], options.z[i]);
-		botlist[i] = converter(options.x[i], options.y[1], options.z[i]);
+	for (let i = 0; i < x.length; i++) {
+		toplist[i] = {x: x[i], y: y[0], z: z[i]};
+		botlist[i] = {x: x[i], y: y[1], z: z[i]};
 	}
 
-	for (let i = 0; i < options.x.length; i++) {
-		const sidelist = [];
-		sidelist[0] = toplist[i];
-		sidelist[1] = botlist[i];
-		sidelist[2] = botlist[(i + 1) % options.x.length];
-		sidelist[3] = toplist[(i + 1) % options.x.length];
-		polylist[i] = sidelist;
+	for (let i = 0; i < x.length; i++) {
+		polylist[i] = [
+			toplist[i],
+			botlist[i],
+			botlist[(i + 1) % x.length],
+			toplist[(i + 1) % x.length],
+		];
 	}
 
-	polylist[options.x.length] = botlist;
-	polylist[options.x.length + 1] = toplist;
+	polylist[x.length] = botlist;
+	polylist[x.length + 1] = toplist;
 
 	return polylist;
 };
 
-export const get2DShapePoints = (options: DynmapArea, converter: Function, outline: boolean): LatLngExpression[] => {
+export const get2DShapePoints = (x: number[], y: [number, number], z: number[], outline: boolean): Coordinate[] => {
 	const points = [];
 
-	for (let i = 0; i < options.x.length; i++) {
-		points[i] = converter(options.x[i], options.y[1], options.z[i]);
+	for (let i = 0; i < x.length; i++) {
+		points[i] = {x: x[i], y: y[1], z: z[i]};
 	}
 
 	if (outline) {
@@ -225,4 +201,4 @@ export const get2DShapePoints = (options: DynmapArea, converter: Function, outli
 	}
 
 	return points;
-}
+};

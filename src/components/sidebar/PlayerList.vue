@@ -1,28 +1,28 @@
 <!--
-  - Copyright 2020 James Lyne
+  - Copyright 2021 James Lyne
   -
-  -    Licensed under the Apache License, Version 2.0 (the "License");
-  -    you may not use this file except in compliance with the License.
-  -    You may obtain a copy of the License at
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
   -
-  -      http://www.apache.org/licenses/LICENSE-2.0
+  - http://www.apache.org/licenses/LICENSE-2.0
   -
-  -    Unless required by applicable law or agreed to in writing, software
-  -    distributed under the License is distributed on an "AS IS" BASIS,
-  -    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  -    See the License for the specific language governing permissions and
-  -    limitations under the License.
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
   -->
 
 <template>
 	<CollapsibleSection name="players" class="players">
-		<template v-slot:heading>{{ messageHeading }} [{{ players.length }}/{{ maxPlayers }}]</template>
+		<template v-slot:heading>{{ messageHeading }}</template>
 		<template v-slot:default>
 			<div class="section__content">
 				<input v-if="players && searchEnabled" id="players__search" type="text" name="search"
 				       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
 				<RadioList v-if="filteredPlayers.length" aria-labelledby="players-heading">
-					<PlayerListItem v-for="player in filteredPlayers" :key="player.account"
+					<PlayerListItem v-for="player in filteredPlayers" :key="player.name"
 					                :player="player"></PlayerListItem>
 				</RadioList>
 				<div v-else-if="searchQuery" class="section__skeleton">{{ messageSkeletonPlayersSearch }}</div>
@@ -49,7 +49,11 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			messageHeading = computed(() => store.state.messages.playersHeading),
+			messageHeading = computed(() => {
+				return store.state.messages.playersHeading
+					.replace('{cur}', players.value.length.toString())
+					.replace('{max}', maxPlayers.value.toString());
+			}),
 			messageSkeletonPlayers = computed(() => store.state.messages.playersSkeleton),
 			messageSkeletonPlayersSearch = computed(() => store.state.messages.playersSearchSkeleton),
 			messagePlayersSearchPlaceholder = computed(() => store.state.messages.playersSearchPlaceholder),
@@ -62,10 +66,10 @@ export default defineComponent({
 				const query = searchQuery.value.toLowerCase();
 
 				return query ? store.state.sortedPlayers.filter(p => {
-					return p.account.toLowerCase().indexOf(query) > -1;
+					return p.name.toLowerCase().indexOf(query) > -1;
 				}) : store.state.sortedPlayers;
 			}),
-			maxPlayers = computed(() => store.state.configuration.maxPlayers),
+			maxPlayers = computed(() => store.state.maxPlayers || 0),
 
 			onKeydown = (e: KeyboardEvent) => {
 				e.stopImmediatePropagation();

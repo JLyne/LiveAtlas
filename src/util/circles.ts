@@ -1,82 +1,62 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
  * Some portions of this file were taken from https://github.com/webbukkit/dynmap.
  * These portions are Copyright 2020 Dynmap Contributors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-import {DynmapCircle} from "@/dynmap";
 import {LatLngExpression} from "leaflet";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
+import {LiveAtlasCircle} from "@/index";
+import {createPopup, tooltipOptions} from "@/util/paths";
 
-export const createCircle = (options: DynmapCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const createCircle = (options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getCirclePoints(options, converter, outline),
-		circle = outline ? new LiveAtlasPolyline(points, {
-			...options.style,
-			minZoom: options.minZoom,
-			maxZoom: options.maxZoom,
-		}) : new LiveAtlasPolygon(points, {
-			...options.style,
-			minZoom: options.minZoom,
-			maxZoom: options.maxZoom,
-		});
+		circle = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
 
-	if(options.label) {
-		circle.bindPopup(() => createPopup(options));
+	if(options.popupContent) {
+		circle.bindPopup(() => createPopup(options, 'CirclePopup'));
+	}
+
+	if (options.tooltipContent) {
+		circle.bindTooltip(() => options.tooltipContent as string, tooltipOptions);
 	}
 
 	return circle;
 };
 
-export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: DynmapCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
-	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean,
-		points = getCirclePoints(options, converter, outline);
-
+export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	if (!circle) {
 		return createCircle(options, converter);
 	}
 
+	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean;
+
 	circle.closePopup();
 	circle.unbindPopup();
-	circle.bindPopup(() => createPopup(options));
+	circle.bindPopup(() => createPopup(options, 'CirclePopup'));
 	circle.setStyle(options.style);
-	circle.setLatLngs(points);
+	circle.setLatLngs(getCirclePoints(options, converter, outline));
 	circle.redraw();
 
 	return circle;
 }
 
-export const createPopup = (options: DynmapCircle) => {
-	const popup = document.createElement('span');
-
-	if (options.popupContent) {
-		popup.classList.add('CirclePopup');
-		popup.insertAdjacentHTML('afterbegin', options.popupContent);
-	} else if (options.isHTML) {
-		popup.classList.add('CirclePopup');
-		popup.insertAdjacentHTML('afterbegin', options.label);
-	} else {
-		popup.textContent = options.label;
-	}
-
-	return popup;
-}
-
-export const getCirclePoints = (options: DynmapCircle, converter: Function, outline: boolean): LatLngExpression[] => {
+export const getCirclePoints = (options: LiveAtlasCircle, converter: Function, outline: boolean): LatLngExpression[] => {
 	const points = [];
 
 	for(let i = 0; i < 360; i++) {
@@ -84,7 +64,7 @@ export const getCirclePoints = (options: DynmapCircle, converter: Function, outl
 			x = options.radius[0] * Math.sin(rad) + options.location.x,
 			z = options.radius[1] * Math.cos(rad) + options.location.z;
 
-		points.push(converter(x, options.location.y, z));
+		points.push(converter({x, y:options.location.y, z}));
 	}
 
 	if(outline && points.length) {

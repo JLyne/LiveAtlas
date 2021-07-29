@@ -1,6 +1,26 @@
+/*
+ * Copyright 2021 James Lyne
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import {State} from "@/store";
-import {DynmapPlayer, DynmapUrlConfig} from "@/dynmap";
+import {DynmapUrlConfig} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {PathOptions, PointTuple, PolylineOptions} from "leaflet";
+import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
+import {ClockControlOptions} from "@/leaflet/control/ClockControl";
+import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 
 declare module "*.png" {
    const value: any;
@@ -40,13 +60,11 @@ interface LiveAtlasGlobalConfig {
 }
 
 interface LiveAtlasServerDefinition {
-	id: string
-	label?: string
-}
-
-interface LiveAtlasDynmapServerDefinition extends LiveAtlasServerDefinition {
-	type: 'dynmap',
-	dynmap: DynmapUrlConfig,
+	id: string;
+	label?: string;
+	type: 'dynmap' | 'pl3xmap';
+	dynmap?: DynmapUrlConfig;
+	pl3xmap?: string;
 }
 
 // Messages defined directly in LiveAtlas and used for all servers
@@ -108,16 +126,27 @@ export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps' | 'setti
 export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';
 export type LiveAtlasDimension = 'overworld' | 'nether' | 'end';
 
-interface LiveAtlasSortedPlayers extends Array<DynmapPlayer> {
+interface LiveAtlasPlayer {
+	name: string;
+	displayName: string;
+	uuid?: string;
+	armor: number;
+	health: number;
+	sort: number;
+	hidden: boolean;
+	location: LiveAtlasLocation;
+}
+
+interface LiveAtlasSortedPlayers extends Array<LiveAtlasPlayer> {
 	dirty?: boolean;
 }
 
 interface LiveAtlasWorldDefinition {
 	seaLevel: number;
 	name: string;
+	displayName: string;
 	dimension: LiveAtlasDimension;
 	protected: boolean;
-	title: string;
 	height: number;
 	center: Coordinate;
 	maps: Map<string, LiveAtlasMapDefinition>;
@@ -135,4 +164,152 @@ interface LiveAtlasParsedUrl {
 	location?: Coordinate;
 	zoom?: number;
 	legacy: boolean;
+}
+
+interface LiveAtlasMapProvider {
+	loadServerConfiguration(): Promise<void>;
+	populateWorld(world: LiveAtlasWorldDefinition): Promise<void>;
+	startUpdates(): void;
+	stopUpdates(): void;
+	sendChatMessage(message: string): void;
+	destroy(): void;
+
+	getPlayerHeadUrl(entry: HeadQueueEntry): string;
+	getTilesUrl(): string;
+	getMarkerIconUrl(icon: string): string;
+}
+
+interface LiveAtlasMarkerSet {
+	id: string,
+	label: string;
+	hidden: boolean;
+	priority: number;
+	minZoom?: number;
+	maxZoom?: number;
+	showLabels?: boolean;
+	markers: Map<string, LiveAtlasMarker>;
+	areas: Map<string, LiveAtlasArea>;
+	lines: Map<string, LiveAtlasLine>;
+	circles: Map<string, LiveAtlasCircle>;
+}
+
+interface LiveAtlasMarker {
+	dimensions: PointTuple;
+	icon: string;
+	label: string;
+	isLabelHTML: boolean;
+	location: Coordinate;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
+}
+
+interface LiveAtlasPath {
+	style: PathOptions;
+	minZoom?: number;
+	maxZoom?: number;
+	popupContent?: string;
+	tooltipContent?: string;
+	isPopupHTML: boolean;
+}
+
+interface LiveAtlasArea extends LiveAtlasPath {
+	style: PolylineOptions;
+	outline: boolean;
+	points: Coordinate[] | Coordinate[][] | Coordinate[][][]
+}
+
+interface LiveAtlasLine extends LiveAtlasPath {
+	points: Coordinate[];
+	style: PolylineOptions;
+}
+
+interface LiveAtlasCircle extends LiveAtlasPath {
+	location: Coordinate;
+	radius: PointTuple;
+	style: PathOptions;
+}
+
+interface HeadQueueEntry {
+	cacheKey: string;
+	name: string;
+	uuid?: string;
+	size: string;
+	image: HTMLImageElement;
+}
+
+interface LiveAtlasServerConfig {
+	defaultMap?: string;
+	defaultWorld?: string;
+	defaultZoom: number;
+	followMap?: string;
+	followZoom?: number;
+	title: string;
+	expandUI: boolean;
+}
+
+interface LiveAtlasComponentConfig {
+	markers: {
+		showLabels: boolean;
+	};
+	playerMarkers?: LiveAtlasPlayerMarkerConfig;
+	coordinatesControl?: CoordinatesControlOptions;
+	clockControl?: ClockControlOptions;
+	linkControl: boolean;
+	layerControl: boolean;
+	logoControls: Array<LogoControlOptions>;
+	chatBox?: LiveAtlasChatBoxConfig;
+	chatSending?: LiveAtlasChatSendingConfig;
+	chatBalloons: boolean;
+	login: boolean;
+}
+
+interface LiveAtlasPartialComponentConfig {
+	markers?: {
+		showLabels: boolean;
+	};
+	playerMarkers?: LiveAtlasPlayerMarkerConfig;
+	coordinatesControl?: CoordinatesControlOptions;
+	clockControl?: ClockControlOptions;
+	linkControl?: boolean;
+	layerControl?: boolean;
+	logoControls?: Array<LogoControlOptions>;
+	chatBox?: LiveAtlasChatBoxConfig;
+	chatSending?: LiveAtlasChatSendingConfig;
+	chatBalloons?: boolean;
+	login?: boolean;
+}
+
+interface LiveAtlasPlayerMarkerConfig {
+	grayHiddenPlayers: boolean;
+	hideByDefault: boolean;
+	layerName: string;
+	layerPriority: number;
+	showBodies: boolean;
+	showSkinFaces: boolean;
+	showHealth: boolean;
+	smallFaces: boolean;
+}
+
+interface LiveAtlasChatBoxConfig {
+	allowUrlName: boolean;
+	showPlayerFaces: boolean;
+	messageLifetime: number;
+	messageHistory: number;
+}
+
+interface LiveAtlasChatSendingConfig {
+	loginRequired: boolean;
+	maxLength: number;
+	cooldown: number;
+}
+
+interface LiveAtlasChat {
+	type: 'chat' | 'playerjoin' | 'playerleave';
+	playerAccount?: string;
+	playerName?: string;
+	channel?: string;
+	message?: string;
+	source?: string;
+	timestamp: number;
 }

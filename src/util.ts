@@ -1,36 +1,32 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-import API from '@/api';
-import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-
-interface HeadQueueEntry {
-	cacheKey: string;
-	account: string;
-	size: string;
-	image: HTMLImageElement;
-}
+import {HeadQueueEntry, LiveAtlasPlayer} from "@/index";
 
 const headCache = new Map<string, HTMLImageElement>(),
 	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>(),
 	headsLoading = new Set<string>(),
 
 	headQueue: HeadQueueEntry[] = [];
+
+export const titleColoursRegex = /§[0-9a-f]/ig;
+export const netherWorldNameRegex = /_?nether(_|$)/i;
+export const endWorldNameRegex = /(^|_)end(_|$)/i;
 
 export const getMinecraftTime = (serverTime: number) => {
 	const day = serverTime >= 0 && serverTime < 13700;
@@ -49,8 +45,9 @@ export const getMinecraftTime = (serverTime: number) => {
 	};
 }
 
-export const getMinecraftHead = (player: DynmapPlayer | string, size: string): Promise<HTMLImageElement> => {
-	const account = typeof  player === 'string' ? player : player.account,
+export const getMinecraftHead = (player: LiveAtlasPlayer | string, size: string): Promise<HTMLImageElement> => {
+	const account = typeof  player === 'string' ? player : player.name,
+		uuid = typeof  player === 'string' ? undefined : player.uuid,
 		cacheKey = `${account}-${size}`;
 
 	if(headCache.has(cacheKey)) {
@@ -79,7 +76,8 @@ export const getMinecraftHead = (player: DynmapPlayer | string, size: string): P
 		};
 
 		headQueue.push({
-			account,
+			name: account,
+			uuid,
 			size,
 			cacheKey,
 			image: faceImage,
@@ -97,35 +95,12 @@ const tickHeadQueue = () => {
 		return;
 	}
 
-	const head = headQueue.pop() as HeadQueueEntry,
-		src = (head.size === 'body') ? `faces/body/${head.account}.png` :`faces/${head.size}x${head.size}/${head.account}.png`;
+	const head = headQueue.pop() as HeadQueueEntry;
 
 	headsLoading.add(head.cacheKey);
-	head.image.src = concatURL(useStore().getters.serverConfig.dynmap.markers, src);
+	head.image.src = useStore().state.currentMapProvider!.getPlayerHeadUrl(head);
 
 	tickHeadQueue();
-}
-
-export const concatURL = (base: string, addition: string) => {
-	if(base.indexOf('?') >= 0) {
-		return base + escape(addition);
-	}
-
-	return base + addition;
-}
-
-export const getPointConverter = () => {
-	const map = useStore().state.currentMap;
-
-	if(map) {
-		return (x: number, y: number, z: number) => {
-			return map.locationToLatLng({x, y, z});
-		};
-	} else {
-		return (x: number, y: number, z: number) => {
-			return LiveAtlasMapDefinition.defaultProjection.locationToLatLng({x, y, z});
-		};
-	}
 }
 
 export const parseUrl = () => {
@@ -209,16 +184,6 @@ export const parseMapSearchParams = (query: URLSearchParams) => {
 		zoom,
 		legacy: true,
 	}
-}
-
-export const getAPI = () => {
-	const store = useStore();
-
-	if(!store.state.currentServer) {
-		throw new RangeError("No current server");
-	}
-
-	return API;
 }
 
 export const getUrlForLocation = (map: LiveAtlasMapDefinition, location: {

@@ -1,24 +1,22 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import {
-	DynmapComponentConfig, DynmapMarkerSet, DynmapMarkerSetUpdates,
-	DynmapPlayer,
-	DynmapServerConfig, DynmapTileUpdate,
-	DynmapChat
+	DynmapMarkerSetUpdates,
+	DynmapTileUpdate
 } from "@/dynmap";
 import {
 	Coordinate,
@@ -29,46 +27,50 @@ import {
 	LiveAtlasUIElement,
 	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
-	LiveAtlasMessageConfig
+	LiveAtlasMessageConfig,
+	LiveAtlasMapProvider,
+	LiveAtlasPlayer,
+	LiveAtlasMarkerSet,
+	LiveAtlasComponentConfig,
+	LiveAtlasServerConfig, LiveAtlasChat
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export type State = {
 	version: string;
 	servers: Map<string, LiveAtlasServerDefinition>;
-	configuration: DynmapServerConfig;
+	configuration: LiveAtlasServerConfig;
 	configurationHash: number | undefined;
 	messages: LiveAtlasMessageConfig;
-	components: DynmapComponentConfig;
+	components: LiveAtlasComponentConfig;
 
 	loggedIn: boolean;
 
 	worlds: Map<string, LiveAtlasWorldDefinition>;
 	maps: Map<string, LiveAtlasMapDefinition>;
-	players: Map<string, DynmapPlayer>;
+	players: Map<string, LiveAtlasPlayer>;
 	sortedPlayers: LiveAtlasSortedPlayers;
-	markerSets: Map<string, DynmapMarkerSet>;
+	maxPlayers: number;
+	markerSets: Map<string, LiveAtlasMarkerSet>;
 
 	chat: {
 		unread: number;
-		messages: DynmapChat[];
+		messages: LiveAtlasChat[];
 	};
 
 	pendingSetUpdates: Map<string, DynmapMarkerSetUpdates>;
 	pendingTileUpdates: Array<DynmapTileUpdate>;
 
-	followTarget?: DynmapPlayer;
-	panTarget?: DynmapPlayer;
+	followTarget?: LiveAtlasPlayer;
+	panTarget?: LiveAtlasPlayer;
 
+	currentMapProvider?: Readonly<LiveAtlasMapProvider>;
 	currentServer?: LiveAtlasServerDefinition;
 	currentWorldState: LiveAtlasWorldState;
 	currentWorld?: LiveAtlasWorldDefinition;
 	currentMap?: LiveAtlasMapDefinition;
 	currentLocation: Coordinate;
 	currentZoom: number;
-
-	updateRequestId: number;
-	updateTimestamp: Date;
 
 	ui: {
 		playersAboveMarkers: boolean;
@@ -91,20 +93,13 @@ export const state: State = {
 	servers: new Map(),
 
 	configuration: {
-		version: '',
 		defaultMap: '',
 		defaultWorld: '',
 		defaultZoom: 0,
 		followMap: '',
 		followZoom: 0,
-		updateInterval: 3000,
-		showLayerControl: false,
 		title: '',
-		loginEnabled: false,
-		maxPlayers: 0,
-		grayHiddenPlayers: false,
 		expandUI: false,
-		hash: 0,
 	},
 	configurationHash: undefined,
 
@@ -157,6 +152,7 @@ export const state: State = {
 	maps: new Map(), //Defined maps from configuration.json
 	players: new Map(), //Online players from world.json
 	sortedPlayers: [] as LiveAtlasSortedPlayers, //Online players from world.json, sorted by their sort property then alphabetically
+	maxPlayers: 0,
 
 	chat: {
 		unread: 0,
@@ -187,6 +183,9 @@ export const state: State = {
 		//Optional "link" component. Adds button to copy url for current position
 		linkControl: false,
 
+		//Layers control
+		layerControl: false,
+
 		//Optional "logo" controls.
 		logoControls: [],
 
@@ -197,12 +196,16 @@ export const state: State = {
 		chatBox: undefined,
 
 		//Chat balloons showing messages above player markers
-		chatBalloons: false
+		chatBalloons: false,
+
+		//Login/registering (not currently implemented)
+		login: false,
 	},
 
 	followTarget: undefined,
 	panTarget: undefined,
 
+	currentMapProvider: undefined,
 	currentServer: undefined,
 	currentWorld: undefined,
 	currentMap: undefined,
@@ -217,9 +220,6 @@ export const state: State = {
 		thundering: false,
 		timeOfDay: 0,
 	},
-
-	updateRequestId: 0,
-	updateTimestamp: new Date(),
 
 	ui: {
 		playersAboveMarkers: true,

@@ -1,33 +1,32 @@
 <!--
-  - Copyright 2020 James Lyne
+  - Copyright 2021 James Lyne
   -
-  -    Licensed under the Apache License, Version 2.0 (the "License");
-  -    you may not use this file except in compliance with the License.
-  -    You may obtain a copy of the License at
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
   -
-  -      http://www.apache.org/licenses/LICENSE-2.0
+  - http://www.apache.org/licenses/LICENSE-2.0
   -
-  -    Unless required by applicable law or agreed to in writing, software
-  -    distributed under the License is distributed on an "AS IS" BASIS,
-  -    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  -    See the License for the specific language governing permissions and
-  -    limitations under the License.
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
   -->
 
 <script lang="ts">
 import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import {DynmapLine, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createLine, updateLine} from "@/util/lines";
-import {getPointConverter} from '@/util';
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
+import {LiveAtlasLine, LiveAtlasMarkerSet} from "@/index";
 
 export default defineComponent({
 	props: {
 		set: {
-			type: Object as () => DynmapMarkerSet,
+			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
 		},
 		layerGroup: {
@@ -49,9 +48,9 @@ export default defineComponent({
 			layers = Object.freeze(new Map<string, LiveAtlasPolyline>()),
 
 			createLines = () => {
-				const converter = getPointConverter();
+				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
-				props.set.lines.forEach((line: DynmapLine, id: string) => {
+				props.set.lines.forEach((line: LiveAtlasLine, id: string) => {
 					const layer = createLine(line, converter);
 
 					layers.set(id, layer);
@@ -74,15 +73,14 @@ export default defineComponent({
 				const updates = await useStore().dispatch(ActionTypes.POP_LINE_UPDATES, {
 					markerSet: props.set.id,
 					amount: 10,
-				});
-
-				const converter = getPointConverter();
+				}),
+					converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				for(const update of updates) {
 					if(update.removed) {
 						deleteLine(update.id);
 					} else {
-						const layer = updateLine(layers.get(update.id), update.payload as DynmapLine, converter)
+						const layer = updateLine(layers.get(update.id), update.payload as LiveAtlasLine, converter)
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);
@@ -100,10 +98,9 @@ export default defineComponent({
 				}
 			};
 
-		//FIXME: Prevent unnecessary repositioning when changing worlds
-		watch(currentMap, (newValue) => {
-			if(newValue) {
-				const converter = getPointConverter();
+		watch(currentMap, (newValue, oldValue) => {
+			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
+				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				for (const [id, line] of props.set.lines) {
 					updateLine(layers.get(id), line, converter);

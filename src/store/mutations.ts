@@ -1,32 +1,25 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import {MutationTree} from "vuex";
 import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
 import {
-	DynmapArea,
-	DynmapCircle,
-	DynmapComponentConfig,
-	DynmapLine, DynmapMarker,
-	DynmapMarkerSet,
 	DynmapMarkerSetUpdates,
-	DynmapPlayer,
-	DynmapServerConfig, DynmapTileUpdate,
-	DynmapChat
+	DynmapTileUpdate
 } from "@/dynmap";
 import {
 	Coordinate,
@@ -38,8 +31,18 @@ import {
 	LiveAtlasParsedUrl,
 	LiveAtlasGlobalConfig,
 	LiveAtlasGlobalMessageConfig,
-	LiveAtlasServerMessageConfig
+	LiveAtlasServerMessageConfig,
+	LiveAtlasPlayer,
+	LiveAtlasCircle,
+	LiveAtlasLine,
+	LiveAtlasArea,
+	LiveAtlasMarker,
+	LiveAtlasMarkerSet,
+	LiveAtlasServerDefinition,
+	LiveAtlasServerConfig, LiveAtlasChat, LiveAtlasPartialComponentConfig, LiveAtlasComponentConfig
 } from "@/index";
+import DynmapMapProvider from "@/providers/DynmapMapProvider";
+import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -48,21 +51,20 @@ export type CurrentMapPayload = {
 
 export type Mutations<S = State> = {
 	[MutationTypes.INIT](state: S, config: LiveAtlasGlobalConfig): void
-	[MutationTypes.SET_SERVER_CONFIGURATION](state: S, config: DynmapServerConfig): void
+	[MutationTypes.SET_SERVER_CONFIGURATION](state: S, config: LiveAtlasServerConfig): void
 	[MutationTypes.SET_SERVER_CONFIGURATION_HASH](state: S, hash: number): void
 	[MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH](state: S): void
 	[MutationTypes.SET_SERVER_MESSAGES](state: S, messages: LiveAtlasServerMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
 	[MutationTypes.CLEAR_WORLDS](state: S): void
-	[MutationTypes.SET_COMPONENTS](state: S, worlds: DynmapComponentConfig): void
-	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, DynmapMarkerSet>): void
+	[MutationTypes.SET_COMPONENTS](state: S, components: LiveAtlasPartialComponentConfig | LiveAtlasComponentConfig): void
+	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, LiveAtlasMarkerSet>): void
 	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
 	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorldDefinition): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
-	[MutationTypes.SET_UPDATE_TIMESTAMP](state: S, time: Date): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
 	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
-	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>): void
+	[MutationTypes.ADD_CHAT](state: State, chat: Array<LiveAtlasChat>): void
 
 	[MutationTypes.POP_MARKER_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
 	[MutationTypes.POP_AREA_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
@@ -70,8 +72,8 @@ export type Mutations<S = State> = {
 	[MutationTypes.POP_LINE_UPDATES](state: S, payload: {markerSet: string, amount: number}): void
 	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): void
 
-	[MutationTypes.INCREMENT_REQUEST_ID](state: S): void
-	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<DynmapPlayer>): Set<DynmapPlayer>
+	[MutationTypes.SET_MAX_PLAYERS](state: S, maxPlayers: number): void
+	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer>
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
 	[MutationTypes.CLEAR_PLAYERS](state: S): void
 	[MutationTypes.SET_CURRENT_SERVER](state: S, server: string): void
@@ -81,8 +83,8 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_PARSED_URL](state: S, payload: LiveAtlasParsedUrl): void
 	[MutationTypes.CLEAR_PARSED_URL](state: S): void
 	[MutationTypes.CLEAR_CURRENT_MAP](state: S): void
-	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: DynmapPlayer): void
-	[MutationTypes.SET_PAN_TARGET](state: S, payload: DynmapPlayer): void
+	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: LiveAtlasPlayer): void
+	[MutationTypes.SET_PAN_TARGET](state: S, payload: LiveAtlasPlayer): void
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: S, a?: void): void
 	[MutationTypes.CLEAR_PAN_TARGET](state: S, a?: void): void
 
@@ -158,9 +160,8 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	// Sets configuration options from the initial config fetch
-	[MutationTypes.SET_SERVER_CONFIGURATION](state: State, config: DynmapServerConfig) {
+	[MutationTypes.SET_SERVER_CONFIGURATION](state: State, config: LiveAtlasServerConfig) {
 		state.configuration = Object.assign(state.configuration, config);
-		state.configurationHash = config.hash;
 	},
 
 	// Sets configuration hash
@@ -222,13 +223,15 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentWorldState.thundering = false;
 	},
 
-	//Sets the state and settings of optional components, from the initial config fetch
-	[MutationTypes.SET_COMPONENTS](state: State, components: DynmapComponentConfig) {
+	//Updates the state of optional components (chat, link button, etc)
+	//Can be called with a LiveAtlasComponentConfig object to replace the whole state
+	//or a LiveAtlasPartialComponentConfig object for partial updates to the existing state
+	[MutationTypes.SET_COMPONENTS](state: State, components: LiveAtlasPartialComponentConfig | LiveAtlasComponentConfig) {
 		state.components = Object.assign(state.components, components);
 	},
 
 	//Sets the existing marker sets from the last marker fetch
-	[MutationTypes.SET_MARKER_SETS](state: State, markerSets: Map<string, DynmapMarkerSet>) {
+	[MutationTypes.SET_MARKER_SETS](state: State, markerSets: Map<string, LiveAtlasMarkerSet>) {
 		state.markerSets.clear();
 		state.pendingSetUpdates.clear();
 
@@ -257,11 +260,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentWorldState = Object.assign(state.currentWorldState, worldState);
 	},
 
-	//Sets the timestamp of the last update fetch
-	[MutationTypes.SET_UPDATE_TIMESTAMP](state: State, timestamp: Date) {
-		state.updateTimestamp = timestamp;
-	},
-
 	//Adds markerset related updates from an update fetch to the pending updates list
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: State, updates: Map<string, DynmapMarkerSetUpdates>) {
 		for(const entry of updates) {
@@ -277,10 +275,10 @@ export const mutations: MutationTree<State> & Mutations = {
 						priority: entry[1].payload.priority,
 						label: entry[1].payload.label,
 						hidden: entry[1].payload.hidden,
-						markers: Object.freeze(new Map()) as Map<string, DynmapMarker>,
-						areas: Object.freeze(new Map()) as Map<string, DynmapArea>,
-						circles: Object.freeze(new Map()) as Map<string, DynmapCircle>,
-						lines: Object.freeze(new Map()) as Map<string, DynmapLine>,
+						markers: Object.freeze(new Map()) as Map<string, LiveAtlasMarker>,
+						areas: Object.freeze(new Map()) as Map<string, LiveAtlasArea>,
+						circles: Object.freeze(new Map()) as Map<string, LiveAtlasCircle>,
+						lines: Object.freeze(new Map()) as Map<string, LiveAtlasLine>,
 					});
 
 					state.pendingSetUpdates.set(entry[0], {
@@ -295,7 +293,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				}
 			}
 
-			const set = state.markerSets.get(entry[0]) as DynmapMarkerSet,
+			const set = state.markerSets.get(entry[0]) as LiveAtlasMarkerSet,
 				setUpdates = state.pendingSetUpdates.get(entry[0]) as DynmapMarkerSetUpdates;
 
 			//Delete the set if it has been deleted
@@ -320,7 +318,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					set.markers.delete(update.id);
 				} else {
-					set.markers.set(update.id, update.payload as DynmapMarker);
+					set.markers.set(update.id, update.payload as LiveAtlasMarker);
 				}
 			}
 
@@ -328,7 +326,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					set.areas.delete(update.id);
 				} else {
-					set.areas.set(update.id, update.payload as DynmapArea);
+					set.areas.set(update.id, update.payload as LiveAtlasArea);
 				}
 			}
 
@@ -336,7 +334,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					set.circles.delete(update.id);
 				} else {
-					set.circles.set(update.id, update.payload as DynmapCircle);
+					set.circles.set(update.id, update.payload as LiveAtlasCircle);
 				}
 			}
 
@@ -344,7 +342,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					set.lines.delete(update.id);
 				} else {
-					set.lines.set(update.id, update.payload as DynmapLine);
+					set.lines.set(update.id, update.payload as LiveAtlasLine);
 				}
 			}
 
@@ -362,7 +360,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Adds chat messages from an update fetch to the chat history
-	[MutationTypes.ADD_CHAT](state: State, chat: Array<DynmapChat>) {
+	[MutationTypes.ADD_CHAT](state: State, chat: Array<LiveAtlasChat>) {
 		state.chat.messages.unshift(...chat);
 	},
 
@@ -411,37 +409,38 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.pendingTileUpdates.splice(0, amount);
 	},
 
-	//Increments the request id for the next update fetch
-	[MutationTypes.INCREMENT_REQUEST_ID](state: State) {
-		state.updateRequestId++;
+	[MutationTypes.SET_MAX_PLAYERS](state: State, maxPlayers: number) {
+		state.maxPlayers = maxPlayers;
 	},
 
 	// Set up to 10 players at once
-	[MutationTypes.SET_PLAYERS_ASYNC](state: State, players: Set<DynmapPlayer>): Set<DynmapPlayer> {
+	[MutationTypes.SET_PLAYERS_ASYNC](state: State, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer> {
 		let count = 0;
 
 		for(const player of players) {
-			if(state.players.has(player.account)) {
-				const existing = state.players.get(player.account);
+			if(state.players.has(player.name)) {
+				const existing = state.players.get(player.name);
 
 				existing!.health = player.health;
+				existing!.uuid = player.uuid;
 				existing!.armor = player.armor;
 				existing!.location = Object.assign(existing!.location, player.location);
 				existing!.hidden = player.hidden;
-				existing!.name = player.name;
+				existing!.displayName = player.displayName;
 				existing!.sort = player.sort;
 
-				if(existing!.name !== player.name || existing!.sort !== player.sort) {
+				if(existing!.displayName !== player.displayName || existing!.sort !== player.sort) {
 					state.sortedPlayers.dirty = true;
 				}
 			} else {
 				state.sortedPlayers.dirty = true;
-				state.players.set(player.account, {
-					account: player.account,
+				state.players.set(player.name, {
+					name: player.name,
+					uuid: player.uuid,
 					health: player.health,
 					armor: player.armor,
 					location: player.location,
-					name: player.name,
+					displayName: player.displayName,
 					sort: player.sort,
 					hidden: player.hidden,
 				});
@@ -461,7 +460,7 @@ export const mutations: MutationTree<State> & Mutations = {
 					return a.sort - b.sort;
 				}
 
-				return a.account.toLowerCase().localeCompare(b.account.toLowerCase());
+				return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
 			}) as LiveAtlasSortedPlayers;
 		}
 
@@ -471,7 +470,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Removes all players not found in the provided keep set
 	[MutationTypes.SYNC_PLAYERS](state: State, keep: Set<string>) {
 		for(const [key, player] of state.players) {
-			if(!keep.has(player.account)) {
+			if(!keep.has(player.name)) {
 				state.sortedPlayers.splice(state.sortedPlayers.indexOf(player), 1);
 				state.players.delete(key);
 			}
@@ -493,6 +492,22 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 
 		state.currentServer = state.servers.get(serverName);
+
+		if(state.currentMapProvider) {
+			state.currentMapProvider.stopUpdates();
+			state.currentMapProvider.destroy();
+		}
+
+		switch(state.currentServer!.type) {
+			case 'pl3xmap':
+				state.currentMapProvider = Object.seal(
+					new Pl3xmapMapProvider(state.servers.get(serverName) as LiveAtlasServerDefinition));
+				break;
+			case 'dynmap':
+				state.currentMapProvider = Object.seal(
+					new DynmapMapProvider(state.servers.get(serverName) as LiveAtlasServerDefinition));
+				break;
+		}
 	},
 
 	//Sets the currently active map/world
@@ -550,12 +565,12 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Set the follow target, which the map will automatically pan to keep in view
-	[MutationTypes.SET_FOLLOW_TARGET](state: State, player: DynmapPlayer) {
+	[MutationTypes.SET_FOLLOW_TARGET](state: State, player: LiveAtlasPlayer) {
 		state.followTarget = player;
 	},
 
 	//Set the pan target, which the map will immediately pan to once
-	[MutationTypes.SET_PAN_TARGET](state: State, player: DynmapPlayer) {
+	[MutationTypes.SET_PAN_TARGET](state: State, player: LiveAtlasPlayer) {
 		state.panTarget = player;
 	},
 

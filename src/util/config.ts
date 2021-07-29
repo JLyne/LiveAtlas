@@ -1,4 +1,20 @@
-import {LiveAtlasDynmapServerDefinition, LiveAtlasGlobalConfig, LiveAtlasServerDefinition} from "@/index";
+/*
+ * Copyright 2021 James Lyne
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import {LiveAtlasGlobalConfig, LiveAtlasServerDefinition} from "@/index";
 import ConfigurationError from "@/errors/ConfigurationError";
 import {DynmapUrlConfig} from "@/dynmap";
 
@@ -22,40 +38,37 @@ const validateLiveAtlasConfiguration = (config: any): Map<string, LiveAtlasServe
 		}
 
 		serverConfig.id = server;
-		serverConfig.type = serverConfig.type || 'dynmap';
 
-		switch(serverConfig.type) {
-			case 'dynmap':
-				if (!serverConfig.dynmap || serverConfig.dynmap.constructor !== Object) {
-					throw new ConfigurationError(`Server '${server}': Dynmap configuration object missing. ${check}`);
-				}
+		if(typeof serverConfig.pl3xmap !== 'undefined') {
+			serverConfig.type = 'pl3xmap';
+		} else if(typeof serverConfig.dynmap !== 'undefined') {
+			if (!serverConfig.dynmap || serverConfig.dynmap.constructor !== Object) {
+				throw new ConfigurationError(`Server '${server}': Dynmap configuration object missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.configuration) {
-					throw new ConfigurationError(`Server '${server}': Dynmap configuration URL missing. ${check}`);
-				}
+			if (!serverConfig.dynmap.configuration) {
+				throw new ConfigurationError(`Server '${server}': Dynmap configuration URL missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.update) {
-					throw new ConfigurationError(`Server '${server}': Dynmap update URL missing. ${check}`);
-				}
+			if (!serverConfig.dynmap.update) {
+				throw new ConfigurationError(`Server '${server}': Dynmap update URL missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.markers) {
-					throw new ConfigurationError(`Server '${server}': Dynmap markers URL missing. ${check}`);
-				}
+			if (!serverConfig.dynmap.markers) {
+				throw new ConfigurationError(`Server '${server}': Dynmap markers URL missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.tiles) {
-					throw new ConfigurationError(`Server '${server}': Dynmap tiles URL missing. ${check}`);
-				}
+			if (!serverConfig.dynmap.tiles) {
+				throw new ConfigurationError(`Server '${server}': Dynmap tiles URL missing. ${check}`);
+			}
 
-				if (!serverConfig.dynmap.sendmessage) {
-					throw new ConfigurationError(`Server '${server}': Dynmap sendmessage URL missing. ${check}`);
-				}
-				break;
+			if (!serverConfig.dynmap.sendmessage) {
+				throw new ConfigurationError(`Server '${server}': Dynmap sendmessage URL missing. ${check}`);
+			}
 
-			case 'pl3xmap':
-			case 'plexmap':
-				if (!serverConfig.plexmap || serverConfig.plexmap.constructor !== Object) {
-					throw new ConfigurationError(`Server '${server}': Pl3xmap configuration object missing. ${check}`);
-				}
+			serverConfig.type = 'dynmap';
+		} else {
+			throw new ConfigurationError(`Server '${server}': No Dynmap or Pl3xmap configuration defined. ${check}`);
 		}
 
 		result.set(server, serverConfig);
@@ -64,7 +77,7 @@ const validateLiveAtlasConfiguration = (config: any): Map<string, LiveAtlasServe
 	return result;
 };
 
-const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveAtlasDynmapServerDefinition> => {
+const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveAtlasServerDefinition> => {
 	const check = '\nCheck your standalone/config.js file exists and is being loaded correctly.';
 
 	if (!config) {
@@ -91,7 +104,7 @@ const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveA
 		throw new ConfigurationError(`Dynmap sendmessage URL is missing. ${check}`);
 	}
 
-	const result = new Map<string, LiveAtlasDynmapServerDefinition>();
+	const result = new Map<string, LiveAtlasServerDefinition>();
 	result.set('dynmap', {
 		id: 'dynmap',
 		label: 'dynmap',

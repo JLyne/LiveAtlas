@@ -1,20 +1,21 @@
 /*
- * Copyright 2020 James Lyne
+ * Copyright 2021 James Lyne
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import {Layer, Map as LeafletMap, LayerGroup, LayerOptions, Util, Marker, Path} from "leaflet";
+import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 
 export interface LiveAtlasLayerGroupOptions extends LayerOptions {
 	id: string; //Added to the name of layer group panes
@@ -29,11 +30,11 @@ export interface LiveAtlasLayerGroupOptions extends LayerOptions {
 export default class LiveAtlasLayerGroup extends LayerGroup {
 	// @ts-ignore
 	options: LiveAtlasLayerGroupOptions;
-	_zoomLimitedLayers: Set<Layer>; //Layers which are zoom limited and should be checked on zoom
+	private _zoomLimitedLayers: Set<Layer>; //Layers which are zoom limited and should be checked on zoom
 	_layers: any;
 	_markerPane?: HTMLElement;
 
-	_zoomEndCallback = () => this._updateLayerVisibility();
+	private _zoomEndCallback = () => this._updateLayerVisibility();
 
 	constructor(options: LiveAtlasLayerGroupOptions) {
 		super([], options);
@@ -80,7 +81,7 @@ export default class LiveAtlasLayerGroup extends LayerGroup {
 			layer.options.pane = `vectors`;
 		}
 
-		const zoomLimited = this._isLayerZoomLimited(layer);
+		const zoomLimited = LiveAtlasLayerGroup._isLayerZoomLimited(layer);
 
 		if (zoomLimited) {
 			this._zoomLimitedLayers.add(layer);
@@ -89,11 +90,11 @@ export default class LiveAtlasLayerGroup extends LayerGroup {
 		if (this._map) {
 			//If layer is zoom limited, only add to map if it should be visible
 			if (zoomLimited) {
-				if (this._isLayerVisible(layer, this._map.getZoom())) {
-					this._map.addLayer(layer);
+				if (LiveAtlasLayerGroup._isLayerVisible(layer, this._map.getZoom())) {
+					this._addToMap(layer);
 				}
 			} else {
-				this._map.addLayer(layer);
+				this._addToMap(layer);
 			}
 		}
 
@@ -106,7 +107,19 @@ export default class LiveAtlasLayerGroup extends LayerGroup {
 	}
 
 	update(options: LiveAtlasLayerGroupOptions) {
-		this.options.showLabels = options.showLabels;
+		if(this.options.showLabels !== options.showLabels) {
+			//Create labels if they are now always visible
+			//TODO: This will be slow when many markers exist. Is it worth doing?
+			if(options.showLabels) {
+				this.eachLayer((layer) => {
+					if(layer instanceof GenericMarker) {
+						(layer as GenericMarker).createLabel();
+					}
+				});
+			}
+
+			this.options.showLabels = options.showLabels;
+		}
 
 		if(this._markerPane) {
 			this._markerPane.classList.toggle('leaflet-pane--show-labels', options.showLabels);
@@ -128,7 +141,7 @@ export default class LiveAtlasLayerGroup extends LayerGroup {
 		}
 	}
 
-	_updateLayerVisibility(onAdd?: boolean) {
+	private _updateLayerVisibility(onAdd?: boolean) {
 		if(!this._map) {
 			return;
 		}
@@ -142,34 +155,34 @@ export default class LiveAtlasLayerGroup extends LayerGroup {
 			this.eachLayer((layer) => {
 				//Per marker zoom limits take precedence, if present
 				if(this._zoomLimitedLayers.has(layer)) {
-					this._isLayerVisible(layer, zoom) ? this._map.addLayer(layer) : this._map.removeLayer(layer);
+					LiveAtlasLayerGroup._isLayerVisible(layer, zoom) ? this._addToMap(layer) : this._removeFromMap(layer);
 				} else { //Otherwise apply group zoom limit
-					visible ? this._map.addLayer(layer) : this._map.removeLayer(layer);
+					visible ? this._addToMap(layer) : this._removeFromMap(layer);
 				}
 			}, this);
 		//Group isn't zoom limited, but some individual markers are
 		} else if(this._zoomLimitedLayers.size) {
 			this._zoomLimitedLayers.forEach((layer) => {
-				this._isLayerVisible(layer, zoom) ? this._map.addLayer(layer) : this._map.removeLayer(layer);
+				LiveAtlasLayerGroup._isLayerVisible(layer, zoom) ? this._addToMap(layer) : this._removeFromMap(layer);
 			});
 		//Nothing is zoom limited, but we've just been added to the map
 		} else if(onAdd) {
-			this.eachLayer(this._map.addLayer, this._map);
+			this.eachLayer((layer: Layer) => this._addToMap(layer), this._map);
 		}
 	}
 
 	//Returns if this layer group has zoom limits defined
-	_isZoomLimited() {
+	private _isZoomLimited() {
 		return this.options.maxZoom !== undefined || this.options.minZoom !== undefined;
 	}
 
 	//Returns if the given layer has its own zoom limits defined
-	_isLayerZoomLimited(layer: Layer) {
+	private static _isLayerZoomLimited(layer: Layer) {
 		return ((layer as any).options && (layer as any).options.minZoom !== undefined)
 			&& ((layer as any).options && (layer as any).options.maxZoom !== undefined);
 	}
 
-	_isLayerVisible(layer: Layer, currentZoom: number) {
+	private static _isLayerVisible(layer: Layer, currentZoom: number) {
 		let minZoom = -Infinity,
 			maxZoom = Infinity;
 
@@ -182,5 +195,18 @@ export default class LiveAtlasLayerGroup extends LayerGroup {
 		}
 
 		return currentZoom >= minZoom && currentZoom <= maxZoom;
+	}
+
+	private _addToMap(layer: Layer) {
+		this._map.addLayer(layer)
+
+		//Create marker label immediately if labels are visible by default
+		if(layer instanceof GenericMarker && this.options.showLabels) {
+			(layer as GenericMarker).createLabel();
+		}
+	}
+
+	private _removeFromMap(layer: Layer) {
+		this._map.removeLayer(layer)
 	}
 }

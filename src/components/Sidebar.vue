@@ -1,24 +1,25 @@
 <!--
-  - Copyright 2020 James Lyne
+  - Copyright 2021 James Lyne
   -
-  -    Licensed under the Apache License, Version 2.0 (the "License");
-  -    you may not use this file except in compliance with the License.
-  -    You may obtain a copy of the License at
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
   -
-  -      http://www.apache.org/licenses/LICENSE-2.0
+  - http://www.apache.org/licenses/LICENSE-2.0
   -
-  -    Unless required by applicable law or agreed to in writing, software
-  -    distributed under the License is distributed on an "AS IS" BASIS,
-  -    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  -    See the License for the specific language governing permissions and
-  -    limitations under the License.
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
   -->
 
 <template>
 	<section class="sidebar" role="none" ref="sidebar">
 		<header class="sidebar__buttons">
-			<button v-if="mapCount > 1" :class="{'button--maps': true}" @click="toggleMaps" :title="messageWorlds"
-					:aria-label="messageWorlds" :aria-expanded="mapsVisible" @keydown="handleMapsKeydown">
+			<button v-if="mapCount > 1 || serverCount > 1" :class="{'button--maps': true}" @click="toggleMaps"
+			        :title="messageWorlds" :aria-label="messageWorlds" :aria-expanded="mapsVisible"
+			        @keydown="handleMapsKeydown">
 				<SvgIcon name="maps"></SvgIcon>
 			</button>
 			<button v-if="playerMakersEnabled" :class="{'button--players': true}" @click="togglePlayers"

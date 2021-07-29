@@ -1,17 +1,17 @@
 <!--
-  - Copyright 2020 James Lyne
+  - Copyright 2021 James Lyne
   -
-  -    Licensed under the Apache License, Version 2.0 (the "License");
-  -    you may not use this file except in compliance with the License.
-  -    You may obtain a copy of the License at
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
   -
-  -      http://www.apache.org/licenses/LICENSE-2.0
+  - http://www.apache.org/licenses/LICENSE-2.0
   -
-  -    Unless required by applicable law or agreed to in writing, software
-  -    distributed under the License is distributed on an "AS IS" BASIS,
-  -    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  -    See the License for the specific language governing permissions and
-  -    limitations under the License.
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
   -->
 
 <template>
@@ -44,12 +44,10 @@ import LinkControl from "@/components/map/control/LinkControl.vue";
 import ChatControl from "@/components/map/control/ChatControl.vue";
 import LogoControl from "@/components/map/control/LogoControl.vue";
 import {MutationTypes} from "@/store/mutation-types";
-import {DynmapPlayer} from "@/dynmap";
-import {ActionTypes} from "@/store/action-types";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {LoadingControl} from "@/leaflet/control/LoadingControl";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
-import {Coordinate} from "@/index";
+import {Coordinate, LiveAtlasPlayer} from "@/index";
 
 export default defineComponent({
 	components: {
@@ -125,7 +123,7 @@ export default defineComponent({
 		followTarget: {
 			handler(newValue, oldValue) {
 				if (newValue) {
-					this.updateFollow(newValue, !oldValue || newValue.account !== oldValue.account);
+					this.updateFollow(newValue, !oldValue || newValue.name !== oldValue.name);
 				}
 			},
 			deep: true
@@ -141,8 +139,14 @@ export default defineComponent({
 			}
 		},
 		currentMap(newValue, oldValue) {
-			if(this.leaflet && newValue && oldValue) {
-				const panTarget = this.scheduledPan || oldValue.latLngToLocation(this.leaflet.getCenter(), 64);
+			if(this.leaflet && newValue) {
+				let panTarget = this.scheduledPan;
+
+				if(!panTarget && oldValue) {
+					panTarget = oldValue.latLngToLocation(this.leaflet.getCenter(), 64);
+				} else if(!panTarget) {
+					panTarget = {x: 0, y: 0, z: 0};
+				}
 
 				if(this.scheduledZoom) {
 					this.leaflet!.setZoom(this.scheduledZoom, {
@@ -164,8 +168,6 @@ export default defineComponent({
 
 			if(newValue) {
 				let location: Coordinate | null = this.scheduledPan;
-
-				store.dispatch(ActionTypes.GET_MARKER_SETS, undefined);
 
 				// Abort if follow target is present, to avoid panning twice
 				if(store.state.followTarget && store.state.followTarget.location.world === newValue.name) {
@@ -280,7 +282,7 @@ export default defineComponent({
 				this.leaflet.getContainer().focus();
 			}
 		},
-		updateFollow(player: DynmapPlayer, newFollow: boolean) {
+		updateFollow(player: LiveAtlasPlayer, newFollow: boolean) {
 			const store = useStore(),
 				followMapName = store.state.configuration.followMap,
 				currentWorld = store.state.currentWorld;
@@ -288,17 +290,17 @@ export default defineComponent({
 			let targetWorld = null;
 
 			if(!this.leaflet) {
-				console.warn(`Cannot follow ${player.account}. Map not yet initialized.`);
+				console.warn(`Cannot follow ${player.name}. Map not yet initialized.`);
 				return;
 			}
 
 			if(player.hidden) {
-				console.warn(`Cannot follow ${player.account}. Player is hidden from the map.`);
+				console.warn(`Cannot follow ${player.name}. Player is hidden from the map.`);
 				return;
 			}
 
 			if(!player.location.world) {
-				console.warn(`Cannot follow ${player.account}. Player isn't in a known world.`);
+				console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
 				return;
 			}
 
@@ -309,7 +311,7 @@ export default defineComponent({
 			}
 
 			if (!targetWorld) {
-				console.warn(`Cannot follow ${player.account}. Player isn't in a known world.`);
+				console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
 				return;
 			}
 
@@ -320,7 +322,7 @@ export default defineComponent({
 			if(map !== store.state.currentMap && (targetWorld !== currentWorld || newFollow)) {
 				this.scheduledPan = player.location;
 
-				if(newFollow) {
+				if(newFollow && store.state.configuration.followZoom) {
 					console.log(`Setting zoom for new follow ${store.state.configuration.followZoom}`);
 					this.scheduledZoom = store.state.configuration.followZoom;
 				}
@@ -330,7 +332,7 @@ export default defineComponent({
 			} else {
 				this.leaflet!.panTo(store.state.currentMap?.locationToLatLng(player.location));
 
-				if(newFollow) {
+				if(newFollow && store.state.configuration.followZoom) {
 					console.log(`Setting zoom for new follow ${store.state.configuration.followZoom}`);
 					this.leaflet!.setZoom(store.state.configuration.followZoom);
 				}

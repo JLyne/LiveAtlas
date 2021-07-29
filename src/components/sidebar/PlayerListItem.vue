@@ -1,50 +1,50 @@
 <!--
-  - Copyright 2020 James Lyne
+  - Copyright 2021 James Lyne
   -
-  -    Licensed under the Apache License, Version 2.0 (the "License");
-  -    you may not use this file except in compliance with the License.
-  -    You may obtain a copy of the License at
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
   -
-  -      http://www.apache.org/licenses/LICENSE-2.0
+  - http://www.apache.org/licenses/LICENSE-2.0
   -
-  -    Unless required by applicable law or agreed to in writing, software
-  -    distributed under the License is distributed on an "AS IS" BASIS,
-  -    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  -    See the License for the specific language governing permissions and
-  -    limitations under the License.
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
   -->
 
 <template>
-	<input :id="`player-${player.account}`" type="radio" name="player" v-bind:value="player.account" v-model="followTarget"
+	<input :id="`player-${player.name}`" type="radio" name="player" v-bind:value="player.name" v-model="followTarget"
 	       @click.prevent="onInputClick" />
-	<label :for="`player-${player.account}`"
+	<label :for="`player-${player.name}`"
 	       :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}" :title="title"
 	       @click.prevent="onLabelClick">
 		<img width="16" height="16" class="player__icon" :src="image" alt="" aria-hidden="true" />
-		<span class="player__name" v-html="player.name"></span>
+		<span class="player__name" v-html="player.displayName"></span>
 	</label>
 </template>
 
 <script lang="ts">
 import {defineComponent, computed, ref, onMounted} from 'vue';
-import {DynmapPlayer} from "@/dynmap";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {getMinecraftHead} from '@/util';
 import defaultImage from '@/assets/images/player_face.png';
+import {LiveAtlasPlayer} from "@/index";
 
 export default defineComponent({
 	name: 'PlayerListItem',
 	props: {
 		player: {
-			type: Object as () => DynmapPlayer,
+			type: Object as () => LiveAtlasPlayer,
 			required: true
 		}
 	},
 	setup(props) {
 		const store = useStore(),
 			otherWorld = computed(() => {
-				return store.state.configuration.grayHiddenPlayers
+				return store.state.components.playerMarkers?.grayHiddenPlayers
 					&& !props.player.hidden
 					&& (!store.state.currentWorld || store.state.currentWorld.name !== props.player.location.world);
 			}),
@@ -59,7 +59,7 @@ export default defineComponent({
 				}
 			}),
 
-			followTarget = computed(() => store.state.followTarget ? store.state.followTarget.account : undefined),
+			followTarget = computed(() => store.state.followTarget ? store.state.followTarget.name : undefined),
 
 			pan = () => {
 				if(!props.player.hidden) {

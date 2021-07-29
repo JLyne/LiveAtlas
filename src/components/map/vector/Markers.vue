@@ -1,33 +1,32 @@
 <!--
-  - Copyright 2020 James Lyne
+  - Copyright 2021 James Lyne
   -
-  -    Licensed under the Apache License, Version 2.0 (the "License");
-  -    you may not use this file except in compliance with the License.
-  -    You may obtain a copy of the License at
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
   -
-  -      http://www.apache.org/licenses/LICENSE-2.0
+  - http://www.apache.org/licenses/LICENSE-2.0
   -
-  -    Unless required by applicable law or agreed to in writing, software
-  -    distributed under the License is distributed on an "AS IS" BASIS,
-  -    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  -    See the License for the specific language governing permissions and
-  -    limitations under the License.
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
   -->
 
 <script lang="ts">
 import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import {Marker} from 'leaflet';
 import {useStore} from "@/store";
-import {DynmapMarker, DynmapMarkerSet} from "@/dynmap";
 import {ActionTypes} from "@/store/action-types";
 import {createMarker, updateMarker} from "@/util/markers";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
-import {getPointConverter} from "@/util";
+import {LiveAtlasMarker, LiveAtlasMarkerSet} from "@/index";
 
 export default defineComponent({
 	props: {
 		set: {
-			type: Object as () => DynmapMarkerSet,
+			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
 		},
 		layerGroup: {
@@ -49,9 +48,9 @@ export default defineComponent({
 			layers = Object.freeze(new Map()) as Map<string, Marker>,
 
 			createMarkers = () => {
-				const converter = getPointConverter();
+				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
-				props.set.markers.forEach((marker: DynmapMarker, id: string) => {
+				props.set.markers.forEach((marker: LiveAtlasMarker, id: string) => {
 					const layer = createMarker(marker, converter);
 
 					layers.set(id, layer);
@@ -74,15 +73,14 @@ export default defineComponent({
 				const updates = await useStore().dispatch(ActionTypes.POP_MARKER_UPDATES, {
 					markerSet: props.set.id,
 					amount: 10,
-				});
-
-				const converter = getPointConverter();
+				}),
+					converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				for(const update of updates) {
 					if(update.removed) {
 						deleteMarker(update.id);
 					} else {
-						const layer = updateMarker(layers.get(update.id), update.payload as DynmapMarker, converter);
+						const layer = updateMarker(layers.get(update.id), update.payload as LiveAtlasMarker, converter);
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);
@@ -100,11 +98,12 @@ export default defineComponent({
 				}
 			};
 
-		//FIXME: Prevent unnecessary repositioning when changing worlds
-		watch(currentMap, (newValue) => {
-			if(newValue) {
+		watch(currentMap, (newValue, oldValue) => {
+			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
+				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
+
 				for (const [id, marker] of props.set.markers) {
-					updateMarker(layers.get(id), marker, getPointConverter());
+					updateMarker(layers.get(id), marker, converter);
 				}
 			}
 		});
