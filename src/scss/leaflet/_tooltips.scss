@@ -14,25 +14,15 @@
  * limitations under the License.
  */
 
-@import "leaflet/controls";
-@import "leaflet/popups";
-@import "leaflet/tooltips";
-@import "leaflet/markers";
+.leaflet-tooltip {
+	background-color: var(--background-base);
+	color: var(--text-base);
+	box-shadow: var(--box-shadow);
+	border-radius: var(--border-radius);
+	border: none;
+	will-change: transform;
 
-.leaflet-container {
-	font-family: inherit;
-	font-size: 1.5rem;
-	font-weight: inherit;
-	line-height: 1;
-
-	/* Workaround for focus outlines until https://github.com/Leaflet/Leaflet/pull/7259 gets released */
-	* {
-		&:focus {
-			outline-style: auto !important;
-		}
-
-		@include focus-reset {
-			outline-style: none !important;
-		}
+	&:before {
+		content: none;
 	}
 }

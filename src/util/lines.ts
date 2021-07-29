@@ -20,7 +20,7 @@
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import {Coordinate, LiveAtlasLine} from "@/index";
 import {LatLngExpression} from "leaflet";
-import {createPopup} from "@/util/paths";
+import {createPopup, tooltipOptions} from "@/util/paths";
 
 export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
 	const points = options.points.map(projectPointsMapCallback, converter),
@@ -28,6 +28,10 @@ export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtl
 
 	if(options.popupContent) {
 		line.bindPopup(() => createPopup(options, 'LinePopup'));
+	}
+
+	if (options.tooltipContent) {
+		line.bindTooltip(() => options.tooltipContent, tooltipOptions);
 	}
 
 	return line;

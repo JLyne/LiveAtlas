@@ -21,7 +21,7 @@ import {LatLngExpression} from "leaflet";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import {LiveAtlasCircle} from "@/index";
-import {createPopup} from "@/util/paths";
+import {createPopup, tooltipOptions} from "@/util/paths";
 
 export const createCircle = (options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
@@ -30,6 +30,10 @@ export const createCircle = (options: LiveAtlasCircle, converter: Function): Liv
 
 	if(options.popupContent) {
 		circle.bindPopup(() => createPopup(options, 'CirclePopup'));
+	}
+
+	if (options.tooltipContent) {
+		circle.bindTooltip(() => options.tooltipContent, tooltipOptions);
 	}
 
 	return circle;

@@ -208,6 +208,7 @@ interface LiveAtlasPath {
 	minZoom?: number;
 	maxZoom?: number;
 	popupContent?: string;
+	tooltipContent?: string;
 	isPopupHTML: boolean;
 }
 

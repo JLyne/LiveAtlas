@@ -17,6 +17,13 @@
 import {LatLngExpression, PathOptions} from "leaflet";
 import {LiveAtlasPath} from "@/index";
 
+export const tooltipOptions = {
+	direction: 'top',
+	sticky: true,
+	opacity: 1.0,
+	interactive: false,
+};
+
 export const arePointsEqual = (oldPoints: LatLngExpression | LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][],
 						newPoints: LatLngExpression | LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]) => {
 	return JSON.stringify(oldPoints) === JSON.stringify(newPoints);
