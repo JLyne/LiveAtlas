@@ -26,7 +26,7 @@
     "@vue/compiler-sfc": "^3.1",
     "@vue/eslint-config-typescript": "^7.0",
     "eslint": "^7.31",
-    "eslint-plugin-vue": "^7.14",
+    "eslint-plugin-vue": "^7.15",
     "patch-package": "^6.4",
     "rollup-plugin-analyzer": "^4.0",
     "sass": "^1.36",
