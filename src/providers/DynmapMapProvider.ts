@@ -796,7 +796,7 @@ export default class DynmapMapProvider extends MapProvider {
 	getPlayerHeadUrl(head: HeadQueueEntry): string {
 		const icon = (head.size === 'body') ? `faces/body/${head.name}` :`faces/${head.size}x${head.size}/${head.name}`
 
-        return this.getMarkerIconUrl(icon);
+        return `${this.config.dynmap!.markers}${icon}.png`;
     }
 
     getMarkerIconUrl(icon: string): string {
