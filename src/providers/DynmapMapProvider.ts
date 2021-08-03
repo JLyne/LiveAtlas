@@ -717,7 +717,10 @@ export default class DynmapMapProvider extends MapProvider {
 		this.store.commit(MutationTypes.ADD_MARKER_SET_UPDATES, updates.markerSets);
 		this.store.commit(MutationTypes.ADD_TILE_UPDATES, updates.tiles);
 		this.store.commit(MutationTypes.ADD_CHAT, updates.chat);
-		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, response.confighash || 0);
+
+		if(response.configHash) {
+			this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, response.confighash || 0);
+		}
 
 		await this.store.dispatch(ActionTypes.SET_PLAYERS, players);
 	}
