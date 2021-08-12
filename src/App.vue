@@ -43,7 +43,7 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			title = computed(() => store.state.configuration.title),
+			title = computed(() => store.getters.pageTitle),
 			currentUrl = computed(() => store.getters.url),
 			currentServer = computed(() => store.state.currentServer),
 			configurationHash = computed(() => store.state.configurationHash),
