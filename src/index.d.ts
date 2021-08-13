@@ -17,7 +17,7 @@
 import {State} from "@/store";
 import {DynmapUrlConfig} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {PathOptions, PointTuple, PolylineOptions} from "leaflet";
+import {Coords, DoneCallback, PathOptions, PointTuple, PolylineOptions} from "leaflet";
 import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
@@ -312,4 +312,21 @@ interface LiveAtlasChat {
 	message?: string;
 	source?: string;
 	timestamp: number;
+}
+
+export interface LiveAtlasTile {
+	active?: boolean;
+	coords: Coords;
+	current: boolean;
+	el: LiveAtlasTileElement;
+	loaded?: Date;
+	retain?: boolean;
+	complete: boolean;
+}
+
+export interface LiveAtlasTileElement extends HTMLImageElement {
+	tileName?: string;
+	url: string;
+	callback: DoneCallback;
+	abortController: AbortController;
 }

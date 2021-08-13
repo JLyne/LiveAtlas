@@ -17,28 +17,14 @@
  * limitations under the License.
  */
 
-import {Coords, DoneCallback, DomUtil} from 'leaflet';
+import {Coords, DoneCallback} from 'leaflet';
 import {useStore} from "@/store";
-import {Coordinate} from "@/index";
-import {LiveAtlasTileLayerOptions, LiveAtlasTileLayer} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {Coordinate, LiveAtlasTile} from "@/index";
+import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 import {computed, watch} from "@vue/runtime-core";
 import {ComputedRef} from "@vue/reactivity";
 import {WatchStopHandle} from "vue";
 import {ActionTypes} from "@/store/action-types";
-
-export interface DynmapTile {
-	active?: boolean;
-	coords: Coords;
-	current: boolean;
-	el: DynmapTileElement;
-	loaded?: Date;
-	retain?: boolean;
-	complete: boolean;
-}
-
-export interface DynmapTileElement extends HTMLImageElement {
-	tileName: string;
-}
 
 export interface TileInfo {
 	prefix: string;
@@ -56,11 +42,7 @@ const store = useStore();
 
 // noinspection JSUnusedGlobalSymbols
 export class DynmapTileLayer extends LiveAtlasTileLayer {
-	private readonly _cachedTileUrls: Map<any, any> = Object.seal(new Map());
 	private readonly _namedTiles: Map<any, any> = Object.seal(new Map());
-	private readonly _loadQueue: DynmapTileElement[] = [];
-	private readonly _loadingTiles: Set<DynmapTileElement> = Object.seal(new Set());
-	private readonly _tileTemplate: DynmapTileElement;
 	private readonly _baseUrl: string;
 
 	private readonly _night: ComputedRef<boolean>;
@@ -69,25 +51,11 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 	private readonly _updateUnwatch: WatchStopHandle;
 	private _updateFrame: number = 0;
 
-	// @ts-ignore
-	declare options: DynmapTileLayerOptions;
-
 	constructor(options: LiveAtlasTileLayerOptions) {
 		super('', options);
 
 		this._mapSettings = options.mapSettings;
-		this._tileTemplate = DomUtil.create('img', 'leaflet-tile') as DynmapTileElement;
-		this._tileTemplate.style.width = this._tileTemplate.style.height = this.options.tileSize + 'px';
-		this._tileTemplate.alt = '';
-		this._tileTemplate.tileName = '';
-		this._tileTemplate.setAttribute('role', 'presentation');
 		this._baseUrl = store.state.currentMapProvider!.getTilesUrl();
-
-		Object.seal(this._tileTemplate);
-
-		if(this.options.crossOrigin || this.options.crossOrigin === '') {
-			this._tileTemplate.crossOrigin = this.options.crossOrigin === true ? '' : this.options.crossOrigin;
-		}
 
 		this._pendingUpdates = computed(() => !!store.state.pendingTileUpdates.length);
 		this._updateUnwatch = watch(this._pendingUpdates, (newValue, oldValue) => {
@@ -117,17 +85,11 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 	}
 
 	private getTileUrlFromName(name: string, timestamp?: number) {
-		let url = this._cachedTileUrls.get(name);
+		const path = escape(`${this._mapSettings.world.name}/${name}`);
+		let url = `${this._baseUrl}${path}`;
 
-		if (!url) {
-			const path = escape(`${this._mapSettings.world.name}/${name}`);
-			url = `${this._baseUrl}${path}`;
-
-			if(typeof timestamp !== 'undefined') {
-				url += (url.indexOf('?') === -1 ? `?timestamp=${timestamp}` : `&timestamp=${timestamp}`);
-			}
-
-			this._cachedTileUrls.set(name, url);
+		if(typeof timestamp !== 'undefined') {
+			url += (url.indexOf('?') === -1 ? `?timestamp=${timestamp}` : `&timestamp=${timestamp}`);
 		}
 
 		return url;
@@ -135,55 +97,21 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 
 	private updateNamedTile(name: string, timestamp: number) {
 		const tile = this._namedTiles.get(name);
-		this._cachedTileUrls.delete(name);
 
 		if (tile) {
 			tile.dataset.src = this.getTileUrlFromName(name, timestamp);
-			this._loadQueue.push(tile);
-			this._tickLoadQueue();
+			this.loadQueue.push(tile);
+			this.tickLoadQueue();
 		}
 	}
 
 	createTile(coords: Coords, done: DoneCallback) {
-		//Clone template image instead of creating a new one
-		const tile = this._tileTemplate.cloneNode(false) as DynmapTileElement;
+		const tile = super.createTile(coords, done);
 
 		tile.tileName = this.getTileName(coords);
-		tile.dataset.src = this.getTileUrl(coords);
-
 		this._namedTiles.set(tile.tileName, tile);
-		this._loadQueue.push(tile);
-
-		//Use addEventListener here
-		tile.onload = () => {
-			this._tileOnLoad(done, tile);
-			this._loadingTiles.delete(tile);
-			this._tickLoadQueue();
-		};
-		tile.onerror = () => {
-			this._tileOnError(done, tile, {name: 'Error', message: 'Error'});
-			this._loadingTiles.delete(tile);
-			this._tickLoadQueue();
-		};
-
-		this._tickLoadQueue();
 
 		return tile;
-	}
-
-	_tickLoadQueue() {
-		if (this._loadingTiles.size > 6) {
-			return;
-		}
-
-		const tile = this._loadQueue.shift();
-
-		if (!tile) {
-			return;
-		}
-
-		this._loadingTiles.add(tile);
-		tile.src = tile.dataset.src as string;
 	}
 
 	// stops loading all tiles in the background layer
@@ -195,18 +123,12 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 				continue;
 			}
 
-			tile = this._tiles[i] as DynmapTile;
+			tile = this._tiles[i] as LiveAtlasTile;
 
 			if (tile.coords.z !== this._tileZoom) {
 				if (tile.loaded && tile.el && tile.el.tileName) {
 					this._namedTiles.delete(tile.el.tileName);
 				}
-
-				if(this._loadQueue.includes(tile.el)) {
-					this._loadQueue.splice(this._loadQueue.indexOf(tile.el), 1);
-				}
-
-				this._loadingTiles.delete(tile.el);
 			}
 		}
 
@@ -214,7 +136,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 	}
 
 	_removeTile(key: string) {
-		const tile = this._tiles[key] as DynmapTile;
+		const tile = this._tiles[key] as LiveAtlasTile;
 
 		if (!tile) {
 			return;
@@ -224,15 +146,6 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 
 		if (tileName) {
 			this._namedTiles.delete(tileName);
-			this._cachedTileUrls.delete(tileName);
-			this._loadingTiles.delete(tile.el);
-
-			if(this._loadQueue.includes(tile.el)) {
-				this._loadQueue.splice(this._loadQueue.indexOf(tile.el), 1);
-			}
-
-			tile.el.onerror = null;
-			tile.el.onload = null;
 		}
 
 		// @ts-ignore
