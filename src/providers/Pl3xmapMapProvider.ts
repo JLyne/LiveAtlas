@@ -127,6 +127,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 				nativeZoomLevels: worldResponse.zoom.max || 1,
 				extraZoomLevels: worldResponse.zoom.extra || 0,
+				tileUpdateInterval: worldResponse.tiles_update_interval ? worldResponse.tiles_update_interval * 1000 : undefined,
 			})));
 
 			worlds.push({

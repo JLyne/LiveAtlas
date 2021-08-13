@@ -34,6 +34,7 @@ export interface LiveAtlasMapDefinitionOptions {
 	worldToMap?: [number, number, number, number, number, number, number, number, number];
 	nativeZoomLevels: number;
 	extraZoomLevels: number;
+	tileUpdateInterval?: number;
 }
 
 export default class LiveAtlasMapDefinition {
@@ -52,6 +53,7 @@ export default class LiveAtlasMapDefinition {
 	readonly nativeZoomLevels: number;
 	readonly extraZoomLevels: number;
 	readonly scale: number;
+	readonly tileUpdateInterval?: number;
 
 	constructor(options: LiveAtlasMapDefinitionOptions) {
 		this.world = options.world; //Ignore append_to_world here otherwise things break
@@ -71,6 +73,7 @@ export default class LiveAtlasMapDefinition {
 		this.nativeZoomLevels = options.nativeZoomLevels || 1;
 		this.extraZoomLevels = options.extraZoomLevels || 0;
 		this.scale = (1 / Math.pow(2, this.nativeZoomLevels));
+		this.tileUpdateInterval = options.tileUpdateInterval || undefined;
 
 		if(options.mapToWorld || options.worldToMap) {
 			this.projection = new LiveAtlasProjection({

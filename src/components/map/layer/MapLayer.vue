@@ -43,7 +43,16 @@ export default defineComponent({
 		const store = useStore(),
 			active = computed(() => props.map === store.state.currentMap);
 
-		let layer: LiveAtlasTileLayer;
+		let redrawTimeout = 0,
+			layer: LiveAtlasTileLayer;
+
+		const redraw = () => {
+			if(active.value) {
+				layer._update();
+			}
+
+			redrawTimeout = setTimeout(redraw, props.map.tileUpdateInterval);
+		};
 
 		if(store.state.currentServer?.type === 'dynmap') {
 			layer = new DynmapTileLayer({
@@ -71,8 +80,16 @@ export default defineComponent({
 			enableLayer();
 		}
 
+		if(props.map.tileUpdateInterval) {
+			redrawTimeout = setTimeout(redraw, props.map.tileUpdateInterval);
+		}
+
 		onUnmounted(() => {
 			disableLayer();
+
+			if(redrawTimeout) {
+				clearTimeout(redrawTimeout);
+			}
 		});
 	},
 
