@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {MarkerOptions, Marker, Util, LatLngExpression, Icon} from 'leaflet';
+import {MarkerOptions, Marker, LatLngExpression, Icon, Map} from 'leaflet';
 import {LiveAtlasMarker} from "@/index";
 import {GenericIcon} from "@/leaflet/icon/GenericIcon";
 
@@ -52,5 +52,17 @@ export class GenericMarker extends Marker {
 
 	createLabel(): void {
 		this.options.icon.createLabel();
+	}
+
+	removeLabel(): void {
+		this.options.icon.createLabel();
+	}
+
+	onRemove(map: Map): this {
+		this.options.icon.removeLabel();
+
+		super.onRemove(map);
+
+		return this;
 	}
 }

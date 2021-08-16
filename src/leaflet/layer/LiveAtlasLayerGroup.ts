@@ -108,15 +108,17 @@ export default class LiveAtlasLayerGroup extends LayerGroup {
 
 	update(options: LiveAtlasLayerGroupOptions) {
 		if(this.options.showLabels !== options.showLabels) {
-			//Create labels if they are now always visible
-			//TODO: This will be slow when many markers exist. Is it worth doing?
-			if(options.showLabels) {
-				this.eachLayer((layer) => {
-					if(layer instanceof GenericMarker) {
+			this.eachLayer((layer) => {
+				//Create labels if they are now always visible
+				//TODO: This will be slow when many markers exist. Is it worth doing?
+				if(layer instanceof GenericMarker) {
+					if(options.showLabels) {
 						(layer as GenericMarker).createLabel();
+					} else {
+						(layer as GenericMarker).removeLabel();
 					}
-				});
-			}
+				}
+			});
 
 			this.options.showLabels = options.showLabels;
 		}

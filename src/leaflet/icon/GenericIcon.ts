@@ -117,6 +117,16 @@ export class GenericIcon extends DivIcon {
 		this._labelCreated = true;
 	}
 
+	removeLabel() {
+		if(!this._container || !this._labelCreated) {
+			return;
+		}
+
+		this._label!.remove();
+		this._label = undefined;
+		this._labelCreated = false;
+	}
+
 	update(options: GenericIconOptions) {
 		if(this._image && options.icon !== this.options.icon) {
 			this._image!.src = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon);
