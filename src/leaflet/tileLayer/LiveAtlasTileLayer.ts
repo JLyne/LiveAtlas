@@ -144,6 +144,22 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 		this.fetchTile(tile);
 	}
 
+	refresh() {
+		for (const i in this._tiles) {
+			if (!Object.prototype.hasOwnProperty.call(this._tiles, i)) {
+				continue;
+			}
+
+			const tile = this._tiles[i] as LiveAtlasTile;
+
+			if(tile.loaded) {
+				this.loadQueue.push(tile.el);
+			}
+		}
+
+		this.tickLoadQueue();
+	}
+
 	_abortLoading() {
 		let tile;
 
