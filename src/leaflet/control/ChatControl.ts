@@ -31,7 +31,8 @@ export class ChatControl extends Control {
 
 	onAdd() {
 		const store = useStore(),
-			chatButton = DomUtil.create('button', 'leaflet-control-chat') as HTMLButtonElement;
+			chatButton = DomUtil.create('button',
+				'leaflet-control-bottom leaflet-control-button leaflet-control-chat') as HTMLButtonElement;
 
 		chatButton.type = 'button';
 		chatButton.title = store.state.messages.chatTitle;

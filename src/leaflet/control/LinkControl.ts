@@ -34,7 +34,8 @@ export class LinkControl extends Control {
 
 	onAdd() {
 		const store = useStore(),
-			linkButton = DomUtil.create('button', 'leaflet-control-link') as HTMLButtonElement,
+			linkButton = DomUtil.create('button',
+				'leaflet-control-button leaflet-control-link') as HTMLButtonElement,
 			copySuccessMessage = computed(() => store.state.messages.copyToClipboardSuccess),
 			copyErrorMessage = computed(() => store.state.messages.copyToClipboardError);
 

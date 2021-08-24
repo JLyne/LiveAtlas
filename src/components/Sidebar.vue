@@ -158,7 +158,7 @@ export default defineComponent({
 	bottom: 0;
 	display: flex;
 	flex-direction: column;
-	padding: 1rem;
+	padding: var(--ui-element-spacing);
 	font-size: 1.5rem;
 	will-change: transform;
 	pointer-events: none;
@@ -174,17 +174,17 @@ export default defineComponent({
 		flex-direction: row;
 		align-items: center;
 		justify-content: flex-end;
-		margin-bottom: 1rem;
+		margin-bottom: var(--ui-element-spacing);
 		pointer-events: auto;
 		align-self: flex-end;
 
 		button {
-			width: 5rem;
-			height: 5rem;
+			width: var(--ui-button-size);
+			height: var(--ui-button-size);
 			box-shadow: var(--box-shadow);
 
 			& + button {
-				margin-left: 1rem;
+				margin-left: var(--ui-element-spacing);
 			}
 		}
 
@@ -193,18 +193,13 @@ export default defineComponent({
 			align-items: flex-end;
 			margin: 0;
 			position: absolute;
-			right: 1rem;
-			top: 1rem;
+			right: var(--ui-element-spacing);
+			top: var(--ui-element-spacing);
 
 			button + button {
 				margin-left: 0;
-				margin-top: 1rem;
+				margin-top: var(--ui-element-spacing);
 			}
-		}
-
-		@media (max-width: 400px), (max-height: 480px) {
-			right: 0.5rem;
-			top: 0.5rem;
 		}
 	}
 
@@ -233,7 +228,7 @@ export default defineComponent({
 
 	.sidebar__section {
 		@extend %panel;
-		margin-bottom: 1rem;
+		margin-bottom: var(--ui-element-spacing);
 		box-sizing: border-box;
 		width: 100%;
 		max-width: 25rem;
@@ -307,12 +302,6 @@ export default defineComponent({
 	@media (max-width: 480px) {
 		padding-right: 7rem;
 		padding-top: 0.8rem;
-	}
-
-	@media (max-width: 400px), (max-height: 480px) {
-		padding-top: 0.5rem;
-		padding-bottom: 0.5rem;
-		padding-left: 0.5rem;
 	}
 
 	@media (max-width: 400px) {

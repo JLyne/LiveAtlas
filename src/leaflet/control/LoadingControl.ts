@@ -48,7 +48,8 @@ export class LoadingControl extends Control {
 	constructor(options: LoadingControlOptions) {
 		super(options);
 
-		this._loadingIndicator = DomUtil.create('div', 'leaflet-control-loading') as HTMLDivElement;
+		this._loadingIndicator = DomUtil.create('div',
+			'leaflet-control-button leaflet-control-loading') as HTMLDivElement;
 	}
 
 	onAdd(map: Map) {

@@ -20,7 +20,7 @@
 	.notification {
 		margin: 0 0.5rem 1rem;
 		padding: 1rem 1.5rem;
-		min-height: 5rem;
+		min-height: var(--ui-button-size);
 		font-size: 1.6rem;
 		font-family: Raleway, sans-serif;
 		color: var(--text-base);

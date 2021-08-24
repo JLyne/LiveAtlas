@@ -130,8 +130,8 @@
 	.chat {
 		@extend %panel;
 		position: absolute;
-		bottom: 7rem;
-		left: 7rem;
+		bottom: calc((var(--ui-element-spacing) * 2) + var(--ui-button-size));
+		left: calc((var(--ui-element-spacing) * 2) + var(--ui-button-size));
 		width: 50rem;
 		max-width: calc(100% - 8rem);
 		max-height: 20rem;
@@ -199,8 +199,6 @@
 		}
 
 		@media (max-width: 400px), (max-height: 480px) {
-			bottom: 6.5rem;
-			left: 6.5rem;
 			max-width: calc(100% - 7rem);
 		}
 
