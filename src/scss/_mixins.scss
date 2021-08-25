@@ -69,17 +69,12 @@
 	border-color: var(--background-dark);
 }
 
-@mixin button-active {
-	background-color: var(--background-active);
-	color: var(--text-active);
-}
-
 @mixin button-disabled {
 	background-color: var(--background-disabled);
 	color: var(--text-disabled);
 	cursor: not-allowed;
 
-	&:hover, &:active, &:focus {
+	&:hover, &:focus {
 		background-color: var(--background-disabled);
 		color: var(--text-disabled);
 	}

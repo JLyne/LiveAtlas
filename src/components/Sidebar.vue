@@ -258,7 +258,7 @@ export default defineComponent({
 				}
 			}
 
-			&:hover, &:focus-visible, &.focus-visible, &:active {
+			&:hover, &:focus-visible, &.focus-visible {
 				background-color: transparent;
 				color: inherit;
 			}
