@@ -36,7 +36,7 @@
 	font-size: 1.6rem;
 	font-family: Raleway, sans-serif;
 	box-sizing: border-box;
-	text-shadow: none;
+	text-shadow: var(--text-shadow);
 	user-select: none;
 
 	.svg-icon {
@@ -61,6 +61,13 @@
 @mixin button-hovered {
 	background-color: var(--background-hover);
 	color: var(--text-hover);
+}
+
+@mixin button-pressed {
+	background-color: var(--background-selected);
+	color: var(--text-selected);
+	font-weight: bold;
+	text-shadow: none;
 }
 
 @mixin button-focused {

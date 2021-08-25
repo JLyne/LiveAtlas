@@ -247,9 +247,11 @@ export default defineComponent({
 				padding: 1.5rem 1.5rem 1rem;
 				margin: -1.5rem -1.5rem 0;
 				background-color: transparent;
+				font-weight: 400;
 				color: inherit;
 				width: calc(100% + 3rem);
 				align-items: center;
+				text-shadow: var(--text-shadow);
 
 				.svg-icon {
 					margin-left: auto;
@@ -260,7 +262,6 @@ export default defineComponent({
 
 			&:hover, &:focus-visible, &.focus-visible {
 				background-color: transparent;
-				color: inherit;
 			}
 		}
 

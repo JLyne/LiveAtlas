@@ -19,8 +19,12 @@
 %button {
 	@include button;
 
-	&:hover, &[aria-expanded="true"], &[aria-pressed="true"] {
+	&:hover {
 		@include button-hovered;
+	}
+
+	&[aria-expanded="true"], &[aria-pressed="true"] {
+		@include button-pressed;
 	}
 
 	&:focus {

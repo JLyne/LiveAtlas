@@ -130,26 +130,29 @@
     <style>
         /* Theme colours */
         :root {
-            --background-base: #222222; /* Buttons/sidebar */
-            --background-dark: #121212; /* Body/map labels  */
-            --background-light: #333333; /* Scrollbars/inputs */
+            --background-base: #222222; /* Foreground UI elements */
+            --background-dark: #121212; /* Body/map labels */
+            --background-light: #363636; /* Scrollbars/inputs */
             --background-error: #771616; /* Errors */
 
             --background-disabled: #555555; /* Disabled controls */
-            --background-hover: #cccccc; /* Button :hover/selected */
+            --background-hover: #363636; /* :hovered buttons/menu items */
+            --background-selected: #BDBDBD; /* Selected buttons/menu items */
 
-            --outline-focus: #eeeeee; /* Button :focus outline */
+            --outline-focus: #eeeeee; /* :focus outline */
 
-            --border-radius: 1rem;
+            --border-radius: 0.5rem;
             --border-color: #333333; /* Control borders */
             --box-shadow: 2px 2px 0px #111111;
 
-            --text-base: #cccccc; /* Normal text */
-            --text-emphasis: #eeeeee; /* Chat messages/:focus inputs */
-            --text-subtle: #aaaaaa; /* Skeletons/secondary text */
-            --text-disabled: #999999; /* Disabled controls */
+            --text-base: rgba(255, 255, 255, 0.7); /* Normal text */
+            --text-emphasis: rgba(255, 255, 255, 0.87); /* Chat messages/:focus inputs */
+            --text-subtle: rgba(255, 255, 255, 0.5); /* Skeletons/secondary text */
+            --text-disabled: var(--text-subtle); /* Disabled controls */
 
-            --text-hover: var(--background-base); /* Text in :hover/selected buttons */
+            --text-hover: var(--text-base); /* Text in :hover buttons */
+            --text-selected: var(--background-base); /* Text in selected buttons */
+            --text-shadow: 0.1rem 0.1rem #000000; /* Text in selected buttons */
 
             --text-night: #ddffff; /* Clock time at night */
             --text-day: #ffdd33; /* Clock time in day */
@@ -214,7 +217,7 @@
         body {
             font-family: Raleway, sans-serif;
             color: var(--text-base);
-            text-shadow: 0.1rem 0.1rem #000000;
+            text-shadow: var(--text-shadow);
             letter-spacing: 0.02rem;
         }
 
