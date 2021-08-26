@@ -10,20 +10,12 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-
-<svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="#fff">
-    <g fill="none" fill-rule="evenodd">
-        <g transform="translate(1 1)" stroke-width="2">
-            <circle stroke-opacity=".5" cx="18" cy="18" r="18"/>
-            <path d="M36 18c0-9.94-8.06-18-18-18">
-                <animateTransform
-                    attributeName="transform"
-                    type="rotate"
-                    from="0 18 18"
-                    to="360 18 18"
-                    dur="1s"
-                    repeatCount="indefinite"/>
-            </path>
-        </g>
+<svg width="38" height="38" xmlns="http://www.w3.org/2000/svg" stroke="#fff">
+    <g transform="translate(1 1)" stroke-width="2" fill="none">
+        <circle stroke-opacity=".5" cx="18" cy="18" r="18"/>
+        <path d="M36 18c0-9.94-8.06-18-18-18">
+            <animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s"
+                              repeatCount="indefinite"/>
+        </path>
     </g>
 </svg>
