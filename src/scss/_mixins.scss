@@ -38,17 +38,19 @@
 	box-sizing: border-box;
 	text-shadow: var(--text-shadow);
 	user-select: none;
+	padding: 0.8rem 0.8rem 0.7rem;
+	line-height: 2rem;
 
 	.svg-icon {
 		display: inline-block;
-		width: calc(var(--ui-button-size) - 1.6rem);
-		height: calc(var(--ui-button-size) - 1.6rem);
 		max-width: 3rem;
 		max-height: 3rem;
 		pointer-events: none;
 
 		&:only-child {
 			position: absolute;
+			width: calc(100% - 1.6rem);
+			height: calc(100% - 1.6rem);
 			top: 0;
 			right: 0;
 			bottom: 0;
