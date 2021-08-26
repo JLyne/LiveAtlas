@@ -26,8 +26,7 @@ export interface LogoControlOptions extends ControlOptions {
 }
 
 export class LogoControl extends Control {
-	// @ts-ignore
-	options: LogoControlOptions;
+	declare options: LogoControlOptions;
 
 	constructor(options: LogoControlOptions) {
 		super(options);

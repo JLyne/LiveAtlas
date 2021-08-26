@@ -38,12 +38,11 @@ export interface LoadingControlOptions extends ControlOptions {
 }
 
 export class LoadingControl extends Control {
-	// @ts-ignore
-	options: LoadingControlOptions;
+	declare options: LoadingControlOptions;
 
-	_dataLoaders: Set<number> = new Set();
-	_loadingIndicator: HTMLDivElement;
-	_delayIndicatorTimeout?: number;
+	private _dataLoaders: Set<number> = new Set();
+	private readonly _loadingIndicator: HTMLDivElement;
+	private _delayIndicatorTimeout?: number;
 
 	constructor(options: LoadingControlOptions) {
 		super(options);

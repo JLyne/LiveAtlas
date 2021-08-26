@@ -25,8 +25,7 @@ import {notify} from "@kyvg/vue3-notification";
 import {computed} from "@vue/runtime-core";
 
 export class LinkControl extends Control {
-	// @ts-ignore
-	options: ControlOptions
+	declare options: ControlOptions
 
 	constructor(options: ControlOptions) {
 		super(options);

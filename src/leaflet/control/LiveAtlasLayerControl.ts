@@ -32,15 +32,16 @@ import Layers = Control.Layers;
 const store = useStore();
 
 export class LiveAtlasLayerControl extends Control.Layers {
+	declare _map ?: LeafletMap;
+	declare _overlaysList?: HTMLElement;
+	declare _baseLayersList?: HTMLElement;
+	declare _layerControlInputs?: HTMLElement[];
+	declare _container?: HTMLElement;
+	declare _section?: HTMLElement;
+	declare _separator?: HTMLElement;
+
 	private _layersButton?: HTMLElement;
-	private _map ?: LeafletMap;
-	private _overlaysList?: HTMLElement;
-	private _baseLayersList?: HTMLElement;
-	private _layerControlInputs?: HTMLElement[];
 	private _layerPositions: Map<Layer, number>;
-	private _container?: HTMLElement;
-	private _section?: HTMLElement;
-	private _separator?: HTMLElement;
 	private visible: boolean = false;
 
 	constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersOptions) {

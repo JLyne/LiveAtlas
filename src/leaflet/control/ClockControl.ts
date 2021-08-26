@@ -38,10 +38,9 @@ export interface ClockControlOptions extends ControlOptions {
 }
 
 export class ClockControl extends Control {
-	// @ts-ignore
-	options: ClockControlOptions;
+	declare options: ClockControlOptions;
+	declare _container?: HTMLElement;
 
-	private _container?: HTMLElement;
 	private _sun?: HTMLElement;
 	private _moon?: HTMLElement;
 	private _clock?: HTMLElement;

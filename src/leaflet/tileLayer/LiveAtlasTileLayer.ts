@@ -26,9 +26,9 @@ export interface LiveAtlasTileLayerOptions extends TileLayerOptions {
 
 // noinspection JSUnusedGlobalSymbols
 export abstract class LiveAtlasTileLayer extends TileLayer {
-	protected _mapSettings: LiveAtlasMapDefinition;
 	declare options: LiveAtlasTileLayerOptions;
 
+	protected _mapSettings: LiveAtlasMapDefinition;
 	private readonly tileTemplate: LiveAtlasTileElement;
 	protected readonly loadQueue: LiveAtlasTileElement[] = [];
 	private readonly loadingTiles: Set<LiveAtlasTileElement> = Object.seal(new Set());

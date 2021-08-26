@@ -28,11 +28,11 @@ export interface LiveAtlasLayerGroupOptions extends LayerOptions {
 }
 
 export default class LiveAtlasLayerGroup extends LayerGroup {
-	// @ts-ignore
-	options: LiveAtlasLayerGroupOptions;
+	declare options: LiveAtlasLayerGroupOptions;
+	declare _layers: any;
+
 	private _zoomLimitedLayers: Set<Layer>; //Layers which are zoom limited and should be checked on zoom
-	_layers: any;
-	_markerPane?: HTMLElement;
+	private _markerPane?: HTMLElement;
 
 	private _zoomEndCallback = () => this._updateLayerVisibility();
 

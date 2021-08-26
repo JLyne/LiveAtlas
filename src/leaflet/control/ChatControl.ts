@@ -22,8 +22,7 @@ import {watch} from "@vue/runtime-core";
 import "@/assets/icons/chat.svg";
 
 export class ChatControl extends Control {
-	// @ts-ignore
-	options: ControlOptions
+	declare options: ControlOptions
 
 	constructor(options: ControlOptions) {
 		super(options);

@@ -18,10 +18,11 @@ import {Map, DomUtil, MapOptions} from 'leaflet';
 import LayerManager from "@/leaflet/layer/LayerManager";
 
 export default class LiveAtlasLeafletMap extends Map {
+	declare _controlCorners: any;
+	declare	_controlContainer?: HTMLElement;
+	declare	_container?: HTMLElement;
+
 	private readonly _layerManager: LayerManager;
-	private _controlCorners: any;
-	private	_controlContainer?: HTMLElement;
-	private	_container?: HTMLElement;
 
 	constructor(element: string | HTMLElement, options?: MapOptions) {
 		super(element, options);

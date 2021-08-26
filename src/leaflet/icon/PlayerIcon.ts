@@ -49,6 +49,8 @@ export interface PlayerIconOptions extends MarkerOptions {
 }
 
 export class PlayerIcon extends DivIcon {
+	declare options: PlayerIconOptions;
+
 	private readonly _player: LiveAtlasPlayer;
 	private _container?: HTMLDivElement;
 	private _playerImage?: HTMLImageElement;
@@ -61,9 +63,6 @@ export class PlayerIcon extends DivIcon {
 	private _playerHealthBar?: HTMLDivElement;
 	private _playerArmor?: HTMLDivElement;
 	private _playerArmorBar?: HTMLDivElement;
-
-	// @ts-ignore
-	options: PlayerIconOptions;
 
 	constructor(player: LiveAtlasPlayer, options: PlayerIconOptions) {
 		super(options);

@@ -45,8 +45,7 @@ export class GenericIcon extends DivIcon {
 		className: '',
 	};
 
-	// @ts-ignore
-	options: GenericIconOptions;
+	declare options: GenericIconOptions;
 
 	private _image?: HTMLImageElement;
 	private _label?: HTMLSpanElement;

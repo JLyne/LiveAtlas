@@ -26,6 +26,8 @@ export interface PlayerMarkerOptions extends MarkerOptions {
 }
 
 export class PlayerMarker extends Marker {
+	declare options: PlayerMarkerOptions;
+
 	private _player: LiveAtlasPlayer;
 
 	constructor(player: LiveAtlasPlayer, options: PlayerMarkerOptions) {

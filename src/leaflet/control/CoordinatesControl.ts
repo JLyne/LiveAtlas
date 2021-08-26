@@ -31,10 +31,9 @@ export interface CoordinatesControlOptions extends ControlOptions {
 }
 
 export class CoordinatesControl extends Control {
-	// @ts-ignore
-	options: CoordinatesControlOptions;
+	declare options: CoordinatesControlOptions;
+	declare _map ?: Map;
 
-	private _map ?: Map;
 	private _location?: Coordinate;
 	private _locationChanged: boolean = false;
 	private readonly _coordsContainer: HTMLSpanElement;
