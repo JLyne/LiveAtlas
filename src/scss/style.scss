@@ -267,7 +267,9 @@ input {
 	}
 }
 
-#app .map .tile img, img {
+//noinspection CssOverwrittenProperties
+img {
+    image-rendering: crisp-edges; //Firefox
     image-rendering: pixelated;
 }
 
