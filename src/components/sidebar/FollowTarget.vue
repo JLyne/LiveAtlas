@@ -25,7 +25,9 @@
 				<span class="target__status" v-show="target.hidden">{{ messageHidden }}</span>
 			</span>
 			<button class="target__unfollow" type="button" :title="messageUnfollowTitle"
-				@click.prevent="unfollow">{{ messageUnfollow }}</button>
+				@click.prevent="unfollow" :aria-label="messageUnfollow">
+				<SvgIcon name="cross"></SvgIcon>
+			</button>
 		</div>
 	</section>
 </template>
@@ -37,9 +39,12 @@ import {computed, defineComponent, onMounted, ref, watch} from "@vue/runtime-cor
 import {getMinecraftHead} from '@/util';
 import defaultImage from '@/assets/images/player_face.png';
 import {LiveAtlasPlayer} from "@/index";
+import SvgIcon from "@/components/SvgIcon.vue";
+import "@/assets/icons/cross.svg";
 
 export default defineComponent({
 	name: 'FollowTarget',
+	components: {SvgIcon},
 	props: {
 		target: {
 			type: Object as () => LiveAtlasPlayer,
@@ -97,8 +102,20 @@ export default defineComponent({
 
 			.target__unfollow {
 				position: absolute;
-				top: 2rem;
-				right: 1.5rem;
+				top: 1.5rem;
+				right: 1rem;
+				width: 2.5rem;
+				height: 2.5rem;
+
+				&:before {
+					content: '';
+					position: absolute;
+					display: block;
+					top: -1rem;
+					right: -1rem;
+					bottom: -1rem;
+					left: -1rem;
+				}
 			}
 
 			.target__info {
