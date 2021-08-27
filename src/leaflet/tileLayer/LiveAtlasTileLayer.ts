@@ -118,7 +118,7 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 			//The tile onload listener will take it from here
 			const blob = await response.blob();
 			tile.src = URL.createObjectURL(blob);
-		} catch(e) {
+		} catch(e: any) {
 			if (e instanceof DOMException && e.name === 'AbortError') {
 				return;
 			}
