@@ -49,6 +49,17 @@
 		border-radius: 0;
 		border-bottom: 0.1rem solid var(--border-color);
 
+		&:first-child {
+			border-top-left-radius: var(--border-radius);
+			border-top-right-radius: var(--border-radius);
+		}
+
+		&:last-child {
+			border-bottom-left-radius: var(--border-radius);
+			border-bottom-right-radius: var(--border-radius);
+			border-bottom: none;
+		}
+
 		&.leaflet-disabled {
 			background-color: var(--background-disabled);
 			cursor: not-allowed;
@@ -69,41 +80,22 @@
 	}
 }
 
-.leaflet-touch {
-	.leaflet-bar, .leaflet-control-layers {
-		border: none;
-	}
-
-	.leaflet-control-layers-toggle {
-		background-image: none;
-		width: var(--ui-button-size);
-		height: var(--ui-button-size);
-	}
-
-	.leaflet-top {
-		.leaflet-bar a {
-			height: var(--ui-button-size);
-			width: var(--ui-button-size);
-			line-height: var(--ui-button-size);
-
-			&:first-child {
-				border-top-left-radius: var(--border-radius);
-				border-top-right-radius: var(--border-radius);
-			}
-
-			&:last-child {
-				border-bottom-left-radius: var(--border-radius);
-				border-bottom-right-radius: var(--border-radius);
-			}
-		}
-	}
-}
-
 .leaflet-control-button,
-.leaflet-control-layers-toggle {
+.leaflet-control-layers-toggle,
+.leaflet-control-logo,
+.leaflet-bar a {
 	@extend %button;
+	line-height: 3.5rem;
 	width: var(--ui-button-size);
 	height: var(--ui-button-size);
+}
+
+.leaflet-control-zoom {
+	flex-shrink: 0;
+
+	a {
+		font-family: sans-serif; /* +/- look better */
+	}
 }
 
 .leaflet-control-coordinates {
@@ -191,8 +183,6 @@
 }
 
 .leaflet-control-logo {
-	width: var(--ui-button-size);
-	height: var(--ui-button-size);
 	flex-shrink: 0;
 
 	a {
@@ -211,18 +201,10 @@
 
 .leaflet-left {
 	padding-left: var(--ui-element-spacing);
-
-	.leaflet-control {
-		margin: 0;
-	}
 }
 
 .leaflet-right {
 	padding-right: var(--ui-element-spacing);
-
-	.leaflet-control {
-		margin: 0;
-	}
 }
 
 .leaflet-top {
@@ -250,17 +232,6 @@
 
 	.leaflet-bar {
 		flex-direction: column;
-		box-shadow: var(--box-shadow);
-
-		a {
-			width: var(--ui-button-size);
-			height: var(--ui-button-size);
-			line-height: var(--ui-button-size);
-		}
-	}
-
-	.leaflet-control-layers {
-		box-shadow: var(--box-shadow);
 	}
 
 	.leaflet-control-logo {
@@ -293,12 +264,6 @@
 	}
 
 	.leaflet-control-zoom {
-		flex-shrink: 0;
-
-		a {
-			font-family: sans-serif; /* +/- look better */
-		}
-
 		@media (max-width: 480px) and (pointer: coarse), (max-height: 480px) and (pointer: coarse), (max-height: 400px) {
 			display: none;
 

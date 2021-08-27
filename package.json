@@ -13,7 +13,7 @@
   "dependencies": {
     "@kyvg/vue3-notification": "2.3.0",
     "@soerenmartius/vue3-clipboard": "^0.1",
-    "leaflet": "git+https://github.com/JLyne/leaflet.git",
+    "leaflet": "git+https://github.com/JLyne/leaflet.git#7a83c3590b5b06f38a88fc2a48d5720b33751360",
     "normalize-scss": "^7.0",
     "vue": "^3.2.6",
     "vuex": "^4.0"
