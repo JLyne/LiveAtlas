@@ -453,10 +453,6 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		return players;
 	}
 
-	sendChatMessage(message: string) {
-		throw new Error('Pl3xmap does not support chat');
-	}
-
 	startUpdates() {
 		this.updatesEnabled = true;
 		this.update();

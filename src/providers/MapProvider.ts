@@ -42,7 +42,6 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 
 	abstract loadServerConfiguration(): Promise<void>;
 	abstract populateWorld(world: LiveAtlasWorldDefinition): Promise<void>;
-	abstract sendChatMessage(message: string): void;
 
 	abstract startUpdates(): void;
 	abstract stopUpdates(): void;
@@ -50,6 +49,10 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 	abstract getPlayerHeadUrl(head: HeadQueueEntry): string;
     abstract getTilesUrl(): string;
     abstract getMarkerIconUrl(icon: string): string;
+
+    sendChatMessage(message: string) {
+		throw new Error('Provider does not support chat');
+	}
 
 	destroy() {
 		this.currentWorldUnwatch();
