@@ -39,6 +39,18 @@ export const hideSplash = () => {
 		return;
 	}
 
+	if(splashError) {
+		splashError.setAttribute('aria-hidden', 'true');
+	}
+
+	if(splashSpinner) {
+		splashSpinner.style.visibility = 'visible';
+	}
+
+	if(splashRetry) {
+		splashRetry.hidden = true;
+	}
+
 	requestAnimationFrame(() => {
 		splash.style.opacity = '0';
 		app.removeAttribute('aria-hidden');
