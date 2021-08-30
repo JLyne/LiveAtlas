@@ -148,10 +148,6 @@ export const actions: ActionTree<State, State> & Actions = {
 	},
 
 	async [ActionTypes.STOP_UPDATES]({state}) {
-		if(!state.currentWorld) {
-			return Promise.reject("No current world");
-		}
-
 		state.currentMapProvider!.stopUpdates();
 	},
 

@@ -49,10 +49,18 @@ export default defineComponent({
 			configurationHash = computed(() => store.state.configurationHash),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
-			configAttempts = ref(0),
+			loggedIn = computed(() => store.state.loggedIn),
+
+			loading = ref(false),
+			loadingAttempts = ref(0),
 
 			loadConfiguration = async () => {
 				try {
+					showSplash();
+					loading.value = true;
+
+					await store.dispatch(ActionTypes.STOP_UPDATES, undefined);
+					store.commit(MutationTypes.RESET, undefined);
 					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
 					await store.dispatch(ActionTypes.START_UPDATES, undefined);
 
@@ -65,7 +73,7 @@ export default defineComponent({
 							(map as HTMLElement).focus();
 						}
 					});
-				} catch(e) {
+				} catch(e: any) {
 					//Request was aborted, probably because another server was selected before the request finished. Don't retry
 					if(e instanceof DOMException && e.name === 'AbortError') {
 						return;
@@ -73,8 +81,10 @@ export default defineComponent({
 
 					const error = `Failed to load server configuration for '${store.state.currentServer!.id}'`;
 					console.error(`${error}:`, e);
-					showSplashError(`${error}\n${e}`, false, ++configAttempts.value);
+					showSplashError(`${error}\n${e}`, false, ++loadingAttempts.value);
 					setTimeout(() => loadConfiguration(), 1000);
+				} finally {
+					loading.value = false;
 				}
 			},
 
@@ -141,28 +151,15 @@ export default defineComponent({
 		watch(title, (title) => document.title = title);
 		watch(currentUrl, (url) => window.history.replaceState({}, '', url));
 		watch(currentServer, (newServer?: LiveAtlasServerDefinition) => {
-			showSplash();
-
 			if(!newServer) {
 				return;
 			}
-
-			//Cleanup
-			store.commit(MutationTypes.CLEAR_PLAYERS, undefined);
-			store.commit(MutationTypes.SET_MAX_PLAYERS, 0);
-			store.commit(MutationTypes.CLEAR_CURRENT_MAP, undefined);
-			store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
-			store.commit(MutationTypes.CLEAR_WORLDS, undefined);
-			store.commit(MutationTypes.CLEAR_MARKER_SETS, undefined);
 
 			window.history.replaceState({}, '', newServer.id);
 			loadConfiguration();
 		}, {deep: true});
 		watch(configurationHash, async (newHash, oldHash) => {
 			if(newHash && oldHash) {
-				showSplash();
-				store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
-				await store.dispatch(ActionTypes.STOP_UPDATES, undefined);
 				await loadConfiguration();
 			}
 		});

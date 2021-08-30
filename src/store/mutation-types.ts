@@ -22,10 +22,8 @@ export enum MutationTypes {
 	CLEAR_SERVER_CONFIGURATION_HASH = 'clearServerConfigurationHash',
 	SET_SERVER_MESSAGES = 'setServerMessages',
 	SET_WORLDS = 'setWorlds',
-	CLEAR_WORLDS = 'clearWorlds',
 	SET_COMPONENTS = 'setComponents',
 	SET_MARKER_SETS = 'setMarkerSets',
-	CLEAR_MARKER_SETS = 'clearMarkerSets',
 	ADD_WORLD = 'addWorld',
 	SET_WORLD_STATE = 'setWorldState',
 	ADD_MARKER_SET_UPDATES = 'addMarkerSetUpdates',
@@ -47,7 +45,6 @@ export enum MutationTypes {
 	SET_CURRENT_ZOOM = 'setCurrentZoom',
 	SET_PARSED_URL = 'setParsedUrl',
 	CLEAR_PARSED_URL = 'clearParsedUrl',
-	CLEAR_CURRENT_MAP = 'clearCurrentMap',
 
 	SET_FOLLOW_TARGET = 'setFollowTarget',
 	SET_PAN_TARGET = 'setPanTarget',
@@ -63,4 +60,5 @@ export enum MutationTypes {
 	SET_SIDEBAR_SECTION_COLLAPSED_STATE = 'setSidebarSectionCollapsedState',
 
 	SET_LOGGED_IN = 'setLoggedIn',
+	RESET = 'reset'
 }

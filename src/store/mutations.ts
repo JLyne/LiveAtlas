@@ -56,10 +56,8 @@ export type Mutations<S = State> = {
 	[MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH](state: S): void
 	[MutationTypes.SET_SERVER_MESSAGES](state: S, messages: LiveAtlasServerMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
-	[MutationTypes.CLEAR_WORLDS](state: S): void
 	[MutationTypes.SET_COMPONENTS](state: S, components: LiveAtlasPartialComponentConfig | LiveAtlasComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, LiveAtlasMarkerSet>): void
-	[MutationTypes.CLEAR_MARKER_SETS](state: S): void
 	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorldDefinition): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
@@ -82,7 +80,6 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_CURRENT_ZOOM](state: S, payload: number): void
 	[MutationTypes.SET_PARSED_URL](state: S, payload: LiveAtlasParsedUrl): void
 	[MutationTypes.CLEAR_PARSED_URL](state: S): void
-	[MutationTypes.CLEAR_CURRENT_MAP](state: S): void
 	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: LiveAtlasPlayer): void
 	[MutationTypes.SET_PAN_TARGET](state: S, payload: LiveAtlasPlayer): void
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: S, a?: void): void
@@ -96,6 +93,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_SIDEBAR_SECTION_COLLAPSED_STATE](state: S, payload: {section: LiveAtlasSidebarSection, state: boolean}): void
 
 	[MutationTypes.SET_LOGGED_IN](state: S, payload: boolean): void
+	[MutationTypes.RESET](state: S): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -211,18 +209,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 	},
 
-	[MutationTypes.CLEAR_WORLDS](state: State) {
-		state.worlds.clear();
-		state.maps.clear();
-
-		state.followTarget = undefined;
-		state.panTarget = undefined;
-
-		state.currentWorldState.timeOfDay = 0;
-		state.currentWorldState.raining = false;
-		state.currentWorldState.thundering = false;
-	},
-
 	//Updates the state of optional components (chat, link button, etc)
 	//Can be called with a LiveAtlasComponentConfig object to replace the whole state
 	//or a LiveAtlasPartialComponentConfig object for partial updates to the existing state
@@ -244,11 +230,6 @@ export const mutations: MutationTree<State> & Mutations = {
 				lineUpdates: [],
 			});
 		}
-	},
-
-	[MutationTypes.CLEAR_MARKER_SETS](state: State) {
-		state.markerSets.clear();
-		state.pendingSetUpdates.clear();
 	},
 
 	[MutationTypes.ADD_WORLD](state: State, world: LiveAtlasWorldDefinition) {
@@ -549,16 +530,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.parsedUrl = payload;
 	},
 
-	//Clear the current map/world
-	[MutationTypes.CLEAR_CURRENT_MAP](state: State) {
-		state.markerSets.clear();
-		state.pendingSetUpdates.clear();
-		state.pendingTileUpdates = [];
-
-		state.currentWorld = undefined;
-		state.currentMap = undefined;
-	},
-
 	//Clear any existing parsed url
 	[MutationTypes.CLEAR_PARSED_URL](state: State) {
 		state.parsedUrl = undefined;
@@ -633,5 +604,43 @@ export const mutations: MutationTree<State> & Mutations = {
 
 	[MutationTypes.SET_LOGGED_IN](state: State, payload: boolean): void {
 		state.loggedIn = payload;
+	},
+
+	//Cleanup for switching servers or reloading the configuration
+	[MutationTypes.RESET](state: State): void {
+		state.maxPlayers = 0;
+		state.parsedUrl = undefined;
+		state.currentWorld = undefined;
+		state.currentMap = undefined;
+
+		state.markerSets.clear();
+		state.pendingSetUpdates.clear();
+		state.pendingTileUpdates = [];
+
+		state.worlds.clear();
+		state.maps.clear();
+		state.currentZoom = 0;
+		state.currentLocation = {x: 0, y: 0, z: 0};
+
+		state.followTarget = undefined;
+		state.panTarget = undefined;
+
+		state.currentWorldState.timeOfDay = 0;
+		state.currentWorldState.raining = false;
+		state.currentWorldState.thundering = false;
+
+		state.configuration.title = '';
+
+		state.components.markers.showLabels= false;
+		state.components.playerMarkers = undefined;
+		state.components.coordinatesControl = undefined;
+		state.components.clockControl = undefined;
+		state.components.linkControl = false;
+		state.components.layerControl = false;
+		state.components.logoControls = [];
+		state.components.chatSending = undefined;
+		state.components.chatBox = undefined;
+		state.components.chatBalloons = false;
+		state.components.login = false;
 	}
 }
