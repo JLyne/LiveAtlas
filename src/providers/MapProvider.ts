@@ -58,11 +58,11 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 		this.currentWorldUnwatch();
 	}
 
-	protected static async fetchJSON(url: string, signal: AbortSignal) {
+	protected static async fetchJSON(url: string, options: any) {
 		let response, json;
 
 		try {
-			response = await fetch(url, {signal});
+			response = await fetch(url, options);
 		} catch(e) {
 			if(e instanceof DOMException && e.name === 'AbortError') {
 				console.warn(`Request aborted (${url}`);
@@ -90,5 +90,9 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 		}
 
 		return json;
+	}
+
+	protected static async getJSON(url: string, signal: AbortSignal) {
+		return MapProvider.fetchJSON(url, {signal, credentials: 'include'});
 	}
 }

@@ -591,7 +591,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 		this.markersAbort = new AbortController();
 
-		const response = await DynmapMapProvider.fetchJSON(url, this.markersAbort.signal);
+		const response = await DynmapMapProvider.getJSON(url, this.markersAbort.signal);
 		const sets: Map<string, LiveAtlasMarkerSet> = new Map();
 
 		response.sets = response.sets || {};
@@ -626,7 +626,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 		this.configurationAbort = new AbortController();
 
-		const response = await DynmapMapProvider.fetchJSON(this.config.dynmap!.configuration, this.configurationAbort.signal);
+		const response = await DynmapMapProvider.getJSON(this.config.dynmap!.configuration, this.configurationAbort.signal);
 
 		if (response.error === 'login-required') {
 			throw new Error("Login required");
@@ -664,7 +664,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 		this.updateAbort = new AbortController();
 
-		const response = await DynmapMapProvider.fetchJSON(url, this.updateAbort.signal);
+		const response = await DynmapMapProvider.getJSON(url, this.updateAbort.signal);
 		const players: Set<LiveAtlasPlayer> = new Set(),
 			updates = this.buildUpdates(response.updates || []),
 			worldState = {
@@ -734,6 +734,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 		return fetch(this.config.dynmap!.sendmessage, {
 			method: 'POST',
+			credentials: 'include',
 			body: JSON.stringify({
 				name: null,
 				message: message,

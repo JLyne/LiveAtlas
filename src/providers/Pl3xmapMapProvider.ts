@@ -190,7 +190,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 		this.markersAbort = new AbortController();
 
-		const response = await Pl3xmapMapProvider.fetchJSON(url, this.markersAbort.signal);
+		const response = await Pl3xmapMapProvider.getJSON(url, this.markersAbort.signal);
 		const sets: Map<string, LiveAtlasMarkerSet> = new Map();
 
 		if(!Array.isArray(response)) {
@@ -368,7 +368,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		this.configurationAbort = new AbortController();
 
 		const baseUrl = this.config.pl3xmap,
-			response = await Pl3xmapMapProvider.fetchJSON(`${baseUrl}tiles/settings.json`, this.configurationAbort.signal);
+			response = await Pl3xmapMapProvider.getJSON(`${baseUrl}tiles/settings.json`, this.configurationAbort.signal);
 
 		if (response.error) {
 			throw new Error(response.error);
@@ -379,7 +379,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				.map((world: any) => world.name);
 
 		const worldResponses = await Promise.all(worldNames.map(name =>
-			Pl3xmapMapProvider.fetchJSON(`${baseUrl}tiles/${name}/settings.json`, this.configurationAbort!.signal)));
+			Pl3xmapMapProvider.getJSON(`${baseUrl}tiles/${name}/settings.json`, this.configurationAbort!.signal)));
 
 		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
 		this.store.commit(MutationTypes.SET_SERVER_MESSAGES, Pl3xmapMapProvider.buildMessagesConfig(response));
@@ -407,7 +407,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 		this.playersAbort = new AbortController();
 
-		const response = await Pl3xmapMapProvider.fetchJSON(url, this.playersAbort.signal),
+		const response = await Pl3xmapMapProvider.getJSON(url, this.playersAbort.signal),
 			players: Set<LiveAtlasPlayer> = new Set();
 
 		(response.players || []).forEach((player: any) => {
