@@ -25,4 +25,7 @@ export enum ActionTypes {
 	POP_LINE_UPDATES = "popLineUpdates",
 	POP_TILE_UPDATES = "popTileUpdates",
 	SEND_CHAT_MESSAGE = "sendChatMessage",
+	LOGIN = "login",
+	LOGOUT = "logout",
+	REGISTER = "register",
 }

@@ -100,6 +100,27 @@ interface LiveAtlasGlobalMessageConfig {
 	layersTitle: string;
 	copyToClipboardSuccess: string;
 	copyToClipboardError: string;
+	loginTitle: string;
+	loginHeading: string;
+	loginUsernameLabel: string;
+	loginPasswordLabel: string;
+	loginSubmit: string;
+	loginErrorUnknown: string;
+	loginErrorDisabled: string;
+	loginErrorIncorrect: string;
+	loginSuccess: string;
+	registerHeading: string;
+	registerDescription: string;
+	registerConfirmPasswordLabel: string;
+	registerCodeLabel: string;
+	registerSubmit: string;
+	registerErrorUnknown: string;
+	registerErrorDisabled: string;
+	registerErrorVerifyFailed: string;
+	registerErrorIncorrect: string;
+	logoutTitle: string;
+	logoutErrorUnknown: string;
+	logoutSuccess: string;
 }
 
 // Messages defined by dynmap configuration responses and can vary per server
@@ -122,7 +143,8 @@ interface LiveAtlasUIConfig {
 	playersSearch: boolean;
 }
 
-export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps' | 'settings';
+export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps';
+export type LiveAtlasUIModal = 'login' | 'settings';
 export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';
 export type LiveAtlasDimension = 'overworld' | 'nether' | 'end';
 
@@ -172,6 +194,9 @@ interface LiveAtlasMapProvider {
 	startUpdates(): void;
 	stopUpdates(): void;
 	sendChatMessage(message: string): void;
+	login(formData: FormData): void;
+	logout(): void;
+	register(formData: FormData): void;
 	destroy(): void;
 
 	getPlayerHeadUrl(entry: HeadQueueEntry): string;

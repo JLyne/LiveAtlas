@@ -39,7 +39,7 @@ import {
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasServerDefinition,
-	LiveAtlasServerConfig, LiveAtlasChat, LiveAtlasPartialComponentConfig, LiveAtlasComponentConfig
+	LiveAtlasServerConfig, LiveAtlasChat, LiveAtlasPartialComponentConfig, LiveAtlasComponentConfig, LiveAtlasUIModal
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
@@ -88,6 +88,8 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_SMALL_SCREEN](state: S, payload: boolean): void
 	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: S, payload: LiveAtlasUIElement): void
 	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: S, payload: {element: LiveAtlasUIElement, state: boolean}): void
+	[MutationTypes.SHOW_UI_MODAL](state: S, payload: LiveAtlasUIModal): void
+	[MutationTypes.HIDE_UI_MODAL](state: S, payload: LiveAtlasUIModal): void
 
 	[MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE](state: S, section: LiveAtlasSidebarSection): void
 	[MutationTypes.SET_SIDEBAR_SECTION_COLLAPSED_STATE](state: S, payload: {section: LiveAtlasSidebarSection, state: boolean}): void
@@ -138,6 +140,27 @@ export const mutations: MutationTree<State> & Mutations = {
 			layersTitle: messageConfig.layersTitle || '',
 			copyToClipboardSuccess: messageConfig.copyToClipboardSuccess || '',
 			copyToClipboardError: messageConfig.copyToClipboardError || '',
+			loginTitle: messageConfig.loginTitle || '',
+			loginHeading: messageConfig.loginHeading || '',
+			loginUsernameLabel: messageConfig.loginUsernameLabel || '',
+			loginPasswordLabel: messageConfig.loginPasswordLabel || '',
+			loginSubmit: messageConfig.loginSubmit || '',
+			loginErrorUnknown: messageConfig.loginErrorUnknown || '',
+			loginErrorDisabled: messageConfig.loginErrorDisabled || '',
+			loginErrorIncorrect: messageConfig.loginErrorIncorrect || '',
+			loginSuccess: messageConfig.loginSuccess || '',
+			registerHeading: messageConfig.registerHeading || '',
+			registerDescription: messageConfig.registerDescription || '',
+			registerConfirmPasswordLabel: messageConfig.registerConfirmPasswordLabel || '',
+			registerCodeLabel: messageConfig.registerCodeLabel || '',
+			registerSubmit: messageConfig.registerSubmit || '',
+			registerErrorUnknown: messageConfig.registerErrorUnknown || '',
+			registerErrorDisabled: messageConfig.registerErrorDisabled || '',
+			registerErrorVerifyFailed: messageConfig.registerErrorVerifyFailed || '',
+			registerErrorIncorrect: messageConfig.registerErrorIncorrect || '',
+			logoutTitle: messageConfig.logoutTitle || '',
+			logoutErrorUnknown: messageConfig.logoutErrorUnknown || '',
+			logoutSuccess: messageConfig.logoutSuccess || '',
 		}
 
 		state.messages = Object.assign(state.messages, messages);
@@ -586,6 +609,16 @@ export const mutations: MutationTree<State> & Mutations = {
 		payload.state ? state.ui.visibleElements.add(payload.element) : state.ui.visibleElements.delete(payload.element);
 	},
 
+	[MutationTypes.SHOW_UI_MODAL](state: State, modal: LiveAtlasUIModal): void {
+		state.ui.visibleModal = modal;
+	},
+
+	[MutationTypes.HIDE_UI_MODAL](state: State, modal: LiveAtlasUIModal): void {
+		if(state.ui.visibleModal === modal) {
+			state.ui.visibleModal = undefined;
+		}
+	},
+
 	[MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE](state: State, section: LiveAtlasSidebarSection): void {
 		if(state.ui.sidebar.collapsedSections.has(section)) {
 			state.ui.sidebar.collapsedSections.delete(section);
@@ -642,5 +675,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.components.chatBox = undefined;
 		state.components.chatBalloons = false;
 		state.components.login = false;
+
+		state.ui.visibleModal = undefined;
 	}
 }

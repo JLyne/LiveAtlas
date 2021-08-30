@@ -22,6 +22,7 @@
 	box-sizing: border-box;
 	overflow: visible;
 	font-size: 1.5rem;
+	flex-shrink: 0;
 
 	a, button {
 		@extend %button;

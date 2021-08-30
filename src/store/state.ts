@@ -32,7 +32,7 @@ import {
 	LiveAtlasPlayer,
 	LiveAtlasMarkerSet,
 	LiveAtlasComponentConfig,
-	LiveAtlasServerConfig, LiveAtlasChat
+	LiveAtlasServerConfig, LiveAtlasChat, LiveAtlasUIModal
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
@@ -78,6 +78,7 @@ export type State = {
 
 		smallScreen: boolean;
 		visibleElements: Set<LiveAtlasUIElement>;
+		visibleModal?: LiveAtlasUIModal;
 		previouslyVisibleElements: Set<LiveAtlasUIElement>;
 
 		sidebar: {
@@ -144,6 +145,27 @@ export const state: State = {
 		layersTitle: '',
 		copyToClipboardSuccess: '',
 		copyToClipboardError: '',
+		loginTitle: '',
+		loginHeading: '',
+		loginUsernameLabel: '',
+		loginPasswordLabel: '',
+		loginSubmit: '',
+		loginErrorUnknown: '',
+		loginErrorDisabled: '',
+		loginErrorIncorrect: '',
+		loginSuccess: '',
+		registerHeading: '',
+		registerDescription: '',
+		registerConfirmPasswordLabel: '',
+		registerCodeLabel: '',
+		registerSubmit: '',
+		registerErrorUnknown: '',
+		registerErrorDisabled: '',
+		registerErrorVerifyFailed: '',
+		registerErrorIncorrect: '',
+		logoutTitle: '',
+		logoutErrorUnknown: '',
+		logoutSuccess: '',
 	},
 
 	loggedIn: false,
@@ -227,6 +249,7 @@ export const state: State = {
 
 		smallScreen: false,
 		visibleElements: new Set(),
+		visibleModal: undefined,
 		previouslyVisibleElements: new Set(),
 
 		sidebar: {

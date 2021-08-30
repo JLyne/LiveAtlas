@@ -25,9 +25,12 @@
 			<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
 			<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
 			<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
+
+			<LoginControl v-if="loginEnabled" :leaflet="leaflet"></LoginControl>
 			<ChatControl v-if="chatBoxEnabled" :leaflet="leaflet"></ChatControl>
 		</template>
 	</div>
+
 	<MapContextMenu :leaflet="leaflet" v-if="leaflet"></MapContextMenu>
 </template>
 
@@ -48,6 +51,7 @@ import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {LoadingControl} from "@/leaflet/control/LoadingControl";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
 import {Coordinate, LiveAtlasPlayer} from "@/index";
+import LoginControl from "@/components/map/control/LoginControl.vue";
 
 export default defineComponent({
 	components: {
@@ -59,7 +63,8 @@ export default defineComponent({
 		ClockControl,
 		LinkControl,
 		ChatControl,
-		LogoControl
+		LogoControl,
+		LoginControl
 	},
 
 	setup() {
@@ -75,6 +80,7 @@ export default defineComponent({
 			clockControlEnabled = computed(() => store.getters.clockControlEnabled),
 			linkControlEnabled = computed(() => store.state.components.linkControl),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
+			loginEnabled = computed(() => store.state.components.login),
 			logoControls = computed(() => store.state.components.logoControls),
 
 			currentWorld = computed(() => store.state.currentWorld),
@@ -102,6 +108,7 @@ export default defineComponent({
 			clockControlEnabled,
 			linkControlEnabled,
 			chatBoxEnabled,
+			loginEnabled,
 
 			logoControls,
 			followTarget,

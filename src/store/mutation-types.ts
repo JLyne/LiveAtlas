@@ -55,6 +55,8 @@ export enum MutationTypes {
 	SET_SMALL_SCREEN = 'setSmallScreen',
 	TOGGLE_UI_ELEMENT_VISIBILITY = 'toggleUIElementVisibility',
 	SET_UI_ELEMENT_VISIBILITY = 'setUIElementVisibility',
+	SHOW_UI_MODAL = 'showUIModal',
+	HIDE_UI_MODAL = 'hideUIModal',
 
 	TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE = 'toggleSidebarSectionCollapsedState',
 	SET_SIDEBAR_SECTION_COLLAPSED_STATE = 'setSidebarSectionCollapsedState',

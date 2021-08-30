@@ -343,6 +343,33 @@ img {
 	}
 }
 
+.form {
+	.form__group {
+		margin-bottom: 1.5rem;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.form__label {
+		font-size: 1.6rem;
+		margin-bottom: 0.5rem;
+		color: var(--text-emphasis);
+	}
+
+	&.form--invalid input:invalid {
+		border-color: var(--background-error);
+		outline-color: var(--background-error);
+	}
+}
+
+.alert {
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+	background-color: var(--background-error);
+	border-radius: var(--border-radius);
+}
+
 @media print {
 	@page {
 		size: 297mm 210mm;

@@ -17,6 +17,7 @@
 <template>
 	<Map></Map>
 	<ChatBox v-if="chatBoxEnabled" v-show="chatBoxEnabled && chatVisible"></ChatBox>
+	<LoginModal v-if="loginEnabled"></LoginModal>
 	<Sidebar></Sidebar>
 	<notifications position="bottom center" :speed="250" :max="3" :ignoreDuplicates="true" classes="notification" />
 </template>
@@ -32,13 +33,16 @@ import {parseUrl} from '@/util';
 import {hideSplash, showSplash, showSplashError} from '@/util/splash';
 import {MutationTypes} from "@/store/mutation-types";
 import {LiveAtlasServerDefinition, LiveAtlasUIElement} from "@/index";
+import LoginModal from "@/components/login/LoginModal.vue";
+import {notify} from "@kyvg/vue3-notification";
 
 export default defineComponent({
 	name: 'App',
 	components: {
 		Map,
 		Sidebar,
-		ChatBox
+		ChatBox,
+		LoginModal
 	},
 
 	setup() {
@@ -48,6 +52,7 @@ export default defineComponent({
 			currentServer = computed(() => store.state.currentServer),
 			configurationHash = computed(() => store.state.configurationHash),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
+			loginEnabled = computed(() => store.state.components.login),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
 			loggedIn = computed(() => store.state.loggedIn),
 
@@ -76,6 +81,14 @@ export default defineComponent({
 				} catch(e: any) {
 					//Request was aborted, probably because another server was selected before the request finished. Don't retry
 					if(e instanceof DOMException && e.name === 'AbortError') {
+						return;
+					}
+
+					//Show login screen if required
+					if(e.message === 'login-required') {
+						hideSplash();
+						store.commit(MutationTypes.SHOW_UI_MODAL, 'login');
+						notify('Login required');
 						return;
 					}
 
@@ -163,6 +176,12 @@ export default defineComponent({
 				await loadConfiguration();
 			}
 		});
+		watch(loggedIn, async () => {
+			if(!loading.value) {
+				console.log('Login state changed. Reloading configuration');
+				await loadConfiguration();
+			}
+		})
 
 		onMounted(() => loadConfiguration());
 		onBeforeUnmount(() => store.dispatch(ActionTypes.STOP_UPDATES, undefined));
@@ -184,6 +203,7 @@ export default defineComponent({
 		return {
 			chatBoxEnabled,
 			chatVisible,
+			loginEnabled,
 		}
 	},
 });

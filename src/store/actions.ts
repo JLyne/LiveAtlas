@@ -71,6 +71,17 @@ export interface Actions {
 		{commit}: AugmentedActionContext,
 		payload: string
 	): Promise<void>
+	[ActionTypes.LOGIN](
+		{commit}: AugmentedActionContext,
+		payload: any
+	): Promise<void>
+	[ActionTypes.LOGOUT](
+		{commit}: AugmentedActionContext
+	): Promise<void>
+	[ActionTypes.REGISTER](
+		{commit}: AugmentedActionContext,
+		payload: any
+	): Promise<void>
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -239,5 +250,17 @@ export const actions: ActionTree<State, State> & Actions = {
 
 	async [ActionTypes.SEND_CHAT_MESSAGE]({commit, state}, message: string): Promise<void> {
 		await state.currentMapProvider!.sendChatMessage(message);
+	},
+
+	async [ActionTypes.LOGIN]({state, commit}, data: any): Promise<void> {
+		await state.currentMapProvider!.login(data);
+	},
+
+	async [ActionTypes.LOGOUT]({state}): Promise<void> {
+		await state.currentMapProvider!.logout();
+	},
+
+	async [ActionTypes.REGISTER]({state}, data: any): Promise<void> {
+		await state.currentMapProvider!.register(data);
 	},
 }

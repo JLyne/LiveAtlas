@@ -628,9 +628,12 @@ export default class DynmapMapProvider extends MapProvider {
 
 		const response = await DynmapMapProvider.getJSON(this.config.dynmap!.configuration, this.configurationAbort.signal);
 
-		if (response.error === 'login-required') {
-			throw new Error("Login required");
-		} else if (response.error) {
+		if(response.error === 'login-required') {
+			this.store.commit(MutationTypes.SET_LOGGED_IN, false);
+			this.store.commit(MutationTypes.SET_COMPONENTS, {login: true});
+		}
+
+		if (response.error) {
 			throw new Error(response.error);
 		}
 
@@ -806,6 +809,106 @@ export default class DynmapMapProvider extends MapProvider {
     getMarkerIconUrl(icon: string): string {
         return `${this.config.dynmap!.markers}_markers_/${icon}.png`;
     }
+
+    async login(data: any) {
+		const store = useStore();
+
+		if (!store.state.components.login) {
+			return Promise.reject(store.state.messages.loginErrorDisabled);
+		}
+
+		store.commit(MutationTypes.SET_LOGGED_IN, false);
+
+		try {
+			const body = new URLSearchParams();
+
+			body.append('j_username', data.username || '');
+			body.append('j_password', data.password || '');
+
+
+			const response = await DynmapMapProvider.fetchJSON(this.config.dynmap!.login, {
+				method: 'POST',
+				body,
+			});
+
+			switch(response.result) {
+				case 'success':
+					store.commit(MutationTypes.SET_LOGGED_IN, true);
+					return;
+
+				case 'loginfailed':
+					return Promise.reject(store.state.messages.loginErrorIncorrect);
+
+				default:
+					return Promise.reject(store.state.messages.loginErrorUnknown);
+			}
+		} catch(e) {
+			console.error(store.state.messages.loginErrorUnknown);
+			console.trace(e);
+			return Promise.reject(store.state.messages.loginErrorUnknown);
+		}
+	}
+
+	async logout() {
+		const store = useStore();
+
+		if (!store.state.components.login) {
+			return Promise.reject(store.state.messages.loginErrorDisabled);
+		}
+
+		try {
+			await DynmapMapProvider.fetchJSON(this.config.dynmap!.login, {
+				method: 'POST',
+			});
+
+			store.commit(MutationTypes.SET_LOGGED_IN, false);
+		} catch(e) {
+			return Promise.reject(store.state.messages.logoutErrorUnknown);
+		}
+	}
+
+    async register(data: any) {
+		const store = useStore();
+
+		if (!store.state.components.login) {
+			return Promise.reject(store.state.messages.loginErrorDisabled);
+		}
+
+		store.commit(MutationTypes.SET_LOGGED_IN, false);
+
+		try {
+			const body = new URLSearchParams();
+
+			body.append('j_username', data.username || '');
+			body.append('j_password', data.password || '');
+			body.append('j_verify_password', data.password || '');
+			body.append('j_passcode', data.code || '');
+
+			const response = await DynmapMapProvider.fetchJSON(this.config.dynmap!.register, {
+				method: 'POST',
+				body,
+			});
+
+			switch(response.result) {
+				case 'success':
+					store.commit(MutationTypes.SET_LOGGED_IN, true);
+					return;
+
+				case 'verifyfailed':
+					return Promise.reject(store.state.messages.registerErrorVerifyFailed);
+
+				case 'registerfailed':
+					return Promise.reject(store.state.messages.registerErrorIncorrect);
+
+				default:
+					return Promise.reject(store.state.messages.registerErrorUnknown);
+			}
+		} catch(e) {
+			console.error(store.state.messages.registerErrorUnknown);
+			console.trace(e);
+			return Promise.reject(store.state.messages.registerErrorUnknown);
+		}
+	}
 
 	destroy() {
 		super.destroy();

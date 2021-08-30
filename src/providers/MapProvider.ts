@@ -54,6 +54,18 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 		throw new Error('Provider does not support chat');
 	}
 
+	async login(data: any) {
+		throw new Error('Provider does not support logging in');
+	}
+
+	async logout() {
+		throw new Error('Provider does not support logging out');
+	}
+
+	async register(data: any) {
+		throw new Error('Provider does not support registration');
+	}
+
 	destroy() {
 		this.currentWorldUnwatch();
 	}
