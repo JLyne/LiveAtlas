@@ -222,4 +222,10 @@ export class LiveAtlasLayerControl extends Control.Layers {
 		Layers.prototype._checkDisabledLayers.call(this);
 		return label;
 	}
+
+	onRemove(map: LeafletMap) {
+		this._layerControlInputs = [];
+
+		(super.onRemove as Function)(map);
+	}
 }
