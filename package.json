@@ -19,7 +19,7 @@
     "vuex": "^4.0"
   },
   "devDependencies": {
-    "@types/leaflet": "1.7.4",
+    "@types/leaflet": "1.7.5",
     "@typescript-eslint/eslint-plugin": "^4.30",
     "@typescript-eslint/parser": "^4.29",
     "@vitejs/plugin-vue": "^1.6",
