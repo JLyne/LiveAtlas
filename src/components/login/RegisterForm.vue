@@ -43,7 +43,7 @@
 			<input id="register-code" type="text" name="code" v-model="valueCode" required />
 		</div>
 
-		<div role="alert" v-if="error" class="form__group alert">{{ error }}</div>
+		<div v-if="error" role="alert" aria-live="assertive" class="form__group alert">{{ error }}</div>
 
 		<div class="form__group">
 			<button type="submit" :disabled="submitting">{{ messageSubmit }}</button>
