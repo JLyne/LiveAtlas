@@ -75,7 +75,7 @@ export class GenericIcon extends DivIcon {
 		this._image.src = url;
 
 		// @ts-ignore
-		Icon.prototype._setIconStyles.call(this, div, 'icon');
+		super._setIconStyles.call(div, 'icon');
 
 		div.appendChild(this._image);
 		div.classList.add('marker');

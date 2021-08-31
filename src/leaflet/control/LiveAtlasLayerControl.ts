@@ -27,7 +27,6 @@ import {nextTick, watch} from "vue";
 import {handleKeyboardEvent} from "@/util/events";
 import LayersObject = Control.LayersObject;
 import LayersOptions = Control.LayersOptions;
-import Layers = Control.Layers;
 
 const store = useStore();
 
@@ -199,7 +198,7 @@ export class LiveAtlasLayerControl extends Control.Layers {
 			input.defaultChecked = checked;
 		} else {
 			// @ts-ignore
-			input = Layers.prototype._createRadioElement.call(this, 'leaflet-base-layers_' + Util.stamp(this), checked);
+			input = super._createRadioElement('leaflet-base-layers_' + Util.stamp(this), checked);
 		}
 
 		input.layerId = Util.stamp(obj.layer);
@@ -207,7 +206,7 @@ export class LiveAtlasLayerControl extends Control.Layers {
 		label.textContent = obj.name;
 
 		// @ts-ignore
-		DomEvent.on(input, 'click', (e: LeafletEvent) => Layers.prototype._onInputClick.call(this, e), this);
+		DomEvent.on(input, 'click', (e: LeafletEvent) => super._onInputClick(e), this);
 
 		item.appendChild(input);
 		item.insertAdjacentHTML('beforeend',  `
@@ -219,7 +218,7 @@ export class LiveAtlasLayerControl extends Control.Layers {
 		container!.appendChild(item);
 
 		// @ts-ignore
-		Layers.prototype._checkDisabledLayers.call(this);
+		super._checkDisabledLayers();
 		return label;
 	}
 
