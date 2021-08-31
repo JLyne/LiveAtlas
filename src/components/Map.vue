@@ -373,7 +373,7 @@ export default defineComponent({
 			right: 0;
 			bottom: 0;
 			left: 0;
-			border: 0.2rem solid #cccccc;
+			border: 0.2rem solid var(--outline-focus);
 			display: block;
 			z-index: 2000;
 			pointer-events: none;
