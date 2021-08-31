@@ -46,6 +46,8 @@ export default defineComponent({
 	},
 
 	setup() {
+		let loadingTimeout = 0;
+
 		const store = useStore(),
 			title = computed(() => store.getters.pageTitle),
 			currentUrl = computed(() => store.getters.url),
@@ -61,6 +63,7 @@ export default defineComponent({
 
 			loadConfiguration = async () => {
 				try {
+					clearTimeout(loadingTimeout);
 					showSplash();
 					loading.value = true;
 
@@ -95,7 +98,9 @@ export default defineComponent({
 					const error = `Failed to load server configuration for '${store.state.currentServer!.id}'`;
 					console.error(`${error}:`, e);
 					showSplashError(`${error}\n${e}`, false, ++loadingAttempts.value);
-					setTimeout(() => loadConfiguration(), 1000);
+
+					clearTimeout(loadingTimeout);
+					loadingTimeout = setTimeout(() => loadConfiguration(), 1000);
 				} finally {
 					loading.value = false;
 				}
@@ -184,7 +189,10 @@ export default defineComponent({
 		})
 
 		onMounted(() => loadConfiguration());
-		onBeforeUnmount(() => store.dispatch(ActionTypes.STOP_UPDATES, undefined));
+		onBeforeUnmount(() => {
+			store.dispatch(ActionTypes.STOP_UPDATES, undefined);
+			clearTimeout(loadingTimeout);
+		});
 
 		handleUrl();
 		onResize();
