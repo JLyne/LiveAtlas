@@ -58,7 +58,6 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
 	[MutationTypes.SET_COMPONENTS](state: S, components: LiveAtlasPartialComponentConfig | LiveAtlasComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, worlds: Map<string, LiveAtlasMarkerSet>): void
-	[MutationTypes.ADD_WORLD](state: S, world: LiveAtlasWorldDefinition): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: Map<string, DynmapMarkerSetUpdates>): void
 	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
@@ -73,7 +72,6 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_MAX_PLAYERS](state: S, maxPlayers: number): void
 	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer>
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
-	[MutationTypes.CLEAR_PLAYERS](state: S): void
 	[MutationTypes.SET_CURRENT_SERVER](state: S, server: string): void
 	[MutationTypes.SET_CURRENT_MAP](state: S, payload: CurrentMapPayload): void
 	[MutationTypes.SET_CURRENT_LOCATION](state: S, payload: Coordinate): void
@@ -92,7 +90,6 @@ export type Mutations<S = State> = {
 	[MutationTypes.HIDE_UI_MODAL](state: S, payload: LiveAtlasUIModal): void
 
 	[MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE](state: S, section: LiveAtlasSidebarSection): void
-	[MutationTypes.SET_SIDEBAR_SECTION_COLLAPSED_STATE](state: S, payload: {section: LiveAtlasSidebarSection, state: boolean}): void
 
 	[MutationTypes.SET_LOGGED_IN](state: S, payload: boolean): void
 	[MutationTypes.RESET](state: S): void
@@ -253,10 +250,6 @@ export const mutations: MutationTree<State> & Mutations = {
 				lineUpdates: [],
 			});
 		}
-	},
-
-	[MutationTypes.ADD_WORLD](state: State, world: LiveAtlasWorldDefinition) {
-		state.worlds.set(world.name, world);
 	},
 
 	//Sets the current world state an update fetch
@@ -481,14 +474,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 	},
 
-	//Removes all players not found in the provided keep set
-	[MutationTypes.CLEAR_PLAYERS](state: State) {
-		state.followTarget = undefined;
-		state.panTarget = undefined;
-		state.players.clear();
-		state.sortedPlayers.splice(0, state.sortedPlayers.length);
-	},
-
 	//Sets the currently active server
 	[MutationTypes.SET_CURRENT_SERVER](state: State, serverName) {
 		if(!state.servers.has(serverName)) {
@@ -627,20 +612,18 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 	},
 
-	[MutationTypes.SET_SIDEBAR_SECTION_COLLAPSED_STATE](state: State, payload: {section: LiveAtlasSidebarSection, state: boolean}): void {
-		if (payload.state) {
-			state.ui.sidebar.collapsedSections.delete(payload.section);
-		} else {
-			state.ui.sidebar.collapsedSections.add(payload.section);
-		}
-	},
-
 	[MutationTypes.SET_LOGGED_IN](state: State, payload: boolean): void {
 		state.loggedIn = payload;
 	},
 
 	//Cleanup for switching servers or reloading the configuration
 	[MutationTypes.RESET](state: State): void {
+		state.followTarget = undefined;
+		state.panTarget = undefined;
+
+		state.players.clear();
+		state.sortedPlayers.splice(0, state.sortedPlayers.length);
+
 		state.maxPlayers = 0;
 		state.parsedUrl = undefined;
 		state.currentWorld = undefined;
@@ -654,9 +637,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.maps.clear();
 		state.currentZoom = 0;
 		state.currentLocation = {x: 0, y: 0, z: 0};
-
-		state.followTarget = undefined;
-		state.panTarget = undefined;
 
 		state.currentWorldState.timeOfDay = 0;
 		state.currentWorldState.raining = false;
@@ -677,5 +657,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.components.login = false;
 
 		state.ui.visibleModal = undefined;
+		state.chat.messages = [];
 	}
 }

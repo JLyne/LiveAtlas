@@ -24,7 +24,6 @@ export enum MutationTypes {
 	SET_WORLDS = 'setWorlds',
 	SET_COMPONENTS = 'setComponents',
 	SET_MARKER_SETS = 'setMarkerSets',
-	ADD_WORLD = 'addWorld',
 	SET_WORLD_STATE = 'setWorldState',
 	ADD_MARKER_SET_UPDATES = 'addMarkerSetUpdates',
 	ADD_TILE_UPDATES = 'addTileUpdates',
@@ -36,7 +35,6 @@ export enum MutationTypes {
 	POP_TILE_UPDATES = 'popTileUpdates',
 	SET_MAX_PLAYERS = 'setMaxPlayers',
 	SET_PLAYERS_ASYNC = 'setPlayersAsync',
-	CLEAR_PLAYERS = 'clearPlayers',
 	SYNC_PLAYERS = 'syncPlayers',
 
 	SET_CURRENT_SERVER = 'setCurrentServer',
@@ -59,7 +57,6 @@ export enum MutationTypes {
 	HIDE_UI_MODAL = 'hideUIModal',
 
 	TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE = 'toggleSidebarSectionCollapsedState',
-	SET_SIDEBAR_SECTION_COLLAPSED_STATE = 'setSidebarSectionCollapsedState',
 
 	SET_LOGGED_IN = 'setLoggedIn',
 	RESET = 'reset'

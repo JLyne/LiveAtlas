@@ -220,7 +220,7 @@ export const state: State = {
 		//Chat balloons showing messages above player markers
 		chatBalloons: false,
 
-		//Login/registering (not currently implemented)
+		//Login/registering
 		login: false,
 	},
 
