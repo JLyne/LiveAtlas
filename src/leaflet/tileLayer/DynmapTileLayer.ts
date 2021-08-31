@@ -19,7 +19,7 @@
 
 import {Coords, DoneCallback} from 'leaflet';
 import {useStore} from "@/store";
-import {Coordinate, LiveAtlasTile} from "@/index";
+import {Coordinate} from "@/index";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 import {computed, watch} from "@vue/runtime-core";
 import {ComputedRef} from "@vue/reactivity";
@@ -123,7 +123,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 				continue;
 			}
 
-			tile = this._tiles[i] as LiveAtlasTile;
+			tile = this._tiles[i];
 
 			if (tile.coords.z !== this._tileZoom) {
 				if (tile.loaded && tile.el && tile.el.tileName) {
@@ -136,7 +136,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 	}
 
 	_removeTile(key: string) {
-		const tile = this._tiles[key] as LiveAtlasTile;
+		const tile = this._tiles[key];
 
 		if (!tile) {
 			return;

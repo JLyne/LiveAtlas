@@ -16,7 +16,7 @@
 
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {Coords, DomUtil, DoneCallback, TileLayer, TileLayerOptions, Util} from "leaflet";
-import {LiveAtlasTile, LiveAtlasTileElement} from "@/index";
+import {LiveAtlasInternalTiles, LiveAtlasTileElement} from "@/index";
 import falseFn = Util.falseFn;
 
 export interface LiveAtlasTileLayerOptions extends TileLayerOptions {
@@ -27,6 +27,7 @@ export interface LiveAtlasTileLayerOptions extends TileLayerOptions {
 // noinspection JSUnusedGlobalSymbols
 export abstract class LiveAtlasTileLayer extends TileLayer {
 	declare options: LiveAtlasTileLayerOptions;
+	declare _tiles: LiveAtlasInternalTiles;
 
 	protected _mapSettings: LiveAtlasMapDefinition;
 	private readonly tileTemplate: LiveAtlasTileElement;
@@ -150,7 +151,7 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 				continue;
 			}
 
-			const tile = this._tiles[i] as LiveAtlasTile;
+			const tile = this._tiles[i];
 
 			if(tile.loaded) {
 				this.loadQueue.push(tile.el);
@@ -168,7 +169,7 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 				continue;
 			}
 
-			tile = this._tiles[i] as LiveAtlasTile;
+			tile = this._tiles[i];
 
 			if (tile.coords.z !== this._tileZoom) {
 				if (!tile.loaded && tile.el && tile.el.abortController) {
@@ -187,7 +188,7 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 	}
 
 	_removeTile(key: string) {
-		const tile = this._tiles[key] as LiveAtlasTile;
+		const tile = this._tiles[key];
 
 		if (!tile) {
 			return;
