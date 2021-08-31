@@ -141,7 +141,7 @@ export default defineComponent({
 			}
 		}
 
-		&:hover, &:focus {
+		&:hover, &:focus, &:active {
 			.player__name ::v-deep(span) {
 				color: inherit !important;
 			}

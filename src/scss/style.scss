@@ -251,6 +251,10 @@ input {
 			outline: none !important;
 		}
 
+		&:active + label {
+			@include button-active;
+		}
+
 		&:disabled + label {
 			@include button-disabled;
 		}

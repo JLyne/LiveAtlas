@@ -36,6 +36,10 @@
 		z-index: auto;
 	}
 
+	&:active {
+		@include button-active;
+	}
+
 	&[disabled], &[aria-disabled="true"] {
 		@include button-disabled;
 	}

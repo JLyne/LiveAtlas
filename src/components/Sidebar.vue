@@ -260,7 +260,7 @@ export default defineComponent({
 				}
 			}
 
-			&:hover, &:focus-visible, &.focus-visible {
+			&:hover, &:focus-visible, &.focus-visible, &:active {
 				background-color: transparent;
 			}
 		}

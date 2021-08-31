@@ -29,8 +29,8 @@
 	}
 
 	/* Avoid applying the base background colour twice, in case its semi-transparent */
-	> a:not(:hover):not(:focus):not([aria-expanded=true]),
-	> button:not(:hover):not(:focus):not([aria-expanded=true]) {
+	> a:not(:hover):not(:focus):not(:active):not([aria-expanded=true]),
+	> button:not(:hover):not(:focus):not(:active):not([aria-expanded=true]) {
 		background-color: transparent;
 	}
 
@@ -311,7 +311,7 @@
 	animation: fade 0.3s linear;
 	animation-fill-mode: forwards;
 
-	&:hover, &:focus {
+	&:hover, &:active, &:focus {
 		background-color: var(--background-base);
 	}
 
