@@ -81,9 +81,9 @@ export class CoordinatesControl extends Control {
 			return this;
 		}
 
-		this._map.on('mousemove', this._onMouseMove, this);
-		this._map.on('mouseout', this._onMouseOut, this);
-		Control.prototype.remove.call(this);
+		this._map.off('mousemove', this._onMouseMove, this);
+		this._map.off('mouseout', this._onMouseOut, this);
+		super.remove();
 
 		return this;
 	}
