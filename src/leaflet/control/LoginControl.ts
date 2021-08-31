@@ -24,9 +24,12 @@ import "@/assets/icons/logout.svg";
 import {computed} from "vue";
 import {ActionTypes} from "@/store/action-types";
 import {notify} from "@kyvg/vue3-notification";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 export class LoginControl extends Control {
-	declare options: ControlOptions
+	declare _map: LiveAtlasLeafletMap;
+	declare options: ControlOptions;
+
 	private readonly store = useStore();
 	private readonly loggedIn = computed(() => this.store.state.loggedIn);
 	private readonly _button: HTMLButtonElement;
@@ -60,10 +63,14 @@ export class LoginControl extends Control {
 			this.update();
 		});
 
-		watch(this.store.state.ui, newValue => {
-			this._button.setAttribute('aria-expanded', (newValue.visibleModal === 'login').toString());
-		}, {
-			deep: true,
+		const visibleModal = computed(() => this.store.state.ui.visibleModal);
+
+		watch(visibleModal, (newValue, oldValue) => {
+			this._button.setAttribute('aria-expanded', (newValue === 'login').toString());
+
+			if(this._map && !newValue && oldValue === 'login') {
+				this._button.focus();
+			}
 		});
 
 		this.update();

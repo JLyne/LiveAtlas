@@ -46,6 +46,7 @@ export default defineComponent({
 			if(visible.value && e.key === 'Escape') {
 				store.commit(MutationTypes.HIDE_UI_MODAL, props.id as LiveAtlasUIModal);
 				e.preventDefault();
+				e.stopImmediatePropagation();
 			}
 		};
 
