@@ -54,7 +54,7 @@ export class CoordinatesControl extends Control {
 	onAdd(map: Map) {
 		const container = DomUtil.create('div', 'leaflet-control-coordinates');
 
-		this._coordsContainer.textContent = this.options.showY ? '-----, ----- , -----' : '-----, -----';
+		this._coordsContainer.textContent = this.options.showY ? '-----, ---, -----' : '-----, -----';
 		this._coordsContainer.dataset.label = this.options.label;
 		container.appendChild(this._coordsContainer);
 
@@ -123,7 +123,7 @@ export class CoordinatesControl extends Control {
 
 		if(!this._location) {
 			if (this.options.showY) {
-				this._coordsContainer.textContent = '-----, ----- , -----';
+				this._coordsContainer.textContent = '-----, ---, -----';
 			} else {
 				this._coordsContainer.textContent = '-----, -----';
 			}
