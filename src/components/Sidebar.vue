@@ -152,7 +152,7 @@ export default defineComponent({
 
 .sidebar {
 	position: fixed;
-	z-index: 120;
+	z-index: 110;
 	top: 0;
 	right: 0;
 	bottom: 0;

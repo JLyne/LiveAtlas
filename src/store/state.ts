@@ -45,6 +45,7 @@ export type State = {
 	components: LiveAtlasComponentConfig;
 
 	loggedIn: boolean;
+	loginRequired: boolean;
 
 	worlds: Map<string, LiveAtlasWorldDefinition>;
 	maps: Map<string, LiveAtlasMapDefinition>;
@@ -170,6 +171,7 @@ export const state: State = {
 	},
 
 	loggedIn: false,
+	loginRequired: false,
 
 	worlds: new Map(), //Defined (loaded) worlds with maps from configuration.json
 	maps: new Map(), //Defined maps from configuration.json

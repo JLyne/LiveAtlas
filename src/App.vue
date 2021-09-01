@@ -17,7 +17,7 @@
 <template>
 	<Map></Map>
 	<ChatBox v-if="chatBoxEnabled" v-show="chatBoxEnabled && chatVisible"></ChatBox>
-	<LoginModal v-if="loginEnabled"></LoginModal>
+	<LoginModal v-if="loginEnabled" :required="loginRequired"></LoginModal>
 	<Sidebar></Sidebar>
 	<notifications position="bottom center" :speed="250" :max="3" :ignoreDuplicates="true" classes="notification" />
 </template>
@@ -54,9 +54,11 @@ export default defineComponent({
 			currentServer = computed(() => store.state.currentServer),
 			configurationHash = computed(() => store.state.configurationHash),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
-			loginEnabled = computed(() => store.state.components.login),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
+
+			loginEnabled = computed(() => store.state.components.login),
 			loggedIn = computed(() => store.state.loggedIn),
+			loginRequired = ref(false),
 
 			loading = ref(false),
 			loadingAttempts = ref(0),
@@ -71,6 +73,8 @@ export default defineComponent({
 					store.commit(MutationTypes.RESET, undefined);
 					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
 					await store.dispatch(ActionTypes.START_UPDATES, undefined);
+
+					loginRequired.value = false;
 
 					requestAnimationFrame(() => {
 						hideSplash();
@@ -89,7 +93,7 @@ export default defineComponent({
 
 					//Show login screen if required
 					if(e.message === 'login-required') {
-						hideSplash();
+						loginRequired.value = true;
 						store.commit(MutationTypes.SHOW_UI_MODAL, 'login');
 						notify('Login required');
 						return;
@@ -212,6 +216,7 @@ export default defineComponent({
 			chatBoxEnabled,
 			chatVisible,
 			loginEnabled,
+			loginRequired,
 		}
 	},
 });
