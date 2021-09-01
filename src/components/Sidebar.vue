@@ -18,9 +18,10 @@
 	<section class="sidebar" role="none" ref="sidebar">
 		<header class="sidebar__buttons">
 			<button v-if="mapCount > 1 || serverCount > 1" :class="{'button--maps': true}" @click="toggleMaps"
-			        :title="messageWorlds" :aria-label="messageWorlds" :aria-expanded="mapsVisible"
-			        @keydown="handleMapsKeydown">
-				<SvgIcon name="maps"></SvgIcon>
+			        :title="mapCount > 1 ? messageWorlds : messageServers"
+			        :aria-label="mapCount > 1 ? messageWorlds : messageServers"
+			        :aria-expanded="mapsVisible" @keydown="handleMapsKeydown">
+				<SvgIcon :name="mapCount > 1 ? 'maps' : 'servers'"></SvgIcon>
 			</button>
 			<button v-if="playerMakersEnabled" :class="{'button--players': true}" @click="togglePlayers"
 			        :title="messagePlayers" :aria-label="messagePlayers" :aria-expanded="playersVisible"
@@ -49,6 +50,7 @@ import SvgIcon from "@/components/SvgIcon.vue";
 import {MutationTypes} from "@/store/mutation-types";
 import "@/assets/icons/players.svg";
 import "@/assets/icons/maps.svg";
+import "@/assets/icons/servers.svg";
 import {nextTick, ref, watch} from "vue";
 import {handleKeyboardEvent} from "@/util/events";
 import {focus} from "@/util";
@@ -74,6 +76,7 @@ export default defineComponent({
 			following = computed(() => store.state.followTarget),
 
 			messageWorlds = computed(() => store.state.messages.worldsHeading),
+			messageServers = computed(() => store.state.messages.serversHeading),
 			messagePlayers = computed(() => store.getters.playersHeading),
 
 			playerMakersEnabled = computed(() => !!store.state.components.playerMarkers),
@@ -127,6 +130,7 @@ export default defineComponent({
 			following,
 
 			messageWorlds,
+			messageServers,
 			messagePlayers,
 
 			previouslyVisible,
