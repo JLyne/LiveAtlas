@@ -15,7 +15,7 @@
     "@soerenmartius/vue3-clipboard": "^0.1",
     "leaflet": "git+https://github.com/JLyne/leaflet.git",
     "normalize-scss": "^7.0",
-    "vue": "^3.2.6",
+    "vue": "^3.2.7",
     "vuex": "^4.0"
   },
   "devDependencies": {
