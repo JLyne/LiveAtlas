@@ -90,17 +90,22 @@ export default defineComponent({
 
 		.world__maps {
 			display: flex;
+			flex: 0 0 auto;
+			flex-wrap: wrap;
+			max-width: 11.1rem;
 			align-items: center;
 			margin-left: auto;
 			padding-left: 1rem;
 			padding-right: 0.2rem;
 			list-style: none;
+			margin-right: -0.5rem;
 		}
 	}
 
 	.map {
 		width: 3.2rem;
 		height: 3.2rem;
+		margin-right: 0.5rem;
 
 		.svg-icon {
 			top: 0.2rem !important;
@@ -109,10 +114,6 @@ export default defineComponent({
 			left: 0.2rem !important;
 			width: calc(100% - 0.4rem) !important;
 			height: auto !important;
-		}
-
-		& ~ .map {
-			margin-left: 0.5rem;
 		}
 	}
 </style>
