@@ -629,7 +629,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.sortedPlayers.splice(0, state.sortedPlayers.length);
 
 		state.maxPlayers = 0;
-		state.parsedUrl = undefined;
 		state.currentWorld = undefined;
 		state.currentMap = undefined;
 
