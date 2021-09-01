@@ -71,7 +71,7 @@ export default defineComponent({
 			loadConfiguration = async () => {
 				try {
 					clearTimeout(loadingTimeout);
-					showSplash();
+					showSplash(!loadingAttempts.value);
 					loading.value = true;
 
 					await store.dispatch(ActionTypes.STOP_UPDATES, undefined);
@@ -186,6 +186,7 @@ export default defineComponent({
 				return;
 			}
 
+			loadingAttempts.value = 0;
 			window.history.replaceState({}, '', newServer.id);
 			loadConfiguration();
 		}, {deep: true});

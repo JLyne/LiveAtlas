@@ -21,21 +21,23 @@ const app = document.getElementById('app'),
 	splashErrorMessage = document.getElementById('splash__error-message'),
 	splashRetry = document.getElementById('splash__error-retry');
 
-export const showSplash = function() {
+export const showSplash = function(reset: boolean) {
 	if(!splash || !app) {
 		return;
 	}
 
-	if(splashError) {
-		splashError.setAttribute('aria-hidden', 'true');
-	}
+	if(reset) {
+		if(splashError) {
+			splashError.setAttribute('aria-hidden', 'true');
+		}
 
-	if(splashSpinner) {
-		splashSpinner.style.visibility = 'visible';
-	}
+		if(splashSpinner) {
+			splashSpinner.style.visibility = 'visible';
+		}
 
-	if(splashRetry) {
-		splashRetry.hidden = true;
+		if(splashRetry) {
+			splashRetry.hidden = true;
+		}
 	}
 
 	splash.hidden = false;
