@@ -17,7 +17,7 @@
 <template>
 	<Map></Map>
 	<ChatBox v-if="chatBoxEnabled" v-show="chatBoxEnabled && chatVisible"></ChatBox>
-	<LoginModal v-if="loginEnabled" :required="loginRequired"></LoginModal>
+	<LoginModal v-if="loginEnabled" v-show="loginModalVisible" :required="loginRequired"></LoginModal>
 	<Sidebar></Sidebar>
 	<notifications position="bottom center" :speed="250" :max="3" :ignoreDuplicates="true" classes="notification" />
 </template>
@@ -56,9 +56,14 @@ export default defineComponent({
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
 
-			loginEnabled = computed(() => store.state.components.login),
-			loggedIn = computed(() => store.state.loggedIn),
-			loginRequired = ref(false),
+			loginEnabled = computed(() => store.state.components.login), //Whether logging in is enabled for the current server
+			loggedIn = computed(() => store.state.loggedIn), //Whether the user is currently logged in
+			loginRequired = ref(false), //Whether logging is required to view the current server
+
+			//Hide the login modal if we are logged out on a login-required server, but the server list is open
+			//Allows switching servers without the modal overlapping
+			loginModalVisible = computed(() => store.state.ui.visibleModal === 'login'
+				&& (!loginRequired.value || !store.state.ui.visibleElements.has('maps'))),
 
 			loading = ref(false),
 			loadingAttempts = ref(0),
@@ -91,14 +96,13 @@ export default defineComponent({
 						return;
 					}
 
-					//Show login screen if required
+					//Logging in is required, show login modal
 					if(e.message === 'login-required') {
 						loginRequired.value = true;
-						store.commit(MutationTypes.SHOW_UI_MODAL, 'login');
-						notify('Login required');
 						return;
 					}
 
+					//Any other errors
 					const error = `Failed to load server configuration for '${store.state.currentServer!.id}'`;
 					console.error(`${error}:`, e);
 					showSplashError(`${error}\n${e}`, false, ++loadingAttempts.value);
@@ -140,6 +144,11 @@ export default defineComponent({
 				}
 
 				let element: LiveAtlasUIElement;
+
+				//Disable shortcuts if modal is open - except login required to allow server list toggling
+				if(store.state.ui.visibleModal && !loginRequired.value) {
+					return;
+				}
 
 				switch(e.key) {
 					case 'M':
@@ -190,6 +199,17 @@ export default defineComponent({
 				console.log('Login state changed. Reloading configuration');
 				await loadConfiguration();
 			}
+		});
+		watch(loginRequired, (newValue) => {
+			if(newValue) {
+				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {
+					element: 'maps',
+					state: false,
+				});
+				store.commit(MutationTypes.SHOW_UI_MODAL, 'login');
+				notify('Login required');
+				showSplashError('Login required', true, 1);
+			}
 		})
 
 		onMounted(() => loadConfiguration());
@@ -217,6 +237,7 @@ export default defineComponent({
 			chatVisible,
 			loginEnabled,
 			loginRequired,
+			loginModalVisible
 		}
 	},
 });

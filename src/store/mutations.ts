@@ -595,6 +595,10 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	[MutationTypes.SHOW_UI_MODAL](state: State, modal: LiveAtlasUIModal): void {
+		if(state.ui.smallScreen) {
+			state.ui.visibleElements.clear();
+		}
+
 		state.ui.visibleModal = modal;
 	},
 

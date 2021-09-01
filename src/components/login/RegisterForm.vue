@@ -40,7 +40,7 @@
 
 		<div class="form__group">
 			<label for="register-code" class="form__label">{{ messageRegisterCodeLabel }}</label>
-			<input id="register-code" type="text" name="code" v-model="valueCode" required />
+			<input id="register-code" type="tel" name="code" minlength="9" maxlength="9" v-model="valueCode" required />
 		</div>
 
 		<div v-if="error" role="alert" aria-live="assertive" class="form__group alert">{{ error }}</div>
