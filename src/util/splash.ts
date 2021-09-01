@@ -26,6 +26,18 @@ export const showSplash = function() {
 		return;
 	}
 
+	if(splashError) {
+		splashError.setAttribute('aria-hidden', 'true');
+	}
+
+	if(splashSpinner) {
+		splashSpinner.style.visibility = 'visible';
+	}
+
+	if(splashRetry) {
+		splashRetry.hidden = true;
+	}
+
 	splash.hidden = false;
 	app.setAttribute('aria-hidden', 'true');
 
@@ -37,18 +49,6 @@ export const showSplash = function() {
 export const hideSplash = () => {
 	if(!splash || !app) {
 		return;
-	}
-
-	if(splashError) {
-		splashError.setAttribute('aria-hidden', 'true');
-	}
-
-	if(splashSpinner) {
-		splashSpinner.style.visibility = 'visible';
-	}
-
-	if(splashRetry) {
-		splashRetry.hidden = true;
 	}
 
 	requestAnimationFrame(() => {
