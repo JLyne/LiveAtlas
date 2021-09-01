@@ -52,7 +52,6 @@ export default defineComponent({
 				showSkinFace: componentSettings.value!.showSkinFaces,
 				showBody: componentSettings.value!.showBodies,
 				showHealth: componentSettings.value!.showHealth,
-				interactive: false,
 				pane: 'players',
 			}),
 
