@@ -15,8 +15,15 @@
   -->
 
 <template>
-	<div :class="{'modal': true, 'modal--visible': visible}" role="dialog" :id="`modal--${id}`"
-	     :aria-labelledby="`${id}__heading`" aria-modal="true" @click="onClick" ref="modal">
+	<div :class="{'modal': true, 'modal--visible': visible, 'modal--backdrop': backdrop}"
+	     role="dialog" :id="`modal--${id}`" :aria-labelledby="`${id}__heading`" aria-modal="true"
+	     @click="onBackdropClick" ref="modal">
+		<div class="modal__header">
+			<slot name="header"></slot>
+			<button v-if="closeable" class="modal__close" type="button" @click="close" :aria-label="messageClose">
+				<SvgIcon name="cross"></SvgIcon>
+			</button>
+		</div>
 		<div class="modal__content">
 			<slot></slot>
 		</div>
@@ -29,44 +36,59 @@ import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {LiveAtlasUIModal} from "@/index";
 import {computed, ref} from "vue";
+import SvgIcon from "@/components/SvgIcon.vue";
 
 export default defineComponent({
+	components: {SvgIcon},
 	props: {
 		id: {
 			required: true,
 			type: String,
+		},
+		closeable: {
+			default: true,
+			type: Boolean,
+		},
+		backdrop: {
+			default: true,
+			type: Boolean,
 		}
 	},
 	setup(props) {
 		const store = useStore(),
 			modal = ref<HTMLElement | null>(null),
+			messageClose = computed(() => store.state.messages.closeTitle),
 			visible = computed(() => store.state.ui.visibleModal === props.id);
 
 		const onKeydown = (e: KeyboardEvent) => {
-			if(visible.value && e.key === 'Escape') {
-				store.commit(MutationTypes.HIDE_UI_MODAL, props.id as LiveAtlasUIModal);
+			if(props.closeable && visible.value && e.key === 'Escape') {
+				close();
 				e.preventDefault();
 				e.stopImmediatePropagation();
 			}
 		};
 
-		const onClick = (e: MouseEvent) => {
-			if(e.target === modal.value) {
-				store.commit(MutationTypes.HIDE_UI_MODAL, props.id as LiveAtlasUIModal);
+		const onBackdropClick = (e: MouseEvent) => {
+			if(props.closeable && e.target === modal.value) {
+				close();
 			}
 		};
+
+		const close = () => props.closeable && store.commit(MutationTypes.HIDE_UI_MODAL, props.id as LiveAtlasUIModal);
 
 		onMounted(() => {
 			window.addEventListener('keydown', onKeydown);
 		});
 		onUnmounted(() => {
-			window.addEventListener('keydown', onKeydown);
+			window.removeEventListener('keydown', onKeydown);
 		});
 
 		return {
 			visible,
 			modal,
-			onClick,
+			onBackdropClick,
+			close,
+			messageClose
 		}
 	}
 });
@@ -83,20 +105,61 @@ export default defineComponent({
 		bottom: 0;
 		left: 0;
 		display: none;
-		align-items: flex-start;
-		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		justify-content: flex-start;
 		padding: 10vh 1rem;
-		background-color: rgba(0, 0, 0, 0.8);
 		overflow: auto;
+		pointer-events: none;
+		cursor: default;
+
+		&.modal--backdrop {
+			pointer-events: auto;
+			background-color: rgba(0, 0, 0, 0.8);
+		}
 
 		&.modal--visible {
 			display: flex;
 		}
 
+		.modal__header,
 		.modal__content {
 			@extend %panel;
 			max-width: 80rem;
+			box-sizing: border-box;
 			width: 100%;
+			padding: 2rem;
+			pointer-events: auto;
+		}
+
+		.modal__header {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+			position: relative;
+			padding: 2rem 3rem 0;
+			text-align: center;
+		}
+
+		.modal__close {
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 1rem;
+			width: 3.5rem;
+            height: 3.5rem;
+			display: block;
+			border-top-left-radius: 0;
+			border-bottom-right-radius: 0;
+
+			.svg-icon {
+				width: 1.5rem !important;
+				height: 1.5rem !important;
+			}
+		}
+
+		.modal__content {
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
 		}
 	}
 </style>

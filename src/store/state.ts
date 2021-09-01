@@ -166,6 +166,7 @@ export const state: State = {
 		logoutTitle: '',
 		logoutErrorUnknown: '',
 		logoutSuccess: '',
+		closeTitle: '',
 	},
 
 	loggedIn: false,

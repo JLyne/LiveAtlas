@@ -158,6 +158,7 @@ export const mutations: MutationTree<State> & Mutations = {
 			logoutTitle: messageConfig.logoutTitle || '',
 			logoutErrorUnknown: messageConfig.logoutErrorUnknown || '',
 			logoutSuccess: messageConfig.logoutSuccess || '',
+			closeTitle: messageConfig.closeTitle || '',
 		}
 
 		state.messages = Object.assign(state.messages, messages);

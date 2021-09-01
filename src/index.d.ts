@@ -121,6 +121,7 @@ interface LiveAtlasGlobalMessageConfig {
 	logoutTitle: string;
 	logoutErrorUnknown: string;
 	logoutSuccess: string;
+	closeTitle: string;
 }
 
 // Messages defined by dynmap configuration responses and can vary per server

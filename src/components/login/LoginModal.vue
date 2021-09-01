@@ -15,9 +15,10 @@
   -->
 
 <template>
-	<Modal id="login">
-		<h2 id="login__heading">{{ heading }}</h2>
-
+	<Modal id="login" :closeable="!required" :backdrop="!required">
+		<template v-slot:header>
+			<h2 id="login__heading">{{ heading }}</h2>
+		</template>
 		<LoginForm></LoginForm>
 		<RegisterForm></RegisterForm>
 	</Modal>
@@ -33,6 +34,12 @@ import Modal from "@/components/Modal.vue";
 
 export default defineComponent({
 	components: {Modal, RegisterForm, LoginForm},
+	props: {
+		required: {
+			default: false,
+			type: Boolean,
+		}
+	},
 	setup() {
 		const store = useStore(),
 			heading = computed(() => store.state.messages.loginTitle);
@@ -54,7 +61,6 @@ export default defineComponent({
 			justify-content: space-between;
 		}
 
-		#login__heading,
 		#login__error {
 			width: 100%;
 			text-align: center;
@@ -62,8 +68,7 @@ export default defineComponent({
 		}
 
 		.form {
-			width: 50%;
-			padding: 1rem;
+			width: calc(50% - 1.5rem);
 			box-sizing: border-box;
 		}
 	}
