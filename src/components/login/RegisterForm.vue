@@ -96,7 +96,6 @@ export default defineComponent({
 
 		const checkPasswords = () => {
 			if(valuePassword.value !== valuePassword2.value) {
-				console.log(messagePasswordMismatch.value);
 				confirmPasswordField.value!.setCustomValidity(messagePasswordMismatch.value)
 			} else {
 				confirmPasswordField.value!.setCustomValidity('');

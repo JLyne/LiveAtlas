@@ -411,7 +411,6 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			players: Set<LiveAtlasPlayer> = new Set();
 
 		(response.players || []).forEach((player: any) => {
-			console.log(player.uuid);
 			players.add({
 				name: (player.name || '').toLowerCase(),
 				uuid: player.uuid,
