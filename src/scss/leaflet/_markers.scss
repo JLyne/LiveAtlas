@@ -60,18 +60,17 @@
 
 	.marker__label {
 		flex: 0 0 auto;
-		margin-left: 2px;
 		z-index: 20;
 		font-size: 1.5rem;
 		line-height: 1;
-
 		white-space: pre-line;
-
 		color: var(--text-base);
 		background: var(--background-dark);
 		padding: 0.2rem;
 		display: none;
-		overflow: hidden;
+		margin-left: 0.2rem;
+		width: max-content;
+		max-width: 30rem;
 
 		@at-root .leaflet-pane--show-labels .marker__label {
 			display: block !important;
