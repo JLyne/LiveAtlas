@@ -361,8 +361,7 @@ img {
 	}
 
 	&.form--invalid input:invalid {
-		border-color: var(--background-error);
-		outline-color: var(--background-error);
+		border-color: var(--border-error);
 	}
 }
 
