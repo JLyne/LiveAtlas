@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {LatLng, MarkerOptions, Marker, Util} from 'leaflet';
+import {LatLng, MarkerOptions, Marker, Map, Util} from 'leaflet';
 import {PlayerIcon} from "@/leaflet/icon/PlayerIcon";
 import {LiveAtlasPlayer} from "@/index";
 import {watch} from "@vue/runtime-core";
