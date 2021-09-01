@@ -17,6 +17,8 @@
 import {LatLng, MarkerOptions, Marker, Util} from 'leaflet';
 import {PlayerIcon} from "@/leaflet/icon/PlayerIcon";
 import {LiveAtlasPlayer} from "@/index";
+import {watch} from "@vue/runtime-core";
+import {WatchStopHandle} from "vue";
 
 export interface PlayerMarkerOptions extends MarkerOptions {
 	smallFace: boolean,
@@ -28,14 +30,15 @@ export interface PlayerMarkerOptions extends MarkerOptions {
 export class PlayerMarker extends Marker {
 	declare options: PlayerMarkerOptions;
 
-	private _player: LiveAtlasPlayer;
+	private readonly _PlayerIcon: PlayerIcon;
+	private readonly _player: LiveAtlasPlayer;
+	private _playerUnwatch?: WatchStopHandle;
 
 	constructor(player: LiveAtlasPlayer, options: PlayerMarkerOptions) {
 		super(new LatLng(0, 0), options);
 		this._player = player;
-		options.draggable = false;
 
-		options.icon = new PlayerIcon(player, {
+		this._PlayerIcon = options.icon = new PlayerIcon(player, {
 			smallFace: options.smallFace,
 			showSkinFace: options.showSkinFace,
 			showBody: options.showBody,
@@ -45,19 +48,17 @@ export class PlayerMarker extends Marker {
 		Util.setOptions(this, options);
 	}
 
-	getIcon(): PlayerIcon {
-		return this.options.icon as PlayerIcon;
+	onAdd(map: Map) {
+		this._playerUnwatch = watch(this._player, () => this._PlayerIcon.update(), {deep: true});
+		return super.onAdd(map);
 	}
 
-	panTo() {
-		if (!this._map) {
-			return;
+	onRemove(map: Map): this {
+		if(this._playerUnwatch) {
+			this._playerUnwatch();
 		}
 
-		this._map.panTo(this.getLatLng(), {
-			animate: false,
-			noMoveStart: true,
-		});
+		return super.onRemove(map);
 	}
 
 	// noinspection JSUnusedGlobalSymbols

@@ -17,14 +17,16 @@
  * limitations under the License.
  */
 
-import {DivIconOptions, PointExpression, Icon, DivIcon, DomUtil, point} from 'leaflet';
+import {PointExpression, Icon, DomUtil, point, BaseIconOptions, PointTuple, Layer, LayerOptions, Util} from 'leaflet';
 import {useStore} from "@/store";
 
-export interface GenericIconOptions extends DivIconOptions {
+export interface GenericIconOptions extends BaseIconOptions {
 	icon: string;
 	label: string;
 	isHtml?: boolean;
 	showLabel?: boolean;
+	iconSize: PointTuple;
+    className?: string;
 }
 
 const markerContainer: HTMLDivElement = document.createElement('div');
@@ -36,17 +38,16 @@ markerIcon.className = 'marker__icon';
 const markerLabel: HTMLSpanElement = document.createElement('span');
 markerLabel.className = 'marker__label';
 
-export class GenericIcon extends DivIcon {
-	static defaultOptions: GenericIconOptions = {
-		icon: 'default',
-		label: '',
-		iconSize: [16, 16],
-		isHtml: false,
-		className: '',
-	};
+const defaultOptions: GenericIconOptions = {
+	icon: 'default',
+	label: '',
+	iconSize: [16, 16],
+	isHtml: false,
+	className: '',
+}
 
+export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 	declare options: GenericIconOptions;
-
 	private _image?: HTMLImageElement;
 	private _label?: HTMLSpanElement;
 	private _container?: HTMLDivElement;
@@ -56,7 +57,8 @@ export class GenericIcon extends DivIcon {
 	};
 
 	constructor(options: GenericIconOptions) {
-		super(Object.assign(GenericIcon.defaultOptions, options));
+		super(options as LayerOptions);
+		Util.setOptions(this, Object.assign(defaultOptions, options));
 	}
 
 	createIcon(oldIcon: HTMLElement) {
@@ -74,11 +76,11 @@ export class GenericIcon extends DivIcon {
 		this._image.height = size.y;
 		this._image.src = url;
 
-		// @ts-ignore
-		super._setIconStyles(div, 'icon');
-
 		div.appendChild(this._image);
-		div.classList.add('marker');
+		div.style.marginLeft = `${-(size.x / 2)}px`;
+		div.style.marginTop = `${-(size.y / 2)}px`;
+		div.style.height = `${size.y}px`;
+		div.classList.add('marker', 'leaflet-marker-icon');
 
 		if(this.options.className) {
 			div.classList.add(this.options.className);
@@ -90,6 +92,11 @@ export class GenericIcon extends DivIcon {
 		this._container = div;
 
 		return div;
+	}
+
+	createShadow(oldIcon?: HTMLElement): HTMLElement {
+		// @ts-ignore - Typings are wrong here, can return null
+		return null;
 	}
 
 	createLabel() {

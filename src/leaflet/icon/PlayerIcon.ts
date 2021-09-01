@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-import {MarkerOptions, DivIcon, DomUtil} from 'leaflet';
+import {BaseIconOptions, DomUtil, Icon, Layer, LayerOptions, Util} from 'leaflet';
 import {getMinecraftHead} from '@/util';
 import playerImage from '@/assets/images/player_face.png';
 import {LiveAtlasPlayer} from "@/index";
@@ -41,14 +41,14 @@ bodyImage.width = 32;
 noSkinImage.src = smallImage.src = largeImage.src = bodyImage.src = playerImage;
 noSkinImage.className = smallImage.className = largeImage.className = bodyImage.className = 'player__icon';
 
-export interface PlayerIconOptions extends MarkerOptions {
+export interface PlayerIconOptions extends BaseIconOptions {
 	smallFace: boolean,
 	showSkinFace: boolean,
 	showBody: boolean,
 	showHealth: boolean,
 }
 
-export class PlayerIcon extends DivIcon {
+export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 	declare options: PlayerIconOptions;
 
 	private readonly _player: LiveAtlasPlayer;
@@ -65,7 +65,8 @@ export class PlayerIcon extends DivIcon {
 	private _playerArmorBar?: HTMLDivElement;
 
 	constructor(player: LiveAtlasPlayer, options: PlayerIconOptions) {
-		super(options);
+		super(options as LayerOptions);
+		Util.setOptions(this, options);
 		this._player = player;
 	}
 
@@ -143,6 +144,11 @@ export class PlayerIcon extends DivIcon {
 		this._container.style.marginLeft = `-${offset}px`;
 
 		return this._container;
+	}
+
+	createShadow(oldIcon?: HTMLElement): HTMLElement {
+		// @ts-ignore - Typings are wrong here, can return null
+		return null;
 	}
 
 	update() {

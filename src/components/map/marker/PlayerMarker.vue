@@ -211,7 +211,6 @@ export default defineComponent({
 
 						this.marker.setLatLng(latLng);
 						this.chatBalloon.setLatLng(latLng);
-						this.marker.getIcon().update();
 					}
 				} else if(this.markerVisible) {
 					this.disableLayer();
