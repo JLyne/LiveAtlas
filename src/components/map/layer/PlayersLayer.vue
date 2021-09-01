@@ -39,7 +39,7 @@ export default defineComponent({
 
 	setup(props) {
 		const store = useStore(),
-			playerPane = props.leaflet.createPane('players'),
+			playerPane = props.leaflet.getPane('players') || props.leaflet.createPane('players'),
 			players = computed(() => store.state.players),
 			playerCount = computed(() => store.state.players.size),
 			playersAboveMarkers = computed(() => store.state.ui.playersAboveMarkers),
