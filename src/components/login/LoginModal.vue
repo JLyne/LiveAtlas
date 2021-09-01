@@ -71,5 +71,13 @@ export default defineComponent({
 			width: calc(50% - 1.5rem);
 			box-sizing: border-box;
 		}
+
+		@media (max-width: 600px) {
+			flex-direction: column;
+
+			.form {
+				width: 100%;
+			}
+		}
 	}
 </style>
