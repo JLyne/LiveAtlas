@@ -72,7 +72,6 @@ interface LiveAtlasGlobalMessageConfig {
 	chatNoMessages: string;
 	chatTitle: string;
 	chatLogin: string;
-	chatLoginLink: string;
 	chatSend: string;
 	chatPlaceholder: string;
 	chatErrorDisabled: string;

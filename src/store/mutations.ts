@@ -108,7 +108,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		const messages: LiveAtlasGlobalMessageConfig = {
 			chatTitle: messageConfig.chatTitle || '',
 			chatLogin: messageConfig.chatLogin || '',
-			chatLoginLink: messageConfig.chatLoginLink || '',
 			chatNoMessages: messageConfig.chatNoMessages || '',
 			chatSend: messageConfig.chatSend || '',
 			chatPlaceholder: messageConfig.chatPlaceholder || '',

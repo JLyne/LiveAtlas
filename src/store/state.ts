@@ -113,7 +113,6 @@ export const state: State = {
 		chatNoMessages: '',
 		chatTitle: '',
 		chatLogin: '',
-		chatLoginLink: '',
 		chatSend: '',
 		chatPlaceholder: '',
 		chatErrorNotAllowed: '',

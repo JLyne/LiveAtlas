@@ -26,7 +26,7 @@
 					:placeholder="messagePlaceholder"  :disabled="sendingMessage">
 			<button class="chat__send" :disabled="!enteredMessage || sendingMessage">{{ messageSend }}</button>
 		</form>
-		<div v-if="loginRequired" class="chat__login" v-html="messageLogin"></div>
+		<button type="button" v-if="loginRequired" class="chat__login" @click="login">{{ messageLogin }}</button>
 	</section>
 </template>
 
@@ -36,6 +36,7 @@
 	import ChatMessage from "@/components/chat/ChatMessage.vue";
 	import {ActionTypes} from "@/store/action-types";
 	import ChatError from "@/errors/ChatError";
+	import {MutationTypes} from "@/store/mutation-types";
 
 	export default defineComponent({
 		components: {
@@ -69,8 +70,7 @@
 				messageSend = computed(() => store.state.messages.chatSend),
 				messagePlaceholder = computed(() => store.state.messages.chatPlaceholder),
 				messageNoMessages = computed(() => store.state.messages.chatNoMessages),
-				messageLogin = computed(() => store.state.messages.chatLogin.replace(
-					'{{link}}', `<a href="login.html">${store.state.messages.chatLoginLink}</a>`)),
+				messageLogin = computed(() => store.state.messages.chatLogin),
 
 				sendMessage = async () => {
 					const message = enteredMessage.value.trim().substring(0, maxMessageLength.value);
@@ -97,7 +97,9 @@
 
 						requestAnimationFrame(() => chatInput.value!.focus());
 					}
-				};
+				},
+
+				login = () => store.commit(MutationTypes.SHOW_UI_MODAL, 'login');
 
 			watch(chatBoxVisible, newValue => {
 				if(newValue && sendingEnabled.value) {
@@ -109,6 +111,7 @@
 				chatInput,
 				enteredMessage,
 				sendMessage,
+				login,
 				chatMessages,
 				loginRequired,
 				sendingEnabled,
@@ -194,8 +197,9 @@
 			background-color: var(--background-light);
 			color: var(--text-subtle);
 			margin: 1.5rem -1.5rem -1.5rem;
-			border-bottom-left-radius: var(--border-radius);
-			border-bottom-right-radius: var(--border-radius);
+			text-align: left;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
 		}
 
 		@media (max-width: 400px), (max-height: 480px) {
