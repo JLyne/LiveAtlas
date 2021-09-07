@@ -629,8 +629,7 @@ export default class DynmapMapProvider extends MapProvider {
 		const response = await DynmapMapProvider.getJSON(this.config.dynmap!.configuration, this.configurationAbort.signal);
 
 		if(response.error === 'login-required') {
-			this.store.commit(MutationTypes.SET_LOGGED_IN, false);
-			this.store.commit(MutationTypes.SET_COMPONENTS, {login: true});
+			this.store.commit(MutationTypes.SET_LOGIN_REQUIRED, true);
 		}
 
 		if (response.error) {
@@ -813,7 +812,7 @@ export default class DynmapMapProvider extends MapProvider {
     async login(data: any) {
 		const store = useStore();
 
-		if (!store.state.components.login) {
+		if (!store.state.components.login && !store.state.loginRequired) {
 			return Promise.reject(store.state.messages.loginErrorDisabled);
 		}
 
@@ -852,7 +851,7 @@ export default class DynmapMapProvider extends MapProvider {
 	async logout() {
 		const store = useStore();
 
-		if (!store.state.components.login) {
+		if (!store.state.components.login && !store.state.loginRequired) {
 			return Promise.reject(store.state.messages.loginErrorDisabled);
 		}
 
@@ -870,7 +869,7 @@ export default class DynmapMapProvider extends MapProvider {
     async register(data: any) {
 		const store = useStore();
 
-		if (!store.state.components.login) {
+		if (!store.state.components.login && !store.state.loginRequired) {
 			return Promise.reject(store.state.messages.loginErrorDisabled);
 		}
 

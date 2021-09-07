@@ -56,9 +56,9 @@ export default defineComponent({
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
 
-			loginEnabled = computed(() => store.state.components.login), //Whether logging in is enabled for the current server
 			loggedIn = computed(() => store.state.loggedIn), //Whether the user is currently logged in
-			loginRequired = ref(false), //Whether logging is required to view the current server
+			loginRequired = computed(() => store.state.loginRequired), //Whether logging is required to view the current server
+			loginEnabled = computed(() => store.state.components.login || loginRequired.value), //Whether logging in is enabled for the current server
 
 			//Hide the login modal if we are logged out on a login-required server, but the server list is open
 			//Allows switching servers without the modal overlapping
@@ -79,8 +79,6 @@ export default defineComponent({
 					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
 					await store.dispatch(ActionTypes.START_UPDATES, undefined);
 
-					loginRequired.value = false;
-
 					requestAnimationFrame(() => {
 						hideSplash();
 
@@ -96,9 +94,8 @@ export default defineComponent({
 						return;
 					}
 
-					//Logging in is required, show login modal
-					if(e.message === 'login-required') {
-						loginRequired.value = true;
+					//Logging in is required
+					if(loginRequired.value) {
 						return;
 					}
 
@@ -211,6 +208,8 @@ export default defineComponent({
 				store.commit(MutationTypes.SHOW_UI_MODAL, 'login');
 				notify('Login required');
 				showSplashError('Login required', true, 1);
+			} else {
+				store.commit(MutationTypes.HIDE_UI_MODAL, 'login');
 			}
 		})
 

@@ -92,6 +92,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE](state: S, section: LiveAtlasSidebarSection): void
 
 	[MutationTypes.SET_LOGGED_IN](state: S, payload: boolean): void
+	[MutationTypes.SET_LOGIN_REQUIRED](state: S, payload: boolean): void
 	[MutationTypes.RESET](state: S): void
 }
 
@@ -620,6 +621,10 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.loggedIn = payload;
 	},
 
+	[MutationTypes.SET_LOGIN_REQUIRED](state: State, payload: boolean): void {
+		state.loginRequired = payload;
+	},
+
 	//Cleanup for switching servers or reloading the configuration
 	[MutationTypes.RESET](state: State): void {
 		state.followTarget = undefined;
@@ -661,5 +666,8 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		state.ui.visibleModal = undefined;
 		state.chat.messages = [];
+
+		state.loggedIn = false;
+		state.loginRequired = false;
 	}
 }

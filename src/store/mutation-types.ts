@@ -59,5 +59,6 @@ export enum MutationTypes {
 	TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE = 'toggleSidebarSectionCollapsedState',
 
 	SET_LOGGED_IN = 'setLoggedIn',
+	SET_LOGIN_REQUIRED = 'setLoginRequired',
 	RESET = 'reset'
 }

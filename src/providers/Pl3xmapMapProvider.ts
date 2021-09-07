@@ -385,9 +385,6 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		this.store.commit(MutationTypes.SET_SERVER_MESSAGES, Pl3xmapMapProvider.buildMessagesConfig(response));
 		this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(response, worldResponses));
 		this.store.commit(MutationTypes.SET_COMPONENTS, Pl3xmapMapProvider.buildComponents(response));
-
-		//Pl3xmap has no login functionality
-		this.store.commit(MutationTypes.SET_LOGGED_IN, false);
 	}
 
 	async populateWorld(world: LiveAtlasWorldDefinition) {
