@@ -198,9 +198,7 @@ export default defineComponent({
 					location = newValue.center;
 				}
 
-				if(!oldValue) {
-					this.scheduledZoom = this.scheduledZoom || store.state.configuration.defaultZoom;
-				}
+				this.scheduledZoom = this.scheduledZoom || store.state.configuration.defaultZoom;
 
 				//Set pan location for when the projection changes
 				this.scheduledPan = location;
