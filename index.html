@@ -21,64 +21,59 @@
 
     <title>Minecraft Dynamic Map - LiveAtlas</title>
 
-    <!-- Remove this if you are using multiple servers in the config below -->
+    <!-- Remove this if you are using the servers config below -->
     <script src="./standalone/config.js"></script>
 
     <script>
         window.liveAtlasConfig = {
-        	// Server URLS can be defined here instead of using the standalone/config.js file.
-            // Multiple servers are supported, see https://github.com/JLyne/LiveAtlas/wiki/Configuring-Multiple-Servers.
-            // servers: {
-            //     creative: {
-            //     	label: 'Creative',
-            //         dynmap: {
-            //             configuration: 'http://dynmap.local/creative/MySQL_configuration.php',
-            //             update: 'http://dynmap.local/creative/MySQL_update.php?world={world}&ts={timestamp}',
-            //             sendmessage: 'http://dynmap.local/creative/MySQL_sendmessage.php',
-            //             login: 'http://dynmap.local/creative/MySQL_login.php',
-            //             register: 'http://dynmap.local/creative/MySQL_register.php',
-            //             tiles: 'http://dynmap.local/creative/MySQL_tiles.php?tile=',
-            //             markers: 'http://dynmap.local/creative/MySQL_markers.php?marker='
-            //         }
-            //     },
-            //     survival: {
-            //     	label: 'Survival',
-            //         dynmap: {
-            //             configuration: 'http://dynmap.local/survival/MySQL_configuration.php',
-            //             update: 'http://dynmap.local/survival/MySQL_update.php?world={world}&ts={timestamp}',
-            //             sendmessage: 'http://dynmap.local/survival/MySQL_sendmessage.php',
-            //             login: 'http://dynmap.local/survival/MySQL_login.php',
-            //             register: 'http://dynmap.local/survival/MySQL_register.php',
-            //             tiles: 'http://dynmap.local/survival/MySQL_tiles.php?tile=',
-            //             markers: 'http://dynmap.local/survival/MySQL_markers.php?marker='
-            //         }
-            //     },
-            //     build: {
-            //     	label: 'Build',
-            //         dynmap: {
-            //             configuration: 'http://dynmap.local/build/MySQL_configuration.php',
-            //             update: 'http://dynmap.local/build/MySQL_update.php?world={world}&ts={timestamp}',
-            //             sendmessage: 'http://dynmap.local/build/MySQL_sendmessage.php',
-            //             login: 'http://dynmap.local/build/MySQL_login.php',
-            //             register: 'http://dynmap.local/build/MySQL_register.php',
-            //             tiles: 'http://dynmap.local/build/MySQL_tiles.php?tile=',
-            //             markers: 'http://dynmap.local/build/MySQL_markers.php?marker='
-            //         }
-            //     },
-            //     test: {
-            //     	label: 'Local Test',
-            //         url: '/map/test',
-            //         dynmap: {
-            //             configuration: 'http://dynmap.local:8123/up/configuration',
-            //             update: 'http://dynmap.local:8123/up/world/{world}/{timestamp}',
-            //             sendmessage: 'http://dynmap.local:8123/up/sendmessage',
-            //             login: 'http://dynmap.local:8123/up/login',
-            //             register: 'http://dynmap.local:8123/up/register',
-            //             tiles: 'http://dynmap.local:8123/tiles/',
-            //             markers: 'http://dynmap.local:8123/tiles/'
-            //         }
-            //     },
-            // },
+        	// By default LiveAtlas looks for a dynmap standalone/config.js file
+            // This configuration can be used instead to support Pl3xmap installations multiple servers
+            // To configure multiple servers, see https://github.com/JLyne/LiveAtlas/wiki/Configuring-Multiple-Servers.
+            servers: {
+                // Pl3xmap internal webserver configuration
+                // pl3xmap: {
+            	// 	pl3xmap: window.location.pathname
+                // },
+
+                // Dynmap internal webserver configuration without using standalone/config.js
+                // dynmap: {
+            	//   dynmap: {
+                //     configuration: 'standalone/dynmap_config.json?_={timestamp}',
+                //     update: 'standalone/dynmap_{world}.json?_={timestamp}',
+                //     sendmessage: 'standalone/sendmessage.php',
+                //     login: 'standalone/login.php',
+                //     register: 'standalone/register.php',
+                //     tiles: 'tiles/',
+                //     markers: 'tiles/'
+                //   }
+                // },
+
+                // Multiple Dynmap servers on external webserver configuration
+                // creative: {
+                //     label: 'Creative',
+                //     dynmap: {
+                //         configuration: 'http://dynmap.local/standalone/creative/MySQL_configuration.php',
+                //         update: 'http://dynmap.local/standalone/creative/MySQL_update.php?world={world}&ts={timestamp}',
+                //         sendmessage: 'http://dynmap.local/standalone/creative/MySQL_sendmessage.php',
+                //         login: 'http://dynmap.local/standalone/creative/MySQL_login.php',
+                //         register: 'http://dynmap.local/standalone/creative/MySQL_register.php',
+                //         tiles: 'http://dynmap.local/standalone/creative/MySQL_tiles.php?tile=',
+                //         markers: 'http://dynmap.local/standalone/creative/MySQL_markers.php?marker='
+                //     }
+                // },
+                // survival: {
+                //     label: 'Survival',
+                //     dynmap: {
+                //         configuration: 'http://dynmap.local/standalone/survival/MySQL_configuration.php',
+                //         update: 'http://dynmap.local/standalone/survival/MySQL_update.php?world={world}&ts={timestamp}',
+                //         sendmessage: 'http://dynmap.local/standalone/survival/MySQL_sendmessage.php',
+                //         login: 'http://dynmap.local/standalone/survival/MySQL_login.php',
+                //         register: 'http://dynmap.local/standalone/survival/MySQL_register.php',
+                //         tiles: 'http://dynmap.local/standalone/survival/MySQL_tiles.php?tile=',
+                //         markers: 'http://dynmap.local/standalone/survival/MySQL_markers.php?marker='
+                //     }
+                // },
+            },
 
             // These messages are used throughout LiveAtlas and can be translated here
             // If a message you want to translate isn't here, it is likely controlled by dynmap itself
