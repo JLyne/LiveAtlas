@@ -71,7 +71,7 @@ First run `npm install` to install LiveAtlas dependencies. You can then either r
 ## Support
 If you find a bug, please create an issue with as must detail as possible. I'm working on this in my spare time, so fixes are on a best effort basis, but I'll eventually find time for them.
 
-Please do not contact the Dynmap team regarding any issue with LiveAtlas. They will be very upset.
+Please do not contact the Dynmap or Pl3xmap teams regarding any issue with LiveAtlas. They will be very upset.
 
 ## Donate
 If you appreciate my work, feel free to:
