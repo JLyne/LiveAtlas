@@ -1,11 +1,11 @@
 # LiveAtlas 
-A [Dynmap](https://github.com/webbukkit/dynmap) frontend for the modern web, built with [Vue.js](https://github.com/vuejs/vue) and typescript.
+A [Dynmap](https://github.com/webbukkit/dynmap) and [Pl3xmap](https://github.com/pl3xgaming/Pl3xMap) frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript.
 
 ![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas4.png)
 
-LiveAtlas is a drop-in replacement for the original Dynmap frontend, which aims to provide a more modern interface and improved performance for busy maps.
+LiveAtlas is a drop-in replacement for the original Dynmap frontend, which aims to provide a more modern interface and improved performance for busy maps. Pl3xmap maps are also supported with some configuration.
 
-Development is ongoing, and there are some rough edges, but most of the Dynmap features used by a typical Minecraft server have been implemented.
+Development is ongoing, but most of the Dynmap features used by a typical Minecraft server have been implemented.
 
 You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 
@@ -26,9 +26,9 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Viewing chat messages
 - Chat balloons
 - Sending chat messages
+- Login/register (2.0.0)
 
 ## Not supported right now
-- Login/register
 - Inactivity timeout
 
 ## Supported Browsers
