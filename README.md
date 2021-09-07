@@ -40,6 +40,8 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Opera 53+
 - Safari 11.1+
 
+IE is not supported
+
 ## Download
 LiveAtlas is available on [SpigotMC](https://www.spigotmc.org/resources/liveatlas-a-dynmap-frontend-for-the-modern-web.86939/)
 
