@@ -11,25 +11,24 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 
 ## Supported Dynmap features
 - Viewing maps
-- Layers
+- Marker sets, markers, areas, circles and lines
 - Player markers
-- Custom markers, areas, circles and lines
 - Popups
 - Tile/marker updates
 - Following players
 - Location control
 - Link control
-- Digital/time of day clock control
+- Digital clock/time of day control
 - Logo controls
-- New urls (`#world;map;1,1,1,1`)
-- Legacy urls (`?worldname=world&mapname=map&z=1&y=1&z=1`)
-- Viewing chat messages
+- Dynmap link button URLs (`?worldname=world&mapname=map&z=1&y=1&z=1`)
+- Chat
 - Chat balloons
 - Sending chat messages
 - Login/register (2.0.0)
 
 ## Not supported right now
 - Inactivity timeout
+- Custom map icons
 
 ## Supported Browsers
 - Chrome 66+
