@@ -156,11 +156,11 @@ export const parseMapHash = (hash: string) => {
 }
 
 export const parseMapSearchParams = (query: URLSearchParams) => {
-	const world = query.get('worldname') || undefined,
+	const world = query.get('worldname') /* Dynmap */ || query.get('world') /* Pl3xmap */ || undefined,
 		map = query.get('mapname') || undefined,
 		location = [
 			query.get('x') || '',
-			query.get('y') || '',
+			query.get('y') || '64',
 			query.get('z') || ''
 		].map(item => parseFloat(item)).filter(item => !isNaN(item) && isFinite(item)),
 		zoom = query.has('zoom') ? parseInt(query.get('zoom') as string) : undefined;

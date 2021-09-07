@@ -121,7 +121,8 @@ export default defineComponent({
 					//Remove legacy url if one was parsed
 					if(parsedUrl.legacy) {
 						const url = new URL(window.location.href);
-						url.searchParams.delete('worldname');
+						url.searchParams.delete('worldname'); //Dynmap
+						url.searchParams.delete('world'); //Pl3xmap
 						url.searchParams.delete('mapname');
 						url.searchParams.delete('x');
 						url.searchParams.delete('y');
