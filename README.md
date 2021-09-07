@@ -40,26 +40,15 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 - Opera 53+
 - Safari 11.1+
 
+IE is not supported
+
 ## Download
 LiveAtlas is available on [SpigotMC](https://www.spigotmc.org/resources/liveatlas-a-dynmap-frontend-for-the-modern-web.86939/)
 
 Dev builds are available in [Github actions](https://github.com/JLyne/LiveAtlas/actions/workflows/main.yml)
 
 ## Installation
-Using an [external webserver](https://github.com/webbukkit/dynmap/wiki/External-Webserver-Basics) is recommended.
-
-### External webserver
-1. Download the latest release.
-2. Extract into your webserver root. Any existing index.html should be overwritten.
-3. Clear any CDN caches you may have
-4. Done.
-
-### Default internal webserver
-1. Download the latest release.
-2. Extract into `plugins/dynmap/web`. The existing index.html should be overwritten.
-3. (Recommended) Set index.html as readonly. This will prevent Dynmap overwriting it after every update.
-4. Clear any CDN caches you may have.
-5. Done.
+[See the wiki](https://github.com/JLyne/LiveAtlas/wiki/Installation)
 
 ## Customisation
 The index.html file can be edited to add custom favicons, styles or analytics, just like the original Dynmap. All LiveAtlas messages can also be modified here for translation purposes.
