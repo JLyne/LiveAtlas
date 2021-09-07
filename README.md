@@ -3,32 +3,35 @@ A [Dynmap](https://github.com/webbukkit/dynmap) and [Pl3xmap](https://github.com
 
 ![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas4.png)
 
-LiveAtlas is a drop-in replacement for the original Dynmap frontend, which aims to provide a more modern interface and improved performance for busy maps. Pl3xmap maps are also supported with some configuration.
+LiveAtlas is an alternative frontend for Dynmap and Pl3xmap, which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in drop-in replacement for Dynmap, and Pl3xmap maps are supported with some additional configuration.
 
-Development is ongoing, but most of the Dynmap features used by a typical Minecraft server have been implemented.
+Development is ongoing, but all of the major Dynmap/Pl3xmap features are supported.
 
 You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 
-## Supported Dynmap features
-- Viewing maps
-- Marker sets, markers, areas, circles and lines
-- Player markers
-- Popups
-- Tile/marker updates
-- Following players
-- Location control
-- Link control
-- Digital clock/time of day control
-- Logo controls
-- Dynmap link button URLs (`?worldname=world&mapname=map&z=1&y=1&z=1`)
-- Chat
-- Chat balloons
-- Sending chat messages
-- Login/register (2.0.0)
+## Supported map features
 
-## Not supported right now
-- Inactivity timeout
-- Custom map icons
+| Feature | Dynmap | Pl3xmap |
+| --------------- | --------------- | --------------- |
+| Viewing maps | ✅ | ✅ |
+| Markers | ✅ | ✅ |
+| Player markers | ✅ | ✅ |
+| Player facing direction | n/a | ❌ |
+| Popups | ✅ | ✅ |
+| Tooltips | n/a | ✅ |
+| Tile updates | ✅ | ✅ |
+| Marker updates | ✅ | ❌ |
+| Following players | ✅ | ✅ |
+| Location display | ✅ | ✅ |
+| Link button | ✅ | ✅ |
+| Link button URLs | ✅ | ✅ |
+| Clock | ✅ | n/a |
+| Logos | ✅ | n/a | 
+| Chat |  ✅ | n/a |
+| Chat balloons | ✅ | n/a |
+| Login/register | ✅ | n/a |
+| Inactivity timeout | ❌ | n/a |
+| Custom map icons | ❌ | ❌ |
 
 ## Supported Browsers
 - Chrome 66+
@@ -59,7 +62,7 @@ Using an [external webserver](https://github.com/webbukkit/dynmap/wiki/External-
 5. Done.
 
 ## Customisation
-The index.html file can be edited to add custom favicons, styles or analytics, just like the original Dynmap.
+The index.html file can be edited to add custom favicons, styles or analytics, just like the original Dynmap. All LiveAtlas messages can also be modified here for translation purposes.
 You are also free to build LiveAtlas yourself to make further changes.
 
 ## Building
