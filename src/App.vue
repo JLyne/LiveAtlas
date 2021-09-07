@@ -143,8 +143,9 @@ export default defineComponent({
 
 				let element: LiveAtlasUIElement;
 
-				//Disable shortcuts if modal is open - except login required to allow server list toggling
-				if(store.state.ui.visibleModal && !loginRequired.value) {
+				// Disable all shortcuts if a modal other than login required is open
+				// Allow maps shortcut if the login required modal is open
+				if(store.state.ui.visibleModal && (!loginRequired.value || e.key !== 'M')) {
 					return;
 				}
 
