@@ -58,7 +58,7 @@ export default defineComponent({
 
 			loggedIn = computed(() => store.state.loggedIn), //Whether the user is currently logged in
 			loginRequired = computed(() => store.state.loginRequired), //Whether logging is required to view the current server
-			loginEnabled = computed(() => store.state.components.login || loginRequired.value), //Whether logging in is enabled for the current server
+			loginEnabled = computed(() => store.getters.loginEnabled), //Whether logging in is enabled for the current server
 
 			//Hide the login modal if we are logged out on a login-required server, but the server list is open
 			//Allows switching servers without the modal overlapping

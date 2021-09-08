@@ -807,7 +807,7 @@ export default class DynmapMapProvider extends MapProvider {
     }
 
     async login(data: any) {
-		if (!this.store.state.components.login && !this.store.state.loginRequired) {
+		if (!this.store.getters.loginEnabled) {
 			return Promise.reject(this.store.state.messages.loginErrorDisabled);
 		}
 
@@ -844,7 +844,7 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	async logout() {
-		if (!this.store.state.components.login && !this.store.state.loginRequired) {
+		if (!this.store.getters.loginEnabled) {
 			return Promise.reject(this.store.state.messages.loginErrorDisabled);
 		}
 
@@ -860,7 +860,7 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
     async register(data: any) {
-		if (!this.store.state.components.login && !this.store.state.loginRequired) {
+		if (!this.store.getters.loginEnabled) {
 			return Promise.reject(this.store.state.messages.loginErrorDisabled);
 		}
 

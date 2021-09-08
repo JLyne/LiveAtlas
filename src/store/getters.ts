@@ -22,6 +22,7 @@ export type Getters = {
 	playerMarkersEnabled(state: State): boolean;
 	coordinatesControlEnabled(state: State): boolean;
 	clockControlEnabled(state: State): boolean;
+	loginEnabled(state: State): boolean;
 	night(state: State): boolean;
 	mapBackground(state: State, getters: GetterTree<State, State> & Getters): string;
 	url(state: State, getters: GetterTree<State, State> & Getters): string;
@@ -40,6 +41,10 @@ export const getters: GetterTree<State, State> & Getters = {
 
 	clockControlEnabled(state: State): boolean {
 		return state.components.clockControl !== undefined;
+	},
+
+	loginEnabled(state: State): boolean {
+		return state.components.login || state.loginRequired;
 	},
 
 	night(state: State): boolean {
