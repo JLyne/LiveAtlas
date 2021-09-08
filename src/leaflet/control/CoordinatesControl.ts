@@ -60,13 +60,13 @@ export class CoordinatesControl extends Control {
 
 		if (this.options.showRegion) {
 			this._regionContainer.textContent = '--------------';
-			this._regionContainer.dataset.label = useStore().state.messages.locationRegion;
+			this._regionContainer.dataset.label = store.state.messages.locationRegion;
 			container.appendChild(this._regionContainer);
 		}
 
 		if (this.options.showChunk) {
 			this._chunkContainer.textContent = '----, ----';
-			this._chunkContainer.dataset.label = useStore().state.messages.locationChunk;
+			this._chunkContainer.dataset.label = store.state.messages.locationChunk;
 			container.appendChild(this._chunkContainer);
 		}
 

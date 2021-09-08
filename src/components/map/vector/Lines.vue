@@ -70,7 +70,7 @@ export default defineComponent({
 			},
 
 			handlePendingUpdates = async () => {
-				const updates = await useStore().dispatch(ActionTypes.POP_LINE_UPDATES, {
+				const updates = await store.dispatch(ActionTypes.POP_LINE_UPDATES, {
 					markerSet: props.set.id,
 					amount: 10,
 				}),

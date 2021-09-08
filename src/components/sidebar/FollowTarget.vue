@@ -62,7 +62,7 @@ export default defineComponent({
 			messageHidden = computed(() => store.state.messages.followingHidden),
 
 			unfollow = () => {
-				useStore().commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
+				store.commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
 			},
 			updatePlayerImage = async () => {
 				image.value = defaultImage;

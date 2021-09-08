@@ -39,7 +39,7 @@ export class LinkControl extends Control {
 			copyErrorMessage = computed(() => store.state.messages.copyToClipboardError);
 
 		linkButton.type = 'button';
-		linkButton.title = useStore().state.messages.linkTitle;
+		linkButton.title = store.state.messages.linkTitle;
 		linkButton.innerHTML = `
 		<svg class="svg-icon" aria-hidden="true">
 		  <use xlink:href="#icon--link" />
@@ -47,7 +47,7 @@ export class LinkControl extends Control {
 
 		linkButton.addEventListener('click', e => {
 			e.preventDefault();
-			toClipboard(window.location.href.split("#")[0] + useStore().getters.url).then(() => {
+			toClipboard(window.location.href.split("#")[0] + store.getters.url).then(() => {
 				notify(copySuccessMessage.value);
 			}).catch((e) => {
 				notify({ type: 'error', text: copyErrorMessage.value });

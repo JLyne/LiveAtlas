@@ -30,7 +30,6 @@ import {
 import {
 	DynmapMarkerSetUpdates, DynmapTileUpdate, DynmapUpdate
 } from "@/dynmap";
-import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import ChatError from "@/errors/ChatError";
 import {MutationTypes} from "@/store/mutation-types";
@@ -652,7 +651,7 @@ export default class DynmapMapProvider extends MapProvider {
 	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {
 		const markerSets = await this.getMarkerSets(world);
 
-		useStore().commit(MutationTypes.SET_MARKER_SETS, markerSets);
+		this.store.commit(MutationTypes.SET_MARKER_SETS, markerSets);
 	}
 
 	private async getUpdate(): Promise<void> {
@@ -728,10 +727,8 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	sendChatMessage(message: string) {
-		const store = useStore();
-
-		if (!store.state.components.chatSending) {
-			return Promise.reject(store.state.messages.chatErrorDisabled);
+		if (!this.store.state.components.chatSending) {
+			return Promise.reject(this.store.state.messages.chatErrorDisabled);
 		}
 
 		return fetch(this.config.dynmap!.sendmessage, {
@@ -743,8 +740,8 @@ export default class DynmapMapProvider extends MapProvider {
 			})
 		}).then((response) => {
 			if (response.status === 403) { //Rate limited
-				throw new ChatError(store.state.messages.chatErrorCooldown
-					.replace('%interval%', store.state.components.chatSending!.cooldown.toString()));
+				throw new ChatError(this.store.state.messages.chatErrorCooldown
+					.replace('%interval%', this.store.state.components.chatSending!.cooldown.toString()));
 			}
 
 			if (!response.ok) {
@@ -754,11 +751,11 @@ export default class DynmapMapProvider extends MapProvider {
 			return response.json();
 		}).then(response => {
 			if (response.error !== 'none') {
-				throw new ChatError(store.state.messages.chatErrorNotAllowed);
+				throw new ChatError(this.store.state.messages.chatErrorNotAllowed);
 			}
 		}).catch(e => {
 			if (!(e instanceof ChatError)) {
-				console.error(store.state.messages.chatErrorUnknown);
+				console.error(this.store.state.messages.chatErrorUnknown);
 				console.trace(e);
 			}
 
@@ -810,13 +807,11 @@ export default class DynmapMapProvider extends MapProvider {
     }
 
     async login(data: any) {
-		const store = useStore();
-
-		if (!store.state.components.login && !store.state.loginRequired) {
-			return Promise.reject(store.state.messages.loginErrorDisabled);
+		if (!this.store.state.components.login && !this.store.state.loginRequired) {
+			return Promise.reject(this.store.state.messages.loginErrorDisabled);
 		}
 
-		store.commit(MutationTypes.SET_LOGGED_IN, false);
+		this.store.commit(MutationTypes.SET_LOGGED_IN, false);
 
 		try {
 			const body = new URLSearchParams();
@@ -832,27 +827,25 @@ export default class DynmapMapProvider extends MapProvider {
 
 			switch(response.result) {
 				case 'success':
-					store.commit(MutationTypes.SET_LOGGED_IN, true);
+					this.store.commit(MutationTypes.SET_LOGGED_IN, true);
 					return;
 
 				case 'loginfailed':
-					return Promise.reject(store.state.messages.loginErrorIncorrect);
+					return Promise.reject(this.store.state.messages.loginErrorIncorrect);
 
 				default:
-					return Promise.reject(store.state.messages.loginErrorUnknown);
+					return Promise.reject(this.store.state.messages.loginErrorUnknown);
 			}
 		} catch(e) {
-			console.error(store.state.messages.loginErrorUnknown);
+			console.error(this.store.state.messages.loginErrorUnknown);
 			console.trace(e);
-			return Promise.reject(store.state.messages.loginErrorUnknown);
+			return Promise.reject(this.store.state.messages.loginErrorUnknown);
 		}
 	}
 
 	async logout() {
-		const store = useStore();
-
-		if (!store.state.components.login && !store.state.loginRequired) {
-			return Promise.reject(store.state.messages.loginErrorDisabled);
+		if (!this.store.state.components.login && !this.store.state.loginRequired) {
+			return Promise.reject(this.store.state.messages.loginErrorDisabled);
 		}
 
 		try {
@@ -860,20 +853,18 @@ export default class DynmapMapProvider extends MapProvider {
 				method: 'POST',
 			});
 
-			store.commit(MutationTypes.SET_LOGGED_IN, false);
+			this.store.commit(MutationTypes.SET_LOGGED_IN, false);
 		} catch(e) {
-			return Promise.reject(store.state.messages.logoutErrorUnknown);
+			return Promise.reject(this.store.state.messages.logoutErrorUnknown);
 		}
 	}
 
     async register(data: any) {
-		const store = useStore();
-
-		if (!store.state.components.login && !store.state.loginRequired) {
-			return Promise.reject(store.state.messages.loginErrorDisabled);
+		if (!this.store.state.components.login && !this.store.state.loginRequired) {
+			return Promise.reject(this.store.state.messages.loginErrorDisabled);
 		}
 
-		store.commit(MutationTypes.SET_LOGGED_IN, false);
+		this.store.commit(MutationTypes.SET_LOGGED_IN, false);
 
 		try {
 			const body = new URLSearchParams();
@@ -890,22 +881,22 @@ export default class DynmapMapProvider extends MapProvider {
 
 			switch(response.result) {
 				case 'success':
-					store.commit(MutationTypes.SET_LOGGED_IN, true);
+					this.store.commit(MutationTypes.SET_LOGGED_IN, true);
 					return;
 
 				case 'verifyfailed':
-					return Promise.reject(store.state.messages.registerErrorVerifyFailed);
+					return Promise.reject(this.store.state.messages.registerErrorVerifyFailed);
 
 				case 'registerfailed':
-					return Promise.reject(store.state.messages.registerErrorIncorrect);
+					return Promise.reject(this.store.state.messages.registerErrorIncorrect);
 
 				default:
-					return Promise.reject(store.state.messages.registerErrorUnknown);
+					return Promise.reject(this.store.state.messages.registerErrorUnknown);
 			}
 		} catch(e) {
-			console.error(store.state.messages.registerErrorUnknown);
+			console.error(this.store.state.messages.registerErrorUnknown);
 			console.trace(e);
-			return Promise.reject(store.state.messages.registerErrorUnknown);
+			return Promise.reject(this.store.state.messages.registerErrorUnknown);
 		}
 	}
 
