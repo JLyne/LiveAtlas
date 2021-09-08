@@ -85,9 +85,9 @@ export interface Actions {
 }
 
 export const actions: ActionTree<State, State> & Actions = {
-	async [ActionTypes.LOAD_CONFIGURATION]({commit, state}): Promise<void> {
-		//Clear any existing has to avoid triggering a second config load, after this load changes the hash
-		commit(MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH, undefined);
+	async [ActionTypes.LOAD_CONFIGURATION]({commit, state, dispatch}): Promise<void> {
+		await dispatch(ActionTypes.STOP_UPDATES, undefined);
+		commit(MutationTypes.RESET, undefined);
 
 		if(!state.currentServer) {
 			console.warn('No current server');

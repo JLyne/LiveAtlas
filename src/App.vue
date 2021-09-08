@@ -74,8 +74,6 @@ export default defineComponent({
 					showSplash(!loadingAttempts.value);
 					loading.value = true;
 
-					await store.dispatch(ActionTypes.STOP_UPDATES, undefined);
-					store.commit(MutationTypes.RESET, undefined);
 					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
 					await store.dispatch(ActionTypes.START_UPDATES, undefined);
 
@@ -89,23 +87,15 @@ export default defineComponent({
 						}
 					});
 				} catch(e: any) {
-					//Request was aborted, probably because another server was selected before the request finished. Don't retry
-					if(e instanceof DOMException && e.name === 'AbortError') {
-						return;
+					// Don't retry if request was aborted or logging in is required
+					if(!(e instanceof DOMException && e.name === 'AbortError') && !loginRequired.value) {
+						const error = `Failed to load server configuration for '${store.state.currentServer!.id}'`;
+						console.error(`${error}:`, e);
+						showSplashError(`${error}\n${e}`, false, ++loadingAttempts.value);
+
+						clearTimeout(loadingTimeout);
+						loadingTimeout = setTimeout(() => loadConfiguration(), 1000);
 					}
-
-					//Logging in is required
-					if(loginRequired.value) {
-						return;
-					}
-
-					//Any other errors
-					const error = `Failed to load server configuration for '${store.state.currentServer!.id}'`;
-					console.error(`${error}:`, e);
-					showSplashError(`${error}\n${e}`, false, ++loadingAttempts.value);
-
-					clearTimeout(loadingTimeout);
-					loadingTimeout = setTimeout(() => loadConfiguration(), 1000);
 				} finally {
 					loading.value = false;
 				}
@@ -212,7 +202,7 @@ export default defineComponent({
 			} else {
 				store.commit(MutationTypes.HIDE_UI_MODAL, 'login');
 			}
-		})
+		});
 
 		onMounted(() => loadConfiguration());
 		onBeforeUnmount(() => {

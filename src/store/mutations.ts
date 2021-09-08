@@ -53,7 +53,6 @@ export type Mutations<S = State> = {
 	[MutationTypes.INIT](state: S, config: LiveAtlasGlobalConfig): void
 	[MutationTypes.SET_SERVER_CONFIGURATION](state: S, config: LiveAtlasServerConfig): void
 	[MutationTypes.SET_SERVER_CONFIGURATION_HASH](state: S, hash: number): void
-	[MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH](state: S): void
 	[MutationTypes.SET_SERVER_MESSAGES](state: S, messages: LiveAtlasServerMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
 	[MutationTypes.SET_COMPONENTS](state: S, components: LiveAtlasPartialComponentConfig | LiveAtlasComponentConfig): void
@@ -186,11 +185,6 @@ export const mutations: MutationTree<State> & Mutations = {
 	// Sets configuration hash
 	[MutationTypes.SET_SERVER_CONFIGURATION_HASH](state: State, hash: number) {
 		state.configurationHash = hash;
-	},
-
-	// Sets configuration hash
-	[MutationTypes.CLEAR_SERVER_CONFIGURATION_HASH](state: State) {
-		state.configurationHash = undefined;
 	},
 
 	// Sets messages from the initial config fetch
@@ -650,6 +644,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentWorldState.raining = false;
 		state.currentWorldState.thundering = false;
 
+		state.configurationHash = undefined;
 		state.configuration.title = '';
 
 		state.components.markers.showLabels= false;
