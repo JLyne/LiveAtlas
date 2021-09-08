@@ -39,6 +39,7 @@
 	import SvgIcon from "@/components/SvgIcon.vue";
 	import '@/assets/icons/arrow.svg';
 	import {MutationTypes} from "@/store/mutation-types";
+	import {computed} from "vue";
 
 	export default defineComponent({
 		name: 'CollapsibleSection',
@@ -50,19 +51,17 @@
 			}
 		},
 
-		computed: {
-			title(): string {
-				return useStore().state.messages.toggleTitle;
-			},
+		setup(props) {
+			const store = useStore(),
+				title = computed(() => store.state.messages.toggleTitle),
+				collapsed = computed(() => store.state.ui.sidebar.collapsedSections.has(props.name));
 
-			collapsed(): boolean {
-				return useStore().state.ui.sidebar.collapsedSections.has(this.name);
-			},
-		},
+			const toggle = () => store.commit(MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE, props.name);
 
-		methods: {
-			toggle() {
-				useStore().commit(MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE, this.name);
+			return {
+				title,
+				collapsed,
+				toggle
 			}
 		}
 	});

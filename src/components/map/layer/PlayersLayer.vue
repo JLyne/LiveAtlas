@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
-import {defineComponent, computed, watch} from "@vue/runtime-core";
+import {defineComponent, computed, watch, onMounted, onUnmounted} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import {LayerGroup} from 'leaflet';
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
@@ -50,6 +50,23 @@ export default defineComponent({
 
 		watch(playerCount, (newValue) => playerPane.classList.toggle('no-animations', newValue > 150));
 
+		onMounted(() => {
+			if(!componentSettings.value!.hideByDefault) {
+				props.leaflet.getLayerManager().addLayer(
+					layerGroup,
+					true,
+					store.state.components.playerMarkers!.layerName,
+					componentSettings.value!.layerPriority);
+			} else {
+				props.leaflet.getLayerManager().addHiddenLayer(
+					layerGroup,
+					store.state.components.playerMarkers!.layerName,
+					componentSettings.value!.layerPriority);
+			}
+		});
+
+		onUnmounted(() => props.leaflet.getLayerManager().removeLayer(layerGroup));
+
 		if(playersAboveMarkers.value) {
 			playerPane.style.zIndex = '600';
 		}
@@ -59,27 +76,6 @@ export default defineComponent({
 			componentSettings,
 			layerGroup,
 		}
-	},
-
-	mounted() {
-		const store = useStore();
-
-		if(!this.componentSettings!.hideByDefault) {
-			this.leaflet.getLayerManager().addLayer(
-				this.layerGroup,
-				true,
-				store.state.components.playerMarkers!.layerName,
-				this.componentSettings!.layerPriority);
-		} else {
-			this.leaflet.getLayerManager().addHiddenLayer(
-				this.layerGroup,
-				store.state.components.playerMarkers!.layerName,
-				this.componentSettings!.layerPriority);
-		}
-	},
-
-	unmounted() {
-		this.leaflet.getLayerManager().removeLayer(this.layerGroup);
 	},
 
 	render() {

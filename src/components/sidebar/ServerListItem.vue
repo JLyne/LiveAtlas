@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import {useStore} from "@/store";
-import {defineComponent} from 'vue';
+import {computed, defineComponent} from 'vue';
 import {MutationTypes} from "@/store/mutation-types";
 import {LiveAtlasServerDefinition} from "@/index";
 
@@ -34,16 +34,16 @@ export default defineComponent({
 		}
 	},
 
-	computed: {
-		currentServer: {
-			get() {
-				const store = useStore();
-				return store.state.currentServer ? store.state.currentServer.id : undefined;
-			},
-			set(value: string) {
-				useStore().commit(MutationTypes.SET_CURRENT_SERVER, value);
-			}
+	setup() {
+		const store = useStore(),
+			currentServer = computed({
+				get: () => store.state.currentServer ? store.state.currentServer.id : undefined,
+				set: (value) => value && store.commit(MutationTypes.SET_CURRENT_SERVER, value)
+			})
+
+		return {
+			currentServer,
 		}
-	},
+	}
 });
 </script>

@@ -15,45 +15,47 @@
   -->
 
 <template>
-  <svg :class="className" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <title v-if="title">{{ title }}</title>
-    <use :xlink:href="iconPath"/>
-  </svg>
+	<svg :class="className" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+		<title v-if="title">{{ title }}</title>
+		<use :xlink:href="iconPath"/>
+	</svg>
 </template>
 
 <script>
+import {computed} from "vue";
+
 export default {
-  name: 'svg-icon',
+	name: 'svg-icon',
 
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
+	props: {
+		name: {
+			type: String,
+			required: true
+		},
 
-    title: {
-      type: String,
-      default: null
-    }
-  },
+		title: {
+			type: String,
+			default: null
+		}
+	},
 
-  computed: {
-    iconPath() {
-      return `#icon--${this.name}`;
-    },
+	setup(props) {
+		const iconPath = computed(() => `#icon--${props.name}`),
+			className = computed(() => `svg-icon svg-icon--${props.name}`);
 
-    className() {
-      return 'svg-icon svg-icon--' + this.name;
-    }
-  }
+		return {
+			iconPath,
+			className
+		}
+	}
 };
 </script>
 
 <style>
-  .svg-icon {
-    pointer-events: none;
-	fill: currentColor;
-	height: 24px;
-	width: 24px;
-  }
+	.svg-icon {
+		pointer-events: none;
+		fill: currentColor;
+		height: 24px;
+		width: 24px;
+	}
 </style>

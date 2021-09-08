@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import {useStore} from "@/store";
-import {defineComponent} from 'vue';
+import {computed, defineComponent} from 'vue';
 import {MutationTypes} from "@/store/mutation-types";
 import SvgIcon from "@/components/SvgIcon.vue";
 import "@/assets/icons/block_world_surface.svg";
@@ -62,15 +62,18 @@ export default defineComponent({
 		}
 	},
 
-	computed: {
-		currentMap: {
-			get() {
-				const store = useStore();
-				return store.state.currentMap ? [store.state.currentWorld!.name, store.state.currentMap.name] : undefined;
-			},
-			set(value: string[]) {
-				useStore().commit(MutationTypes.SET_CURRENT_MAP, {worldName: value[0], mapName: value[1]});
-			}
+	setup() {
+		const store = useStore(),
+			currentMap = computed({
+				get: () => store.state.currentMap ? [store.state.currentWorld!.name, store.state.currentMap.name] : undefined,
+				set: (value) => value && store.commit(MutationTypes.SET_CURRENT_MAP, {
+					worldName: value[0],
+					mapName: value[1]
+				})
+			});
+
+		return {
+			currentMap
 		}
 	}
 });

@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, computed} from "@vue/runtime-core";
+import {defineComponent, computed, onMounted, onUnmounted} from "@vue/runtime-core";
 import {useStore} from "@/store";
 import Areas from "@/components/map/vector/Areas.vue";
 import Circles from "@/components/map/vector/Circles.vue";
@@ -31,6 +31,7 @@ import Markers from "@/components/map/vector/Markers.vue";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import {LiveAtlasMarkerSet} from "@/index";
+import {watch} from "vue";
 
 export default defineComponent({
 	components: {
@@ -63,57 +64,45 @@ export default defineComponent({
 				priority: props.markerSet.priority,
 			});
 
+		watch(props.markerSet, newValue => {
+			if(newValue && layerGroup) {
+				layerGroup.update({
+					id: props.markerSet.id,
+					minZoom: props.markerSet.minZoom,
+					maxZoom: props.markerSet.maxZoom,
+					showLabels: props.markerSet.showLabels || store.state.components.markers.showLabels,
+					priority: props.markerSet.priority,
+				});
+
+				if(newValue.hidden) {
+					props.leaflet.getLayerManager()
+						.addHiddenLayer(layerGroup, newValue.label, props.markerSet.priority);
+				} else {
+					props.leaflet.getLayerManager()
+						.addLayer(layerGroup, true, newValue.label, props.markerSet.priority);
+				}
+			}
+		}, {deep: true});
+
+		onMounted(() => {
+			if(props.markerSet.hidden) {
+				props.leaflet.getLayerManager()
+					.addHiddenLayer(layerGroup, props.markerSet.label, props.markerSet.priority);
+			} else {
+				props.leaflet.getLayerManager()
+					.addLayer(layerGroup, true, props.markerSet.label, props.markerSet.priority);
+			}
+		});
+
+		onUnmounted(() => props.leaflet.getLayerManager().removeLayer(layerGroup));
+
 		return {
 			markerSettings,
 			layerGroup,
 		}
 	},
-
-	watch: {
-		markerSet: {
-			handler(newValue) {
-				if(newValue && this.layerGroup) {
-					this.layerGroup.update({
-						id: this.markerSet.id,
-						minZoom: this.markerSet.minZoom,
-						maxZoom: this.markerSet.maxZoom,
-						showLabels: this.markerSet.showLabels || useStore().state.components.markers.showLabels,
-						priority: this.markerSet.priority,
-					});
-
-					if(newValue.hidden) {
-						this.leaflet.getLayerManager()
-							.addHiddenLayer(this.layerGroup, newValue.label, this.markerSet.priority);
-					} else {
-						this.leaflet.getLayerManager()
-							.addLayer(this.layerGroup, true, newValue.label, this.markerSet.priority);
-					}
-				}
-			},
-			deep: true,
-		}
-	},
-
-	mounted() {
-		if(this.markerSet.hidden) {
-			this.leaflet.getLayerManager()
-				.addHiddenLayer(this.layerGroup, this.markerSet.label, this.markerSet.priority);
-		} else {
-			this.leaflet.getLayerManager()
-				.addLayer(this.layerGroup, true, this.markerSet.label, this.markerSet.priority);
-		}
-	},
-
-	unmounted() {
-		this.leaflet.getLayerManager().removeLayer(this.layerGroup);
-	},
-
 	render() {
 		return null;
 	}
 })
 </script>
-
-<style scoped>
-
-</style>

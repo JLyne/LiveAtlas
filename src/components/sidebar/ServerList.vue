@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import ServerListItem from './ServerListItem.vue';
-import {defineComponent} from 'vue';
+import {computed, defineComponent} from 'vue';
 import {useStore} from "@/store";
 import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
 import RadioList from "@/components/util/RadioList.vue";
@@ -40,13 +40,14 @@ export default defineComponent({
 		ServerListItem
 	},
 
-	computed: {
-		heading() {
-			return useStore().state.messages.serversHeading;
-		},
+	setup() {
+		const store = useStore(),
+			heading = computed(() => store.state.messages.serversHeading),
+			servers = computed(() => store.state.servers);
 
-		servers() {
-			return useStore().state.servers;
+		return {
+			heading,
+			servers
 		}
 	}
 });

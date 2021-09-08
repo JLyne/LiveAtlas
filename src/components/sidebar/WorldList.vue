@@ -21,14 +21,14 @@
 			<RadioList v-if="worlds.size" class="section__content" aria-labelledby="maps-heading">
 				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer}_${name}`"></WorldListItem>
 			</RadioList>
-			<div v-else class="section__content section__skeleton">{{ skeletonWorlds }}</div>
+			<div v-else class="section__content section__skeleton">{{ skeleton }}</div>
 		</template>
 	</CollapsibleSection>
 </template>
 
 <script lang="ts">
 import WorldListItem from './WorldListItem.vue';
-import {defineComponent} from 'vue';
+import {computed, defineComponent} from 'vue';
 import {useStore} from "@/store";
 import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
 import RadioList from "@/components/util/RadioList.vue";
@@ -48,22 +48,18 @@ export default defineComponent({
 		}
 	},
 
-	computed: {
-		heading() {
-			return useStore().state.messages.worldsHeading;
-		},
+	setup() {
+		const store = useStore(),
+			heading = computed(() => store.state.messages.worldsHeading),
+			skeleton = computed(() => store.state.messages.worldsSkeleton),
+			worlds = computed(() => store.state.worlds),
+			currentServer = computed(() => store.state.currentServer ? store.state.currentServer.id : undefined);
 
-		skeletonWorlds() {
-			return useStore().state.messages.worldsSkeleton;
-		},
-
-		worlds() {
-			return useStore().state.worlds;
-		},
-
-		currentServer() {
-			const store = useStore();
-			return store.state.currentServer ? store.state.currentServer.id : undefined;
+		return {
+			heading,
+			skeleton,
+			worlds,
+			currentServer
 		}
 	}
 });

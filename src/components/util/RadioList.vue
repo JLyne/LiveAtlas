@@ -27,13 +27,14 @@ export default defineComponent({
 	name: 'RadioList',
 
 	setup() {
-	},
-
-	methods: {
-		onKeydown(e: KeyboardEvent) {
+		const onKeydown = (e: KeyboardEvent) => {
 			handleKeyboardEvent(e, Array.from((e.currentTarget as HTMLFieldSetElement).elements) as HTMLElement[])
 		}
-	}
+
+		return {
+			onKeydown
+		}
+	},
 });
 </script>
 
