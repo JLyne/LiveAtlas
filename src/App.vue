@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onBeforeUnmount, onMounted, onUnmounted, ref, watch} from 'vue';
+import {computed, defineComponent, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
 import ChatBox from './components/ChatBox.vue';
@@ -102,12 +102,12 @@ export default defineComponent({
 			},
 
 			handleUrl = () => {
-				const parsedUrl = parseUrl();
+				const url = new URL(window.location.href),
+					parsedUrl = parseUrl(url);
 
 				if(parsedUrl) {
 					//Remove legacy url if one was parsed
 					if(parsedUrl.legacy) {
-						const url = new URL(window.location.href);
 						url.searchParams.delete('worldname'); //Dynmap
 						url.searchParams.delete('world'); //Pl3xmap
 						url.searchParams.delete('mapname');
@@ -158,14 +158,6 @@ export default defineComponent({
 
 				e.preventDefault();
 				store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, element);
-			},
-
-			onUrlChange = () => {
-				const parsedUrl = parseUrl();
-
-				if(parsedUrl) {
-					store.commit(MutationTypes.SET_PARSED_URL, parsedUrl);
-				}
 			};
 
 		watch(title, (title) => document.title = title);
@@ -204,24 +196,23 @@ export default defineComponent({
 			}
 		});
 
-		onMounted(() => loadConfiguration());
-		onBeforeUnmount(() => {
-			store.dispatch(ActionTypes.STOP_UPDATES, undefined);
-			clearTimeout(loadingTimeout);
-		});
-
 		handleUrl();
 		onResize();
 
 		onMounted(() => {
 			window.addEventListener('resize', onResize);
 			window.addEventListener('keydown', onKeydown);
-			window.addEventListener('hashchange', onUrlChange);
+			window.addEventListener('hashchange', handleUrl);
+
+			loadConfiguration();
 		});
-		onUnmounted(() => {
-			window.addEventListener('resize', onResize);
-			window.addEventListener('keydown', onKeydown);
-			window.addEventListener('hashchange', onUrlChange);
+		onBeforeUnmount(() => {
+			store.dispatch(ActionTypes.STOP_UPDATES, undefined);
+			clearTimeout(loadingTimeout);
+
+			window.removeEventListener('resize', onResize);
+			window.removeEventListener('keydown', onKeydown);
+			window.removeEventListener('hashchange', handleUrl);
 		});
 
 		return {
