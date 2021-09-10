@@ -205,10 +205,10 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 			const id = set.id;
 
-			const markers: Map<string, LiveAtlasMarker> = new Map(),
-				circles: Map<string, LiveAtlasCircle> = new Map(),
-				areas: Map<string, LiveAtlasArea> = new Map(),
-				lines: Map<string, LiveAtlasLine> = new Map();
+			const markers: Map<string, LiveAtlasMarker> = Object.freeze(new Map()),
+				circles: Map<string, LiveAtlasCircle> = Object.freeze(new Map()),
+				areas: Map<string, LiveAtlasArea> = Object.freeze(new Map()),
+				lines: Map<string, LiveAtlasLine> = Object.freeze(new Map());
 
 			(set.markers || []).forEach((marker: any) => {
 				switch(marker.type) {
@@ -258,7 +258,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}
 
 	private static buildMarker(marker: any): LiveAtlasMarker {
-		return {
+		return Object.seal({
 			location: {
 				x: marker.point?.x || 0,
 				y: 0,
@@ -269,7 +269,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 			label: (marker.tooltip || '').trim(),
 			isLabelHTML: true
-		};
+		});
 	}
 
 	private static buildRectangle(area: any): LiveAtlasArea {
