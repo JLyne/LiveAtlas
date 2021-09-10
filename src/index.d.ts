@@ -38,6 +38,16 @@ declare global {
 	interface Window {
 		liveAtlasConfig: LiveAtlasGlobalConfig,
 	}
+
+	declare const process : {
+		env: {
+			VITE_VERSION: string
+		}
+	}
+}
+
+export interface ProcessEnv {
+    [key: string]: string | undefined
 }
 
 interface Coordinate {

@@ -91,7 +91,7 @@ export type State = {
 }
 
 export const state: State = {
-	version: (import.meta.env.VITE_VERSION || 'Unknown') as string,
+	version: (process.env.VITE_VERSION || 'Unknown') as string,
 	servers: new Map(),
 
 	configuration: {

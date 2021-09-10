@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vite",
     "preview": "vite preview --port 8082",
+    "test": "jest",
     "build": "vue-tsc --noEmit && vite build --out-dir dist",
     "lint": "eslint --ext .ts,.vue src",
     "lint:fix": "eslint -ext .ts,.vue src --fix",
@@ -19,20 +20,27 @@
     "vuex": "^4.0"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.1",
     "@types/leaflet": "1.7.5",
+    "@types/node": "^16.9.1",
     "@typescript-eslint/eslint-plugin": "^4.31",
     "@typescript-eslint/parser": "^4.31",
     "@vitejs/plugin-vue": "^1.6",
     "@vue/compiler-sfc": "^3.2.10",
     "@vue/eslint-config-typescript": "^7.0",
+    "@vue/test-utils": "^2.0.0-rc.14",
     "eslint": "^7.32",
     "eslint-plugin-vue": "^7.17",
+    "jest": "^26.6.3",
     "patch-package": "^6.4",
     "rollup-plugin-analyzer": "^4.0",
     "sass": "^1.39",
+    "ts-jest": "^26.5.6",
+    "ts-node": "^10.2.1",
     "typescript": "^4.4",
     "vite": "^2.5",
     "vite-plugin-svg-sprite-component": "^1.0",
+    "vue-jest": "^5.0.0-alpha.10",
     "vue-tsc": "0.3.0"
   },
   "eslintConfig": {
