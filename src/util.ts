@@ -103,9 +103,9 @@ const tickHeadQueue = () => {
 	tickHeadQueue();
 }
 
-export const parseUrl = () => {
-	const query = new URLSearchParams(window.location.search),
-		hash = window.location.hash.replace('#', '');
+export const parseUrl = (url: URL) => {
+	const query = new URLSearchParams(url.search),
+		hash = url.hash.replace('#', '');
 
 	if(hash) {
 		try {
@@ -128,18 +128,21 @@ export const parseMapHash = (hash: string) => {
 	const parts = hash.replace('#', '').split(';');
 
 	const world = parts[0] || undefined,
-		map = parts[1] || undefined,
-		location = (parts[2] || '').split(',')
+		map = parts[1] || undefined;
+
+	let location = (parts[2] || '').split(',')
 			.map(item => parseFloat(item))
 			.filter(item => !isNaN(item) && isFinite(item)),
 		zoom = typeof parts[3] !== 'undefined' ? parseInt(parts[3]) : undefined;
 
 	if(location.length && location.length !== 3) {
-		throw new TypeError('Location should contain exactly 3 valid numbers');
+		location = [];
+		console.warn('Ignoring invalid URL location');
 	}
 
 	if(typeof zoom !== 'undefined' && (isNaN(zoom) || zoom < 0 || !isFinite(zoom))) {
-		throw new TypeError('Invalid value for zoom');
+		zoom = undefined;
+		console.warn('Ignoring invalid URL value for zoom');
 	}
 
 	return {
@@ -157,8 +160,9 @@ export const parseMapHash = (hash: string) => {
 
 export const parseMapSearchParams = (query: URLSearchParams) => {
 	const world = query.get('worldname') /* Dynmap */ || query.get('world') /* Pl3xmap */ || undefined,
-		map = query.get('mapname') || undefined,
-		location = [
+		map = query.get('mapname') || undefined;
+
+	let location = [
 			query.get('x') || '',
 			query.get('y') || '64',
 			query.get('z') || ''
@@ -166,11 +170,13 @@ export const parseMapSearchParams = (query: URLSearchParams) => {
 		zoom = query.has('zoom') ? parseInt(query.get('zoom') as string) : undefined;
 
 	if(location.length && location.length !== 3) {
-		throw new TypeError('Location should contain exactly 3 valid numbers');
+		location = [];
+		console.warn('Ignoring invalid URL location');
 	}
 
 	if(typeof zoom !== 'undefined' && (isNaN(zoom) || zoom < 0 || !isFinite(zoom))) {
-		throw new TypeError('Invalid value for zoom');
+		zoom = undefined;
+		console.warn('Ignoring invalid URL value for zoom');
 	}
 
 	return {
