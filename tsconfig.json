@@ -17,7 +17,8 @@
     "types": [
       "vite/client",
       "vue",
-      "jest"
+      "jest",
+      "jest-in-case"
     ],
     "paths": {
       "@/*": [

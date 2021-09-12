@@ -15,269 +15,321 @@
  */
 
 import {parseUrl} from "@/util";
-import {LiveAtlasParsedUrl} from "@/index";
+import cases from 'jest-in-case';
 
 describe("parseURL", () => {
-	const testUrls = (urls: Map<URL, LiveAtlasParsedUrl>) => {
-		urls.forEach((value, key) => {
-			// @ts-ignore
-			process.stdout.write(key.toString() + '\n');
-			expect(parseUrl(key)).toEqual(value);
-		});
-	};
+	cases('valid Dynmap URLs', (options: any) => {
+		expect(parseUrl(options.url)).toEqual(options.result);
+	}, [
+		{
+			name: 'Complete URL',
+			url: new URL('https://minecraft.rtgame.co.uk/build?worldname=world&mapname=surface&zoom=4&x=6885&y=64&z=24608'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: {x: 6885, y: 64, z: 24608},
+				zoom: 4,
+				legacy: true
+			}
+		},
+		{
+			name: 'no location',
+			url: new URL('https://minecraft.rtgame.co.uk/build?worldname=world&mapname=surface&zoom=4'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: undefined,
+				zoom: 4,
+				legacy: true
+			}
+		},
+		{
+			name: 'no zoom',
+			url: new URL('https://minecraft.rtgame.co.uk/build?worldname=world&mapname=surface&x=6885&y=64&z=24608'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: {x: 6885, y: 64, z: 24608},
+				zoom: undefined,
+				legacy: true
+			}
+		},
+		{
+			name: 'no zoom or location',
+			url: new URL('https://minecraft.rtgame.co.uk/build?worldname=world&mapname=surface'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: undefined,
+				zoom: undefined,
+				legacy: true
+			}
+		},
+		{
+			name: 'no map, zoom or location',
+			url: new URL('https://minecraft.rtgame.co.uk/build?worldname=world'),
+			result: {
+				world: 'world',
+				map: undefined,
+				location: undefined,
+				zoom: undefined,
+				legacy: true
+			}
+		}
+	]);
 
-	test('parses valid Dynmap URLs', () => {
-		const tests = new Map<URL, LiveAtlasParsedUrl>();
+	cases('valid Pl3xmap URLs', (options: any) => {
+		expect(parseUrl(options.url)).toEqual(options.result);
+	}, [
+		{
+			name: 'Complete URL',
+			url: new URL('https://minecraft.rtgame.co.uk/build?world=world&zoom=4&x=6885&y=64&z=24608'),
+			result: {
+				world: 'world',
+				map: undefined,
+				location: {x: 6885, y: 64, z: 24608},
+				zoom: 4,
+				legacy: true
+			}
+		},
+		{
+			name: 'no location',
+			url: new URL('https://minecraft.rtgame.co.uk/build?world=world&zoom=4'),
+			result: {
+				world: 'world',
+				map: undefined,
+				location: undefined,
+				zoom: 4,
+				legacy: true
+			}
+		},
+		{
+			name: 'no zoom',
+			url: new URL('https://minecraft.rtgame.co.uk/build?world=world&x=6885&y=64&z=24608'),
+			result: {
+				world: 'world',
+				map: undefined,
+				location: {x: 6885, y: 64, z: 24608},
+				zoom: undefined,
+				legacy: true
+			}
+		},
+		{
+			name: 'no zoom or location',
+			url: new URL('https://minecraft.rtgame.co.uk/build?world=world'),
+			result: {
+				world: 'world',
+				map: undefined,
+				location: undefined,
+				zoom: undefined,
+				legacy: true
+			}
+		},
+		{
+			name: 'nothing',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival?'),
+			result: null
+		}
+	]);
 
-		// Complete URL
-		tests.set(new URL('https://minecraft.rtgame.co.uk/build?worldname=world&mapname=surface&zoom=4&x=6885&y=64&z=24608'), {
-			world: 'world',
-			map: 'surface',
-			location: { x: 6885, y: 64, z: 24608 },
-			zoom: 4,
-			legacy: true
-		});
+	cases('valid LiveAtlas URLs', (options: any) => {
+		expect(parseUrl(options.url)).toEqual(options.result);
+	}, [
+		{
+			name: 'Complete URL',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,1914;2'),
+			result: {
+				world: 'world',
+				map: 'flat',
+				location: {x: 168, y: 64, z: 1914},
+				zoom: 2,
+				legacy: false
+			}
+		},
+		{
+			name: 'no zoom',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,1914'),
+			result: {
+				world: 'world',
+				map: 'flat',
+				location: {x: 168, y: 64, z: 1914},
+				zoom: undefined,
+				legacy: false
+			}
+		},
+		{
+			name: 'no location or zoom',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat'),
+			result: {
+				world: 'world',
+				map: 'flat',
+				location: undefined,
+				zoom: undefined,
+				legacy: false
+			}
+		},
+		{
+			name: 'no map, location or zoom',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world'),
+			result: {
+				world: 'world',
+				map: undefined,
+				location: undefined,
+				zoom: undefined,
+				legacy: false
+			}
+		},
+		{
+			name: 'nothing',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#'),
+			result: null
+		}
+	]);
 
-		// No location
-		tests.set(new URL('https://minecraft.rtgame.co.uk/build?worldname=world&mapname=surface&zoom=4'), {
-			world: 'world',
-			map: 'surface',
-			location: undefined,
-			zoom: 4,
-			legacy: true
-		});
+	cases('incomplete or invalid LiveAtlas URLs', (options: any) => {
+		expect(parseUrl(options.url)).toEqual(options.result);
+	}, [
+		{
+			name: 'negative zoom',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,1914;-2'),
+			result: {
+				world: 'world',
+				map: 'flat',
+				location: {x: 168, y: 64, z: 1914},
+				zoom: undefined,
+				legacy: false
+			}
+		},
+		{
+			name: 'NaN zoom',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,1914;ewsjtuiewshfoes'),
+			result: {
+				world: 'world',
+				map: 'flat',
+				location: {x: 168, y: 64, z: 1914},
+				zoom: undefined,
+				legacy: false
+			}
+		},
+		{
+			name: 'missing z coordinate',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64;2'),
+			result: {
+				world: 'world',
+				map: 'flat',
+				location: undefined,
+				zoom: 2,
+				legacy: false
+			}
+		},
+		{
+			name: 'NaN z coordinate',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,j;2'),
+			result: {
+				world: 'world',
+				map: 'flat',
+				location: undefined,
+				zoom: 2,
+				legacy: false
+			}
+		},
+		{
+			name: 'missing y and z coordinates',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168;2'),
+			result: {
+				world: 'world',
+				map: 'flat',
+				location: undefined,
+				zoom: 2,
+				legacy: false
+			}
+		},
+		{
+			name: 'invalid location',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;23wteyuisezujsezr'),
+			result: {
+				world: 'world',
+				map: 'flat',
+				location: undefined,
+				zoom: undefined,
+				legacy: false
+			}
+		}
+	]);
 
-		// No zoom
-		tests.set(new URL('https://minecraft.rtgame.co.uk/build?worldname=world&mapname=surface&x=6885&y=64&z=24608'), {
-			world: 'world',
-			map: 'surface',
-			location: { x: 6885, y: 64, z: 24608 },
-			zoom: undefined,
-			legacy: true
-		});
-
-		// No zoom or location
-		tests.set(new URL('https://minecraft.rtgame.co.uk/build?worldname=world&mapname=surface'), {
-			world: 'world',
-			map: 'surface',
-			location: undefined,
-			zoom: undefined,
-			legacy: true
-		});
-
-		// No zoom, location or map
-		tests.set(new URL('https://minecraft.rtgame.co.uk/build?worldname=world'), {
-			world: 'world',
-			map: undefined,
-			location: undefined,
-			zoom: undefined,
-			legacy: true
-		});
-
-		testUrls(tests);
-	});
-
-	test('parses valid Pl3xmap URLs', () => {
-		const tests = new Map<URL, LiveAtlasParsedUrl>();
-
-		// Complete URL
-		tests.set(new URL('https://minecraft.rtgame.co.uk/build?world=world&zoom=4&x=6885&z=24608'), {
-			world: 'world',
-			map: undefined,
-			location: { x: 6885, y: 64, z: 24608 },
-			zoom: 4,
-			legacy: true
-		});
-
-		// No location
-		tests.set(new URL('https://minecraft.rtgame.co.uk/build?world=world&zoom=4'), {
-			world: 'world',
-			map: undefined,
-			location: undefined,
-			zoom: 4,
-			legacy: true
-		});
-
-		// No zoom
-		tests.set(new URL('https://minecraft.rtgame.co.uk/build?world=world&x=6885&z=24608'), {
-			world: 'world',
-			map: undefined,
-			location: { x: 6885, y: 64, z: 24608 },
-			zoom: undefined,
-			legacy: true
-		});
-
-		// No zoom or location
-		tests.set(new URL('https://minecraft.rtgame.co.uk/build?world=world'), {
-			world: 'world',
-			map: undefined,
-			location: undefined,
-			zoom: undefined,
-			legacy: true
-		});
-
-		testUrls(tests);
-	});
-
-	test('parses valid LiveAtlas URL', () => {
-		const tests = new Map<URL, LiveAtlasParsedUrl>();
-
-		// Complete URL
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,1914;2'), {
-			world: 'world',
-			map: 'flat',
-			location: { x: 168, y: 64, z: 1914 },
-			zoom: 2,
-			legacy: false
-		});
-
-		// No zoom
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,1914'), {
-			world: 'world',
-			map: 'flat',
-			location: { x: 168, y: 64, z: 1914 },
-			zoom: undefined,
-			legacy: false
-		});
-
-		// No location or zoom
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat'), {
-			world: 'world',
-			map: 'flat',
-			location: undefined,
-			zoom: undefined,
-			legacy: false
-		});
-
-		// No map, location or zoom
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world'), {
-			world: 'world',
-			map: undefined,
-			location: undefined,
-			zoom: undefined,
-			legacy: false
-		});
-
-		testUrls(tests);
-	});
-
-	test('handles incomplete or invalid LiveAtlas URLs', () => {
-		const tests = new Map<URL, LiveAtlasParsedUrl>();
-
-		//Negative zoom
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,1914;-2'), {
-			world: 'world',
-			map: 'flat',
-			location: { x: 168, y: 64, z: 1914 },
-			zoom: undefined,
-			legacy: false
-		});
-
-		//NaN zoom
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,1914;ewsjtuiewshfoes'), {
-			world: 'world',
-			map: 'flat',
-			location: { x: 168, y: 64, z: 1914 },
-			zoom: undefined,
-			legacy: false
-		});
-
-		//Missing z coordinate
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64;2'), {
-			world: 'world',
-			map: 'flat',
-			location: undefined,
-			zoom: 2,
-			legacy: false
-		});
-
-		//NaN z coordinate
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168,64,j;2'), {
-			world: 'world',
-			map: 'flat',
-			location: undefined,
-			zoom: 2,
-			legacy: false
-		});
-
-		//Missing y and z coordinates
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;168;2'), {
-			world: 'world',
-			map: 'flat',
-			location: undefined,
-			zoom: 2,
-			legacy: false
-		});
-
-		//Invalid location
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival#world;flat;23wteyuisezujsezr'), {
-			world: 'world',
-			map: 'flat',
-			location: undefined,
-			zoom: undefined,
-			legacy: false
-		});
-
-		testUrls(tests);
-	});
-
-	test('handles incomplete or invalid Dynmap URLs', () => {
-		const tests = new Map<URL, LiveAtlasParsedUrl>();
-
-		//Negative zoom
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=-2&x=6885&y=64&z=24608'), {
-			world: 'world',
-			map: 'surface',
-			location: { x: 6885, y: 64, z: 24608 },
-			zoom: undefined,
-			legacy: true
-		});
-
-		//NaN zoom
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=fsghrtdrh&x=6885&y=64&z=24608'), {
-			world: 'world',
-			map: 'surface',
-			location: { x: 6885, y: 64, z: 24608 },
-			zoom: undefined,
-			legacy: true
-		});
-
-		//Missing z coordinate
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=2&x=6885&y=64'), {
-			world: 'world',
-			map: 'surface',
-			location: undefined,
-			zoom: 2,
-			legacy: true
-		});
-
-		//NaN z coordinate
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=2&x=6885&y=64&z=j'), {
-			world: 'world',
-			map: 'surface',
-			location: undefined,
-			zoom: 2,
-			legacy: true
-		});
-
-		//Missing y and z coordinates
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=2&x=6885'), {
-			world: 'world',
-			map: 'surface',
-			location: undefined,
-			zoom: 2,
-			legacy: true
-		});
-
-		//Invalid/missing coordinates
-		tests.set(new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&x=3wresfsg'), {
-			world: 'world',
-			map: 'surface',
-			location: undefined,
-			zoom: undefined,
-			legacy: true
-		});
-
-		testUrls(tests);
-	});
+	cases('incomplete or invalid Dynmap URLs', (options: any) => {
+		expect(parseUrl(options.url)).toEqual(options.result);
+	}, [
+		{
+			name: 'Negative zoom',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=-2&x=6885&y=64&z=24608'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: {x: 6885, y: 64, z: 24608},
+				zoom: undefined,
+				legacy: true
+			}
+		},
+		{
+			name: 'NaN zoom',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=fsghrtdrh&x=6885&y=64&z=24608'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: {x: 6885, y: 64, z: 24608},
+				zoom: undefined,
+				legacy: true
+			}
+		},
+		{
+			name: 'Missing z coordinate',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=2&x=6885&y=64'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: undefined,
+				zoom: 2,
+				legacy: true
+			}
+		},
+		{
+			name: 'NaN z coordinate',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=2&x=6885&y=64&z=j'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: undefined,
+				zoom: 2,
+				legacy: true
+			}
+		},
+		{
+			name: 'Missing y and z coordinates',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&zoom=2&x=6885'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: undefined,
+				zoom: 2,
+				legacy: true
+			}
+		},
+		{
+			name: 'Invalid/missing coordinates',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival?worldname=world&mapname=surface&x=3wresfsg'),
+			result: {
+				world: 'world',
+				map: 'surface',
+				location: undefined,
+				zoom: undefined,
+				legacy: true
+			}
+		},
+		{
+			name: 'Missing world',
+			url: new URL('https://minecraft.rtgame.co.uk/map/survival?mapname=surface&x=3wresfsg'),
+			result: null
+		}
+	]);
 });
