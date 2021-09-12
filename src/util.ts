@@ -107,89 +107,65 @@ export const parseUrl = (url: URL) => {
 	const query = new URLSearchParams(url.search),
 		hash = url.hash.replace('#', '');
 
-	if(hash) {
-		try {
-			return parseMapHash(hash);
-		} catch (e) {
-			console.warn('Ignoring invalid url ' + e);
-		}
-	}
-
-	try {
-		return parseMapSearchParams(query);
-	} catch(e) {
-		console.warn('Ignoring invalid legacy url ' + e);
-	}
-
-	return null;
+	return hash ? parseMapHash(hash) : parseMapSearchParams(query);
 }
 
 export const parseMapHash = (hash: string) => {
 	const parts = hash.replace('#', '').split(';');
 
 	const world = parts[0] || undefined,
-		map = parts[1] || undefined;
-
-	let location = (parts[2] || '').split(',')
+		map = parts[1] || undefined,
+		location = (parts[2] || '').split(',')
 			.map(item => parseFloat(item))
 			.filter(item => !isNaN(item) && isFinite(item)),
 		zoom = typeof parts[3] !== 'undefined' ? parseInt(parts[3]) : undefined;
 
-	if(location.length && location.length !== 3) {
-		location = [];
-		console.warn('Ignoring invalid URL location');
-	}
-
-	if(typeof zoom !== 'undefined' && (isNaN(zoom) || zoom < 0 || !isFinite(zoom))) {
-		zoom = undefined;
-		console.warn('Ignoring invalid URL value for zoom');
-	}
-
-	return {
+	return validateParsedUrl({
 		world,
 		map,
-		location: location.length ? {
+		location: location.length === 3 ? {
 			x: location[0],
 			y: location[1],
 			z: location[2],
 		} : undefined,
 		zoom,
 		legacy: false,
-	}
+	});
 }
 
 export const parseMapSearchParams = (query: URLSearchParams) => {
 	const world = query.get('worldname') /* Dynmap */ || query.get('world') /* Pl3xmap */ || undefined,
-		map = query.get('mapname') || undefined;
-
-	let location = [
+		map = query.has('worldname') ? query.get('mapname') || undefined : undefined, //Dynmap only
+		location = [
 			query.get('x') || '',
 			query.get('y') || '64',
 			query.get('z') || ''
 		].map(item => parseFloat(item)).filter(item => !isNaN(item) && isFinite(item)),
 		zoom = query.has('zoom') ? parseInt(query.get('zoom') as string) : undefined;
 
-	if(location.length && location.length !== 3) {
-		location = [];
-		console.warn('Ignoring invalid URL location');
-	}
-
-	if(typeof zoom !== 'undefined' && (isNaN(zoom) || zoom < 0 || !isFinite(zoom))) {
-		zoom = undefined;
-		console.warn('Ignoring invalid URL value for zoom');
-	}
-
-	return {
+	return validateParsedUrl({
 		world,
 		map,
-		location: location.length ? {
+		location: location.length === 3 ? {
 			x: location[0],
 			y: location[1],
 			z: location[2],
 		} : undefined,
 		zoom,
 		legacy: true,
+	});
+}
+
+const validateParsedUrl = (parsed: any) => {
+	if(typeof parsed.zoom !== 'undefined' && (isNaN(parsed.zoom) || parsed.zoom < 0 || !isFinite(parsed.zoom))) {
+		parsed.zoom = undefined;
 	}
+
+	if(!parsed.world) {
+		return null;
+	}
+
+	return parsed;
 }
 
 export const getUrlForLocation = (map: LiveAtlasMapDefinition, location: {
