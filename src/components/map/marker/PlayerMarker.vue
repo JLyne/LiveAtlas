@@ -70,7 +70,7 @@ export default defineComponent({
 			chatBalloonVisible = ref(false),
 
 			//Timeout for closing the chat balloon
-			chatBalloonTimeout = ref(0),
+			chatBalloonTimeout = ref<null | ReturnType<typeof setTimeout>>(null),
 
 			//Cutoff time for chat messages
 			//Only messages newer than this time will be shown in the chat balloon

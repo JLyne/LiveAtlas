@@ -42,7 +42,7 @@ export class LoadingControl extends Control {
 
 	private _dataLoaders: Set<number> = new Set();
 	private readonly _loadingIndicator: HTMLDivElement;
-	private _delayIndicatorTimeout?: number;
+	private _delayIndicatorTimeout: null | ReturnType<typeof setTimeout> = null;
 
 	constructor(options: LoadingControlOptions) {
 		super(options);
@@ -78,7 +78,7 @@ export class LoadingControl extends Control {
 			// already waiting for that delay, set up a timeout.
 			this._delayIndicatorTimeout = setTimeout(() => {
 				this.updateIndicator();
-				this._delayIndicatorTimeout = undefined;
+				this._delayIndicatorTimeout = null;
 			}, this.options.delayIndicator);
 		} else {
 			// Otherwise show the indicator immediately
@@ -95,7 +95,7 @@ export class LoadingControl extends Control {
 		// triggering the indicator.
 		if (this.options.delayIndicator && this._delayIndicatorTimeout && !this.isLoading()) {
 			clearTimeout(this._delayIndicatorTimeout);
-			this._delayIndicatorTimeout = undefined;
+			this._delayIndicatorTimeout = null;
 		}
 	}
 

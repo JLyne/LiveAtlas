@@ -46,7 +46,7 @@ export default defineComponent({
 	},
 
 	setup() {
-		let loadingTimeout = 0;
+		let loadingTimeout: null | ReturnType<typeof setTimeout> = null;
 
 		const store = useStore(),
 			title = computed(() => store.getters.pageTitle),
@@ -70,7 +70,7 @@ export default defineComponent({
 
 			loadConfiguration = async () => {
 				try {
-					clearTimeout(loadingTimeout);
+					clearTimeout(Number(loadingTimeout));
 					showSplash(!loadingAttempts.value);
 					loading.value = true;
 
@@ -93,7 +93,7 @@ export default defineComponent({
 						console.error(`${error}:`, e);
 						showSplashError(`${error}\n${e}`, false, ++loadingAttempts.value);
 
-						clearTimeout(loadingTimeout);
+						clearTimeout(Number(loadingTimeout));
 						loadingTimeout = setTimeout(() => loadConfiguration(), 1000);
 					}
 				} finally {
@@ -208,7 +208,7 @@ export default defineComponent({
 		});
 		onBeforeUnmount(() => {
 			store.dispatch(ActionTypes.STOP_UPDATES, undefined);
-			clearTimeout(loadingTimeout);
+			clearTimeout(Number(loadingTimeout));
 
 			window.removeEventListener('resize', onResize);
 			window.removeEventListener('keydown', onKeydown);

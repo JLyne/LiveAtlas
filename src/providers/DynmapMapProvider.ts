@@ -41,7 +41,7 @@ export default class DynmapMapProvider extends MapProvider {
 	private	updateAbort?: AbortController = undefined;
 
 	private updatesEnabled = false;
-	private updateTimeout: number = 0;
+	private updateTimeout: null | ReturnType<typeof setTimeout> = null;
 	private updateTimestamp: Date = new Date();
 	private updateInterval: number = 3000;
 
@@ -257,7 +257,7 @@ export default class DynmapMapProvider extends MapProvider {
 			clearTimeout(this.updateTimeout);
 		}
 
-		this.updateTimeout = 0;
+		this.updateTimeout = null;
 	}
 
 	getTilesUrl(): string {

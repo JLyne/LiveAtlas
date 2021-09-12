@@ -43,7 +43,7 @@ export default defineComponent({
 		const store = useStore(),
 			active = computed(() => props.map === store.state.currentMap);
 
-		let refreshTimeout = 0,
+		let refreshTimeout: null | ReturnType<typeof setTimeout> = null,
 			layer: LiveAtlasTileLayer;
 
 		const refresh = () => {
