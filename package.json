@@ -16,7 +16,7 @@
     "@soerenmartius/vue3-clipboard": "^0.1",
     "leaflet": "git+https://github.com/JLyne/leaflet.git",
     "modern-normalize": "^1.1.0",
-    "vue": "^3.2.12",
+    "vue": "^3.2.13",
     "vuex": "^4.0"
   },
   "devDependencies": {
@@ -26,7 +26,7 @@
     "@types/node": "^16.9.6",
     "@typescript-eslint/eslint-plugin": "^4.31",
     "@typescript-eslint/parser": "^4.31",
-    "@vitejs/plugin-vue": "^1.8",
+    "@vitejs/plugin-vue": "^1.9",
     "@vue/compiler-sfc": "^3.2.12",
     "@vue/eslint-config-typescript": "^7.0",
     "@vue/test-utils": "^2.0.0-rc.14",
@@ -36,7 +36,7 @@
     "jest-in-case": "^1.0.2",
     "patch-package": "^6.4",
     "rollup-plugin-analyzer": "^4.0",
-    "sass": "^1.41",
+    "sass": "^1.42",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
     "typescript": "^4.4",
