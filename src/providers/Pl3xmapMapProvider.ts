@@ -37,7 +37,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	private updateTimeout: null | ReturnType<typeof setTimeout> = null;
 	private updateTimestamp: Date = new Date();
 	private updateInterval: number = 3000;
-	private worldSettings: Map<string, {
+	private worldComponents: Map<string, {
 		components: LiveAtlasPartialComponentConfig,
 	}> = new Map();
 
@@ -95,9 +95,11 @@ export default class Pl3xmapMapProvider extends MapProvider {
 					showHealth: !!worldResponse.player_tracker?.nameplates?.show_health,
 					smallFaces: true,
 				}
+			} else {
+				worldConfig.components.playerMarkers = undefined;
 			}
 
-			this.worldSettings.set(world.name, worldConfig);
+			this.worldComponents.set(world.name, worldConfig);
 
 			if(!worldResponse) {
 				console.warn(`World ${world.name} has no matching world config. Ignoring.`);
@@ -389,7 +391,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 	async populateWorld(world: LiveAtlasWorldDefinition) {
 		const markerSets = await this.getMarkerSets(world),
-			worldConfig = this.worldSettings.get(world.name);
+			worldConfig = this.worldComponents.get(world.name);
 
 		this.store.commit(MutationTypes.SET_MARKER_SETS, markerSets);
 		this.store.commit(MutationTypes.SET_COMPONENTS, worldConfig!.components);
@@ -456,11 +458,13 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 	private async update() {
 		try {
-			const players = await this.getPlayers();
+			if(this.store.state.components.playerMarkers) {
+				const players = await this.getPlayers();
 
-			this.updateTimestamp = new Date();
+				this.updateTimestamp = new Date();
 
-			await this.store.dispatch(ActionTypes.SET_PLAYERS, players);
+				await this.store.dispatch(ActionTypes.SET_PLAYERS, players);
+			}
 		} finally {
 			if(this.updatesEnabled) {
 				if(this.updateTimeout) {
