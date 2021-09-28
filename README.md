@@ -31,6 +31,7 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 | Chat balloons | ✅ | n/a |
 | Login/register | ✅ | n/a |
 | Inactivity timeout | ❌ | n/a |
+| Custom player head URLs | n/a | ❌ | 
 | Custom map icons | ❌ | ❌ |
 
 ## Supported Browsers
