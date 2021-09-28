@@ -396,7 +396,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}
 
 	private async getPlayers(): Promise<Set<LiveAtlasPlayer>> {
-		const url = `${this.config.pl3xmap}/tiles/players.json`;
+		const url = `${this.config.pl3xmap}tiles/players.json`;
 
 		if(this.playersAbort) {
 			this.playersAbort.abort();
