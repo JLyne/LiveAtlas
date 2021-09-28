@@ -93,6 +93,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 					showBodies: false,
 					showSkinFaces: true,
 					showHealth: !!worldResponse.player_tracker?.nameplates?.show_health,
+					showArmor: !!worldResponse.player_tracker?.nameplates?.show_armor,
 					smallFaces: true,
 				}
 			} else {

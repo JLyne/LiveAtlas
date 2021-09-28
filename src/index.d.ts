@@ -323,6 +323,7 @@ interface LiveAtlasPlayerMarkerConfig {
 	showBodies: boolean;
 	showSkinFaces: boolean;
 	showHealth: boolean;
+	showArmor: boolean;
 	smallFaces: boolean;
 }
 

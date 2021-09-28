@@ -25,6 +25,7 @@ export interface PlayerMarkerOptions extends MarkerOptions {
 	showSkinFace: boolean,
 	showBody: boolean,
 	showHealth: boolean,
+	showArmor: boolean,
 }
 
 export class PlayerMarker extends Marker {
@@ -43,6 +44,7 @@ export class PlayerMarker extends Marker {
 			showSkinFace: options.showSkinFace,
 			showBody: options.showBody,
 			showHealth: options.showHealth,
+			showArmor: options.showArmor,
 		});
 
 		Util.setOptions(this, options);

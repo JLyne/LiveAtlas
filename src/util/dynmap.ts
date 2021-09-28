@@ -153,6 +153,7 @@ export function buildComponents(response: any): LiveAtlasComponentConfig {
 					showBodies: component.showplayerbody || false,
 					showSkinFaces: component.showplayerfaces || false,
 					showHealth: component.showplayerhealth || false,
+					showArmor: component.showplayerhealth || false,
 					smallFaces: component.smallplayerfaces || false,
 				}
 

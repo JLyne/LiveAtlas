@@ -46,6 +46,7 @@ export interface PlayerIconOptions extends BaseIconOptions {
 	showSkinFace: boolean,
 	showBody: boolean,
 	showHealth: boolean,
+	showArmor: boolean,
 }
 
 export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
@@ -120,24 +121,25 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		if (this.options.showHealth) {
 			this._playerHealth = document.createElement('div');
 			this._playerHealth.className = 'player__health';
-
-			this._playerArmor = document.createElement('div');
-			this._playerArmor.className = 'player__armor';
+			this._playerHealth.hidden = true;
 
 			this._playerHealthBar = document.createElement('div');
 			this._playerHealthBar.className = 'player__health-bar';
 
+			this._playerHealth.appendChild(this._playerHealthBar);
+			this._playerInfo.appendChild(this._playerHealth);
+		}
+
+		if (this.options.showArmor) {
+			this._playerArmor = document.createElement('div');
+			this._playerArmor.className = 'player__armor';
+			this._playerArmor.hidden = true;
+
 			this._playerArmorBar = document.createElement('div');
 			this._playerArmorBar.className = 'player__armor-bar';
 
-			this._playerHealth.appendChild(this._playerHealthBar);
 			this._playerArmor.appendChild(this._playerArmorBar);
-			this._playerInfo.appendChild(this._playerHealth);
 			this._playerInfo.appendChild(this._playerArmor);
-
-			this._playerHealth.hidden = this._playerArmor.hidden = true;
-		} else {
-			this._playerName.classList.add('playerNameNoHealth');
 		}
 
 		this._container.style.marginTop = `-${offset}px`;
@@ -161,13 +163,19 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		}
 
 		if(this.options.showHealth) {
-			if (this._player.health !== undefined && this._player.armor !== undefined) {
+			if (this._player.health !== undefined) {
 				this._playerHealth!.hidden = false;
-				this._playerArmor!.hidden = false;
 				this._playerHealthBar!.style.width = Math.ceil(this._player.health * 2.5) + 'px';
-				this._playerArmorBar!.style.width = Math.ceil(this._player.armor * 2.5) + 'px';
 			} else {
 				this._playerHealth!.hidden = true;
+			}
+		}
+
+		if(this.options.showArmor) {
+			if(this._player.armor !== undefined) {
+				this._playerArmor!.hidden = false;
+				this._playerArmorBar!.style.width = Math.ceil(this._player.armor * 2.5) + 'px';
+			} else {
 				this._playerArmor!.hidden = true;
 			}
 		}
