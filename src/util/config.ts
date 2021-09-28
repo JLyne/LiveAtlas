@@ -41,6 +41,11 @@ const validateLiveAtlasConfiguration = (config: any): Map<string, LiveAtlasServe
 
 		if(typeof serverConfig.pl3xmap !== 'undefined') {
 			serverConfig.type = 'pl3xmap';
+
+			// Ensure trailing /
+			if(serverConfig.pl3xmap.slice(-1) !== '/') {
+				serverConfig.pl3xmap = `${serverConfig.pl3xmap}/`;
+			}
 		} else if(typeof serverConfig.dynmap !== 'undefined') {
 			if (!serverConfig.dynmap || serverConfig.dynmap.constructor !== Object) {
 				throw new ConfigurationError(`Server '${server}': Dynmap configuration object missing. ${check}`);
