@@ -21,7 +21,6 @@ import {watch} from "@vue/runtime-core";
 import {WatchStopHandle} from "vue";
 
 export interface PlayerMarkerOptions extends MarkerOptions {
-	showSkin: boolean,
 	imageSize: LiveAtlasPlayerImageSize,
 	showHealth: boolean,
 	showArmor: boolean,
@@ -40,7 +39,6 @@ export class PlayerMarker extends Marker {
 
 		this._PlayerIcon = options.icon = new PlayerIcon(player, {
 			imageSize: options.imageSize,
-			showSkin: options.showSkin,
 			showHealth: options.showHealth,
 			showArmor: options.showArmor,
 		});

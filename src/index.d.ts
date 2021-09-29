@@ -321,7 +321,6 @@ interface LiveAtlasPlayerMarkerConfig {
 	layerName: string;
 	layerPriority: number;
 	imageSize: LiveAtlasPlayerImageSize;
-	showSkins: boolean;
 	showHealth: boolean;
 	showArmor: boolean;
 }

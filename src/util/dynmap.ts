@@ -22,7 +22,7 @@ import {
 	LiveAtlasComponentConfig,
 	LiveAtlasDimension,
 	LiveAtlasLine,
-	LiveAtlasMarker,
+	LiveAtlasMarker, LiveAtlasPlayerImageSize,
 	LiveAtlasServerConfig,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
@@ -139,6 +139,7 @@ export function buildComponents(response: any): LiveAtlasComponentConfig {
 
 	(response.components || []).forEach((component: any) => {
 		const type = component.type || "unknown";
+		let imageSize: LiveAtlasPlayerImageSize = 'large';
 
 		switch (type) {
 			case "markers":
@@ -149,21 +150,22 @@ export function buildComponents(response: any): LiveAtlasComponentConfig {
 				break;
 
 			case "playermarkers":
+				if(!component.showplayerfaces) {
+					imageSize = 'none';
+				} else if(component.smallplayerfaces) {
+					imageSize = 'small';
+				} else if(component.showplayerbody) {
+					imageSize = 'body';
+				}
+
 				components.playerMarkers = {
 					grayHiddenPlayers: response.grayplayerswhenhidden || false,
 					hideByDefault: component.hidebydefault || false,
 					layerName: component.label || "Players",
 					layerPriority: component.layerprio || 0,
-					showSkins: component.showplayerfaces || false,
-					imageSize: 'large',
+					imageSize,
 					showHealth: component.showplayerhealth || false,
 					showArmor: component.showplayerhealth || false,
-				}
-
-				if(component.smallplayerfaces) {
-					components.playerMarkers.imageSize = 'small'
-				} else if(component.showplayerbody) {
-					components.playerMarkers.imageSize = 'body';
 				}
 
 				break;

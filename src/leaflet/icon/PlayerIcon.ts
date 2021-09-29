@@ -28,7 +28,6 @@ playerImage.className = 'player__icon';
 
 export interface PlayerIconOptions extends BaseIconOptions {
 	imageSize: LiveAtlasPlayerImageSize,
-	showSkin: boolean,
 	showHealth: boolean,
 	showArmor: boolean,
 }
@@ -68,16 +67,17 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		this._playerName = document.createElement('span');
 		this._playerName.className = 'player__name';
 
-		this._playerImage = playerImage.cloneNode() as HTMLImageElement;
-		this._playerImage.height = this._playerImage.width = getImagePixelSize(this.options.imageSize);
+		if (this.options.imageSize != 'none') {
+			this._playerImage = playerImage.cloneNode() as HTMLImageElement;
+			this._playerImage.height = this._playerImage.width = getImagePixelSize(this.options.imageSize);
 
-		if (this.options.showSkin) {
 			getMinecraftHead(this._player, this.options.imageSize).then(head => {
 				this._playerImage!.src = head.src;
 			}).catch(() => {});
+
+			this._playerInfo.appendChild(this._playerImage);
 		}
 
-		this._playerInfo.appendChild(this._playerImage);
 		this._playerInfo.appendChild(this._playerName);
 
 		if (this.options.showHealth) {

@@ -48,7 +48,6 @@ export default defineComponent({
 
 			//The player marker
 			marker = new PlayerMarker(props.player, {
-				showSkin: componentSettings.value!.showSkins,
 				imageSize: componentSettings.value!.imageSize,
 				showHealth: componentSettings.value!.showHealth,
 				showArmor: componentSettings.value!.showArmor,

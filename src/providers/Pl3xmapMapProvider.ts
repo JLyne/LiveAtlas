@@ -94,15 +94,15 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 			if(worldResponse.player_tracker?.enabled) {
 				const health = !!worldResponse.player_tracker?.nameplates?.show_health,
-					armor = !!worldResponse.player_tracker?.nameplates?.show_armor;
+					armor = !!worldResponse.player_tracker?.nameplates?.show_armor,
+					images = !!worldResponse.player_tracker?.nameplates?.show_heads;
 
 				worldConfig.components.playerMarkers = {
 					grayHiddenPlayers: true,
 					hideByDefault: !!worldResponse.player_tracker?.default_hidden,
 					layerName: worldResponse.player_tracker?.label || '',
 					layerPriority: worldResponse.player_tracker?.priority,
-					imageSize: health && armor ? 'large' : 'small',
-					showSkins: true,
+					imageSize: images ? (health && armor ? 'large' : 'small') : 'none',
 					showHealth: health,
 					showArmor: armor,
 				}
