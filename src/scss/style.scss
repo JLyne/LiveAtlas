@@ -225,6 +225,8 @@ input {
 		height: 1px;
 		width: 1px;
 		position: absolute;
+		padding: 0;
+		border: none;
 
 		& + label {
 			@include button;

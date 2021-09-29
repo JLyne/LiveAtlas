@@ -198,6 +198,10 @@ export const state: State = {
 		// If not present, player markers will be disabled
 		playerMarkers: undefined,
 
+		playerList: {
+			showImages: false,
+		},
+
 		//Optional "coords" component. Adds control showing coordinates on map mouseover
 		coordinatesControl: undefined,
 

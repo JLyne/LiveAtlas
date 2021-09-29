@@ -288,6 +288,9 @@ interface LiveAtlasComponentConfig {
 		showLabels: boolean;
 	};
 	playerMarkers?: LiveAtlasPlayerMarkerConfig;
+	playerList: {
+		showImages: boolean;
+	},
 	coordinatesControl?: CoordinatesControlOptions;
 	clockControl?: ClockControlOptions;
 	linkControl: boolean;

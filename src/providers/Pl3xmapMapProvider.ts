@@ -160,15 +160,20 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 	private static buildComponents(response: any): LiveAtlasComponentConfig {
 		const components: LiveAtlasComponentConfig = {
-			markers: {
-				showLabels: false,
-			},
 			coordinatesControl: undefined,
 			linkControl: !!response.ui?.link?.enabled,
 			layerControl: !!response.ui?.coordinates?.enabled,
 
 			//Configured per-world
 			playerMarkers: undefined,
+
+			//Not configurable
+			markers: {
+				showLabels: false,
+			},
+			playerList: {
+				showImages: true,
+			},
 
 			//Not used by pl3xmap
 			chatBox: undefined,

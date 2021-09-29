@@ -129,6 +129,9 @@ export function buildComponents(response: any): LiveAtlasComponentConfig {
 		chatBox: undefined,
 		chatBalloons: false,
 		playerMarkers: undefined,
+		playerList: {
+			showImages: response.showplayerfacesinmenu || false,
+		},
 		coordinatesControl: undefined,
 		layerControl: response.showlayercontrol && response.showlayercontrol !== 'false', //Sent as a string for some reason
 		linkControl: false,

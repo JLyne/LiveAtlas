@@ -20,7 +20,7 @@
 	<label :for="`player-${player.name}`"
 	       :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}" :title="title"
 	       @click.prevent="onLabelClick">
-		<img width="16" height="16" class="player__icon" :src="image" alt="" aria-hidden="true" />
+		<img v-if="imagesEnabled" width="16" height="16" class="player__icon" :src="image" alt="" aria-hidden="true" />
 		<span class="player__name" v-html="player.displayName"></span>
 	</label>
 </template>
@@ -43,6 +43,9 @@ export default defineComponent({
 	},
 	setup(props) {
 		const store = useStore(),
+			imagesEnabled = computed(() => store.state.components.playerList.showImages),
+			image = ref(defaultImage),
+
 			otherWorld = computed(() => {
 				return store.state.components.playerMarkers?.grayHiddenPlayers
 					&& !props.player.hidden
@@ -88,15 +91,14 @@ export default defineComponent({
 				}
 			};
 
-		let image = ref(defaultImage);
-
 		onMounted(() => {
-			if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkins) {
+			if(imagesEnabled.value) {
 				getMinecraftHead(props.player, 'small').then((result) => image.value = result.src).catch(() => {});
 			}
 		});
 
 		return {
+			imagesEnabled,
 			image,
 			title,
 			otherWorld,
@@ -113,19 +115,14 @@ export default defineComponent({
 	@import '../../scss/mixins';
 
 	.player {
-		.player__icon {
-			position: absolute;
-			display: block;
-			top: 0;
-			bottom: 0;
-			left: 0.7rem;
-			pointer-events: none;
-			margin: auto;
-			z-index: 2;
-		}
+		display: flex !important;
+		align-items: center;
 
-		.player__name {
-			padding-left: 2.7rem;
+		.player__icon {
+			position: relative;
+			pointer-events: none;
+			z-index: 2;
+			padding-right: 1.2rem;
 		}
 
 		&.player--hidden:not(:hover),

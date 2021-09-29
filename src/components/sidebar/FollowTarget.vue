@@ -19,11 +19,9 @@
 		<h2>{{ heading }}</h2>
 
 		<div :class="{'following__target': true, 'following__target--hidden': target.hidden}">
-			<img width="32" height="32" class="target__icon" :src="image" alt="" />
-			<span class="target__info">
-				<span class="target__name" v-html="target.displayName"></span>
-				<span class="target__status" v-show="target.hidden">{{ messageHidden }}</span>
-			</span>
+			<img v-if="imagesEnabled" width="32" height="32" class="target__icon" :src="image" alt="" />
+			<span class="target__name" v-html="target.displayName"></span>
+			<span class="target__status" v-show="target.hidden">{{ messageHidden }}</span>
 			<button class="target__unfollow" type="button" :title="messageUnfollowTitle"
 				@click.prevent="unfollow" :aria-label="messageUnfollow">
 				<SvgIcon name="cross"></SvgIcon>
@@ -53,6 +51,7 @@ export default defineComponent({
 	},
 	setup(props) {
 		const store = useStore(),
+			imagesEnabled = computed(() => store.state.components.playerList.showImages),
 			image = ref(defaultImage),
 			account = ref(props.target.name),
 
@@ -67,7 +66,7 @@ export default defineComponent({
 			updatePlayerImage = async () => {
 				image.value = defaultImage;
 
-				if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkins) {
+				if(imagesEnabled.value) {
 					try {
 						const result = await getMinecraftHead(props.target, 'small');
 						image.value = result.src;
@@ -79,6 +78,7 @@ export default defineComponent({
 		onMounted(() => updatePlayerImage());
 
 		return {
+			imagesEnabled,
 			image,
 			unfollow,
 			heading,
@@ -97,7 +97,11 @@ export default defineComponent({
 		flex: 0 0 auto;
 
 		.following__target {
-			display: flex;
+			display: grid;
+			grid-template-columns: min-content 1fr;
+			grid-template-rows: 1fr min-content min-content 1fr;
+			grid-template-areas: "icon ." "icon name" "icon status" "icon .";
+			grid-auto-flow: column;
 			align-items: center;
 
 			.target__unfollow {
@@ -118,15 +122,18 @@ export default defineComponent({
 				}
 			}
 
-			.target__info {
-				margin-left: 2rem;
-				display: flex;
-				flex-direction: column;
-				justify-content: flex-start;
+			.target__icon {
+				margin-right: 2rem;
+				grid-area: icon;
+			}
 
-				.target__status {
-					font-size: 1.3rem;
-				}
+			.target__name {
+				grid-area: name;
+			}
+
+			.target__status {
+				grid-area: status;
+				font-size: 1.3rem;
 			}
 
 			&.following__target--hidden {
