@@ -16,7 +16,7 @@
 
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {HeadQueueEntry, LiveAtlasPlayer} from "@/index";
+import {HeadQueueEntry, LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
 
 const headCache = new Map<string, HTMLImageElement>(),
 	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>(),
@@ -45,7 +45,19 @@ export const getMinecraftTime = (serverTime: number) => {
 	};
 }
 
-export const getMinecraftHead = (player: LiveAtlasPlayer | string, size: string): Promise<HTMLImageElement> => {
+export const getImagePixelSize = (imageSize: LiveAtlasPlayerImageSize) => {
+	switch(imageSize) {
+		case 'large':
+		case 'body':
+			return 32;
+
+		case 'small':
+		default:
+			return 16;
+	}
+}
+
+export const getMinecraftHead = (player: LiveAtlasPlayer | string, size: LiveAtlasPlayerImageSize): Promise<HTMLImageElement> => {
 	const account = typeof  player === 'string' ? player : player.name,
 		uuid = typeof  player === 'string' ? undefined : player.uuid,
 		cacheKey = `${account}-${size}`;

@@ -269,7 +269,7 @@ interface HeadQueueEntry {
 	cacheKey: string;
 	name: string;
 	uuid?: string;
-	size: string;
+	size: LiveAtlasPlayerImageSize;
 	image: HTMLImageElement;
 }
 

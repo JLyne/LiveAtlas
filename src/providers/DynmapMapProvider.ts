@@ -34,6 +34,7 @@ import {
 	buildMessagesConfig,
 	buildServerConfig, buildUpdates, buildWorlds
 } from "@/util/dynmap";
+import {getImagePixelSize} from "@/util";
 
 export default class DynmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -265,9 +266,14 @@ export default class DynmapMapProvider extends MapProvider {
     }
 
 	getPlayerHeadUrl(head: HeadQueueEntry): string {
-		const icon = (head.size === 'body') ? `faces/body/${head.name}` :`faces/${head.size}x${head.size}/${head.name}`
+		const baseUrl = `${this.config.dynmap!.markers}faces/`;
 
-        return `${this.config.dynmap!.markers}${icon}.png`;
+		if(head.size === 'body') {
+			return `${baseUrl}body/${head.name}.png`;
+		}
+
+		const pixels = getImagePixelSize(head.size);
+		return `${baseUrl}${pixels}x${pixels}/${head.name}.png`;
     }
 
     getMarkerIconUrl(icon: string): string {
