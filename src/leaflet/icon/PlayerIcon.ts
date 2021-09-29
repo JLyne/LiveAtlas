@@ -61,7 +61,6 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		const player = this._player;
 
 		this._container = document.createElement('div');
-
 		this._container.classList.add('marker', 'marker--player', 'leaflet-marker-icon');
 
 		this._playerInfo = document.createElement('div');
@@ -69,7 +68,6 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 
 		this._playerName = document.createElement('span');
 		this._playerName.className = 'player__name';
-		this._playerName.innerHTML = this._currentName = player.displayName;
 
 		this._playerImage = playerImage.cloneNode() as HTMLImageElement;
 		this._playerImage.height = this._playerImage.width = getImagePixelSize(this.options.imageSize);
@@ -82,7 +80,6 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 
 		this._playerInfo.appendChild(this._playerImage);
 		this._playerInfo.appendChild(this._playerName);
-		this._container.appendChild(this._playerInfo);
 
 		if (this.options.showHealth) {
 			this._playerHealth = document.createElement('meter');
@@ -101,6 +98,9 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 
 			this._playerInfo.appendChild(this._playerArmor);
 		}
+
+		this._container.appendChild(this._playerInfo);
+		this.update();
 
 		return this._container;
 	}
