@@ -57,8 +57,11 @@
 		}
 
 		.player__name {
-			padding-bottom: 0.2rem;
 			grid-row: 2;
+
+			&:not(:last-child) {
+				padding-bottom: 0.2rem;
+			}
 		}
 
 		.player__health,
