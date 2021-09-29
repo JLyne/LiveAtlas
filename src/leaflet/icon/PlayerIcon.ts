@@ -120,7 +120,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 			this._playerHealth = document.createElement('meter');
 			this._playerHealth.className = 'player__health';
 			this._playerHealth.hidden = true;
-			this._playerHealth.max = 100;
+			this._playerHealth.max = 20;
 
 			this._playerInfo.appendChild(this._playerHealth);
 		}
@@ -129,7 +129,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 			this._playerArmor = document.createElement('meter');
 			this._playerArmor.className = 'player__armor';
 			this._playerArmor.hidden = true;
-			this._playerArmor.max = 100;
+			this._playerArmor.max = 20;
 
 			this._playerInfo.appendChild(this._playerArmor);
 		}
@@ -154,7 +154,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		if(this.options.showHealth) {
 			if (this._player.health !== undefined) {
 				this._playerHealth!.hidden = false;
-				this._playerHealth!.value = this._player.health * 5;
+				this._playerHealth!.value = this._player.health;
 			} else {
 				this._playerHealth!.hidden = true;
 			}
@@ -163,7 +163,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		if(this.options.showArmor) {
 			if(this._player.armor !== undefined) {
 				this._playerArmor!.hidden = false;
-				this._playerArmor!.value = this._player.armor * 5;
+				this._playerArmor!.value = this._player.armor;
 			} else {
 				this._playerArmor!.hidden = true;
 			}
