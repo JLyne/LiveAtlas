@@ -122,13 +122,24 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			if(world.type === 'nether') {
 				dimension = 'nether';
 			} else if(world.type === 'the_end') {
-				dimension = 'nether';
+				dimension = 'end';
 			}
 
 			const maps: Map<string, LiveAtlasMapDefinition> = new Map();
 
+			const w = {
+				name: world.name || '(Unnamed world)',
+				displayName: world.display_name || world.name,
+				dimension,
+				protected: false,
+				seaLevel: 0,
+				height: 256,
+				center: {x: worldResponse.spawn.x, y: 0, z: worldResponse.spawn.z},
+				maps,
+			};
+
 			maps.set('flat', Object.freeze(new LiveAtlasMapDefinition({
-				world: world,
+				world: w,
 
 				background: 'transparent',
 				backgroundDay: 'transparent',
@@ -143,16 +154,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				tileUpdateInterval: worldResponse.tiles_update_interval ? worldResponse.tiles_update_interval * 1000 : undefined,
 			})));
 
-			worlds.push({
-				name: world.name || '(Unnamed world)',
-				displayName: world.display_name || world.name,
-				dimension,
-				protected: false,
-				seaLevel: 0,
-				height: 256,
-				center: {x: worldResponse.spawn.x, y: 0, z: worldResponse.spawn.z},
-				maps,
-			});
+			worlds.push(w);
 		});
 
 		return Array.from(worlds.values());
