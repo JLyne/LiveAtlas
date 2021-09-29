@@ -320,12 +320,13 @@ interface LiveAtlasPlayerMarkerConfig {
 	hideByDefault: boolean;
 	layerName: string;
 	layerPriority: number;
-	showBodies: boolean;
-	showSkinFaces: boolean;
+	imageSize: LiveAtlasPlayerImageSize;
+	showSkins: boolean;
 	showHealth: boolean;
 	showArmor: boolean;
-	smallFaces: boolean;
 }
+
+export type LiveAtlasPlayerImageSize  = 'none' |  'small' |  'large' | 'body';
 
 interface LiveAtlasChatBoxConfig {
 	allowUrlName: boolean;

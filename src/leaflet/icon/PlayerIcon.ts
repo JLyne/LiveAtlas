@@ -20,7 +20,7 @@
 import {BaseIconOptions, DomUtil, Icon, Layer, LayerOptions, Util} from 'leaflet';
 import {getMinecraftHead} from '@/util';
 import playerImage from '@/assets/images/player_face.png';
-import {LiveAtlasPlayer} from "@/index";
+import {LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
 
 const noSkinImage: HTMLImageElement = document.createElement('img');
 noSkinImage.height = 16;
@@ -42,9 +42,8 @@ noSkinImage.src = smallImage.src = largeImage.src = bodyImage.src = playerImage;
 noSkinImage.className = smallImage.className = largeImage.className = bodyImage.className = 'player__icon';
 
 export interface PlayerIconOptions extends BaseIconOptions {
-	smallFace: boolean,
-	showSkinFace: boolean,
-	showBody: boolean,
+	imageSize: LiveAtlasPlayerImageSize,
+	showSkin: boolean,
 	showHealth: boolean,
 	showArmor: boolean,
 }
@@ -60,10 +59,8 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 
 	private _currentName?: string;
 
-	private _playerHealth?: HTMLDivElement;
-	private _playerHealthBar?: HTMLDivElement;
-	private _playerArmor?: HTMLDivElement;
-	private _playerArmorBar?: HTMLDivElement;
+	private _playerHealth?: HTMLMeterElement;
+	private _playerArmor?: HTMLMeterElement;
 
 	constructor(player: LiveAtlasPlayer, options: PlayerIconOptions) {
 		super(options as LayerOptions);
@@ -77,7 +74,6 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		}
 
 		const player = this._player;
-		let offset = 8;
 
 		this._container = document.createElement('div');
 
@@ -90,21 +86,23 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		this._playerName.className = 'player__name';
 		this._playerName.innerHTML = this._currentName = player.displayName;
 
-		if (this.options.showSkinFace) {
+		if (this.options.showSkin) {
 			let size;
 
-			if (this.options.smallFace) {
-				this._playerImage = smallImage.cloneNode() as HTMLImageElement;
-				size = '16';
-				offset = 8;
-			} else if(this.options.showBody) {
-				this._playerImage = bodyImage.cloneNode() as HTMLImageElement;
-				size = 'body';
-				offset = 16;
-			} else {
-				this._playerImage = largeImage.cloneNode() as HTMLImageElement;
-				size = '32';
-				offset = 16;
+			switch(this.options.imageSize) {
+				case 'small':
+					this._playerImage = smallImage.cloneNode() as HTMLImageElement;
+					size = '16';
+					break;
+
+				case 'body':
+					this._playerImage = bodyImage.cloneNode() as HTMLImageElement;
+					size = 'body';
+					break;
+
+				default:
+					this._playerImage = largeImage.cloneNode() as HTMLImageElement;
+					size = '32';
 			}
 
 			getMinecraftHead(player, size).then(head => {
@@ -114,36 +112,27 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 			this._playerImage = noSkinImage.cloneNode(false) as HTMLImageElement;
 		}
 
-		this._container.appendChild(this._playerImage);
-		this._container.appendChild(this._playerInfo);
+		this._playerInfo.appendChild(this._playerImage);
 		this._playerInfo.appendChild(this._playerName);
+		this._container.appendChild(this._playerInfo);
 
 		if (this.options.showHealth) {
-			this._playerHealth = document.createElement('div');
+			this._playerHealth = document.createElement('meter');
 			this._playerHealth.className = 'player__health';
 			this._playerHealth.hidden = true;
+			this._playerHealth.max = 100;
 
-			this._playerHealthBar = document.createElement('div');
-			this._playerHealthBar.className = 'player__health-bar';
-
-			this._playerHealth.appendChild(this._playerHealthBar);
 			this._playerInfo.appendChild(this._playerHealth);
 		}
 
 		if (this.options.showArmor) {
-			this._playerArmor = document.createElement('div');
+			this._playerArmor = document.createElement('meter');
 			this._playerArmor.className = 'player__armor';
 			this._playerArmor.hidden = true;
+			this._playerArmor.max = 100;
 
-			this._playerArmorBar = document.createElement('div');
-			this._playerArmorBar.className = 'player__armor-bar';
-
-			this._playerArmor.appendChild(this._playerArmorBar);
 			this._playerInfo.appendChild(this._playerArmor);
 		}
-
-		this._container.style.marginTop = `-${offset}px`;
-		this._container.style.marginLeft = `-${offset}px`;
 
 		return this._container;
 	}
@@ -165,7 +154,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		if(this.options.showHealth) {
 			if (this._player.health !== undefined) {
 				this._playerHealth!.hidden = false;
-				this._playerHealthBar!.style.width = Math.ceil(this._player.health * 2.5) + 'px';
+				this._playerHealth!.value = this._player.health * 5;
 			} else {
 				this._playerHealth!.hidden = true;
 			}
@@ -174,7 +163,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		if(this.options.showArmor) {
 			if(this._player.armor !== undefined) {
 				this._playerArmor!.hidden = false;
-				this._playerArmorBar!.style.width = Math.ceil(this._player.armor * 2.5) + 'px';
+				this._playerArmor!.value = this._player.armor * 5;
 			} else {
 				this._playerArmor!.hidden = true;
 			}

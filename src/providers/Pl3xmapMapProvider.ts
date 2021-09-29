@@ -15,10 +15,18 @@
  */
 
 import {
-	HeadQueueEntry, LiveAtlasArea, LiveAtlasCircle, LiveAtlasComponentConfig,
-	LiveAtlasDimension, LiveAtlasLine, LiveAtlasMarker,
-	LiveAtlasMarkerSet, LiveAtlasPartialComponentConfig,
-	LiveAtlasPlayer, LiveAtlasServerConfig, LiveAtlasServerDefinition,
+	HeadQueueEntry,
+	LiveAtlasArea,
+	LiveAtlasCircle,
+	LiveAtlasComponentConfig,
+	LiveAtlasDimension,
+	LiveAtlasLine,
+	LiveAtlasMarker,
+	LiveAtlasMarkerSet,
+	LiveAtlasPartialComponentConfig,
+	LiveAtlasPlayer,
+	LiveAtlasServerConfig,
+	LiveAtlasServerDefinition,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
 } from "@/index";
@@ -90,11 +98,10 @@ export default class Pl3xmapMapProvider extends MapProvider {
 					hideByDefault: !!worldResponse.player_tracker?.default_hidden,
 					layerName: worldResponse.player_tracker?.label || '',
 					layerPriority: worldResponse.player_tracker?.priority,
-					showBodies: false,
-					showSkinFaces: true,
+					imageSize: 'small',
+					showSkins: true,
 					showHealth: !!worldResponse.player_tracker?.nameplates?.show_health,
 					showArmor: !!worldResponse.player_tracker?.nameplates?.show_armor,
-					smallFaces: true,
 				}
 			} else {
 				worldConfig.components.playerMarkers = undefined;

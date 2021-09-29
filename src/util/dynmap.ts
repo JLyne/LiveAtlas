@@ -16,11 +16,15 @@
 
 import {DynmapMarkerSetUpdates, DynmapTileUpdate, DynmapUpdate} from "@/dynmap";
 import {
-	LiveAtlasArea, LiveAtlasChat,
+	LiveAtlasArea,
+	LiveAtlasChat,
 	LiveAtlasCircle,
-	LiveAtlasComponentConfig, LiveAtlasDimension,
+	LiveAtlasComponentConfig,
+	LiveAtlasDimension,
 	LiveAtlasLine,
-	LiveAtlasMarker, LiveAtlasServerConfig, LiveAtlasServerMessageConfig,
+	LiveAtlasMarker,
+	LiveAtlasServerConfig,
+	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {getPoints} from "@/util/areas";
@@ -150,11 +154,16 @@ export function buildComponents(response: any): LiveAtlasComponentConfig {
 					hideByDefault: component.hidebydefault || false,
 					layerName: component.label || "Players",
 					layerPriority: component.layerprio || 0,
-					showBodies: component.showplayerbody || false,
-					showSkinFaces: component.showplayerfaces || false,
+					showSkins: component.showplayerfaces || false,
+					imageSize: 'large',
 					showHealth: component.showplayerhealth || false,
 					showArmor: component.showplayerhealth || false,
-					smallFaces: component.smallplayerfaces || false,
+				}
+
+				if(component.smallplayerfaces) {
+					components.playerMarkers.imageSize = 'small'
+				} else if(component.showplayerbody) {
+					components.playerMarkers.imageSize = 'body';
 				}
 
 				break;

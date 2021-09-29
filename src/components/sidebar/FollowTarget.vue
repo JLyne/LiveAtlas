@@ -67,7 +67,7 @@ export default defineComponent({
 			updatePlayerImage = async () => {
 				image.value = defaultImage;
 
-				if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkinFaces) {
+				if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkins) {
 					try {
 						const result = await getMinecraftHead(props.target, '16');
 						image.value = result.src;
