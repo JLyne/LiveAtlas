@@ -58,8 +58,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 			DomUtil.remove(oldIcon);
 		}
 
-		const player = this._player;
-
+		this._currentName = undefined;
 		this._container = document.createElement('div');
 		this._container.classList.add('marker', 'marker--player', 'leaflet-marker-icon');
 
@@ -73,7 +72,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		this._playerImage.height = this._playerImage.width = getImagePixelSize(this.options.imageSize);
 
 		if (this.options.showSkin) {
-			getMinecraftHead(player, this.options.imageSize).then(head => {
+			getMinecraftHead(this._player, this.options.imageSize).then(head => {
 				this._playerImage!.src = head.src;
 			}).catch(() => {});
 		}
