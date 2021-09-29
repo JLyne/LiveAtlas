@@ -69,7 +69,7 @@ export default defineComponent({
 
 				if(store.state.components.playerMarkers && store.state.components.playerMarkers.showSkins) {
 					try {
-						const result = await getMinecraftHead(props.target, '16');
+						const result = await getMinecraftHead(props.target, 'small');
 						image.value = result.src;
 					} catch (e) {}
 				}

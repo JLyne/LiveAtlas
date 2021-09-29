@@ -64,7 +64,7 @@
 
 			onMounted(() => {
 				if(showFace.value) {
-					getMinecraftHead(props.message.playerAccount as string, '16')
+					getMinecraftHead(props.message.playerAccount as string, 'small')
 						.then((result) => image.value = result.src).catch(() => {});
 				}
 			});
