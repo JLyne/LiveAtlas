@@ -57,15 +57,16 @@
 		}
 
 		.player__name {
+			padding-bottom: 0.2rem;
 			grid-row: 2;
 		}
 
 		.player__health,
 		.player__armor {
-			width: 5rem;
+			width: 7rem;
 			height: 0.7rem;
-			display: block;
 
+			&,
 			&::-webkit-meter-inner-element,
 			&::-webkit-meter-bar {
 				border-radius: 0;
@@ -74,6 +75,9 @@
 				box-shadow: none;
 				image-rendering: crisp-edges;
 				image-rendering: pixelated;
+				display: block;
+				top: 0;
+				bottom: 0;
 			}
 		}
 
