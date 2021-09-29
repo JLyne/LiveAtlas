@@ -93,15 +93,18 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				};
 
 			if(worldResponse.player_tracker?.enabled) {
+				const health = !!worldResponse.player_tracker?.nameplates?.show_health,
+					armor = !!worldResponse.player_tracker?.nameplates?.show_armor;
+
 				worldConfig.components.playerMarkers = {
 					grayHiddenPlayers: true,
 					hideByDefault: !!worldResponse.player_tracker?.default_hidden,
 					layerName: worldResponse.player_tracker?.label || '',
 					layerPriority: worldResponse.player_tracker?.priority,
-					imageSize: 'small',
+					imageSize: health && armor ? 'large' : 'small',
 					showSkins: true,
-					showHealth: !!worldResponse.player_tracker?.nameplates?.show_health,
-					showArmor: !!worldResponse.player_tracker?.nameplates?.show_armor,
+					showHealth: health,
+					showArmor: armor,
 				}
 			} else {
 				worldConfig.components.playerMarkers = undefined;
