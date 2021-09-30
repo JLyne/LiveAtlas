@@ -39,9 +39,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import {defineComponent, onMounted} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import {computed, ref, watch} from "vue";
+import {computed, nextTick, ref, watchEffect} from "vue";
 import {ActionTypes} from "@/store/action-types";
 import {MutationTypes} from "@/store/mutation-types";
 import {notify} from "@kyvg/vue3-notification";
@@ -68,13 +68,17 @@ export default defineComponent({
 			invalid = ref(false),
 			error = ref(null);
 
-		watch(loginModalVisible, (newValue) => {
-			if(newValue) {
-				requestAnimationFrame(() => usernameField.value!.focus());
-			} else {
-				loginUsername.value = '';
-				loginPassword.value = '';
-			}
+		onMounted(() => {
+			watchEffect(async () => {
+				await nextTick();
+
+				if(loginModalVisible.value) {
+					usernameField.value!.focus();
+				} else {
+					loginUsername.value = '';
+					loginPassword.value = '';
+				}
+			});
 		});
 
 		const login = async () => {

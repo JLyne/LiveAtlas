@@ -616,6 +616,10 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	[MutationTypes.SET_LOGIN_REQUIRED](state: State, payload: boolean): void {
+		if(payload) {
+			state.loggedIn = false;
+		}
+
 		state.loginRequired = payload;
 	},
 
