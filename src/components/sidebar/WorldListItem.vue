@@ -23,7 +23,8 @@
 				       v-bind:value="[world.name,map.name]" v-model="currentMap"
 				       :aria-labelledby="`${name}-${world.name}-${key}-label`">
 				<label :id="`${name}-${world.name}-${key}-label`" class="map" :for="`${name}-${world.name}-${key}`" :title="`${world.displayName} - ${map.displayName}`">
-					<SvgIcon :name="map.getIcon()"></SvgIcon>
+					<img v-if="map.hasCustomIcon()" :src="map.getIcon()" alt="" />
+					<SvgIcon v-else :name="map.getIcon()"></SvgIcon>
 				</label>
 			</template>
 		</div>
@@ -110,7 +111,7 @@ export default defineComponent({
 		height: 3.2rem;
 		margin-right: 0.5rem;
 
-		.svg-icon {
+		.svg-icon, img {
 			top: 0.2rem !important;
 			right: 0.2rem !important;
 			bottom: 0.2rem !important;

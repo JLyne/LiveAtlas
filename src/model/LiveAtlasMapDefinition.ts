@@ -91,9 +91,17 @@ export default class LiveAtlasMapDefinition {
 			: {x: latLng.lng / this.scale, y: y, z: -latLng.lat / this.scale};
 	}
 
+	hasCustomIcon(): boolean {
+		return !!this.icon;
+	}
+
 	getIcon(): string {
 		let worldType: string,
 			mapType: string;
+
+		if(this.icon) {
+			return this.icon;
+		}
 
 		switch(this.world.dimension) {
 			case 'nether':
