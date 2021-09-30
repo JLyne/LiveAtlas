@@ -112,6 +112,7 @@ export default defineComponent({
 		margin-right: 0.5rem;
 
 		.svg-icon, img {
+			position: absolute;
 			top: 0.2rem !important;
 			right: 0.2rem !important;
 			bottom: 0.2rem !important;
