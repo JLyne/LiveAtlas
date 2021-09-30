@@ -75,8 +75,6 @@ export function buildWorlds(response: any): Array<LiveAtlasWorldDefinition> {
 			name: world.name,
 			displayName: world.title || '',
 			dimension: worldType,
-			protected: world.protected || false,
-			height: world.height || 256,
 			seaLevel: world.sealevel || 64,
 			center: {
 				x: world.center.x || 0,
@@ -108,7 +106,6 @@ export function buildWorlds(response: any): Array<LiveAtlasWorldDefinition> {
 				name: map.name || '(Unnamed map)',
 				nightAndDay: map.nightandday || false,
 				prefix: map.prefix || '',
-				protected: map.protected || false,
 				displayName: map.title || '',
 				mapToWorld: map.maptoworld || undefined,
 				worldToMap: map.worldtomap || undefined,

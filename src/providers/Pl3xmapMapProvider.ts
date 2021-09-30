@@ -131,9 +131,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				name: world.name || '(Unnamed world)',
 				displayName: world.display_name || world.name,
 				dimension,
-				protected: false,
 				seaLevel: 0,
-				height: 256,
 				center: {x: worldResponse.spawn.x, y: 0, z: worldResponse.spawn.z},
 				maps,
 			};

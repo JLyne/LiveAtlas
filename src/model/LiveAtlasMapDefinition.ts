@@ -29,7 +29,6 @@ export interface LiveAtlasMapDefinitionOptions {
 	backgroundNight?: string;
 	imageFormat: string;
 	prefix?: string;
-	protected?: boolean;
 	mapToWorld?: [number, number, number, number, number, number, number, number, number];
 	worldToMap?: [number, number, number, number, number, number, number, number, number];
 	nativeZoomLevels: number;
@@ -48,7 +47,6 @@ export default class LiveAtlasMapDefinition {
 	readonly backgroundNight?: string;
 	readonly imageFormat: string;
 	readonly prefix: string;
-	readonly protected: boolean;
 	private readonly projection?: Readonly<LiveAtlasProjection>;
 	readonly nativeZoomLevels: number;
 	readonly extraZoomLevels: number;
@@ -68,7 +66,6 @@ export default class LiveAtlasMapDefinition {
 
 		this.imageFormat = options.imageFormat;
 		this.prefix = options.prefix || '';
-		this.protected = options.protected || false;
 
 		this.nativeZoomLevels = options.nativeZoomLevels || 1;
 		this.extraZoomLevels = options.extraZoomLevels || 0;

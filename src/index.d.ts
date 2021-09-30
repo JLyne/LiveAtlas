@@ -178,8 +178,6 @@ interface LiveAtlasWorldDefinition {
 	name: string;
 	displayName: string;
 	dimension: LiveAtlasDimension;
-	protected: boolean;
-	height: number;
 	center: Coordinate;
 	maps: Map<string, LiveAtlasMapDefinition>;
 }
