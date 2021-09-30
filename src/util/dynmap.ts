@@ -28,7 +28,7 @@ import {
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {getPoints} from "@/util/areas";
-import {endWorldNameRegex, netherWorldNameRegex, titleColoursRegex} from "@/util";
+import {decodeHTMLEntities, endWorldNameRegex, netherWorldNameRegex, titleColoursRegex} from "@/util";
 import {getLinePoints} from "@/util/lines";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
@@ -263,21 +263,28 @@ export function buildMarkers(data: any): Map<string, LiveAtlasMarker> {
 	return markers;
 }
 
-export function buildMarker(marker: any): LiveAtlasMarker {
-	return Object.seal({
-		label: marker.label || '',
-		isLabelHTML: marker.markup || false,
+export function buildMarker(data: any): LiveAtlasMarker {
+	const marker = Object.seal({
+		label: data.label || '',
+		isLabelHTML: data.markup || false,
 		location: {
-			x: marker.x || 0,
-			y: marker.y || 0,
-			z: marker.z || 0,
+			x: data.x || 0,
+			y: data.y || 0,
+			z: data.z || 0,
 		},
-		dimensions: marker.dim ? marker.dim.split('x') : [16, 16],
-		icon: marker.icon || "default",
-		minZoom: typeof marker.minzoom !== 'undefined' && marker.minzoom > -1 ? marker.minzoom : undefined,
-		maxZoom: typeof marker.maxzoom !== 'undefined' && marker.maxzoom > -1 ? marker.maxzoom : undefined,
-		popupContent: marker.desc || undefined,
+		dimensions: data.dim ? data.dim.split('x') : [16, 16],
+		icon: data.icon || "default",
+		minZoom: typeof data.minzoom !== 'undefined' && data.minzoom > -1 ? data.minzoom : undefined,
+		maxZoom: typeof data.maxzoom !== 'undefined' && data.maxzoom > -1 ? data.maxzoom : undefined,
+		popupContent: data.desc || undefined,
 	});
+
+	//Fix double escaping on non-HTML labels
+	if(!marker.isLabelHTML) {
+		marker.label = decodeHTMLEntities(marker.label);
+	}
+
+	return marker;
 }
 
 export function buildAreas(data: any): Map<string, LiveAtlasArea> {

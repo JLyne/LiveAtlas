@@ -203,3 +203,10 @@ export const focus = (selector: string) => {
 		(element as HTMLElement).focus();
 	}
 }
+
+const decodeTextarea = document.createElement('textarea');
+
+export const decodeHTMLEntities = (text: string) => {
+	decodeTextarea.innerHTML = text;
+	return decodeTextarea.textContent;
+}
