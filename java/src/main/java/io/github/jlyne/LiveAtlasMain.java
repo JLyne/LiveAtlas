@@ -79,7 +79,7 @@ public class LiveAtlasMain extends JavaPlugin {
 
 		try {
             Path dynmapWebFolderPath = Paths.get(dynmap.getDataFolder().toURI()).resolve("web");
-            File sourceDirectory = Paths.get(this.getDataFolder().toURI()).resolve("resources").toFile();
+            File sourceDirectory = Paths.get(this.getDataFolder().toURI()).toFile();
             File destinationDirectory = dynmapWebFolderPath.toFile();
             copyDirectory(sourceDirectory, destinationDirectory);
         } catch (IOException e) {
