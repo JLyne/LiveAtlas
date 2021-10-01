@@ -1,6 +1,6 @@
 {
   "name": "live-atlas",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "private": false,
   "scripts": {
     "serve": "vite",
@@ -8,9 +8,10 @@
     "test": "jest",
     "clean": "rimraf dist java/target/resources",
     "copy": "cpy plugin.yml dist java/target/resources --parents",
-    "build": "vue-tsc --noEmit && vite build --out-dir dist && npm-run-all clean copy",
+    "build": "npm run clean && vue-tsc --noEmit && vite build --out-dir dist && npm-run-all copy mvn",
     "lint": "eslint --ext .ts,.vue src",
     "lint:fix": "eslint -ext .ts,.vue src --fix",
+    "mvn": "cd java && mvn package && cd ..",
     "postinstall": "patch-package"
   },
   "dependencies": {
