@@ -83,10 +83,10 @@ public class LiveAtlasMain extends JavaPlugin {
 			File destinationDirectory = dynmapWebFolderPath.toFile();
 			copyDirectory(sourceDirectory, destinationDirectory);
 		} catch (IOException e) {
-			throw new RuntimeException("Material Dynmap v" + version + " installation failed", e);
+			throw new RuntimeException("LiveAtlas v" + version + " installation failed", e);
 		}
 
-		info("Material Dynmap v" + version + " installation succeeded");
+		info("LiveAtlas v" + version + " installation succeeded");
 	}
 
 	public void onDisable() {
@@ -105,6 +105,7 @@ public class LiveAtlasMain extends JavaPlugin {
 		if (sourceDirectory.getName() == "io" || sourceDirectory.getName() == "META-INF") {
 			return;
 		}
+		info(sourceDirectory.getName());
 		if (sourceDirectory.isDirectory()) {
 			copyDirectory(sourceDirectory, destinationDirectory);
 		} else {
