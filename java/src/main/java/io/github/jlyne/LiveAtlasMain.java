@@ -6,11 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -78,10 +80,11 @@ public class LiveAtlasMain extends JavaPlugin {
 		String version = this.getDescription().getVersion();
 
 		try {
-			Path dynmapWebFolderPath = Paths.get(dynmap.getDataFolder().toURI()).resolve("web");
-			File sourceDirectory = Paths.get(this.getDataFolder().toURI()).toFile();
-			File destinationDirectory = dynmapWebFolderPath.toFile();
-			copyDirectory(sourceDirectory, destinationDirectory);
+			File liveAtlasFolderPath = this.getDataFolder();
+			deleteDir(liveAtlasFolderPath);
+			copyJarFile(this.getFile().getAbsoluteFile().toString());
+			File dynmapWebFolderPath = Paths.get(dynmap.getDataFolder().toURI()).resolve("web").toFile();
+			copyDirectory(liveAtlasFolderPath, dynmapWebFolderPath);
 		} catch (IOException e) {
 			throw new RuntimeException("LiveAtlas v" + version + " installation failed", e);
 		}
@@ -90,6 +93,53 @@ public class LiveAtlasMain extends JavaPlugin {
 	}
 
 	public void onDisable() {
+	}
+
+	public void deleteDir(File file) {
+		File[] list = file.listFiles();
+		if (list != null) {
+			for (File child : list) {
+				deleteDir(child);
+			}
+		}
+		file.delete();
+	}
+
+	public void copyJarFile(String jarfile) throws IOException {        /* Open JAR as ZIP */
+        ZipFile zf = null;
+        FileOutputStream fos = null;
+        InputStream ins = null;
+        byte[] buf = new byte[2048];
+        String n = null;
+
+		File f;
+		zf = new ZipFile(jarfile);
+		Enumeration<? extends ZipEntry> e = zf.entries();
+		while (e.hasMoreElements()) {
+			ZipEntry ze = e.nextElement();
+			n = ze.getName();
+			f = new File(this.getDataFolder(), n);
+			if (n.startsWith("io/")) continue;
+			if (n.startsWith("META-INF/")) continue;
+			if (n == "plugin.yml") continue;
+			if (ze.isDirectory()) {
+				f.mkdirs();
+			}
+			else {
+				f.getParentFile().mkdirs();
+				fos = new FileOutputStream(f);
+				ins = zf.getInputStream(ze);
+				int len;
+				while ((len = ins.read(buf)) >= 0) {
+					fos.write(buf, 0, len);
+				}
+				ins.close();
+				ins = null;
+				fos.close();
+				fos = null;
+			}
+		}
+		zf.close();
 	}
 
 	private static void copyDirectory(File sourceDirectory, File destinationDirectory) throws IOException {
@@ -102,9 +152,6 @@ public class LiveAtlasMain extends JavaPlugin {
 	}
 
 	public static void copyDirectoryCompatibityMode(File sourceDirectory, File destinationDirectory) throws IOException {
-		if (sourceDirectory.getName() == "io" || sourceDirectory.getName() == "META-INF") {
-			return;
-		}
 		info(sourceDirectory.getName());
 		if (sourceDirectory.isDirectory()) {
 			copyDirectory(sourceDirectory, destinationDirectory);
@@ -114,9 +161,6 @@ public class LiveAtlasMain extends JavaPlugin {
 	}
 
 	private static void copyFile(File sourceFile, File destinationFile) throws IOException {
-		if (sourceFile.getName() == "plugin.yml") {
-			return;
-		}
 		try (InputStream in = new FileInputStream(sourceFile);
 			OutputStream out = new FileOutputStream(destinationFile)) {
 			byte[] buf = new byte[1024];
@@ -126,5 +170,4 @@ public class LiveAtlasMain extends JavaPlugin {
 			}
 		}
 	}
-
 }
