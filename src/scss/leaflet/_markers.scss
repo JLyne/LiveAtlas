@@ -45,15 +45,16 @@
 			grid-template-columns: min-content 1fr;
 			grid-template-rows: 1fr min-content min-content min-content 1fr;
 			grid-auto-flow: column;
-			column-gap: 0.5rem;
 			margin-left: 1.6rem;
 			background-clip: padding-box;
-			padding-right: 0.5rem;
+			padding: 0.2rem 0.5rem;
 			align-items: center;
 		}
 
 		.player__icon {
 			grid-row: 1 / -1;
+			margin-right: 0.5rem;
+			margin-left: -0.3rem;
 		}
 
 		.player__name {

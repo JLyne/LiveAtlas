@@ -32,7 +32,7 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 | Login/register | ✅ | n/a |
 | Inactivity timeout | ❌ | n/a |
 | Custom player head URLs | n/a | ❌ | 
-| Custom map icons | ❌ | ❌ |
+| Custom map icons | ✅ | ✅ |
 
 ## Supported Browsers
 - Chrome 66+
