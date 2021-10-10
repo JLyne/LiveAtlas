@@ -85,6 +85,7 @@ public class LiveAtlasMain extends JavaPlugin {
 			copyJarFile(this.getFile().getAbsoluteFile().toString());
 			File dynmapWebFolderPath = Paths.get(dynmap.getDataFolder().toURI()).resolve("web").toFile();
 			copyDirectory(liveAtlasFolderPath, dynmapWebFolderPath);
+			deleteDir(liveAtlasFolderPath);
 		} catch (IOException e) {
 			throw new RuntimeException("LiveAtlas v" + version + " installation failed", e);
 		}
