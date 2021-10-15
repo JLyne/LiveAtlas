@@ -43,7 +43,7 @@
     "vite": "^2.6",
     "vite-plugin-svg-sprite-component": "^1.0",
     "vue-jest": "^5.0.0-alpha.10",
-    "vue-tsc": "0.28.3"
+    "vue-tsc": "0.28.6"
   },
   "eslintConfig": {
     "root": true,
