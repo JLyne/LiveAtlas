@@ -24,7 +24,7 @@
     "@types/jest-in-case": "^1.0.5",
     "@types/leaflet": "1.7.5",
     "@types/node": "^16.10.9",
-    "@typescript-eslint/eslint-plugin": "^4.33",
+    "@typescript-eslint/eslint-plugin": "^5.1",
     "@typescript-eslint/parser": "^4.33",
     "@vitejs/plugin-vue": "^1.9",
     "@vue/compiler-sfc": "^3.2.18",
