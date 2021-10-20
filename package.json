@@ -32,7 +32,7 @@
     "@vue/test-utils": "^2.0.0-rc.16",
     "eslint": "^8.0",
     "eslint-plugin-vue": "^7.20",
-    "jest": "^27.2.5",
+    "jest": "^27.3.1",
     "jest-in-case": "^1.0.2",
     "patch-package": "^6.4",
     "rollup-plugin-analyzer": "^4.0",
