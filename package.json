@@ -28,9 +28,9 @@
     "@typescript-eslint/parser": "^5.2",
     "@vitejs/plugin-vue": "^1.9",
     "@vue/compiler-sfc": "^3.2.18",
-    "@vue/eslint-config-typescript": "^8.0",
+    "@vue/eslint-config-typescript": "^9.0",
     "@vue/test-utils": "^2.0.0-rc.16",
-    "eslint": "^8.0",
+    "eslint": "^8.1",
     "eslint-plugin-vue": "^7.20",
     "jest": "^27.3.1",
     "jest-in-case": "^1.0.2",
@@ -38,12 +38,12 @@
     "rollup-plugin-analyzer": "^4.0",
     "sass": "^1.43",
     "ts-jest": "^27.0.7",
-    "ts-node": "^10.3.0",
+    "ts-node": "^10.4.0",
     "typescript": "^4.4",
     "vite": "^2.6",
     "vite-plugin-svg-sprite-component": "^1.0",
     "vue-jest": "^5.0.0-alpha.10",
-    "vue-tsc": "0.28.7"
+    "vue-tsc": "0.28.10"
   },
   "eslintConfig": {
     "root": true,
