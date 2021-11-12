@@ -487,7 +487,7 @@ export function buildUpdates(data: Array<any>, lastUpdate: Date) {
 					continue;
 				}
 
-				if (entry.source !== 'player' && entry.source !== 'web') {
+				if (entry.source !== 'player' && entry.source !== 'web' && entry.source !== 'plugin') {
 					dropped.notImplemented++;
 					continue;
 				}

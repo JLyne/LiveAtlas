@@ -17,6 +17,7 @@
 <template>
 	<li :class="`message message--${message.type}`">
 		<img v-if="showFace" width="16" height="16" class="message__face" :src="image" alt="" />
+		<span v-if="messageChannel" class="message__channel" v-html="messageChannel"></span>
 		<span v-if="showSender" class="message__sender" v-html="message.playerName"></span>
 		<span class="message__content" v-html="messageContent"></span>
 	</li>
@@ -41,6 +42,7 @@
 			let image = ref(defaultImage),
 				showFace = computed(() => store.state.components.chatBox?.showPlayerFaces && props.message.playerAccount),
 				showSender = computed(() => props.message.playerName && props.message.type === 'chat'),
+				messageChannel = computed(() => props.message.type === 'chat' ? props.message.channel : undefined),
 				messageContent = computed(() => {
 					switch(props.message.type) {
 						case 'chat':
@@ -73,6 +75,7 @@
 				image,
 				showFace,
 				showSender,
+				messageChannel,
 				messageContent
 			}
 		}
@@ -87,10 +90,23 @@
 			margin-right: 0.5rem;
 		}
 
+		.message__channel,
 		.message__sender {
 			margin-right: 0.5rem;
 			word-wrap: break-word;
+		}
 
+		.message__channel {
+			&:not(:empty):before {
+				content: '[';
+			}
+
+			&:not(:empty):after {
+				content: ']';
+			}
+		}
+
+		.message__sender {
 			&:not(:empty):after {
 				content: ': ';
 			}
