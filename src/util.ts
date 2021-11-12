@@ -208,5 +208,5 @@ const decodeTextarea = document.createElement('textarea');
 
 export const decodeHTMLEntities = (text: string) => {
 	decodeTextarea.innerHTML = text;
-	return decodeTextarea.textContent;
+	return decodeTextarea.textContent || '';
 }
