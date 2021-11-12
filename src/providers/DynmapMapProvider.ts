@@ -35,6 +35,7 @@ import {
 	buildServerConfig, buildUpdates, buildWorlds
 } from "@/util/dynmap";
 import {getImagePixelSize} from "@/util";
+import {MarkerSet} from "dynmap";
 
 export default class DynmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -69,7 +70,7 @@ export default class DynmapMapProvider extends MapProvider {
 				continue;
 			}
 
-			const set = response.sets[key],
+			const set: MarkerSet = response.sets[key],
 				markers = buildMarkers(set.markers || {}),
 				circles = buildCircles(set.circles || {}),
 				areas = buildAreas(set.areas || {}),

@@ -31,20 +31,36 @@ import {getPoints} from "@/util/areas";
 import {decodeHTMLEntities, endWorldNameRegex, netherWorldNameRegex, titleColoursRegex} from "@/util";
 import {getLinePoints} from "@/util/lines";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {
+	Configuration,
+	Marker, MarkerArea, MarkerCircle, MarkerLine, MarkerSet,
+	Options,
+	WorldConfiguration,
+	WorldMapConfiguration
+} from "dynmap";
+import {PointTuple} from "leaflet";
 
-export function buildServerConfig(response: any): LiveAtlasServerConfig {
+export function buildServerConfig(response: Options): LiveAtlasServerConfig {
+	let title = 'Dynmap';
+
+	if(response.title) {
+		title = response.title.replace(titleColoursRegex, '') || title;
+	}
+
+	const followZoom = parseInt(response.followzoom || "", 10);
+
 	return {
 		defaultMap: response.defaultmap || undefined,
 		defaultWorld: response.defaultworld || undefined,
 		defaultZoom: response.defaultzoom || 0,
 		followMap: response.followmap || undefined,
-		followZoom: response.followzoom,
-		title: response.title.replace(titleColoursRegex, '') || 'Dynmap',
-		expandUI: response.sidebaropened && response.sidebaropened !== 'false', //Sent as a string for some reason
+		followZoom: isNaN(followZoom) ? undefined : followZoom,
+		title: title,
+		expandUI: !!response.sidebaropened && response.sidebaropened !== 'false', //Sent as a string for some reason
 	};
 }
 
-export function buildMessagesConfig(response: any): LiveAtlasServerMessageConfig {
+export function buildMessagesConfig(response: Options): LiveAtlasServerMessageConfig {
 	return {
 		chatPlayerJoin: response.joinmessage || '',
 		chatPlayerQuit: response.quitmessage || '',
@@ -58,11 +74,11 @@ export function buildMessagesConfig(response: any): LiveAtlasServerMessageConfig
 	}
 }
 
-export function buildWorlds(response: any): Array<LiveAtlasWorldDefinition> {
+export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefinition> {
 	const worlds: Map<string, LiveAtlasWorldDefinition> = new Map<string, LiveAtlasWorldDefinition>();
 
 	//Get all the worlds first so we can handle append_to_world properly
-	(response.worlds || []).forEach((world: any) => {
+	(response.worlds || []).forEach((world: WorldConfiguration) => {
 		let worldType: LiveAtlasDimension = 'overworld';
 
 		if (netherWorldNameRegex.test(world.name) || (world.name == 'DIM-1')) {
@@ -85,9 +101,10 @@ export function buildWorlds(response: any): Array<LiveAtlasWorldDefinition> {
 		});
 	});
 
-	(response.worlds || []).forEach((world: any) => {
-		(world.maps || []).forEach((map: any) => {
+	(response.worlds || []).forEach((world: WorldConfiguration) => {
+		(world.maps || []).forEach((map: WorldMapConfiguration) => {
 			const actualWorld = worlds.get(world.name),
+				// @ts-ignore
 				assignedWorldName = map.append_to_world || world.name, //handle append_to_world
 				assignedWorld = worlds.get(assignedWorldName);
 
@@ -101,7 +118,7 @@ export function buildWorlds(response: any): Array<LiveAtlasWorldDefinition> {
 				background: map.background || '#000000',
 				backgroundDay: map.backgroundday || '#000000',
 				backgroundNight: map.backgroundnight || '#000000',
-				icon: map.icon || undefined,
+				icon: (map.icon || undefined) as string | undefined,
 				imageFormat: map['image-format'] || 'png',
 				name: map.name || '(Unnamed map)',
 				nightAndDay: map.nightandday || false,
@@ -118,7 +135,7 @@ export function buildWorlds(response: any): Array<LiveAtlasWorldDefinition> {
 	return Array.from(worlds.values());
 }
 
-export function buildComponents(response: any): LiveAtlasComponentConfig {
+export function buildComponents(response: Configuration): LiveAtlasComponentConfig {
 	const components: LiveAtlasComponentConfig = {
 		markers: {
 			showLabels: false,
@@ -130,7 +147,7 @@ export function buildComponents(response: any): LiveAtlasComponentConfig {
 			showImages: response.showplayerfacesinmenu || false,
 		},
 		coordinatesControl: undefined,
-		layerControl: response.showlayercontrol && response.showlayercontrol !== 'false', //Sent as a string for some reason
+		layerControl: !!response.showlayercontrol && response.showlayercontrol !== 'false', //Sent as a string for some reason
 		linkControl: false,
 		clockControl: undefined,
 		logoControls: [],
@@ -237,7 +254,7 @@ export function buildComponents(response: any): LiveAtlasComponentConfig {
 	return components;
 }
 
-export function buildMarkerSet(id: string, data: any): any {
+export function buildMarkerSet(id: string, data: MarkerSet): any {
 	return {
 		id,
 		label: data.label || "Unnamed set",
@@ -263,7 +280,17 @@ export function buildMarkers(data: any): Map<string, LiveAtlasMarker> {
 	return markers;
 }
 
-export function buildMarker(data: any): LiveAtlasMarker {
+export function buildMarker(data: Marker): LiveAtlasMarker {
+	let dimensions;
+
+	if(data.dim) {
+		dimensions = data.dim.split('x').slice(0, 2).map(value => parseInt(value));
+
+		if(dimensions.length !== 2) {
+			dimensions = undefined;
+		}
+	}
+
 	const marker = Object.seal({
 		label: data.label || '',
 		isLabelHTML: data.markup || false,
@@ -272,7 +299,7 @@ export function buildMarker(data: any): LiveAtlasMarker {
 			y: data.y || 0,
 			z: data.z || 0,
 		},
-		dimensions: data.dim ? data.dim.split('x') : [16, 16],
+		dimensions: (dimensions || [16, 16]) as PointTuple,
 		icon: data.icon || "default",
 		minZoom: typeof data.minzoom !== 'undefined' && data.minzoom > -1 ? data.minzoom : undefined,
 		maxZoom: typeof data.maxzoom !== 'undefined' && data.maxzoom > -1 ? data.maxzoom : undefined,
@@ -301,7 +328,7 @@ export function buildAreas(data: any): Map<string, LiveAtlasArea> {
 	return areas;
 }
 
-export function buildArea(area: any): LiveAtlasArea {
+export function buildArea(area: MarkerArea): LiveAtlasArea {
 	const opacity = area.fillopacity || 0,
 		x = area.x || [0, 0],
 		y: [number, number] = [area.ybottom || 0, area.ytop || 0],
@@ -339,7 +366,7 @@ export function buildLines(data: any): Map<string, LiveAtlasLine> {
 	return lines;
 }
 
-export function buildLine(line: any): LiveAtlasLine {
+export function buildLine(line: MarkerLine): LiveAtlasLine {
 	return Object.seal({
 		style: {
 			color: line.color || '#ff0000',
@@ -369,7 +396,7 @@ export function buildCircles(data: any): Map<string, LiveAtlasCircle> {
 	return circles;
 }
 
-export function buildCircle(circle: any): LiveAtlasCircle {
+export function buildCircle(circle: MarkerCircle): LiveAtlasCircle {
 	return Object.seal({
 		location: {
 			x: circle.x || 0,
