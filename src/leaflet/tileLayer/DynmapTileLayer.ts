@@ -25,18 +25,7 @@ import {computed, watch} from "@vue/runtime-core";
 import {ComputedRef} from "@vue/reactivity";
 import {WatchStopHandle} from "vue";
 import {ActionTypes} from "@/store/action-types";
-
-export interface TileInfo {
-	prefix: string;
-	nightday: string;
-	scaledx: number;
-	scaledy: number;
-	zoom: string;
-	zoomprefix: string;
-	x: number;
-	y: number;
-	fmt: string;
-}
+import {TileInformation} from "dynmap";
 
 const store = useStore();
 
@@ -160,7 +149,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 		return 'z'.repeat(amount) + (amount === 0 ? '' : '_');
 	}
 
-	private getTileInfo(coords: Coordinate): TileInfo {
+	private getTileInfo(coords: Coordinate): TileInformation {
 		// zoom: max zoomed in = this.options.maxZoom, max zoomed out = 0
 		// izoom: max zoomed in = 0, max zoomed out = this.options.maxZoom
 		// zoomoutlevel: izoom < mapzoomin -> 0, else -> izoom - mapzoomin (which ranges from 0 till mapzoomout)

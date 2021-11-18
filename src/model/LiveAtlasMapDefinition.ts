@@ -17,6 +17,7 @@
 import {Coordinate, LiveAtlasWorldDefinition} from "@/index";
 import {LatLng} from "leaflet";
 import {LiveAtlasProjection} from "@/model/LiveAtlasProjection";
+import {ImageFormat} from "dynmap";
 
 export interface LiveAtlasMapDefinitionOptions {
 	world: LiveAtlasWorldDefinition;
@@ -27,7 +28,7 @@ export interface LiveAtlasMapDefinitionOptions {
 	nightAndDay?: boolean;
 	backgroundDay?: string;
 	backgroundNight?: string;
-	imageFormat: string;
+	imageFormat: ImageFormat;
 	prefix?: string;
 	mapToWorld?: [number, number, number, number, number, number, number, number, number];
 	worldToMap?: [number, number, number, number, number, number, number, number, number];
@@ -45,7 +46,7 @@ export default class LiveAtlasMapDefinition {
 	readonly nightAndDay: boolean;
 	readonly backgroundDay?: string;
 	readonly backgroundNight?: string;
-	readonly imageFormat: string;
+	readonly imageFormat: ImageFormat;
 	readonly prefix: string;
 	private readonly projection?: Readonly<LiveAtlasProjection>;
 	readonly nativeZoomLevels: number;
