@@ -26,7 +26,9 @@ export const createMarker = (options: LiveAtlasMarker, converter: Function): Mar
 	const marker = new GenericMarker(converter(options.location), options);
 
 	marker.on('click', (e: LeafletMouseEvent) => {
-		e.target._map.panTo(e.target.getLatLng());
+		if(!e.target.getPopup() || e.target.isPopupOpen()) {
+			e.target._map.panTo(e.target.getLatLng());
+		}
 	});
 
 	if(options.popupContent) {
