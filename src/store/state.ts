@@ -76,6 +76,7 @@ export type State = {
 	ui: {
 		playersAboveMarkers: boolean;
 		playersSearch: boolean;
+		compactPlayerMarkers: boolean;
 
 		smallScreen: boolean;
 		visibleElements: Set<LiveAtlasUIElement>;
@@ -252,6 +253,7 @@ export const state: State = {
 	ui: {
 		playersAboveMarkers: true,
 		playersSearch: true,
+		compactPlayerMarkers: false,
 
 		smallScreen: false,
 		visibleElements: new Set(),

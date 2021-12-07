@@ -27,6 +27,7 @@ playerImage.src = defaultImage;
 playerImage.className = 'player__icon';
 
 export interface PlayerIconOptions extends BaseIconOptions {
+	compact: boolean;
 	imageSize: LiveAtlasPlayerImageSize,
 	showHealth: boolean,
 	showArmor: boolean,
@@ -66,6 +67,10 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 
 		this._playerName = document.createElement('span');
 		this._playerName.className = 'player__name';
+
+		if(this.options.compact) {
+			this._container.classList.add('marker--compact');
+		}
 
 		if (this.options.imageSize != 'none') {
 			this._playerImage = playerImage.cloneNode() as HTMLImageElement;

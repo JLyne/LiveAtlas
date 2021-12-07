@@ -151,6 +151,7 @@ type LiveAtlasMessageConfig = LiveAtlasGlobalMessageConfig & LiveAtlasServerMess
 interface LiveAtlasUIConfig {
 	playersAboveMarkers: boolean;
 	playersSearch: boolean;
+	compactPlayerMarkers: boolean;
 }
 
 export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps';

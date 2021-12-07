@@ -48,6 +48,7 @@ export default defineComponent({
 
 			//The player marker
 			marker = new PlayerMarker(props.player, {
+				compact: store.state.ui.compactPlayerMarkers,
 				imageSize: componentSettings.value!.imageSize,
 				showHealth: componentSettings.value!.showHealth,
 				showArmor: componentSettings.value!.showArmor,

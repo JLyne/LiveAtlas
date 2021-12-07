@@ -166,6 +166,10 @@ export const mutations: MutationTree<State> & Mutations = {
 			state.ui.playersAboveMarkers = uiConfig.playersAboveMarkers;
 		}
 
+		if(typeof uiConfig.compactPlayerMarkers === 'boolean') {
+			state.ui.compactPlayerMarkers = uiConfig.compactPlayerMarkers;
+		}
+
 		if(typeof uiConfig.playersSearch === 'boolean') {
 			state.ui.playersSearch = uiConfig.playersSearch;
 		}

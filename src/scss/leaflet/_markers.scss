@@ -69,6 +69,7 @@
 		.player__armor {
 			width: 7rem;
 			height: 0.7rem;
+			box-sizing: content-box;
 
 			&,
 			&::-webkit-meter-inner-element,
@@ -107,6 +108,34 @@
 
 		.player__armor::-moz-meter-bar {
 			background: url(../assets/images/armor.png) repeat-x left center;
+		}
+
+		&.marker--compact {
+			.marker__label {
+				background-color: transparent;
+			}
+
+			.player__icon {
+				margin-right: 0.2rem;
+			}
+
+			.player__armor, .player__health, .player__name {
+				background-color: var(--background-marker);
+			}
+
+			.player__name {
+				padding: 0.2rem;
+			}
+
+			.player__armor, .player__health {
+				border: 0.2rem solid var(--background-marker);
+				border-top-width: 0;
+				border-bottom-width: 0;
+			}
+
+			.player__armor:last-child, .player__health:last-child {
+				border-bottom-width: 0.2rem;
+			}
 		}
 	}
 

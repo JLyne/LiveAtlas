@@ -24,6 +24,7 @@ export interface PlayerMarkerOptions extends MarkerOptions {
 	imageSize: LiveAtlasPlayerImageSize,
 	showHealth: boolean,
 	showArmor: boolean,
+	compact: boolean,
 }
 
 export class PlayerMarker extends Marker {
@@ -41,6 +42,7 @@ export class PlayerMarker extends Marker {
 			imageSize: options.imageSize,
 			showHealth: options.showHealth,
 			showArmor: options.showArmor,
+			compact: options.compact,
 		});
 
 		Util.setOptions(this, options);
