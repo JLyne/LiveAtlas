@@ -42,6 +42,9 @@ const defaultOptions: GenericIconOptions = {
 	icon: 'default',
 	label: '',
 	iconSize: [16, 16],
+	popupAnchor: [0, 0],
+	iconAnchor: [0, 0],
+	tooltipAnchor: [0, 0],
 	isHtml: false,
 	className: '',
 }
