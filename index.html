@@ -153,9 +153,10 @@
         /* Theme colours */
         :root {
             --background-base: #222222; /* Foreground UI elements */
-            --background-dark: #121212; /* Body/map labels */
+            --background-dark: #121212; /* Body/Splash screen/Shadows */
             --background-light: #363636; /* Scrollbars/inputs */
             --background-error: #771616; /* Errors */
+            --background-marker: var(--background-dark); /* Map markers */
 
             --background-disabled: #555555; /* Disabled controls */
             --background-hover: #363636; /* :hovered buttons/menu items */
@@ -173,6 +174,7 @@
             --text-emphasis: rgba(255, 255, 255, 0.87); /* Chat messages/:focus inputs */
             --text-subtle: rgba(255, 255, 255, 0.5); /* Skeletons/secondary text */
             --text-disabled: var(--text-subtle); /* Disabled controls */
+            --text-marker: var(--text-base); /* Map markers */
 
             --text-hover: var(--text-base); /* Text in :hover buttons */
             --text-active: var(--text-base); /* Text in :active buttons */
