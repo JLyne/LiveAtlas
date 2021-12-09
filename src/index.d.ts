@@ -67,6 +67,7 @@ interface LiveAtlasGlobalConfig {
 	servers: Map<string, LiveAtlasServerDefinition>;
 	messages: LiveAtlasGlobalMessageConfig;
 	ui: LiveAtlasUIConfig;
+	version?: number;
 }
 
 interface LiveAtlasServerDefinition {

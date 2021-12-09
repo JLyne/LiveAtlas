@@ -17,6 +17,9 @@
 import {LiveAtlasGlobalConfig, LiveAtlasServerDefinition} from "@/index";
 import ConfigurationError from "@/errors/ConfigurationError";
 import {DynmapUrlConfig} from "@/dynmap";
+import {useStore} from "@/store";
+
+const expectedConfigVersion = 1;
 
 const validateLiveAtlasConfiguration = (config: any): Map<string, LiveAtlasServerDefinition> => {
 	const check = '\nCheck your server configuration in index.html is correct.',
@@ -123,6 +126,10 @@ const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveA
 export const getServerDefinitions = (config: LiveAtlasGlobalConfig): Map<string, LiveAtlasServerDefinition> => {
 	if (!config) {
 		throw new ConfigurationError(`No configuration found.\nCheck for any syntax errors in your configuration in index.html. Your browser console may contain additional information.`);
+	}
+
+	if (config.version !== expectedConfigVersion) {
+		throw new ConfigurationError(`Configuration version mismatch.\nUse a fresh copy of index.html from your current LiveAtlas version (${useStore().state.version}) and reapply any customisations.`);
 	}
 
 	if (typeof config.servers !== 'undefined') {
