@@ -15,5 +15,6 @@ export default {
   },
   setupFilesAfterEnv: [
       '<rootDir>/tests/setup.ts'
-  ]
+  ],
+  testEnvironment: 'jsdom'
 }
