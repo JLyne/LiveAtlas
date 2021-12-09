@@ -76,5 +76,5 @@ try {
 	app.mount('#app');
 } catch(e) {
 	console.error('LiveAtlas configuration is invalid: ', e);
-	showSplashError('LiveAtlas configuration is invalid\n' + e, true);
+	showSplashError('LiveAtlas configuration is invalid:\n' + e, true);
 }

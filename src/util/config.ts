@@ -122,7 +122,7 @@ const validateDynmapConfiguration = (config: DynmapUrlConfig): Map<string, LiveA
 
 export const getServerDefinitions = (config: LiveAtlasGlobalConfig): Map<string, LiveAtlasServerDefinition> => {
 	if (!config) {
-		throw new ConfigurationError(`Configuration object is missing`);
+		throw new ConfigurationError(`No configuration found.\nCheck for any syntax errors in your configuration in index.html. Your browser console may contain additional information.`);
 	}
 
 	if (typeof config.servers !== 'undefined') {
