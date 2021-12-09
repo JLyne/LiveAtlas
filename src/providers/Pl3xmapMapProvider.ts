@@ -105,6 +105,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 					imageSize: images ? (health && armor ? 'large' : 'small') : 'none',
 					showHealth: health,
 					showArmor: armor,
+					showYaw: true,
 				}
 			} else {
 				worldConfig.components.playerMarkers = undefined;
@@ -440,7 +441,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 					y: 0,
 					z: !isNaN(player.z) ? player.z + 0.5 : 0,
 					world: player.world,
-				}
+				},
+				yaw: !isNaN(player.yaw) ? parseFloat(player.yaw) + 180 : 0,
 			});
 		});
 

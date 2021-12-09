@@ -168,6 +168,7 @@ interface LiveAtlasPlayer {
 	sort: number;
 	hidden: boolean;
 	location: LiveAtlasLocation;
+	yaw?: number;
 }
 
 interface LiveAtlasSortedPlayers extends Array<LiveAtlasPlayer> {
@@ -325,6 +326,7 @@ interface LiveAtlasPlayerMarkerConfig {
 	imageSize: LiveAtlasPlayerImageSize;
 	showHealth: boolean;
 	showArmor: boolean;
+	showYaw: boolean;
 }
 
 export type LiveAtlasPlayerImageSize  = 'none' |  'small' |  'large' | 'body';

@@ -52,6 +52,7 @@ export default defineComponent({
 				imageSize: componentSettings.value!.imageSize,
 				showHealth: componentSettings.value!.showHealth,
 				showArmor: componentSettings.value!.showArmor,
+				showYaw: componentSettings.value!.showYaw,
 				pane: 'players',
 			}),
 

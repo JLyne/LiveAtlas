@@ -31,6 +31,7 @@ export interface PlayerIconOptions extends BaseIconOptions {
 	imageSize: LiveAtlasPlayerImageSize,
 	showHealth: boolean,
 	showArmor: boolean,
+	showYaw: boolean,
 }
 
 export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
@@ -46,6 +47,9 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 
 	private _playerHealth?: HTMLMeterElement;
 	private _playerArmor?: HTMLMeterElement;
+	private _playerYaw?: HTMLDivElement;
+
+	private _currentYaw = 0;
 
 	constructor(player: LiveAtlasPlayer, options: PlayerIconOptions) {
 		super(options as LayerOptions);
@@ -103,6 +107,14 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 			this._playerInfo.appendChild(this._playerArmor);
 		}
 
+		if (this.options.showYaw) {
+			this._container.classList.add('player--yaw');
+
+			this._playerYaw = document.createElement('div');
+			this._playerYaw.className = 'player__yaw';
+			this._container.appendChild(this._playerYaw);
+		}
+
 		this._container.appendChild(this._playerInfo);
 		this.update();
 
@@ -138,6 +150,16 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 				this._playerArmor!.value = this._player.armor;
 			} else {
 				this._playerArmor!.hidden = true;
+			}
+		}
+
+		if(this.options.showYaw) {
+			if(this._player.yaw !== undefined) {
+				// https://stackoverflow.com/a/53416030
+				const delta = ((((this._player.yaw - this._currentYaw) % 360) + 540) % 360) - 180;
+
+				this._currentYaw = this._currentYaw + delta;
+				this._playerYaw!.style.setProperty('--player-yaw', `${this._currentYaw}deg`);
 			}
 		}
 	}

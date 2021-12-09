@@ -183,6 +183,7 @@ export function buildComponents(response: Configuration): LiveAtlasComponentConf
 					imageSize,
 					showHealth: component.showplayerhealth || false,
 					showArmor: component.showplayerhealth || false,
+					showYaw: false,
 				}
 
 				break;

@@ -110,6 +110,37 @@
 			background: url(../assets/images/armor.png) repeat-x left center;
 		}
 
+		.player__yaw {
+			--player-yaw: 0deg;
+
+			position: relative;
+			transform: rotate(var(--player-yaw));
+			transition: 0.1s transform ease-in;
+
+			&, &:after {
+				position: absolute;
+				width: 0;
+				height: 0;
+				border-style: solid;
+				border-color: transparent transparent var(--background-marker);
+				border-width: 0 0.7rem 2.0rem 0.7rem;
+			}
+
+			&:after {
+				content: '';
+				top: 0.5rem;
+				left: -0.4rem;
+				border-width: 0 0.4rem 1.3rem 0.4rem;
+				border-bottom-color: var(--text-emphasis);
+			}
+
+			@at-root {
+				.no-animations .marker.marker--player .player__yaw {
+					transition: none;
+				}
+			}
+		}
+
 		&.marker--compact {
 			.marker__label {
 				background-color: transparent;
@@ -135,6 +166,16 @@
 
 			.player__armor:last-child, .player__health:last-child {
 				border-bottom-width: 0.2rem;
+			}
+		}
+
+		&.player--yaw {
+			&:before {
+				content: none;
+			}
+
+			.marker__label {
+				margin-left: 1.8rem;
 			}
 		}
 	}
