@@ -97,7 +97,10 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		this.worldMarkerUpdateIntervals.clear();
 		this.worldPlayerUpdateIntervals.clear();
 
-		(serverResponse.worlds || []).filter((w: any) => w && !!w.name).forEach((world: any, index: number) => {
+		const filteredWorlds = (serverResponse.worlds || []).filter((w: any) => w && !!w.name)
+			.sort((a: any, b: any) => a.order - b.order);
+
+		filteredWorlds.forEach((world: any, index: number) => {
 			const worldResponse = worldResponses[index],
 				worldConfig: {components: LiveAtlasPartialComponentConfig } = {
 					components: {},
