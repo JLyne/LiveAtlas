@@ -42,9 +42,16 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	private	playersAbort?: AbortController = undefined;
 
 	private updatesEnabled = false;
-	private updateTimeout: null | ReturnType<typeof setTimeout> = null;
-	private updateTimestamp: Date = new Date();
-	private updateInterval: number = 3000;
+
+	private playerUpdateTimeout: null | ReturnType<typeof setTimeout> = null;
+	private playerUpdateTimestamp: Date = new Date();
+	private playerUpdateInterval = 3000;
+
+	private markerUpdateTimeout: null | ReturnType<typeof setTimeout> = null;
+	private markerUpdateInterval = 3000;
+
+	private worldPlayerUpdateIntervals: Map<string, number> = new Map();
+	private worldMarkerUpdateIntervals: Map<string, number> = new Map();
 	private worldComponents: Map<string, {
 		components: LiveAtlasPartialComponentConfig,
 	}> = new Map();
@@ -86,16 +93,25 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	private buildWorlds(serverResponse: any, worldResponses: any[]): Array<LiveAtlasWorldDefinition> {
 		const worlds: Array<LiveAtlasWorldDefinition> = [];
 
+		this.worldComponents.clear();
+		this.worldMarkerUpdateIntervals.clear();
+		this.worldPlayerUpdateIntervals.clear();
+
 		(serverResponse.worlds || []).filter((w: any) => w && !!w.name).forEach((world: any, index: number) => {
 			const worldResponse = worldResponses[index],
 				worldConfig: {components: LiveAtlasPartialComponentConfig } = {
 					components: {},
 				};
 
+			this.worldMarkerUpdateIntervals.set(world.name, worldResponse.marker_update_interval || 3000);
+
 			if(worldResponse.player_tracker?.enabled) {
 				const health = !!worldResponse.player_tracker?.nameplates?.show_health,
 					armor = !!worldResponse.player_tracker?.nameplates?.show_armor,
-					images = !!worldResponse.player_tracker?.nameplates?.show_heads;
+					images = !!worldResponse.player_tracker?.nameplates?.show_heads,
+					updateInterval = worldResponse.player_tracker.update_interval ? worldResponse.player_tracker.update_interval * 1000 : 3000;
+
+				this.worldPlayerUpdateIntervals.set(world.name, updateInterval);
 
 				worldConfig.components.playerMarkers = {
 					grayHiddenPlayers: true,
@@ -410,6 +426,9 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		const markerSets = await this.getMarkerSets(world),
 			worldConfig = this.worldComponents.get(world.name);
 
+		this.playerUpdateInterval = this.worldPlayerUpdateIntervals.get(world.name) || 3000;
+		this.markerUpdateInterval = this.worldMarkerUpdateIntervals.get(world.name) || 3000;
+
 		this.store.commit(MutationTypes.SET_MARKER_SETS, markerSets);
 		this.store.commit(MutationTypes.SET_COMPONENTS, worldConfig!.components);
 	}
@@ -471,37 +490,47 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 	startUpdates() {
 		this.updatesEnabled = true;
-		this.update();
+		this.updatePlayers();
+		this.updateMarkers();
 	}
 
-	private async update() {
+	private async updatePlayers() {
 		try {
 			if(this.store.state.components.playerMarkers) {
 				const players = await this.getPlayers();
 
-				this.updateTimestamp = new Date();
+				this.playerUpdateTimestamp = new Date();
 
 				await this.store.dispatch(ActionTypes.SET_PLAYERS, players);
 			}
 		} finally {
 			if(this.updatesEnabled) {
-				if(this.updateTimeout) {
-					clearTimeout(this.updateTimeout);
+				if(this.playerUpdateTimeout) {
+					clearTimeout(this.playerUpdateTimeout);
 				}
 
-				this.updateTimeout = setTimeout(() => this.update(), this.updateInterval);
+				this.playerUpdateTimeout = setTimeout(() => this.updatePlayers(), this.playerUpdateInterval);
 			}
 		}
+	}
+
+	private async updateMarkers() {
+		//TODO: Implement once Pl3xmap offers a way to do this without recreating all markers
 	}
 
 	stopUpdates() {
 		this.updatesEnabled = false;
 
-		if (this.updateTimeout) {
-			clearTimeout(this.updateTimeout);
+		if (this.markerUpdateTimeout) {
+			clearTimeout(this.markerUpdateTimeout);
 		}
 
-		this.updateTimeout = null;
+		if (this.playerUpdateTimeout) {
+			clearTimeout(this.playerUpdateTimeout);
+		}
+
+		this.markerUpdateTimeout = null;
+		this.playerUpdateTimeout = null;
 	}
 
     getTilesUrl(): string {
