@@ -189,7 +189,7 @@ export default defineComponent({
 					location = store.state.parsedUrl.location;
 
 					if(!oldValue) {
-						this.scheduledZoom = store.state.parsedUrl?.zoom || store.state.configuration.defaultZoom;
+						this.scheduledZoom = store.state.parsedUrl?.zoom || newValue.defaultZoom || store.state.configuration.defaultZoom;
 					}
 
 					store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
@@ -198,7 +198,7 @@ export default defineComponent({
 					location = newValue.center;
 				}
 
-				this.scheduledZoom = this.scheduledZoom || store.state.configuration.defaultZoom;
+				this.scheduledZoom = this.scheduledZoom || newValue.defaultZoom || store.state.configuration.defaultZoom;
 
 				//Set pan location for when the projection changes
 				this.scheduledPan = location;

@@ -182,6 +182,7 @@ interface LiveAtlasWorldDefinition {
 	displayName: string;
 	dimension: LiveAtlasDimension;
 	center: Coordinate;
+	defaultZoom?: number;
 	maps: Map<string, LiveAtlasMapDefinition>;
 }
 

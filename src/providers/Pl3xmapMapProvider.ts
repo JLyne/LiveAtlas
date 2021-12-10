@@ -150,6 +150,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				dimension,
 				seaLevel: 0,
 				center: {x: worldResponse.spawn.x, y: 0, z: worldResponse.spawn.z},
+				defaultZoom: worldResponse.zoom.def || 1,
 				maps,
 			};
 
