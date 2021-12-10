@@ -1,9 +1,9 @@
 # LiveAtlas 
-A [Dynmap](https://github.com/webbukkit/dynmap) and [Pl3xmap](https://github.com/pl3xgaming/Pl3xMap) frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript.
+A [Dynmap](https://github.com/webbukkit/dynmap) and [Pl3xmap](https://github.com/NeumimTo/Pl3xMap) frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript.
 
 ![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas4.png)
 
-LiveAtlas is an alternative frontend for Dynmap and Pl3xmap, which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in drop-in replacement for Dynmap, and Pl3xmap maps are supported with some additional configuration.
+LiveAtlas is an alternative frontend for Dynmap and Pl3xmap, which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in replacement for Dynmap, and Pl3xmap maps are supported with some additional configuration.
 
 Development is ongoing, but all of the major Dynmap/Pl3xmap features are supported.
 
@@ -16,7 +16,7 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 | Viewing maps | ✅ | ✅ |
 | Markers | ✅ | ✅ |
 | Player markers | ✅ | ✅ |
-| Player facing direction | n/a | ❌ |
+| Player facing direction | n/a | ✅ |
 | Popups | ✅ | ✅ |
 | Tooltips | n/a | ✅ |
 | Tile updates | ✅ | ✅ |
