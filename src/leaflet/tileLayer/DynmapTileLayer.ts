@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-import {Coords, DoneCallback} from 'leaflet';
+import {Map as LeafletMap, Coords, DoneCallback} from 'leaflet';
 import {useStore} from "@/store";
 import {Coordinate} from "@/index";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
@@ -31,13 +31,13 @@ const store = useStore();
 
 // noinspection JSUnusedGlobalSymbols
 export class DynmapTileLayer extends LiveAtlasTileLayer {
-	private readonly _namedTiles: Map<any, any> = Object.seal(new Map());
+	private readonly _namedTiles: Map<any, any>;
 	private readonly _baseUrl: string;
 
 	private readonly _night: ComputedRef<boolean>;
 	private readonly _pendingUpdates: ComputedRef<boolean>;
-	private readonly _nightUnwatch: WatchStopHandle;
-	private readonly _updateUnwatch: WatchStopHandle;
+	private _nightUnwatch: WatchStopHandle | null = null;
+	private _updateUnwatch: WatchStopHandle | null = null;
 	private _updateFrame: number = 0;
 
 	constructor(options: LiveAtlasTileLayerOptions) {
@@ -45,20 +45,29 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 
 		this._mapSettings = options.mapSettings;
 		this._baseUrl = store.state.currentMapProvider!.getTilesUrl();
+		this._namedTiles = Object.seal(new Map());
 
 		this._pendingUpdates = computed(() => !!store.state.pendingTileUpdates.length);
+		this._night = computed(() => store.getters.night);
+	}
+
+	onAdd(map: LeafletMap) {
+		super.onAdd(map);
+
+		//Only watch updates when active map, to avoid stealing other map's tile updates
 		this._updateUnwatch = watch(this._pendingUpdates, (newValue, oldValue) => {
 			if(newValue && !oldValue && !this._updateFrame) {
 				this.handlePendingUpdates();
 			}
 		});
 
-		this._night = computed(() => store.getters.night);
 		this._nightUnwatch = watch(this._night, () =>  {
 			if(this._mapSettings.nightAndDay) {
 				this.redraw();
 			}
 		});
+
+		return this;
 	}
 
 	private getTileName(coords: Coordinate) {
@@ -88,6 +97,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 		const tile = this._namedTiles.get(name);
 
 		if (tile) {
+			tile.classList.remove('leaflet-tile-loaded');
 			tile.dataset.src = this.getTileUrlFromName(name, timestamp);
 			this.loadQueue.push(tile);
 			this.tickLoadQueue();
@@ -190,7 +200,9 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 	remove() {
 		super.remove();
 
-		this._nightUnwatch();
+		if(this._nightUnwatch) {
+			this._nightUnwatch();
+		}
 
 		if(this._updateFrame) {
 			cancelAnimationFrame(this._updateFrame);
