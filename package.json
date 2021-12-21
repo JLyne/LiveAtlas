@@ -44,7 +44,7 @@
     "patch-package": "^6.4",
     "rimraf": "^3.0.2",
     "rollup-plugin-analyzer": "^4.0",
-    "sass": "^1.43",
+    "sass": "^1.45",
     "ts-jest": "^27.1.1",
     "ts-node": "^10.4.0",
     "typescript": "^4.5",
