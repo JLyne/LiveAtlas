@@ -204,7 +204,7 @@ export default defineComponent({
 					location = newValue.center;
 				}
 
-				if(typeof this.scheduledZoom === 'undefined') {
+				if(this.scheduledZoom == null) {
 					if(typeof newValue.defaultZoom !== 'undefined') {
 						this.scheduledZoom = newValue.defaultZoom;
 					} else {
