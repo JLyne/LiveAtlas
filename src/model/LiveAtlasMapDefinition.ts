@@ -93,7 +93,7 @@ export default class LiveAtlasMapDefinition {
 	}
 
 	hasCustomIcon(): boolean {
-		return !!this.icon;
+		return !!this.icon && !this.icon.startsWith('liveatlas_');
 	}
 
 	getIcon(): string {
@@ -101,6 +101,10 @@ export default class LiveAtlasMapDefinition {
 			mapType: string;
 
 		if(this.icon) {
+			if(this.icon.startsWith('liveatlas_')) {
+				return this.icon.replace('liveatlas_', '');
+			}
+
 			return this.icon;
 		}
 
