@@ -3,7 +3,7 @@ A [Dynmap](https://github.com/webbukkit/dynmap) and [Pl3xmap](https://github.com
 
 ![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas4.png)
 
-LiveAtlas is an alternative frontend for Dynmap, Pl3xmap and Squaremap, which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in replacement for Dynmap, and Pl3xmap/Squaremap maps are supported with some additional configuration.
+LiveAtlas is an alternative frontend for Dynmap, Pl3xmap and Squaremap, which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in replacement for Dynmap; Pl3xmap and Squaremap maps are supported with some additional configuration.
 
 Development is ongoing, but the major features of each map plugin are supported.
 
