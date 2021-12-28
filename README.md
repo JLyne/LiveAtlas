@@ -1,17 +1,17 @@
 # LiveAtlas 
-A [Dynmap](https://github.com/webbukkit/dynmap) and [Pl3xmap](https://github.com/NeumimTo/Pl3xMap) frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript.
+A [Dynmap](https://github.com/webbukkit/dynmap) and [Pl3xmap](https://github.com/NeumimTo/Pl3xMap)/[Squaremap](https://github.com/jpenilla/squaremap) frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript.
 
 ![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas4.png)
 
-LiveAtlas is an alternative frontend for Dynmap and Pl3xmap, which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in replacement for Dynmap, and Pl3xmap maps are supported with some additional configuration.
+LiveAtlas is an alternative frontend for Dynmap, Pl3xmap and Squaremap, which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in replacement for Dynmap; Pl3xmap and Squaremap maps are supported with some additional configuration.
 
-Development is ongoing, but all of the major Dynmap/Pl3xmap features are supported.
+Development is ongoing, but the major features of each map plugin are supported.
 
 You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 
 ## Supported map features
 
-| Feature | Dynmap | Pl3xmap |
+| Feature | Dynmap | Pl3xmap/Squaremap |
 | --------------- | --------------- | --------------- |
 | Viewing maps | ✅ | ✅ |
 | Markers | ✅ | ✅ |
@@ -52,7 +52,7 @@ Dev builds are available in [Github actions](https://github.com/JLyne/LiveAtlas/
 [See the wiki](https://github.com/JLyne/LiveAtlas/wiki/Installation)
 
 ## Customisation
-The index.html file can be edited to add custom favicons, styles or analytics, just like the original Dynmap. All LiveAtlas messages can also be modified here for translation purposes.
+The index.html file can be edited to add custom favicons, styles or analytics, just like the map plugins original UIs. All LiveAtlas messages can also be modified here for translation purposes.
 You are also free to build LiveAtlas yourself to make further changes.
 
 ## Building
@@ -61,7 +61,7 @@ First run `npm install` to install LiveAtlas dependencies. You can then either r
 ## Support
 If you find a bug, please create an issue with as must detail as possible. I'm working on this in my spare time, so fixes are on a best effort basis, but I'll eventually find time for them.
 
-Please do not contact the Dynmap or Pl3xmap teams regarding any issue with LiveAtlas. They will be very upset.
+Please do not contact the Dynmap, Pl3xmap or Squaremap teams regarding any issue with LiveAtlas. They will be very upset.
 
 ## Donate
 If you appreciate my work, feel free to:
