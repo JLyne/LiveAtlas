@@ -43,7 +43,7 @@ import {defineComponent} from "@vue/runtime-core";
 import SvgIcon from "@/components/SvgIcon.vue";
 import '@/assets/icons/arrow.svg';
 import {MutationTypes} from "@/store/mutation-types";
-import {computed, ref} from "vue";
+import {computed} from "vue";
 
 export default defineComponent({
 	name: 'SidebarSection',
@@ -64,12 +64,7 @@ export default defineComponent({
 		const store = useStore(),
 			title = computed(() => store.state.messages.toggleTitle),
 			collapsed = computed(() => store.state.ui.sidebar[props.name].collapsed),
-			customPosition = computed(() => store.state.ui.sidebar[props.name].customPosition),
-			customSize = computed(() => store.state.ui.sidebar[props.name].customSize),
-			smallScreen = computed(() => store.state.ui.smallScreen),
-
-			offsetX = ref(0),
-			offsetY = ref(0);
+			smallScreen = computed(() => store.state.ui.smallScreen);
 
 		const toggle = () => {
 			if(!props.collapsible) {
@@ -82,8 +77,6 @@ export default defineComponent({
 		return {
 			title,
 			collapsed,
-			customPosition,
-			customSize,
 			smallScreen,
 			toggle,
 		}
