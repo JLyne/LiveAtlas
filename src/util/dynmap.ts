@@ -28,7 +28,7 @@ import {
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {getPoints} from "@/util/areas";
-import {decodeHTMLEntities, endWorldNameRegex, netherWorldNameRegex, titleColoursRegex} from "@/util";
+import {endWorldNameRegex, netherWorldNameRegex, titleColoursRegex} from "@/util";
 import {getLinePoints} from "@/util/lines";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
@@ -292,9 +292,11 @@ export function buildMarker(data: Marker): LiveAtlasMarker {
 		}
 	}
 
-	const marker = Object.seal({
+	return Object.seal({
 		label: data.label || '',
-		isLabelHTML: data.markup || false,
+		//Dynmap#2288 currently means markup:false markers are still encoded
+		//The planned solution for this is to always treat everything as HTML, so we'll do that here
+		isLabelHTML: true,
 		location: {
 			x: data.x || 0,
 			y: data.y || 0,
@@ -306,13 +308,6 @@ export function buildMarker(data: Marker): LiveAtlasMarker {
 		maxZoom: typeof data.maxzoom !== 'undefined' && data.maxzoom > -1 ? data.maxzoom : undefined,
 		popupContent: data.desc || undefined,
 	});
-
-	//Fix double escaping on non-HTML labels
-	if(!marker.isLabelHTML) {
-		marker.label = decodeHTMLEntities(marker.label);
-	}
-
-	return marker;
 }
 
 export function buildAreas(data: any): Map<string, LiveAtlasArea> {
@@ -348,7 +343,9 @@ export function buildArea(area: MarkerArea): LiveAtlasArea {
 		minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
 		maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
 
-		isPopupHTML: area.desc ? true : area.markup || false,
+		//Dynmap#2288 currently means markup: false markers are still encoded
+		//The planned solution for this is to always treat everything as HTML, so we'll do that here
+		isPopupHTML: true, //area.desc ? true : area.markup || false,
 		popupContent: area.desc || area.label || undefined,
 	});
 }
@@ -378,7 +375,9 @@ export function buildLine(line: MarkerLine): LiveAtlasLine {
 		minZoom: typeof line.minzoom !== 'undefined' && line.minzoom > -1 ? line.minzoom : undefined,
 		maxZoom: typeof line.maxzoom !== 'undefined' && line.maxzoom > -1 ? line.maxzoom : undefined,
 
-		isPopupHTML: line.desc ? true : line.markup || false,
+		//Dynmap#2288 currently means markup: false markers are still encoded
+		//The planned solution for this is to always treat everything as HTML, so we'll do that here
+		isPopupHTML: true,
 		popupContent: line.desc || line.label || undefined,
 	});
 }
@@ -415,7 +414,9 @@ export function buildCircle(circle: MarkerCircle): LiveAtlasCircle {
 		minZoom: typeof circle.minzoom !== 'undefined' && circle.minzoom > -1 ? circle.minzoom : undefined,
 		maxZoom: typeof circle.maxzoom !== 'undefined' && circle.maxzoom > -1 ? circle.maxzoom : undefined,
 
-		isPopupHTML: circle.desc ? true : circle.markup || false,
+		//Dynmap#2288 currently means markup: false markers are still encoded
+		//The planned solution for this is to always treat everything as HTML, so we'll do that here
+		isPopupHTML: true,
 		popupContent: circle.desc || circle.label || undefined,
 	});
 }
@@ -480,22 +481,30 @@ export function buildUpdates(data: Array<any>, lastUpdate: Date) {
 						removed: entry.msg.endsWith('deleted'),
 					};
 
+				//Dynmap currently doesn't sanitise markup: true markers when they update
+				//To avoid an XSS vulnerability we force isLabelHTML/isPopupHTML to false here
+				//FIXME: Change this to a version check when dynmap sorts this
+
 				if (entry.msg.startsWith("set")) {
 					markerSetUpdates!.removed = update.removed;
 					markerSetUpdates!.payload = update.removed ? undefined : buildMarkerSet(set, entry);
 				} else if (entry.msg.startsWith("marker")) {
 					update.payload = update.removed ? undefined : buildMarker(entry);
+					update.payload.isLabelHTML = false;
 					markerSetUpdates!.markerUpdates.push(Object.freeze(update));
 				} else if (entry.msg.startsWith("area")) {
 					update.payload = update.removed ? undefined : buildArea(entry);
+					update.payload.isPopupHTML = false;
 					markerSetUpdates!.areaUpdates.push(Object.freeze(update));
 
 				} else if (entry.msg.startsWith("circle")) {
 					update.payload = update.removed ? undefined : buildCircle(entry);
+					update.payload.isPopupHTML = false;
 					markerSetUpdates!.circleUpdates.push(Object.freeze(update));
 
 				} else if (entry.msg.startsWith("line")) {
 					update.payload = update.removed ? undefined : buildLine(entry);
+					update.payload.isPopupHTML = false;
 					markerSetUpdates!.lineUpdates.push(Object.freeze(update));
 				}
 
