@@ -21,7 +21,10 @@
 		<div :class="{'following__target': true, 'following__target--hidden': target.hidden}">
 			<img v-if="imagesEnabled" width="32" height="32" class="target__icon" :src="image" alt="" />
 			<span class="target__name" v-html="target.displayName"></span>
-			<span class="target__status" v-show="target.hidden">{{ messageHidden }}</span>
+			<span class="target__status">{{ status }}</span>
+			<span class="target__location" v-show="!target.hidden" v-clipboard:copy="location"
+			      v-clipboard:success="copySuccess"
+			      v-clipboard:error="copyError">{{ location }}</span>
 			<button class="target__unfollow" type="button" :title="messageUnfollowTitle"
 				@click.prevent="unfollow" :aria-label="messageUnfollow">
 				<SvgIcon name="cross"></SvgIcon>
@@ -34,7 +37,7 @@
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {computed, defineComponent, onMounted, ref, watch} from "@vue/runtime-core";
-import {getMinecraftHead} from '@/util';
+import {clipboardError, clipboardSuccess, getMinecraftHead} from '@/util';
 import defaultImage from '@/assets/images/player_face.png';
 import {LiveAtlasPlayer} from "@/index";
 import SvgIcon from "@/components/SvgIcon.vue";
@@ -60,17 +63,35 @@ export default defineComponent({
 			messageUnfollowTitle = computed(() => store.state.messages.followingTitleUnfollow),
 			messageHidden = computed(() => store.state.messages.followingHidden),
 
+			status = computed(() => {
+				if (props.target.hidden) {
+					return messageHidden.value;
+				}
+
+				const world = store.state.worlds.get(props.target.location.world || '');
+				return world ? world.displayName : messageHidden.value;
+			}),
+
+			location = computed(() => {
+				if (props.target.hidden) {
+					return messageHidden.value;
+				}
+
+				return `${Math.floor(props.target.location.x)}, ${props.target.location.y}, ${Math.floor(props.target.location.z)}`;
+			}),
+
 			unfollow = () => {
 				store.commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
 			},
 			updatePlayerImage = async () => {
 				image.value = defaultImage;
 
-				if(imagesEnabled.value) {
+				if (imagesEnabled.value) {
 					try {
 						const result = await getMinecraftHead(props.target, 'small');
 						image.value = result.src;
-					} catch (e) {}
+					} catch (e) {
+					}
 				}
 			};
 
@@ -85,6 +106,10 @@ export default defineComponent({
 			messageUnfollow,
 			messageUnfollowTitle,
 			messageHidden,
+			status,
+			location,
+			copySuccess: clipboardSuccess(),
+			copyError: clipboardError(),
 		}
 	},
 });
@@ -99,8 +124,8 @@ export default defineComponent({
 		.following__target {
 			display: grid;
 			grid-template-columns: min-content 1fr;
-			grid-template-rows: 1fr min-content min-content 1fr;
-			grid-template-areas: "icon ." "icon name" "icon status" "icon .";
+			grid-template-rows: 1fr min-content min-content min-content 1fr;
+			grid-template-areas: "icon ." "icon name" "icon status" "icon location" "icon .";
 			grid-auto-flow: column;
 			align-items: center;
 
@@ -136,11 +161,23 @@ export default defineComponent({
 				font-size: 1.3rem;
 			}
 
+			.target__location {
+				grid-area: location;
+				font-family: monospace;
+				cursor: pointer;
+			}
+
 			&.following__target--hidden {
 				.target__icon {
 					filter: grayscale(1);
 					opacity: 0.5;
 				}
+			}
+
+			> * {
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
 			}
 		}
 

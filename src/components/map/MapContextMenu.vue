@@ -47,8 +47,7 @@ import {LeafletMouseEvent} from "leaflet";
 import {useStore} from "@/store";
 import WorldListItem from "@/components/sidebar/WorldListItem.vue";
 import {CSSProperties, ref} from "vue";
-import {getUrlForLocation} from "@/util";
-import {notify} from "@kyvg/vue3-notification";
+import {clipboardError, clipboardSuccess, getUrlForLocation} from "@/util";
 import {nextTick} from 'vue';
 import {handleKeyboardEvent} from "@/util/events";
 
@@ -69,8 +68,6 @@ export default defineComponent({
 
 			messageCopyLink = computed(() => store.state.messages.contextMenuCopyLink),
 			messageCenterHere = computed(() => store.state.messages.contextMenuCenterHere),
-			messageCopySuccess = computed(() => store.state.messages.copyToClipboardSuccess),
-			messageCopyError = computed(() => store.state.messages.copyToClipboardError),
 
 			menuElement = ref<HTMLInputElement | null>(null),
 			menuVisible = computed(() => !!event.value),
@@ -162,12 +159,6 @@ export default defineComponent({
 			}
 		}
 
-		const copySuccess = () => notify(messageCopySuccess.value);
-		const copyError = (e: Error) => {
-			notify({ type: 'error', text: messageCopyError.value });
-			console.error('Error copying to clipboard', e);
-		};
-
 		watch(event, value => {
 			if(value) {
 				props.leaflet.closePopup();
@@ -221,8 +212,8 @@ export default defineComponent({
 			messageCopyLink,
 			messageCenterHere,
 
-			copySuccess,
-			copyError,
+			copySuccess: clipboardSuccess(),
+			copyError: clipboardError(),
 
 			menuVisible,
 			menuElement,

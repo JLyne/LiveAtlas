@@ -17,6 +17,7 @@
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {HeadQueueEntry, LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
+import {notify} from "@kyvg/vue3-notification";
 
 const headCache = new Map<string, HTMLImageElement>(),
 	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>(),
@@ -203,3 +204,11 @@ export const focus = (selector: string) => {
 		(element as HTMLElement).focus();
 	}
 }
+
+
+export const clipboardSuccess = () => () => notify(useStore().state.messages.copyToClipboardSuccess);
+
+export const clipboardError = () => (e: Error) => {
+	notify({ type: 'error', text: useStore().state.messages.copyToClipboardError });
+	console.error('Error copying to clipboard', e);
+};
