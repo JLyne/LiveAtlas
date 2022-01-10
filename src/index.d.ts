@@ -160,6 +160,10 @@ export type LiveAtlasUIModal = 'login' | 'settings';
 export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';
 export type LiveAtlasDimension = 'overworld' | 'nether' | 'end';
 
+export type LiveAtlasSidebarSectionState = {
+	collapsed?: boolean;
+}
+
 interface LiveAtlasPlayer {
 	name: string;
 	displayName: string;

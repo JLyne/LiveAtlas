@@ -15,35 +15,33 @@
   -->
 
 <template>
-	<CollapsibleSection name="players" class="players">
+	<SidebarSection name="players" class="players">
 		<template v-slot:heading>{{ messageHeading }}</template>
 		<template v-slot:default>
-			<div class="section__content">
-				<input v-if="players && searchEnabled" id="players__search" type="text" name="search"
-				       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
-				<RadioList v-if="filteredPlayers.length" aria-labelledby="players-heading">
-					<PlayerListItem v-for="player in filteredPlayers" :key="player.name"
-					                :player="player"></PlayerListItem>
-				</RadioList>
-				<div v-else-if="searchQuery" class="section__skeleton">{{ messageSkeletonPlayersSearch }}</div>
-				<div v-else class="section__skeleton">{{ messageSkeletonPlayers }}</div>
-			</div>
+			<input v-if="players && searchEnabled" id="players__search" type="text" name="search"
+			       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
+			<RadioList v-if="filteredPlayers.length" aria-labelledby="players-heading">
+				<PlayerListItem v-for="player in filteredPlayers" :key="player.name"
+				                :player="player"></PlayerListItem>
+			</RadioList>
+			<div v-else-if="searchQuery" class="section__skeleton">{{ messageSkeletonPlayersSearch }}</div>
+			<div v-else class="section__skeleton">{{ messageSkeletonPlayers }}</div>
 		</template>
-	</CollapsibleSection>
+	</SidebarSection>
 </template>
 
 <script lang="ts">
 import PlayerListItem from "./PlayerListItem.vue";
 import {computed, defineComponent} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
 import RadioList from "@/components/util/RadioList.vue";
 import {ref} from "vue";
+import SidebarSection from "@/components/sidebar/SidebarSection.vue";
 
 export default defineComponent({
 	components: {
+		SidebarSection,
 		RadioList,
-		CollapsibleSection,
 		PlayerListItem
 	},
 

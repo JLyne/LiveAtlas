@@ -32,7 +32,10 @@ import {
 	LiveAtlasPlayer,
 	LiveAtlasMarkerSet,
 	LiveAtlasComponentConfig,
-	LiveAtlasServerConfig, LiveAtlasChat, LiveAtlasUIModal
+	LiveAtlasServerConfig,
+	LiveAtlasChat,
+	LiveAtlasUIModal,
+	LiveAtlasSidebarSectionState
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
@@ -86,8 +89,8 @@ export type State = {
 		previouslyVisibleElements: Set<LiveAtlasUIElement>;
 
 		sidebar: {
-			collapsedSections: Set<LiveAtlasSidebarSection>;
-		}
+			[K in LiveAtlasSidebarSection]: LiveAtlasSidebarSectionState
+		};
 	};
 
 	parsedUrl?: LiveAtlasParsedUrl;
@@ -265,7 +268,9 @@ export const state: State = {
 		previouslyVisibleElements: new Set(),
 
 		sidebar: {
-			collapsedSections: new Set(),
+			servers: {},
+			players: {},
+			maps: {},
 		},
 	}
 };

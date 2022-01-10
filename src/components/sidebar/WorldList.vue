@@ -15,29 +15,29 @@
   -->
 
 <template>
-	<CollapsibleSection name="maps">
+	<SidebarSection name="maps">
 		<template v-slot:heading>{{ heading }}</template>
 		<template v-slot:default>
-			<RadioList v-if="worlds.size" class="section__content" aria-labelledby="maps-heading">
+			<RadioList v-if="worlds.size" aria-labelledby="maps-heading">
 				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer}_${name}`"></WorldListItem>
 			</RadioList>
-			<div v-else class="section__content section__skeleton">{{ skeleton }}</div>
+			<div v-else class="section__skeleton">{{ skeleton }}</div>
 		</template>
-	</CollapsibleSection>
+	</SidebarSection>
 </template>
 
 <script lang="ts">
 import WorldListItem from './WorldListItem.vue';
 import {computed, defineComponent} from 'vue';
 import {useStore} from "@/store";
-import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
 import RadioList from "@/components/util/RadioList.vue";
+import SidebarSection from "@/components/sidebar/SidebarSection.vue";
 
 export default defineComponent({
 	name: 'WorldList',
 	components: {
+		SidebarSection,
 		RadioList,
-		CollapsibleSection,
 		WorldListItem
 	},
 

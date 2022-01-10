@@ -15,28 +15,28 @@
   -->
 
 <template>
-	<CollapsibleSection v-if="servers.size > 1" name="servers">
+	<SidebarSection v-if="servers.size > 1" name="servers">
 		<template v-slot:heading>{{ heading }}</template>
 		<template v-slot:default>
-			<RadioList class="section__content" aria-labelledby="servers-heading">
+			<RadioList aria-labelledby="servers-heading">
 				<ServerListItem :server="server" v-for="[name, server] in servers" :key="name"></ServerListItem>
 			</RadioList>
 		</template>
-	</CollapsibleSection>
+	</SidebarSection>
 </template>
 
 <script lang="ts">
 import ServerListItem from './ServerListItem.vue';
 import {computed, defineComponent} from 'vue';
 import {useStore} from "@/store";
-import CollapsibleSection from "@/components/sidebar/CollapsibleSection.vue";
+import SidebarSection from "@/components/sidebar/SidebarSection.vue";
 import RadioList from "@/components/util/RadioList.vue";
 
 export default defineComponent({
 	name: 'ServerList',
 	components: {
 		RadioList,
-		CollapsibleSection,
+		SidebarSection,
 		ServerListItem
 	},
 

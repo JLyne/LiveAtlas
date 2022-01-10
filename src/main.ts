@@ -43,7 +43,9 @@ console.info(`LiveAtlas version ${store.state.version} - https://github.com/JLyn
 
 store.subscribe((mutation, state) => {
 	if(mutation.type === 'toggleSidebarSectionCollapsedState' || mutation.type === 'setSidebarSectionCollapsedState') {
-		localStorage.setItem('collapsedSections', JSON.stringify(Array.from(state.ui.sidebar.collapsedSections)));
+		localStorage.setItem('uiSettings', JSON.stringify({
+			sidebar: state.ui.sidebar,
+		}));
 	}
 });
 

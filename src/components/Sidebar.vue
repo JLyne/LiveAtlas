@@ -152,8 +152,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '../scss/placeholders';
-
 .sidebar {
 	position: fixed;
 	z-index: 110;
@@ -227,80 +225,6 @@ export default defineComponent({
 
 		&:not(:hover):not(:focus-within)::-webkit-scrollbar-thumb {
 			background-color: var(--background-base);
-		}
-	}
-
-	.sidebar__section {
-		@extend %panel;
-		margin-bottom: var(--ui-element-spacing);
-		box-sizing: border-box;
-		width: 100%;
-		max-width: 25rem;
-		flex: 0 0 auto;
-
-		.section__heading {
-			cursor: pointer;
-			user-select: none;
-			text-align: left;
-			align-items: center;
-			margin: 0;
-
-			button {
-				display: flex;
-				font-size: 2rem;
-				padding: 1.5rem 1.5rem 1rem;
-				margin: -1.5rem -1.5rem 0;
-				background-color: transparent;
-				font-weight: 400;
-				color: inherit;
-				width: calc(100% + 3rem);
-				align-items: center;
-				text-shadow: var(--text-shadow);
-
-				.svg-icon {
-					margin-left: auto;
-					width: 1.5rem;
-					height: 1.5rem;
-				}
-			}
-
-			&:hover, &:focus-visible, &.focus-visible, &:active {
-				background-color: transparent;
-			}
-		}
-
-		.section__content {
-			padding: 0 0.5rem;
-			margin: 0 -.5rem 1rem;
-			min-width: 0;
-
-			&:last-child {
-				margin-bottom: 0;
-			}
-		}
-
-		.section__skeleton {
-			font-style: italic;
-			color: var(--text-disabled);
-			text-align: center;
-			align-self: center;
-			margin-top: 1rem;
-		}
-
-		&.section--collapsed {
-			.section__heading button {
-				padding-bottom: 1.5rem;
-				margin-bottom: -1.5rem;
-			}
-
-			.section__content {
-				display: none;
-			}
-		}
-
-		@media (max-width: 320px) {
-			box-sizing: border-box;
-			width: 100%;
 		}
 	}
 

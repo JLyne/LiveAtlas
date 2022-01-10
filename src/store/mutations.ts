@@ -39,7 +39,12 @@ import {
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasServerDefinition,
-	LiveAtlasServerConfig, LiveAtlasChat, LiveAtlasPartialComponentConfig, LiveAtlasComponentConfig, LiveAtlasUIModal
+	LiveAtlasServerConfig,
+	LiveAtlasChat,
+	LiveAtlasPartialComponentConfig,
+	LiveAtlasComponentConfig,
+	LiveAtlasUIModal,
+	LiveAtlasSidebarSectionState
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
@@ -97,12 +102,27 @@ export type Mutations<S = State> = {
 
 export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.INIT](state: State, config: LiveAtlasGlobalConfig) {
-		const collapsedSections = localStorage.getItem('collapsedSections'),
-			messageConfig = config?.messages || {},
+		const messageConfig = config?.messages || {},
 			uiConfig = config?.ui || {};
 
-		if(collapsedSections) {
-			state.ui.sidebar.collapsedSections = new Set(JSON.parse(collapsedSections));
+		try {
+			const uiSettings = JSON.parse(localStorage.getItem('uiSettings') || '{}');
+
+			if(uiSettings && uiSettings.sidebar) {
+				for(const element in uiSettings.sidebar) {
+					const elementState: LiveAtlasSidebarSectionState = uiSettings.sidebar[element];
+
+					if(!elementState) {
+						continue;
+					}
+
+					if(typeof state.ui.sidebar[element as LiveAtlasSidebarSection] !== 'undefined') {
+						state.ui.sidebar[element as LiveAtlasSidebarSection].collapsed = !!elementState.collapsed;
+					}
+				}
+			}
+		} catch(e) {
+			console.warn('Failed to load saved UI settings', e);
 		}
 
 		const messages: LiveAtlasGlobalMessageConfig = {
@@ -615,11 +635,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	[MutationTypes.TOGGLE_SIDEBAR_SECTION_COLLAPSED_STATE](state: State, section: LiveAtlasSidebarSection): void {
-		if(state.ui.sidebar.collapsedSections.has(section)) {
-			state.ui.sidebar.collapsedSections.delete(section);
-		} else {
-			state.ui.sidebar.collapsedSections.add(section);
-		}
+		state.ui.sidebar[section].collapsed = !state.ui.sidebar[section].collapsed;
 	},
 
 	[MutationTypes.SET_LOGGED_IN](state: State, payload: boolean): void {
