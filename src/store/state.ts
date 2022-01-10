@@ -78,6 +78,8 @@ export type State = {
 		playersSearch: boolean;
 		compactPlayerMarkers: boolean;
 
+		screenWidth: number;
+		screenHeight: number;
 		smallScreen: boolean;
 		visibleElements: Set<LiveAtlasUIElement>;
 		visibleModal?: LiveAtlasUIModal;
@@ -255,6 +257,8 @@ export const state: State = {
 		playersSearch: true,
 		compactPlayerMarkers: false,
 
+		screenWidth: window.innerWidth,
+		screenHeight: window.innerHeight,
 		smallScreen: false,
 		visibleElements: new Set(),
 		visibleModal: undefined,

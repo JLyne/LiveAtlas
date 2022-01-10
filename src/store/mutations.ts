@@ -82,7 +82,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: S, a?: void): void
 	[MutationTypes.CLEAR_PAN_TARGET](state: S, a?: void): void
 
-	[MutationTypes.SET_SMALL_SCREEN](state: S, payload: boolean): void
+	[MutationTypes.SET_SCREEN_SIZE](state: S, payload: {width: number, height: number}): void
 	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: S, payload: LiveAtlasUIElement): void
 	[MutationTypes.SET_UI_ELEMENT_VISIBILITY](state: S, payload: {element: LiveAtlasUIElement, state: boolean}): void
 	[MutationTypes.SHOW_UI_MODAL](state: S, payload: LiveAtlasUIModal): void
@@ -564,7 +564,12 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.panTarget = undefined;
 	},
 
-	[MutationTypes.SET_SMALL_SCREEN](state: State, smallScreen: boolean): void {
+	[MutationTypes.SET_SCREEN_SIZE](state: State, payload: {width: number, height: number}): void {
+		state.ui.screenWidth = payload.width;
+		state.ui.screenHeight = payload.height;
+
+		const smallScreen = state.ui.screenWidth < 480 || state.ui.screenHeight < 500;
+
 		if(!state.ui.smallScreen && smallScreen && state.ui.visibleElements.size > 1) {
 			state.ui.visibleElements.clear();
 		}

@@ -49,7 +49,7 @@ export enum MutationTypes {
 	CLEAR_FOLLOW_TARGET = 'clearFollow',
 	CLEAR_PAN_TARGET = 'clearPanTarget',
 
-	SET_SMALL_SCREEN = 'setSmallScreen',
+	SET_SCREEN_SIZE = 'setScreenSize',
 	TOGGLE_UI_ELEMENT_VISIBILITY = 'toggleUIElementVisibility',
 	SET_UI_ELEMENT_VISIBILITY = 'setUIElementVisibility',
 	SHOW_UI_MODAL = 'showUIModal',

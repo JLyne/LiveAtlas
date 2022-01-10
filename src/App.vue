@@ -123,7 +123,7 @@ export default defineComponent({
 			},
 
 			onResize = () => {
-				store.commit(MutationTypes.SET_SMALL_SCREEN, window.innerWidth < 480 || window.innerHeight < 500);
+				store.commit(MutationTypes.SET_SCREEN_SIZE, {width: window.innerWidth, height: window.innerHeight});
 			},
 
 			onKeydown = (e: KeyboardEvent) => {
