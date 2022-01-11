@@ -205,6 +205,13 @@ export const focus = (selector: string) => {
 	}
 }
 
+const decodeTextarea = document.createElement('textarea');
+
+export const decodeHTMLEntities = (text: string) => {
+	decodeTextarea.innerHTML = text;
+	return decodeTextarea.textContent || '';
+}
+
 
 export const clipboardSuccess = () => () => notify(useStore().state.messages.copyToClipboardSuccess);
 
