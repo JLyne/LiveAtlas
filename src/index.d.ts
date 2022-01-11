@@ -228,7 +228,10 @@ interface LiveAtlasMarkerSet {
 	minZoom?: number;
 	maxZoom?: number;
 	showLabels?: boolean;
-	markers: Map<string, LiveAtlasMarker>;
+}
+
+interface LiveAtlasMarkerSetContents {
+	markers: Map<string, LiveAtlasMarker>,
 	areas: Map<string, LiveAtlasArea>;
 	lines: Map<string, LiveAtlasLine>;
 	circles: Map<string, LiveAtlasCircle>;

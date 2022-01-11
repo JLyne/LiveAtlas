@@ -16,7 +16,7 @@
 
 import {
 	HeadQueueEntry,
-	LiveAtlasMarkerSet,
+	LiveAtlasMarkerSet, LiveAtlasMarkerSetContents,
 	LiveAtlasPlayer,
 	LiveAtlasServerDefinition,
 	LiveAtlasWorldDefinition
@@ -47,11 +47,14 @@ export default class DynmapMapProvider extends MapProvider {
 	private updateTimestamp: Date = new Date();
 	private updateInterval: number = 3000;
 
+	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
+	private markers = new Map<string, LiveAtlasMarkerSetContents>();
+
 	constructor(config: LiveAtlasServerDefinition) {
 		super(config);
 	}
 
-	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<Map<string, LiveAtlasMarkerSet>> {
+	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
 		const url = `${this.config.dynmap!.markers}_markers_/marker_${world.name}.json`;
 
 		if(this.markersAbort) {
@@ -61,7 +64,6 @@ export default class DynmapMapProvider extends MapProvider {
 		this.markersAbort = new AbortController();
 
 		const response = await this.getJSON(url, this.markersAbort.signal);
-		const sets: Map<string, LiveAtlasMarkerSet> = new Map();
 
 		response.sets = response.sets || {};
 
@@ -71,21 +73,16 @@ export default class DynmapMapProvider extends MapProvider {
 			}
 
 			const set: MarkerSet = response.sets[key],
-				markers = buildMarkers(set.markers || {}),
-				circles = buildCircles(set.circles || {}),
-				areas = buildAreas(set.areas || {}),
-				lines = buildLines(set.lines || {});
+				markerSet = buildMarkerSet(key, set);
 
-			sets.set(key, {
-				...buildMarkerSet(key, set),
-				markers,
-				circles,
-				areas,
-				lines,
-			});
+			this.markerSets.set(key, markerSet);
+			this.markers.set(key, Object.seal({
+				markers: buildMarkers(set.markers || {}),
+				areas: buildAreas(set.areas || {}),
+				lines: buildLines(set.lines || {}),
+				circles: buildCircles(set.circles || {}),
+			}));
 		}
-
-		return sets;
 	}
 
 	async loadServerConfiguration(): Promise<void> {
@@ -115,9 +112,13 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {
-		const markerSets = await this.getMarkerSets(world);
+		await this.getMarkerSets(world);
 
-		this.store.commit(MutationTypes.SET_MARKER_SETS, markerSets);
+		this.store.commit(MutationTypes.SET_MARKER_SETS, this.markerSets);
+		this.store.commit(MutationTypes.SET_MARKERS, this.markers);
+
+		this.markerSets.clear();
+		this.markers.clear();
 	}
 
 	private async getUpdate(): Promise<void> {

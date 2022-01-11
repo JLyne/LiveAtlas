@@ -23,6 +23,7 @@ export enum MutationTypes {
 	SET_WORLDS = 'setWorlds',
 	SET_COMPONENTS = 'setComponents',
 	SET_MARKER_SETS = 'setMarkerSets',
+	SET_MARKERS = 'setMarkers',
 	SET_WORLD_STATE = 'setWorldState',
 	ADD_MARKER_SET_UPDATES = 'addMarkerSetUpdates',
 	ADD_TILE_UPDATES = 'addTileUpdates',

@@ -35,7 +35,8 @@ import {
 	LiveAtlasServerConfig,
 	LiveAtlasChat,
 	LiveAtlasUIModal,
-	LiveAtlasSidebarSectionState
+	LiveAtlasSidebarSectionState,
+	LiveAtlasMarkerSetContents
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
@@ -189,7 +190,8 @@ export const state: State = {
 		messages: [],
 	},
 
-	markerSets: new Map(), //Markers from world_markers.json. Contents of each set isn't reactive for performance reasons.
+	markerSets: new Map(), //Markers sets from world_markers.json, doesn't include the markers themselves for performance reasons
+
 	pendingSetUpdates: new Map(), //Pending updates to markers/areas/etc for each marker set
 	pendingTileUpdates: [], //Pending updates to map tiles
 
@@ -274,3 +276,7 @@ export const state: State = {
 		},
 	}
 };
+
+export const nonReactiveState = Object.freeze({
+	markers: new Map<string, LiveAtlasMarkerSetContents>(),
+});

@@ -23,6 +23,7 @@ import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import {LiveAtlasCircle, LiveAtlasMarkerSet} from "@/index";
+import {nonReactiveState} from "@/store/state";
 
 export default defineComponent({
 	props: {
@@ -51,7 +52,7 @@ export default defineComponent({
 			createCircles = () => {
 				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
-				props.set.circles.forEach((circle: LiveAtlasCircle, id: string) => {
+				nonReactiveState.markers.get(props.set.id)!.circles.forEach((circle: LiveAtlasCircle, id: string) => {
 					const layer = createCircle(circle, converter);
 
 					layers.set(id, layer);
@@ -103,7 +104,7 @@ export default defineComponent({
 			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
 				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
-				for (const [id, circle] of props.set.circles) {
+				for (const [id, circle] of nonReactiveState.markers.get(props.set.id)!.circles) {
 					updateCircle(layers.get(id), circle, converter);
 				}
 			}

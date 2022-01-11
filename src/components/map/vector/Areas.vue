@@ -23,6 +23,7 @@ import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import {LiveAtlasArea, LiveAtlasMarkerSet} from "@/index";
+import {nonReactiveState} from "@/store/state";
 
 export default defineComponent({
 	props: {
@@ -51,7 +52,7 @@ export default defineComponent({
 			createAreas = () => {
 				const converter = currentMap.value!.locationToLatLng.bind(currentMap.value);
 
-				props.set.areas.forEach((area: LiveAtlasArea, id: string) => {
+				nonReactiveState.markers.get(props.set.id)!.areas.forEach((area: LiveAtlasArea, id: string) => {
 					const layer = createArea(area, converter);
 
 					layers.set(id, layer);
@@ -103,7 +104,7 @@ export default defineComponent({
 			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
 				const converter = newValue.locationToLatLng.bind(newValue);
 
-				for (const [id, area] of props.set.areas) {
+				for (const [id, area] of nonReactiveState.markers.get(props.set.id)!.areas) {
 					updateArea(layers.get(id), area, converter);
 				}
 			}

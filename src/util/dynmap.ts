@@ -285,14 +285,14 @@ export function buildMarker(data: Marker): LiveAtlasMarker {
 	let dimensions;
 
 	if(data.dim) {
-		dimensions = data.dim.split('x').slice(0, 2).map(value => parseInt(value));
+		dimensions = data.dim.split('x').filter(value => !isNaN(Number(value)));
 
 		if(dimensions.length !== 2) {
 			dimensions = undefined;
 		}
 	}
 
-	return Object.seal({
+	return {
 		label: data.label || '',
 		//Dynmap#2288 currently means markup:false markers are still encoded
 		//The planned solution for this is to always treat everything as HTML, so we'll do that here
@@ -307,7 +307,7 @@ export function buildMarker(data: Marker): LiveAtlasMarker {
 		minZoom: typeof data.minzoom !== 'undefined' && data.minzoom > -1 ? data.minzoom : undefined,
 		maxZoom: typeof data.maxzoom !== 'undefined' && data.maxzoom > -1 ? data.maxzoom : undefined,
 		popupContent: data.desc || undefined,
-	});
+	};
 }
 
 export function buildAreas(data: any): Map<string, LiveAtlasArea> {
@@ -325,12 +325,7 @@ export function buildAreas(data: any): Map<string, LiveAtlasArea> {
 }
 
 export function buildArea(area: MarkerArea): LiveAtlasArea {
-	const opacity = area.fillopacity || 0,
-		x = area.x || [0, 0],
-		y: [number, number] = [area.ybottom || 0, area.ytop || 0],
-		z = area.z || [0, 0];
-
-	return Object.seal({
+	return {
 		style: {
 			color: area.color || '#ff0000',
 			opacity: area.opacity || 1,
@@ -338,8 +333,12 @@ export function buildArea(area: MarkerArea): LiveAtlasArea {
 			fillColor: area.fillcolor || '#ff0000',
 			fillOpacity: area.fillopacity || 0,
 		},
-		outline: !opacity,
-		points: getPoints(x, y, z, !opacity),
+		outline: !area.fillopacity,
+		points: getPoints(
+			area.x || [0, 0],
+			[area.ybottom || 0, area.ytop || 0],
+			area.z || [0, 0],
+			!area.fillopacity),
 		minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
 		maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
 
@@ -347,7 +346,7 @@ export function buildArea(area: MarkerArea): LiveAtlasArea {
 		//The planned solution for this is to always treat everything as HTML, so we'll do that here
 		isPopupHTML: true, //area.desc ? true : area.markup || false,
 		popupContent: area.desc || area.label || undefined,
-	});
+	};
 }
 
 export function buildLines(data: any): Map<string, LiveAtlasLine> {
@@ -365,7 +364,7 @@ export function buildLines(data: any): Map<string, LiveAtlasLine> {
 }
 
 export function buildLine(line: MarkerLine): LiveAtlasLine {
-	return Object.seal({
+	return {
 		style: {
 			color: line.color || '#ff0000',
 			opacity: line.opacity || 1,
@@ -379,7 +378,7 @@ export function buildLine(line: MarkerLine): LiveAtlasLine {
 		//The planned solution for this is to always treat everything as HTML, so we'll do that here
 		isPopupHTML: true,
 		popupContent: line.desc || line.label || undefined,
-	});
+	};
 }
 
 export function buildCircles(data: any): Map<string, LiveAtlasCircle> {
@@ -397,7 +396,7 @@ export function buildCircles(data: any): Map<string, LiveAtlasCircle> {
 }
 
 export function buildCircle(circle: MarkerCircle): LiveAtlasCircle {
-	return Object.seal({
+	return {
 		location: {
 			x: circle.x || 0,
 			y: circle.y || 0,
@@ -418,7 +417,7 @@ export function buildCircle(circle: MarkerCircle): LiveAtlasCircle {
 		//The planned solution for this is to always treat everything as HTML, so we'll do that here
 		isPopupHTML: true,
 		popupContent: circle.desc || circle.label || undefined,
-	});
+	};
 }
 
 export function buildUpdates(data: Array<any>, lastUpdate: Date) {
