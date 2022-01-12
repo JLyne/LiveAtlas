@@ -41,7 +41,7 @@ declare global {
 
 	declare const process : {
 		env: {
-			VITE_VERSION: string
+			VITE_APP_VERSION: string
 		}
 	}
 }
