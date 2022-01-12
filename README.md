@@ -1,4 +1,6 @@
-# LiveAtlas 
+# LiveAtlas [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Discord](https://img.shields.io/discord/390942438061113344?color=8C9CFE&label=discord&logo=discord&logoColor=white)](https://discord.gg/DBduB9qyv3) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/JLyne/LiveAtlas/Build)](https://github.com/JLyne/LiveAtlas/actions)
+
+
 A [Dynmap](https://github.com/webbukkit/dynmap) and [Pl3xmap](https://github.com/NeumimTo/Pl3xMap)/[Squaremap](https://github.com/jpenilla/squaremap) frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript.
 
 ![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas4.png)
