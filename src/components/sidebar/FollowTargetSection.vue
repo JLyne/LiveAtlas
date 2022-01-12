@@ -44,7 +44,7 @@ import SvgIcon from "@/components/SvgIcon.vue";
 import "@/assets/icons/cross.svg";
 
 export default defineComponent({
-	name: 'FollowTarget',
+	name: 'FollowTargetSection',
 	components: {SvgIcon},
 	props: {
 		target: {

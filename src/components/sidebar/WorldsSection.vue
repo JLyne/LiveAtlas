@@ -1,5 +1,5 @@
 <!--
-  - Copyright 2021 James Lyne
+  - Copyright 2022 James Lyne
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -18,27 +18,23 @@
 	<SidebarSection name="maps">
 		<template v-slot:heading>{{ heading }}</template>
 		<template v-slot:default>
-			<RadioList v-if="worlds.size" aria-labelledby="maps-heading">
-				<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer}_${name}`"></WorldListItem>
-			</RadioList>
+			<WorldList v-if="worlds.size" :worlds="worlds" :prefix="prefix" aria-labelledby="maps-heading"></WorldList>
 			<div v-else class="section__skeleton">{{ skeleton }}</div>
 		</template>
 	</SidebarSection>
 </template>
 
 <script lang="ts">
-import WorldListItem from './WorldListItem.vue';
 import {computed, defineComponent} from 'vue';
 import {useStore} from "@/store";
-import RadioList from "@/components/util/RadioList.vue";
 import SidebarSection from "@/components/sidebar/SidebarSection.vue";
+import WorldList from "@/components/list/WorldList.vue";
 
 export default defineComponent({
-	name: 'WorldList',
+	name: 'WorldsSection',
 	components: {
+		WorldList,
 		SidebarSection,
-		RadioList,
-		WorldListItem
 	},
 
 	props: {

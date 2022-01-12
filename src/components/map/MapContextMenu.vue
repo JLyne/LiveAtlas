@@ -45,7 +45,7 @@ import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {computed, defineComponent, onMounted, onUnmounted, watch} from "@vue/runtime-core";
 import {LeafletMouseEvent} from "leaflet";
 import {useStore} from "@/store";
-import WorldListItem from "@/components/sidebar/WorldListItem.vue";
+import WorldListItem from "@/components/list/WorldListItem.vue";
 import {CSSProperties, ref} from "vue";
 import {clipboardError, clipboardSuccess, getUrlForLocation} from "@/util";
 import {nextTick} from 'vue';

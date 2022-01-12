@@ -1,5 +1,5 @@
 <!--
-  - Copyright 2021 James Lyne
+  - Copyright 2022 James Lyne
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -20,10 +20,7 @@
 		<template v-slot:default>
 			<input v-if="players && searchEnabled" id="players__search" type="text" name="search"
 			       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
-			<RadioList v-if="filteredPlayers.length" aria-labelledby="players-heading">
-				<PlayerListItem v-for="player in filteredPlayers" :key="player.name"
-				                :player="player"></PlayerListItem>
-			</RadioList>
+			<PlayerList v-if="filteredPlayers.length" :players="filteredPlayers" aria-labelledby="players-heading"></PlayerList>
 			<div v-else-if="searchQuery" class="section__skeleton">{{ messageSkeletonPlayersSearch }}</div>
 			<div v-else class="section__skeleton">{{ messageSkeletonPlayers }}</div>
 		</template>
@@ -31,18 +28,16 @@
 </template>
 
 <script lang="ts">
-import PlayerListItem from "./PlayerListItem.vue";
 import {computed, defineComponent} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import RadioList from "@/components/util/RadioList.vue";
 import {ref} from "vue";
 import SidebarSection from "@/components/sidebar/SidebarSection.vue";
+import PlayerList from "@/components/list/PlayerList.vue";
 
 export default defineComponent({
 	components: {
+		PlayerList,
 		SidebarSection,
-		RadioList,
-		PlayerListItem
 	},
 
 	setup() {

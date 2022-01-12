@@ -27,7 +27,7 @@
 				<span>
 					<slot name="heading"></slot>
 				</span>
-				<SvgIcon name="arrow"></SvgIcon>
+				<SvgIcon v-if="collapsible" name="arrow"></SvgIcon>
 			</button>
 		</h2>
 		<div :id="`${name}-content`" class="section__content" :aria-hidden="collapsed">

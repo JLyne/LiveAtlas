@@ -30,21 +30,21 @@
 			</button>
 		</header>
 		<div class="sidebar__content" @keydown="handleSidebarKeydown">
-			<ServerList v-if="serverCount > 1" v-show="mapsVisible"></ServerList>
-			<WorldList v-if="mapCount > 1" v-show="mapsVisible"></WorldList>
-			<PlayerList id="players" v-if="playerMakersEnabled && previouslyVisible.has('players')"
-			            v-show="playersVisible"></PlayerList>
-			<FollowTarget v-if="following" v-show="followVisible" :target="following"></FollowTarget>
+			<ServersSection v-if="serverCount > 1" v-show="mapsVisible"></ServersSection>
+			<WorldsSection v-if="mapCount > 1" v-show="mapsVisible"></WorldsSection>
+			<PlayersSection id="players" v-if="playerMakersEnabled && previouslyVisible.has('players')"
+			            v-show="playersVisible"></PlayersSection>
+			<FollowTargetSection v-if="following" v-show="followVisible" :target="following"></FollowTargetSection>
 		</div>
 	</section>
 </template>
 
 <script lang="ts">
 import {computed, defineComponent} from "@vue/runtime-core";
-import PlayerList from './sidebar/PlayerList.vue';
-import WorldList from './sidebar/WorldList.vue';
-import ServerList from "@/components/sidebar/ServerList.vue";
-import FollowTarget from './sidebar/FollowTarget.vue';
+import FollowTargetSection from './sidebar/FollowTargetSection.vue';
+import PlayersSection from "@/components/sidebar/PlayersSection.vue";
+import ServersSection from "@/components/sidebar/ServersSection.vue";
+import WorldsSection from "@/components/sidebar/WorldsSection.vue";
 import {useStore} from "@/store";
 import SvgIcon from "@/components/SvgIcon.vue";
 import {MutationTypes} from "@/store/mutation-types";
@@ -57,11 +57,11 @@ import {focus} from "@/util";
 
 export default defineComponent({
 	components: {
-		ServerList,
+		WorldsSection,
+		ServersSection,
+		PlayersSection,
+		FollowTargetSection,
 		SvgIcon,
-		PlayerList,
-		FollowTarget,
-		WorldList,
 	},
 
 	setup() {
