@@ -76,6 +76,7 @@ interface LiveAtlasServerDefinition {
 	type: 'dynmap' | 'pl3xmap';
 	dynmap?: DynmapUrlConfig;
 	pl3xmap?: string;
+	squaremap?: string;
 }
 
 // Messages defined directly in LiveAtlas and used for all servers

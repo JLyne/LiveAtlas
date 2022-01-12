@@ -42,6 +42,11 @@ const validateLiveAtlasConfiguration = (config: any): Map<string, LiveAtlasServe
 
 		serverConfig.id = server;
 
+		//Squaremap and Pl3xmap are currently interchangeable
+		if(typeof serverConfig.squaremap !== 'undefined') {
+			serverConfig.pl3xmap = serverConfig.squaremap;
+		}
+
 		if(typeof serverConfig.pl3xmap !== 'undefined') {
 			serverConfig.type = 'pl3xmap';
 
