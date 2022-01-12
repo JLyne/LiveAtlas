@@ -21,6 +21,7 @@ import {Coords, DoneCallback, InternalTiles, PathOptions, PointTuple, PolylineOp
 import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
+import {globalMessages, serverMessages} from "../messages";
 
 declare module "*.png" {
    const value: any;
@@ -80,72 +81,13 @@ interface LiveAtlasServerDefinition {
 }
 
 // Messages defined directly in LiveAtlas and used for all servers
-interface LiveAtlasGlobalMessageConfig {
-	chatNoMessages: string;
-	chatTitle: string;
-	chatLogin: string;
-	chatSend: string;
-	chatPlaceholder: string;
-	chatErrorDisabled: string;
-	chatErrorUnknown: string;
-	serversHeading: string;
-	worldsSkeleton: string;
-	playersSkeleton: string;
-	playersTitle: string;
-	playersTitleHidden: string;
-	playersTitleOtherWorld: string;
-	playersSearchPlaceholder: string;
-	playersSearchSkeleton: string;
-	followingHeading: string;
-	followingUnfollow: string;
-	followingTitleUnfollow: string;
-	followingHidden: string;
-	linkTitle: string;
-	loadingTitle: string;
-	locationRegion: string;
-	locationChunk: string;
-	contextMenuCopyLink: string;
-	contextMenuCenterHere: string;
-	toggleTitle: string;
-	mapTitle: string;
-	layersTitle: string;
-	copyToClipboardSuccess: string;
-	copyToClipboardError: string;
-	loginTitle: string;
-	loginHeading: string;
-	loginUsernameLabel: string;
-	loginPasswordLabel: string;
-	loginSubmit: string;
-	loginErrorUnknown: string;
-	loginErrorDisabled: string;
-	loginErrorIncorrect: string;
-	loginSuccess: string;
-	registerHeading: string;
-	registerDescription: string;
-	registerConfirmPasswordLabel: string;
-	registerCodeLabel: string;
-	registerSubmit: string;
-	registerErrorUnknown: string;
-	registerErrorDisabled: string;
-	registerErrorVerifyFailed: string;
-	registerErrorIncorrect: string;
-	logoutTitle: string;
-	logoutErrorUnknown: string;
-	logoutSuccess: string;
-	closeTitle: string;
+type LiveAtlasGlobalMessageConfig = {
+	[K in typeof globalMessages[number]]: string;
 }
 
 // Messages defined by dynmap configuration responses and can vary per server
-interface LiveAtlasServerMessageConfig {
-	chatPlayerJoin: string;
-	chatPlayerQuit: string;
-	chatAnonymousJoin: string;
-	chatAnonymousQuit: string;
-	chatErrorNotAllowed: string;
-	chatErrorRequiresLogin: string;
-	chatErrorCooldown: string;
-	worldsHeading: string;
-	playersHeading: string;
+type LiveAtlasServerMessageConfig = {
+	[K in typeof serverMessages[number]]: string;
 }
 
 type LiveAtlasMessageConfig = LiveAtlasGlobalMessageConfig & LiveAtlasServerMessageConfig;

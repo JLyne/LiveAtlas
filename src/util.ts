@@ -16,8 +16,15 @@
 
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {HeadQueueEntry, LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
+import {
+	HeadQueueEntry,
+	LiveAtlasGlobalMessageConfig,
+	LiveAtlasMessageConfig,
+	LiveAtlasPlayer,
+	LiveAtlasPlayerImageSize,
+} from "@/index";
 import {notify} from "@kyvg/vue3-notification";
+import {globalMessages, serverMessages} from "../messages";
 
 const headCache = new Map<string, HTMLImageElement>(),
 	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>(),
@@ -212,10 +219,28 @@ export const decodeHTMLEntities = (text: string) => {
 	return decodeTextarea.textContent || '';
 }
 
-
 export const clipboardSuccess = () => () => notify(useStore().state.messages.copyToClipboardSuccess);
 
 export const clipboardError = () => (e: Error) => {
 	notify({ type: 'error', text: useStore().state.messages.copyToClipboardError });
 	console.error('Error copying to clipboard', e);
 };
+
+export const getMessages = (config: any = {}) => {
+	return Object.assign(_getMessages(globalMessages, config),
+		_getMessages(serverMessages, config)) as LiveAtlasMessageConfig;
+}
+
+export const getGlobalMessages = (config: any = {}) => {
+	return _getMessages(globalMessages, config) as LiveAtlasGlobalMessageConfig;
+}
+
+const _getMessages = (messageKeys: any, config: any = {}) => {
+	const messages: any = {};
+
+	for(const key of messageKeys) {
+		messages[key] = config[key] || `Missing message: ${key}`;
+	}
+
+	return messages as LiveAtlasGlobalMessageConfig;
+}

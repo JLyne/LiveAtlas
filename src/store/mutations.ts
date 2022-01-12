@@ -48,6 +48,7 @@ import {
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
+import {getGlobalMessages} from "@/util";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -126,62 +127,7 @@ export const mutations: MutationTree<State> & Mutations = {
 			console.warn('Failed to load saved UI settings', e);
 		}
 
-		const messages: LiveAtlasGlobalMessageConfig = {
-			chatTitle: messageConfig.chatTitle || '',
-			chatLogin: messageConfig.chatLogin || '',
-			chatNoMessages: messageConfig.chatNoMessages || '',
-			chatSend: messageConfig.chatSend || '',
-			chatPlaceholder: messageConfig.chatPlaceholder || '',
-			chatErrorDisabled: messageConfig.chatErrorDisabled || '',
-			chatErrorUnknown: messageConfig.chatErrorUnknown || '',
-			serversHeading: messageConfig.serversHeading || '',
-			worldsSkeleton: messageConfig.worldsSkeleton || '',
-			playersSkeleton: messageConfig.playersSkeleton || '',
-			playersTitle: messageConfig.playersTitle || '',
-			playersTitleHidden: messageConfig.playersTitleHidden || '',
-			playersTitleOtherWorld: messageConfig.playersTitleOtherWorld || '',
-			playersSearchPlaceholder: messageConfig.playersSearchPlaceholder || '',
-			playersSearchSkeleton: messageConfig.playersSearchSkeleton || '',
-			followingHeading: messageConfig.followingHeading || '',
-			followingHidden: messageConfig.followingHidden || '',
-			followingUnfollow: messageConfig.followingUnfollow || '',
-			followingTitleUnfollow: messageConfig.followingTitleUnfollow || '',
-			linkTitle: messageConfig.linkTitle || '',
-			loadingTitle: messageConfig.loadingTitle || '',
-			locationRegion: messageConfig.locationRegion || '',
-			locationChunk: messageConfig.locationChunk || '',
-			contextMenuCopyLink: messageConfig.contextMenuCopyLink || '',
-			contextMenuCenterHere: messageConfig.contextMenuCenterHere || '',
-			toggleTitle: messageConfig.toggleTitle || '',
-			mapTitle: messageConfig.mapTitle || '',
-			layersTitle: messageConfig.layersTitle || '',
-			copyToClipboardSuccess: messageConfig.copyToClipboardSuccess || '',
-			copyToClipboardError: messageConfig.copyToClipboardError || '',
-			loginTitle: messageConfig.loginTitle || '',
-			loginHeading: messageConfig.loginHeading || '',
-			loginUsernameLabel: messageConfig.loginUsernameLabel || '',
-			loginPasswordLabel: messageConfig.loginPasswordLabel || '',
-			loginSubmit: messageConfig.loginSubmit || '',
-			loginErrorUnknown: messageConfig.loginErrorUnknown || '',
-			loginErrorDisabled: messageConfig.loginErrorDisabled || '',
-			loginErrorIncorrect: messageConfig.loginErrorIncorrect || '',
-			loginSuccess: messageConfig.loginSuccess || '',
-			registerHeading: messageConfig.registerHeading || '',
-			registerDescription: messageConfig.registerDescription || '',
-			registerConfirmPasswordLabel: messageConfig.registerConfirmPasswordLabel || '',
-			registerCodeLabel: messageConfig.registerCodeLabel || '',
-			registerSubmit: messageConfig.registerSubmit || '',
-			registerErrorUnknown: messageConfig.registerErrorUnknown || '',
-			registerErrorDisabled: messageConfig.registerErrorDisabled || '',
-			registerErrorVerifyFailed: messageConfig.registerErrorVerifyFailed || '',
-			registerErrorIncorrect: messageConfig.registerErrorIncorrect || '',
-			logoutTitle: messageConfig.logoutTitle || '',
-			logoutErrorUnknown: messageConfig.logoutErrorUnknown || '',
-			logoutSuccess: messageConfig.logoutSuccess || '',
-			closeTitle: messageConfig.closeTitle || '',
-		}
-
-		state.messages = Object.assign(state.messages, messages);
+		state.messages = Object.assign(state.messages, getGlobalMessages(messageConfig));
 
 		if(typeof uiConfig.playersAboveMarkers === 'boolean') {
 			state.ui.playersAboveMarkers = uiConfig.playersAboveMarkers;
