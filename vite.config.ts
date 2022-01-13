@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [vue(), analyze(), svgSpritePlugin({
       symbolId: (name) => `icon--${name}`,
+      removeAttrs: ['xmlns', 'width', 'height', 'version']
     })],
     base: './',
     server: {
