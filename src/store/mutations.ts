@@ -33,10 +33,10 @@ import {
 	LiveAtlasGlobalMessageConfig,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasPlayer,
-	LiveAtlasCircle,
-	LiveAtlasLine,
-	LiveAtlasArea,
-	LiveAtlasMarker,
+	LiveAtlasCircleMarker,
+	LiveAtlasLineMarker,
+	LiveAtlasAreaMarker,
+	LiveAtlasPointMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasServerDefinition,
 	LiveAtlasServerConfig,
@@ -217,10 +217,10 @@ export const mutations: MutationTree<State> & Mutations = {
 				lineUpdates: [],
 			});
 			nonReactiveState.markers.set(entry[0], {
-				markers: new Map<string, LiveAtlasMarker>(),
-				areas: new Map<string, LiveAtlasArea>(),
-				lines: new Map<string, LiveAtlasLine>(),
-				circles: new Map<string, LiveAtlasCircle>(),
+				points: new Map<string, LiveAtlasPointMarker>(),
+				areas: new Map<string, LiveAtlasAreaMarker>(),
+				lines: new Map<string, LiveAtlasLineMarker>(),
+				circles: new Map<string, LiveAtlasCircleMarker>(),
 			});
 		}
 	},
@@ -292,9 +292,9 @@ export const mutations: MutationTree<State> & Mutations = {
 			//Update non-reactive lists
 			for(const update of entry[1].markerUpdates) {
 				if(update.removed) {
-					setContents.markers.delete(update.id);
+					setContents.points.delete(update.id);
 				} else {
-					setContents.markers.set(update.id, update.payload as LiveAtlasMarker);
+					setContents.points.set(update.id, update.payload as LiveAtlasPointMarker);
 				}
 			}
 
@@ -302,7 +302,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					setContents.areas.delete(update.id);
 				} else {
-					setContents.areas.set(update.id, update.payload as LiveAtlasArea);
+					setContents.areas.set(update.id, update.payload as LiveAtlasAreaMarker);
 				}
 			}
 
@@ -310,7 +310,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					setContents.circles.delete(update.id);
 				} else {
-					setContents.circles.set(update.id, update.payload as LiveAtlasCircle);
+					setContents.circles.set(update.id, update.payload as LiveAtlasCircleMarker);
 				}
 			}
 
@@ -318,7 +318,7 @@ export const mutations: MutationTree<State> & Mutations = {
 				if(update.removed) {
 					setContents.lines.delete(update.id);
 				} else {
-					setContents.lines.set(update.id, update.payload as LiveAtlasLine);
+					setContents.lines.set(update.id, update.payload as LiveAtlasLineMarker);
 				}
 			}
 

@@ -20,9 +20,9 @@
 import {LeafletMouseEvent, Marker} from "leaflet";
 import {GenericIcon} from "@/leaflet/icon/GenericIcon";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
-import {LiveAtlasMarker} from "@/index";
+import {LiveAtlasPointMarker} from "@/index";
 
-export const createMarker = (options: LiveAtlasMarker, converter: Function): Marker => {
+export const createMarker = (options: LiveAtlasPointMarker, converter: Function): Marker => {
 	const marker = new GenericMarker(converter(options.location), options);
 
 	marker.on('click', (e: LeafletMouseEvent) => {
@@ -38,7 +38,7 @@ export const createMarker = (options: LiveAtlasMarker, converter: Function): Mar
 	return marker;
 };
 
-export const updateMarker = (marker: Marker | undefined, options: LiveAtlasMarker, converter: Function): Marker => {
+export const updateMarker = (marker: Marker | undefined, options: LiveAtlasPointMarker, converter: Function): Marker => {
 	if (!marker) {
 		return createMarker(options, converter);
 	}
@@ -73,7 +73,7 @@ export const updateMarker = (marker: Marker | undefined, options: LiveAtlasMarke
 	return marker;
 };
 
-const createPopup = (options: LiveAtlasMarker) => {
+const createPopup = (options: LiveAtlasPointMarker) => {
 	const popup = document.createElement('span');
 
 	if (options.popupContent) {

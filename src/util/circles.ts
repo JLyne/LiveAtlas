@@ -20,10 +20,10 @@
 import {LatLngExpression} from "leaflet";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
-import {LiveAtlasCircle} from "@/index";
+import {LiveAtlasCircleMarker} from "@/index";
 import {createPopup, tooltipOptions} from "@/util/paths";
 
-export const createCircle = (options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const createCircle = (options: LiveAtlasCircleMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getCirclePoints(options, converter, outline),
 		circle = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
@@ -39,7 +39,7 @@ export const createCircle = (options: LiveAtlasCircle, converter: Function): Liv
 	return circle;
 };
 
-export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasCircle, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasCircleMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	if (!circle) {
 		return createCircle(options, converter);
 	}
@@ -56,7 +56,7 @@ export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | unde
 	return circle;
 }
 
-export const getCirclePoints = (options: LiveAtlasCircle, converter: Function, outline: boolean): LatLngExpression[] => {
+export const getCirclePoints = (options: LiveAtlasCircleMarker, converter: Function, outline: boolean): LatLngExpression[] => {
 	const points = [];
 
 	for(let i = 0; i < 360; i++) {

@@ -22,7 +22,7 @@ import {createArea, updateArea} from "@/util/areas";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
-import {LiveAtlasArea, LiveAtlasMarkerSet} from "@/index";
+import {LiveAtlasAreaMarker, LiveAtlasMarkerSet} from "@/index";
 import {nonReactiveState} from "@/store/state";
 
 export default defineComponent({
@@ -52,7 +52,7 @@ export default defineComponent({
 			createAreas = () => {
 				const converter = currentMap.value!.locationToLatLng.bind(currentMap.value);
 
-				nonReactiveState.markers.get(props.set.id)!.areas.forEach((area: LiveAtlasArea, id: string) => {
+				nonReactiveState.markers.get(props.set.id)!.areas.forEach((area: LiveAtlasAreaMarker, id: string) => {
 					const layer = createArea(area, converter);
 
 					layers.set(id, layer);
@@ -82,7 +82,7 @@ export default defineComponent({
 					if(update.removed) {
 						deleteArea(update.id);
 					} else {
-						const layer = updateArea(layers.get(update.id), update.payload as LiveAtlasArea, converter);
+						const layer = updateArea(layers.get(update.id), update.payload as LiveAtlasAreaMarker, converter);
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);

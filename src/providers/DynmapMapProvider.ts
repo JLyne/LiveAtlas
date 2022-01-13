@@ -77,7 +77,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 			this.markerSets.set(key, markerSet);
 			this.markers.set(key, Object.seal({
-				markers: buildMarkers(set.markers || {}),
+				points: buildMarkers(set.markers || {}),
 				areas: buildAreas(set.areas || {}),
 				lines: buildLines(set.lines || {}),
 				circles: buildCircles(set.circles || {}),

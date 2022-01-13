@@ -16,13 +16,13 @@
 
 import {DynmapMarkerSetUpdates, DynmapTileUpdate, DynmapUpdate} from "@/dynmap";
 import {
-	LiveAtlasArea,
+	LiveAtlasAreaMarker,
 	LiveAtlasChat,
-	LiveAtlasCircle,
+	LiveAtlasCircleMarker,
 	LiveAtlasComponentConfig,
 	LiveAtlasDimension,
-	LiveAtlasLine,
-	LiveAtlasMarker, LiveAtlasPlayerImageSize,
+	LiveAtlasLineMarker,
+	LiveAtlasPointMarker, LiveAtlasPlayerImageSize,
 	LiveAtlasServerConfig,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
@@ -267,8 +267,8 @@ export function buildMarkerSet(id: string, data: MarkerSet): any {
 	}
 }
 
-export function buildMarkers(data: any): Map<string, LiveAtlasMarker> {
-	const markers = Object.freeze(new Map()) as Map<string, LiveAtlasMarker>;
+export function buildMarkers(data: any): Map<string, LiveAtlasPointMarker> {
+	const markers = Object.freeze(new Map()) as Map<string, LiveAtlasPointMarker>;
 
 	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
@@ -281,7 +281,7 @@ export function buildMarkers(data: any): Map<string, LiveAtlasMarker> {
 	return markers;
 }
 
-export function buildMarker(data: Marker): LiveAtlasMarker {
+export function buildMarker(data: Marker): LiveAtlasPointMarker {
 	let dimensions;
 
 	if(data.dim) {
@@ -315,8 +315,8 @@ export function buildMarker(data: Marker): LiveAtlasMarker {
 	return marker;
 }
 
-export function buildAreas(data: any): Map<string, LiveAtlasArea> {
-	const areas = Object.freeze(new Map()) as Map<string, LiveAtlasArea>;
+export function buildAreas(data: any): Map<string, LiveAtlasAreaMarker> {
+	const areas = Object.freeze(new Map()) as Map<string, LiveAtlasAreaMarker>;
 
 	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
@@ -329,7 +329,7 @@ export function buildAreas(data: any): Map<string, LiveAtlasArea> {
 	return areas;
 }
 
-export function buildArea(area: MarkerArea): LiveAtlasArea {
+export function buildArea(area: MarkerArea): LiveAtlasAreaMarker {
 	return {
 		style: {
 			color: area.color || '#ff0000',
@@ -352,8 +352,8 @@ export function buildArea(area: MarkerArea): LiveAtlasArea {
 	};
 }
 
-export function buildLines(data: any): Map<string, LiveAtlasLine> {
-	const lines = Object.freeze(new Map()) as Map<string, LiveAtlasLine>;
+export function buildLines(data: any): Map<string, LiveAtlasLineMarker> {
+	const lines = Object.freeze(new Map()) as Map<string, LiveAtlasLineMarker>;
 
 	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
@@ -366,7 +366,7 @@ export function buildLines(data: any): Map<string, LiveAtlasLine> {
 	return lines;
 }
 
-export function buildLine(line: MarkerLine): LiveAtlasLine {
+export function buildLine(line: MarkerLine): LiveAtlasLineMarker {
 	return {
 		style: {
 			color: line.color || '#ff0000',
@@ -382,8 +382,8 @@ export function buildLine(line: MarkerLine): LiveAtlasLine {
 	};
 }
 
-export function buildCircles(data: any): Map<string, LiveAtlasCircle> {
-	const circles = Object.freeze(new Map()) as Map<string, LiveAtlasCircle>;
+export function buildCircles(data: any): Map<string, LiveAtlasCircleMarker> {
+	const circles = Object.freeze(new Map()) as Map<string, LiveAtlasCircleMarker>;
 
 	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
@@ -396,7 +396,7 @@ export function buildCircles(data: any): Map<string, LiveAtlasCircle> {
 	return circles;
 }
 
-export function buildCircle(circle: MarkerCircle): LiveAtlasCircle {
+export function buildCircle(circle: MarkerCircle): LiveAtlasCircleMarker {
 	return {
 		location: {
 			x: circle.x || 0,

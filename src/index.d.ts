@@ -174,13 +174,13 @@ interface LiveAtlasMarkerSet {
 }
 
 interface LiveAtlasMarkerSetContents {
-	markers: Map<string, LiveAtlasMarker>,
-	areas: Map<string, LiveAtlasArea>;
-	lines: Map<string, LiveAtlasLine>;
-	circles: Map<string, LiveAtlasCircle>;
+	points: Map<string, LiveAtlasPointMarker>,
+	areas: Map<string, LiveAtlasAreaMarker>;
+	lines: Map<string, LiveAtlasLineMarker>;
+	circles: Map<string, LiveAtlasCircleMarker>;
 }
 
-interface LiveAtlasMarker {
+interface LiveAtlasPointMarker {
 	dimensions: PointTuple;
 	icon: string;
 	label: string;
@@ -191,7 +191,7 @@ interface LiveAtlasMarker {
 	popupContent?: string;
 }
 
-interface LiveAtlasPath {
+interface LiveAtlasPathMarker {
 	style: PathOptions;
 	minZoom?: number;
 	maxZoom?: number;
@@ -200,18 +200,18 @@ interface LiveAtlasPath {
 	isPopupHTML: boolean;
 }
 
-interface LiveAtlasArea extends LiveAtlasPath {
+interface LiveAtlasAreaMarker extends LiveAtlasPathMarker {
 	style: PolylineOptions;
 	outline: boolean;
 	points: Coordinate[] | Coordinate[][] | Coordinate[][][]
 }
 
-interface LiveAtlasLine extends LiveAtlasPath {
+interface LiveAtlasLineMarker extends LiveAtlasPathMarker {
 	points: Coordinate[];
 	style: PolylineOptions;
 }
 
-interface LiveAtlasCircle extends LiveAtlasPath {
+interface LiveAtlasCircleMarker extends LiveAtlasPathMarker {
 	location: Coordinate;
 	radius: PointTuple;
 	style: PathOptions;

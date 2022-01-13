@@ -21,7 +21,7 @@ import {ActionTypes} from "@/store/action-types";
 import {createLine, updateLine} from "@/util/lines";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
-import {LiveAtlasLine, LiveAtlasMarkerSet} from "@/index";
+import {LiveAtlasLineMarker, LiveAtlasMarkerSet} from "@/index";
 import {nonReactiveState} from "@/store/state";
 
 export default defineComponent({
@@ -51,7 +51,7 @@ export default defineComponent({
 			createLines = () => {
 				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
-				nonReactiveState.markers.get(props.set.id)!.lines.forEach((line: LiveAtlasLine, id: string) => {
+				nonReactiveState.markers.get(props.set.id)!.lines.forEach((line: LiveAtlasLineMarker, id: string) => {
 					const layer = createLine(line, converter);
 
 					layers.set(id, layer);
@@ -81,7 +81,7 @@ export default defineComponent({
 					if(update.removed) {
 						deleteLine(update.id);
 					} else {
-						const layer = updateLine(layers.get(update.id), update.payload as LiveAtlasLine, converter)
+						const layer = updateLine(layers.get(update.id), update.payload as LiveAtlasLineMarker, converter)
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);

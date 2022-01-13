@@ -18,11 +18,11 @@
  */
 
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
-import {Coordinate, LiveAtlasLine} from "@/index";
+import {Coordinate, LiveAtlasLineMarker} from "@/index";
 import {LatLngExpression} from "leaflet";
 import {createPopup, tooltipOptions} from "@/util/paths";
 
-export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
+export const createLine = (options: LiveAtlasLineMarker, converter: Function): LiveAtlasPolyline => {
 	const points = options.points.map(projectPointsMapCallback, converter),
 		line = new LiveAtlasPolyline(points, options);
 
@@ -37,7 +37,7 @@ export const createLine = (options: LiveAtlasLine, converter: Function): LiveAtl
 	return line;
 };
 
-export const updateLine = (line: LiveAtlasPolyline | undefined, options: LiveAtlasLine, converter: Function): LiveAtlasPolyline => {
+export const updateLine = (line: LiveAtlasPolyline | undefined, options: LiveAtlasLineMarker, converter: Function): LiveAtlasPolyline => {
 	if (!line) {
 		return createLine(options, converter);
 	}

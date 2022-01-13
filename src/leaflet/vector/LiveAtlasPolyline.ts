@@ -15,7 +15,7 @@
  */
 
 import {LatLngExpression, Polyline, PolylineOptions} from "leaflet";
-import {LiveAtlasPath} from "@/index";
+import {LiveAtlasPathMarker} from "@/index";
 
 export interface LiveAtlasPolylineOptions extends PolylineOptions {
 	minZoom?: number;
@@ -25,7 +25,7 @@ export interface LiveAtlasPolylineOptions extends PolylineOptions {
 export default class LiveAtlasPolyline extends Polyline {
 	declare options: LiveAtlasPolylineOptions;
 
-	constructor(latlngs: LatLngExpression[] | LatLngExpression[][], option: LiveAtlasPath) {
+	constructor(latlngs: LatLngExpression[] | LatLngExpression[][], option: LiveAtlasPathMarker) {
 		super(latlngs, option.style);
 		this.options.minZoom = option.minZoom;
 		this.options.maxZoom = option.maxZoom;

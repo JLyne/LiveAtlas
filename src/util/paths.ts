@@ -15,7 +15,7 @@
  */
 
 import {Direction, LatLngExpression, PathOptions} from "leaflet";
-import {LiveAtlasPath} from "@/index";
+import {LiveAtlasPathMarker} from "@/index";
 
 export const tooltipOptions = {
 	direction: 'top' as Direction,
@@ -38,7 +38,7 @@ export const isStyleEqual = (oldStyle: PathOptions, newStyle: PathOptions) => {
 		&& (oldStyle.fillOpacity === newStyle.fillOpacity)
 }
 
-export const createPopup = (options: LiveAtlasPath, className: string): HTMLElement => {
+export const createPopup = (options: LiveAtlasPathMarker, className: string): HTMLElement => {
 	const popup = document.createElement('span');
 
 	if(options.isPopupHTML) {

@@ -15,7 +15,7 @@
  */
 
 import {MarkerOptions, Marker, LatLngExpression, Icon, Map} from 'leaflet';
-import {LiveAtlasMarker} from "@/index";
+import {LiveAtlasPointMarker} from "@/index";
 import {GenericIcon} from "@/leaflet/icon/GenericIcon";
 
 export interface GenericMarkerOptions extends MarkerOptions {
@@ -27,7 +27,7 @@ export interface GenericMarkerOptions extends MarkerOptions {
 export class GenericMarker extends Marker {
 	declare options: GenericMarkerOptions;
 
-	constructor(latLng: LatLngExpression, options: LiveAtlasMarker) {
+	constructor(latLng: LatLngExpression, options: LiveAtlasPointMarker) {
 		super(latLng, {});
 
 		this.options.icon = new GenericIcon({

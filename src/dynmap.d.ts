@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {LiveAtlasArea, LiveAtlasCircle, LiveAtlasLine, LiveAtlasMarker} from "@/index";
+import {LiveAtlasAreaMarker, LiveAtlasCircleMarker, LiveAtlasLineMarker, LiveAtlasPointMarker} from "@/index";
 
 declare global {
 	// noinspection JSUnusedGlobalSymbols
@@ -56,19 +56,19 @@ interface DynmapUpdate {
 }
 
 interface DynmapMarkerUpdate extends DynmapUpdate {
-	payload?: LiveAtlasMarker
+	payload?: LiveAtlasPointMarker
 }
 
 interface DynmapAreaUpdate extends DynmapUpdate {
-	payload?: LiveAtlasArea
+	payload?: LiveAtlasAreaMarker
 }
 
 interface DynmapCircleUpdate extends DynmapUpdate {
-	payload?: LiveAtlasCircle
+	payload?: LiveAtlasCircleMarker
 }
 
 interface DynmapLineUpdate extends DynmapUpdate {
-	payload?: LiveAtlasLine
+	payload?: LiveAtlasLineMarker
 }
 
 interface DynmapTileUpdate {

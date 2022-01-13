@@ -21,7 +21,7 @@ import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
 import {createMarker, updateMarker} from "@/util/markers";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
-import {LiveAtlasMarker, LiveAtlasMarkerSet} from "@/index";
+import {LiveAtlasPointMarker, LiveAtlasMarkerSet} from "@/index";
 import {nonReactiveState} from "@/store/state";
 
 export default defineComponent({
@@ -51,7 +51,7 @@ export default defineComponent({
 			createMarkers = () => {
 				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
-				nonReactiveState.markers.get(props.set.id)!.markers.forEach((marker: LiveAtlasMarker, id: string) => {
+				nonReactiveState.markers.get(props.set.id)!.points.forEach((marker: LiveAtlasPointMarker, id: string) => {
 					const layer = createMarker(marker, converter);
 
 					layers.set(id, layer);
@@ -81,7 +81,7 @@ export default defineComponent({
 					if(update.removed) {
 						deleteMarker(update.id);
 					} else {
-						const layer = updateMarker(layers.get(update.id), update.payload as LiveAtlasMarker, converter);
+						const layer = updateMarker(layers.get(update.id), update.payload as LiveAtlasPointMarker, converter);
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);
@@ -103,7 +103,7 @@ export default defineComponent({
 			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
 				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
-				for (const [id, marker] of nonReactiveState.markers.get(props.set.id)!.markers) {
+				for (const [id, marker] of nonReactiveState.markers.get(props.set.id)!.points) {
 					updateMarker(layers.get(id), marker, converter);
 				}
 			}
