@@ -531,6 +531,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
 	//Set the pan target, which the map will immediately pan to once
 	[MutationTypes.SET_PAN_TARGET](state: State, player: LiveAtlasPlayer) {
+		state.followTarget = undefined;
 		state.panTarget = player;
 	},
 

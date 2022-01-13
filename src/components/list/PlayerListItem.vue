@@ -66,7 +66,6 @@ export default defineComponent({
 
 			pan = () => {
 				if(!props.player.hidden) {
-					store.commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
 					store.commit(MutationTypes.SET_PAN_TARGET, props.player);
 				}
 			},
