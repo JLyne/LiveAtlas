@@ -89,6 +89,9 @@ export default defineComponent({
 			padding: 0.5rem 1rem;
 			box-sizing: border-box;
 			width: 100%;
+			position: sticky;
+			top: 4.8rem;
+			z-index: 3;
 
 			& + .section__skeleton {
 				margin-top: 0;
