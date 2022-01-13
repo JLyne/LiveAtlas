@@ -15,16 +15,22 @@
   -->
 
 <template>
-	<RadioList v-if="players.length">
-		<PlayerListItem v-for="player in players" :key="player.name" :player="player"></PlayerListItem>
+	<input v-if="filteredPlayers && search" id="players__search" type="text" name="search"
+			       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
+	<RadioList v-if="filteredPlayers.length" :aria-labelledby="ariaLabelledby">
+		<PlayerListItem v-for="player in filteredPlayers" :key="player.name" :player="player"></PlayerListItem>
 	</RadioList>
+	<div v-else-if="searchQuery" class="section__skeleton">{{ messageSkeletonPlayersSearch }}</div>
+	<div v-else class="section__skeleton">{{ messageSkeletonPlayers }}</div>
 </template>
 
 <script lang="ts">
 import PlayerListItem from "./PlayerListItem.vue";
-import {defineComponent} from "@vue/runtime-core";
+import {computed, defineComponent} from "@vue/runtime-core";
 import RadioList from "@/components/util/RadioList.vue";
 import {LiveAtlasPlayer} from "@/index";
+import {useStore} from "@/store";
+import {ref} from "vue";
 
 export default defineComponent({
 	components: {
@@ -32,10 +38,68 @@ export default defineComponent({
 		PlayerListItem
 	},
 	props: {
+		search: {
+			type: Boolean,
+			default: true,
+		},
 		players: {
 			type: Object as () => LiveAtlasPlayer[],
 			required: true,
+		},
+		ariaLabelledby: {
+			type: String,
+			default: '',
+		}
+	},
+
+	setup(props) {
+		const store = useStore(),
+			messageSkeletonPlayers = computed(() => store.state.messages.playersSkeleton),
+			messageSkeletonPlayersSearch = computed(() => store.state.messages.playersSearchSkeleton),
+			messagePlayersSearchPlaceholder = computed(() => store.state.messages.playersSearchPlaceholder),
+
+			searchQuery = ref(""),
+
+			filteredPlayers = computed(() => {
+				const query = searchQuery.value.toLowerCase();
+
+				return query ? props.players.filter(p => {
+					return p.name.toLowerCase().indexOf(query) > -1;
+				}) : props.players;
+			}),
+
+			onKeydown = (e: KeyboardEvent) => {
+				e.stopImmediatePropagation();
+			};
+
+		return {
+			messageSkeletonPlayers,
+			messageSkeletonPlayersSearch,
+			messagePlayersSearchPlaceholder,
+
+			searchQuery,
+
+			filteredPlayers,
+			onKeydown
 		}
 	}
 });
 </script>
+
+<style lang="scss" scoped>
+	.players {
+		#players__search {
+			margin-bottom: 1.5rem;
+			padding: 0.5rem 1rem;
+			box-sizing: border-box;
+			width: 100%;
+			position: sticky;
+			top: 4.8rem;
+			z-index: 3;
+
+			& + .section__skeleton {
+				margin-top: 0;
+			}
+		}
+	}
+</style>

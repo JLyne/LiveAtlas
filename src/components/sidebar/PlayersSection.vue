@@ -18,11 +18,8 @@
 	<SidebarSection name="players" class="players">
 		<template v-slot:heading>{{ messageHeading }}</template>
 		<template v-slot:default>
-			<input v-if="players && searchEnabled" id="players__search" type="text" name="search"
-			       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
-			<PlayerList v-if="filteredPlayers.length" :players="filteredPlayers" aria-labelledby="players-heading"></PlayerList>
-			<div v-else-if="searchQuery" class="section__skeleton">{{ messageSkeletonPlayersSearch }}</div>
-			<div v-else class="section__skeleton">{{ messageSkeletonPlayers }}</div>
+			<PlayerList :players="players" :search="searchEnabled" aria-labelledby="players-heading">
+			</PlayerList>
 		</template>
 	</SidebarSection>
 </template>
@@ -30,7 +27,6 @@
 <script lang="ts">
 import {computed, defineComponent} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import {ref} from "vue";
 import SidebarSection from "@/components/sidebar/SidebarSection.vue";
 import PlayerList from "@/components/list/PlayerList.vue";
 
@@ -43,59 +39,18 @@ export default defineComponent({
 	setup() {
 		const store = useStore(),
 			messageHeading = computed(() => store.getters.playersHeading),
-			messageSkeletonPlayers = computed(() => store.state.messages.playersSkeleton),
-			messageSkeletonPlayersSearch = computed(() => store.state.messages.playersSearchSkeleton),
-			messagePlayersSearchPlaceholder = computed(() => store.state.messages.playersSearchPlaceholder),
 
 			searchEnabled = computed(() => store.state.ui.playersSearch),
-			searchQuery = ref(""),
 
 			players = computed(() => store.state.sortedPlayers),
-			filteredPlayers = computed(() => {
-				const query = searchQuery.value.toLowerCase();
-
-				return query ? store.state.sortedPlayers.filter(p => {
-					return p.name.toLowerCase().indexOf(query) > -1;
-				}) : store.state.sortedPlayers;
-			}),
-			maxPlayers = computed(() => store.state.maxPlayers || 0),
-
-			onKeydown = (e: KeyboardEvent) => {
-				e.stopImmediatePropagation();
-			};
+			maxPlayers = computed(() => store.state.maxPlayers || 0);
 
 		return {
 			messageHeading,
-			messageSkeletonPlayers,
-			messageSkeletonPlayersSearch,
-			messagePlayersSearchPlaceholder,
-
 			searchEnabled,
-			searchQuery,
-
 			players,
-			filteredPlayers,
-			maxPlayers,
-			onKeydown
+			maxPlayers
 		}
 	}
 });
 </script>
-
-<style lang="scss" scoped>
-	.players {
-		#players__search {
-			margin-bottom: 1.5rem;
-			padding: 0.5rem 1rem;
-			box-sizing: border-box;
-			width: 100%;
-			position: sticky;
-			top: 4.8rem;
-			z-index: 3;
-
-			& + .section__skeleton {
-				margin-top: 0;
-			}
-		}
-	}
-</style>
