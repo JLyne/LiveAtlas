@@ -293,8 +293,6 @@ export function buildMarker(data: Marker): LiveAtlasPointMarker {
 	}
 
 	const marker = {
-		label: data.label || '',
-		isLabelHTML: data.markup || false,
 		location: {
 			x: data.x || 0,
 			y: data.y || 0,
@@ -304,12 +302,15 @@ export function buildMarker(data: Marker): LiveAtlasPointMarker {
 		icon: data.icon || "default",
 		minZoom: typeof data.minzoom !== 'undefined' && data.minzoom > -1 ? data.minzoom : undefined,
 		maxZoom: typeof data.maxzoom !== 'undefined' && data.maxzoom > -1 ? data.maxzoom : undefined,
-		popupContent: data.desc || undefined,
+		tooltip: data.label || '',
+		isTooltipHTML: data.markup || false,
+		popup: data.desc || undefined,
+		isPopupHTML: true,
 	};
 
 	//Fix double escaping on non-HTML labels
-	if(!marker.isLabelHTML) {
-		marker.label = decodeHTMLEntities(marker.label);
+	if(!marker.isTooltipHTML) {
+		marker.tooltip = decodeHTMLEntities(marker.tooltip);
 	}
 
 	return marker;
@@ -347,8 +348,10 @@ export function buildArea(area: MarkerArea): LiveAtlasAreaMarker {
 		minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
 		maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
 
+		tooltip: area.label,
+		isTooltipHTML: area.markup || false,
+		popup: area.desc || area.label || undefined,
 		isPopupHTML: area.desc ? true : area.markup || false,
-		popupContent: area.desc || area.label || undefined,
 	};
 }
 
@@ -377,8 +380,10 @@ export function buildLine(line: MarkerLine): LiveAtlasLineMarker {
 		minZoom: typeof line.minzoom !== 'undefined' && line.minzoom > -1 ? line.minzoom : undefined,
 		maxZoom: typeof line.maxzoom !== 'undefined' && line.maxzoom > -1 ? line.maxzoom : undefined,
 
+		tooltip: line.label,
+		isTooltipHTML: line.markup || false,
+		popup: line.desc || line.label || undefined,
 		isPopupHTML: line.desc ? true : line.markup || false,
-		popupContent: line.desc || line.label || undefined,
 	};
 }
 
@@ -414,8 +419,10 @@ export function buildCircle(circle: MarkerCircle): LiveAtlasCircleMarker {
 		minZoom: typeof circle.minzoom !== 'undefined' && circle.minzoom > -1 ? circle.minzoom : undefined,
 		maxZoom: typeof circle.maxzoom !== 'undefined' && circle.maxzoom > -1 ? circle.maxzoom : undefined,
 
+		tooltip: circle.label,
+		isTooltipHTML: circle.markup || false,
+		popup: circle.desc || circle.label || undefined,
 		isPopupHTML: circle.desc ? true : circle.markup || false,
-		popupContent: circle.desc || circle.label || undefined,
 	};
 }
 

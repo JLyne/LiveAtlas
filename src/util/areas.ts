@@ -28,12 +28,12 @@ export const createArea = (options: LiveAtlasAreaMarker, converter: Function): L
 		points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[] | LatLngExpression[][],
 		area = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
 
-	if (options.popupContent) {
+	if (options.popup) {
 		area.bindPopup(() => createPopup(options, 'AreaPopup'));
 	}
 
-	if (options.tooltipContent) {
-		area.bindTooltip(() => options.tooltipContent as string, tooltipOptions);
+	if (options.tooltip) {
+		area.bindTooltip(() => options.tooltip as string, tooltipOptions);
 	}
 
 	return area;

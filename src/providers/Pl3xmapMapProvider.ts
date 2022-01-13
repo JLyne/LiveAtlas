@@ -300,8 +300,10 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			dimensions: marker.size ? [marker.size.x || 16, marker.size.z || 16] : [16, 16],
 			icon: marker.icon || "default",
 
-			label: (marker.tooltip || '').trim(),
-			isLabelHTML: true
+			tooltip: (marker.tooltip || '').trim(),
+			isTooltipHTML: true,
+			popup: marker.popup,
+			isPopupHTML: true,
 		};
 	}
 
@@ -325,8 +327,9 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			],
 			outline: false,
 
-			tooltipContent: area.tooltip,
-			popupContent: area.popup,
+			tooltip: area.tooltip,
+			isTooltipHTML: true,
+			popup: area.popup,
 			isPopupHTML: true,
 		};
 	}
@@ -346,8 +349,9 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			points: area.points,
 			outline: false,
 
-			tooltipContent: area.tooltip,
-			popupContent: area.popup,
+			tooltip: area.tooltip,
+			isTooltipHTML: true,
+			popup: area.popup,
 			isPopupHTML: true,
 		};
 	}
@@ -362,8 +366,9 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			},
 			points: line.points,
 
-			tooltipContent: line.tooltip,
-			popupContent: line.popup,
+			tooltip: line.tooltip,
+			isTooltipHTML: true,
+			popup: line.popup,
 			isPopupHTML: true,
 		};
 	}
@@ -387,8 +392,9 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				fillRule: circle.fillRule,
 			},
 
-			tooltipContent: circle.tooltip,
-			popupContent: circle.popup,
+			tooltip: circle.tooltip,
+			isTooltipHTML: true,
+			popup: circle.popup,
 			isPopupHTML: true
 		};
 	}

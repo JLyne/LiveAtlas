@@ -28,12 +28,12 @@ export const createCircle = (options: LiveAtlasCircleMarker, converter: Function
 		points = getCirclePoints(options, converter, outline),
 		circle = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
 
-	if(options.popupContent) {
+	if(options.popup) {
 		circle.bindPopup(() => createPopup(options, 'CirclePopup'));
 	}
 
-	if (options.tooltipContent) {
-		circle.bindTooltip(() => options.tooltipContent as string, tooltipOptions);
+	if (options.tooltip) {
+		circle.bindTooltip(() => options.tooltip as string, tooltipOptions);
 	}
 
 	return circle;

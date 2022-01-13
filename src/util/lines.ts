@@ -26,12 +26,12 @@ export const createLine = (options: LiveAtlasLineMarker, converter: Function): L
 	const points = options.points.map(projectPointsMapCallback, converter),
 		line = new LiveAtlasPolyline(points, options);
 
-	if(options.popupContent) {
+	if(options.popup) {
 		line.bindPopup(() => createPopup(options, 'LinePopup'));
 	}
 
-	if (options.tooltipContent) {
-		line.bindTooltip(() => options.tooltipContent as string, tooltipOptions);
+	if (options.tooltip) {
+		line.bindTooltip(() => options.tooltip as string, tooltipOptions);
 	}
 
 	return line;

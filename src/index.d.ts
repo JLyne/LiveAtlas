@@ -180,24 +180,25 @@ interface LiveAtlasMarkerSetContents {
 	circles: Map<string, LiveAtlasCircleMarker>;
 }
 
-interface LiveAtlasPointMarker {
+interface LiveAtlasMarker {
+	tooltip: string;
+	isTooltipHTML: boolean;
+	popup?: string;
+	isPopupHTML: boolean;
+}
+
+interface LiveAtlasPointMarker extends LiveAtlasMarker {
 	dimensions: PointTuple;
 	icon: string;
-	label: string;
-	isLabelHTML: boolean;
 	location: Coordinate;
 	minZoom?: number;
 	maxZoom?: number;
-	popupContent?: string;
 }
 
-interface LiveAtlasPathMarker {
+interface LiveAtlasPathMarker extends LiveAtlasMarker {
 	style: PathOptions;
 	minZoom?: number;
 	maxZoom?: number;
-	popupContent?: string;
-	tooltipContent?: string;
-	isPopupHTML: boolean;
 }
 
 interface LiveAtlasAreaMarker extends LiveAtlasPathMarker {

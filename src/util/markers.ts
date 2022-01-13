@@ -31,7 +31,7 @@ export const createMarker = (options: LiveAtlasPointMarker, converter: Function)
 		}
 	});
 
-	if(options.popupContent) {
+	if(options.popup) {
 		marker.bindPopup(() => createPopup(options));
 	}
 
@@ -56,9 +56,9 @@ export const updateMarker = (marker: Marker | undefined, options: LiveAtlasPoint
 		if(icon && icon instanceof GenericIcon) {
 			icon.update({
 				icon: options.icon,
-				label: options.label,
+				label: options.tooltip,
 				iconSize: options.dimensions,
-				isHtml: options.isLabelHTML,
+				isHtml: options.isTooltipHTML,
 			});
 		}
 	}
@@ -66,7 +66,7 @@ export const updateMarker = (marker: Marker | undefined, options: LiveAtlasPoint
 	marker.closePopup();
 	marker.unbindPopup();
 
-	if(options.popupContent) {
+	if(options.popup) {
 		marker.bindPopup(() => createPopup(options));
 	}
 
@@ -76,9 +76,9 @@ export const updateMarker = (marker: Marker | undefined, options: LiveAtlasPoint
 const createPopup = (options: LiveAtlasPointMarker) => {
 	const popup = document.createElement('span');
 
-	if (options.popupContent) {
+	if (options.popup) {
 		popup.classList.add('MarkerPopup');
-		popup.insertAdjacentHTML('afterbegin', options.popupContent);
+		popup.insertAdjacentHTML('afterbegin', options.popup);
 	}
 
 	return popup;

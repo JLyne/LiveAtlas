@@ -43,9 +43,9 @@ export const createPopup = (options: LiveAtlasPathMarker, className: string): HT
 
 	if(options.isPopupHTML) {
 		popup.classList.add(className);
-		popup.insertAdjacentHTML('afterbegin', options.popupContent as string);
+		popup.insertAdjacentHTML('afterbegin', options.popup as string);
 	} else {
-		popup.textContent = options.popupContent as string;
+		popup.textContent = options.popup as string;
 	}
 
 	return popup;
