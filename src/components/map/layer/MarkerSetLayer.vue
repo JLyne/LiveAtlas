@@ -18,7 +18,7 @@
 	<Areas :layer-group="layerGroup" :set="markerSet"></Areas>
 	<Circles :layer-group="layerGroup" :set="markerSet"></Circles>
 	<Lines :layer-group="layerGroup" :set="markerSet"></Lines>
-	<Markers :layer-group="layerGroup" :set="markerSet"></Markers>
+	<Points :layer-group="layerGroup" :set="markerSet"></Points>
 </template>
 
 <script lang="ts">
@@ -27,7 +27,7 @@ import {useStore} from "@/store";
 import Areas from "@/components/map/vector/Areas.vue";
 import Circles from "@/components/map/vector/Circles.vue";
 import Lines from "@/components/map/vector/Lines.vue";
-import Markers from "@/components/map/vector/Markers.vue";
+import Points from "@/components/map/vector/Points.vue";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import {LiveAtlasMarkerSet} from "@/index";
@@ -38,7 +38,7 @@ export default defineComponent({
 		Areas,
 		Circles,
 		Lines,
-		Markers,
+		Points,
 	},
 
 	props: {
