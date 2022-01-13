@@ -103,15 +103,20 @@ export default defineComponent({
 			position: sticky;
 			top: -0.2rem;
 			background-color: inherit;
-			z-index: 10;
+			z-index: 3;
 			border-radius: inherit;
 			margin: -1.5rem -1.5rem 0;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
 
 			&, button {
 				padding: 1.5rem;
 			}
 
 			button {
+				text-overflow: ellipsis;
+				overflow: hidden;
 				display: flex;
 				font-size: 2rem;
 				background-color: transparent;
@@ -170,16 +175,6 @@ export default defineComponent({
 				.section__content {
 					display: none;
 				}
-			}
-
-			.section__content {
-				display: flex;
-				flex-direction: column;
-				align-items: stretch;
-				flex-shrink: 1;
-				min-height: 0;
-				overflow-y: auto;
-				overflow-x: hidden;
 			}
 		}
 
