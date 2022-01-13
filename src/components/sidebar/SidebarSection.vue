@@ -100,19 +100,27 @@ export default defineComponent({
 			user-select: none;
 			text-align: left;
 			align-items: center;
-			margin: 0;
+			position: sticky;
+			top: -0.2rem;
+			background-color: inherit;
+			z-index: 10;
+			border-radius: inherit;
+			margin: -1.5rem -1.5rem 0;
+
+			&, button {
+				padding: 1.5rem;
+			}
 
 			button {
 				display: flex;
 				font-size: 2rem;
-				padding: 1.5rem 1.5rem 1rem;
-				margin: -1.5rem -1.5rem 0;
 				background-color: transparent;
 				font-weight: 400;
 				color: inherit;
 				width: calc(100% + 3rem);
 				align-items: center;
 				text-shadow: var(--text-shadow);
+				margin: -1.5rem;
 
 				.svg-icon {
 					margin-left: auto;
@@ -122,7 +130,7 @@ export default defineComponent({
 			}
 
 			&:hover, &:focus-visible, &.focus-visible, &:active {
-				background-color: transparent;
+				background-color: inherit;
 			}
 		}
 
@@ -155,8 +163,7 @@ export default defineComponent({
 					transform: none;
 				}
 
-				.section__heading button {
-					padding-bottom: 1.5rem;
+				.section__heading, .section__heading button {
 					margin-bottom: -1.5rem;
 				}
 
