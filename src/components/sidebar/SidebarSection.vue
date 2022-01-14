@@ -95,6 +95,10 @@ export default defineComponent({
 		max-width: 26rem;
 		flex: 0 0 auto;
 
+		&[hidden] {
+			display: none;
+		}
+
 		.section__heading {
 			cursor: pointer;
 			user-select: none;

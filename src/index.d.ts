@@ -98,7 +98,7 @@ interface LiveAtlasUIConfig {
 	compactPlayerMarkers: boolean;
 }
 
-export type LiveAtlasUIElement = 'layers' | 'chat' | 'players' | 'maps';
+export type LiveAtlasUIElement = 'layers' | 'chat' | LiveAtlasSidebarSection;
 export type LiveAtlasUIModal = 'login' | 'settings';
 export type LiveAtlasSidebarSection = 'servers' | 'players' | 'maps';
 export type LiveAtlasDimension = 'overworld' | 'nether' | 'end';
