@@ -219,6 +219,10 @@ export const decodeHTMLEntities = (text: string) => {
 	return decodeTextarea.textContent || '';
 }
 
+export const stripHTML = (text: string) => {
+	return documentRange.createContextualFragment(text.replace(brToSpaceRegex,'&nbsp;')).textContent || '';
+}
+
 export const clipboardSuccess = () => () => notify(useStore().state.messages.copyToClipboardSuccess);
 
 export const clipboardError = () => (e: Error) => {
