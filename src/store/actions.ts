@@ -97,8 +97,8 @@ export const actions: ActionTree<State, State> & Actions = {
 
 		await state.currentMapProvider!.loadServerConfiguration();
 
-		//Skip default map/ui visibility logic if not first load (i.e config reload after hash change)
-		if(!state.firstLoad) {
+		//Skip default map/ui visibility logic if we already have a map selected (i.e config reload after hash change)
+		if(state.currentMap) {
 			return;
 		}
 

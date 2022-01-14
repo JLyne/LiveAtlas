@@ -182,9 +182,9 @@ interface LiveAtlasMarkerSetContents {
 
 interface LiveAtlasMarker {
 	tooltip: string;
-	isTooltipHTML: boolean;
+	tooltipHTML?: string;
 	popup?: string;
-	isPopupHTML: boolean;
+	isPopupHTML?: boolean;
 }
 
 interface LiveAtlasPointMarker extends LiveAtlasMarker {
