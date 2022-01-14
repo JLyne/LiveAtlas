@@ -26,7 +26,9 @@ import {
 import {notify} from "@kyvg/vue3-notification";
 import {globalMessages, serverMessages} from "../messages";
 
-const headCache = new Map<string, HTMLImageElement>(),
+const documentRange = document.createRange(),
+	brToSpaceRegex = /<br \/>/g,
+	headCache = new Map<string, HTMLImageElement>(),
 	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>(),
 	headsLoading = new Set<string>(),
 
