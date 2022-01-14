@@ -34,7 +34,7 @@ export class GenericMarker extends Marker {
 			icon: options.icon,
 			label: options.tooltip,
 			iconSize: options.dimensions,
-			isHtml: options.isTooltipHTML,
+			isHtml: !!options.tooltipHTML,
 		});
 
 		this.options.maxZoom = options.maxZoom;

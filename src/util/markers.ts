@@ -58,7 +58,7 @@ export const updateMarker = (marker: Marker | undefined, options: LiveAtlasPoint
 				icon: options.icon,
 				label: options.tooltip,
 				iconSize: options.dimensions,
-				isHtml: options.isTooltipHTML,
+				isHtml: !!options.tooltipHTML,
 			});
 		}
 	}

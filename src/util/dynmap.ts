@@ -28,7 +28,7 @@ import {
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {getPoints} from "@/util/areas";
-import {decodeHTMLEntities, endWorldNameRegex, netherWorldNameRegex, titleColoursRegex} from "@/util";
+import {decodeHTMLEntities, endWorldNameRegex, netherWorldNameRegex, stripHTML, titleColoursRegex} from "@/util";
 import {getLinePoints} from "@/util/lines";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
@@ -302,14 +302,14 @@ export function buildMarker(data: Marker): LiveAtlasPointMarker {
 		icon: data.icon || "default",
 		minZoom: typeof data.minzoom !== 'undefined' && data.minzoom > -1 ? data.minzoom : undefined,
 		maxZoom: typeof data.maxzoom !== 'undefined' && data.maxzoom > -1 ? data.maxzoom : undefined,
-		tooltip: data.label || '',
-		isTooltipHTML: data.markup || false,
+		tooltip: data.markup ? stripHTML(data.label) : data.label,
+		tooltipHTML: data.markup ? data.label : undefined,
 		popup: data.desc || undefined,
 		isPopupHTML: true,
 	};
 
 	//Fix double escaping on non-HTML labels
-	if(!marker.isTooltipHTML) {
+	if(!marker.tooltipHTML) {
 		marker.tooltip = decodeHTMLEntities(marker.tooltip);
 	}
 
@@ -348,8 +348,8 @@ export function buildArea(area: MarkerArea): LiveAtlasAreaMarker {
 		minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
 		maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
 
-		tooltip: area.label,
-		isTooltipHTML: area.markup || false,
+		tooltip: area.markup ? stripHTML(area.label) : area.label,
+		tooltipHTML: area.markup ? area.label : undefined,
 		popup: area.desc || area.label || undefined,
 		isPopupHTML: area.desc ? true : area.markup || false,
 	};
@@ -380,8 +380,8 @@ export function buildLine(line: MarkerLine): LiveAtlasLineMarker {
 		minZoom: typeof line.minzoom !== 'undefined' && line.minzoom > -1 ? line.minzoom : undefined,
 		maxZoom: typeof line.maxzoom !== 'undefined' && line.maxzoom > -1 ? line.maxzoom : undefined,
 
-		tooltip: line.label,
-		isTooltipHTML: line.markup || false,
+		tooltip: line.markup ? stripHTML(line.label) : line.label,
+		tooltipHTML: line.markup ? line.label : undefined,
 		popup: line.desc || line.label || undefined,
 		isPopupHTML: line.desc ? true : line.markup || false,
 	};
@@ -419,8 +419,8 @@ export function buildCircle(circle: MarkerCircle): LiveAtlasCircleMarker {
 		minZoom: typeof circle.minzoom !== 'undefined' && circle.minzoom > -1 ? circle.minzoom : undefined,
 		maxZoom: typeof circle.maxzoom !== 'undefined' && circle.maxzoom > -1 ? circle.maxzoom : undefined,
 
-		tooltip: circle.label,
-		isTooltipHTML: circle.markup || false,
+		tooltip: circle.markup ? stripHTML(circle.label) : circle.label,
+		tooltipHTML: circle.markup ? circle.label : undefined,
 		popup: circle.desc || circle.label || undefined,
 		isPopupHTML: circle.desc ? true : circle.markup || false,
 	};

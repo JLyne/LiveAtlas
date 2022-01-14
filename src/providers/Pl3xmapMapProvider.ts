@@ -34,7 +34,7 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {ActionTypes} from "@/store/action-types";
-import {titleColoursRegex} from "@/util";
+import {stripHTML, titleColoursRegex} from "@/util";
 
 export default class Pl3xmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -300,8 +300,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			dimensions: marker.size ? [marker.size.x || 16, marker.size.z || 16] : [16, 16],
 			icon: marker.icon || "default",
 
-			tooltip: (marker.tooltip || '').trim(),
-			isTooltipHTML: true,
+			tooltip: stripHTML(marker.tooltip),
+			tooltipHTML: marker.tooltip,
 			popup: marker.popup,
 			isPopupHTML: true,
 		};
@@ -327,8 +327,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			],
 			outline: false,
 
-			tooltip: area.tooltip,
-			isTooltipHTML: true,
+			tooltip: stripHTML(area.tooltip),
+			tooltipHTML: area.tooltip,
 			popup: area.popup,
 			isPopupHTML: true,
 		};
@@ -349,8 +349,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			points: area.points,
 			outline: false,
 
-			tooltip: area.tooltip,
-			isTooltipHTML: true,
+			tooltip: stripHTML(area.tooltip),
+			tooltipHTML: area.tooltip,
 			popup: area.popup,
 			isPopupHTML: true,
 		};
@@ -366,8 +366,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			},
 			points: line.points,
 
-			tooltip: line.tooltip,
-			isTooltipHTML: true,
+			tooltip: stripHTML(line.tooltip),
+			tooltipHTML: line.tooltip,
 			popup: line.popup,
 			isPopupHTML: true,
 		};
@@ -392,10 +392,10 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				fillRule: circle.fillRule,
 			},
 
-			tooltip: circle.tooltip,
-			isTooltipHTML: true,
+			tooltip: stripHTML(circle.tooltip),
+			tooltipHTML: circle.tooltip,
 			popup: circle.popup,
-			isPopupHTML: true
+			isPopupHTML: true,
 		};
 	}
 
