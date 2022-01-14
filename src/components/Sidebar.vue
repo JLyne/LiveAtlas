@@ -218,6 +218,7 @@ export default defineComponent({
 		width: 26rem;
         align-items: flex-end;
 		overscroll-behavior: contain;
+		will-change: transform;
 
 		&:not(:hover):not(:focus-within) {
 			scrollbar-color: var(--background-base) transparent;
