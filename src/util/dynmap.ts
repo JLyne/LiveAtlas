@@ -28,7 +28,14 @@ import {
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {getPoints} from "@/util/areas";
-import {decodeHTMLEntities, endWorldNameRegex, netherWorldNameRegex, stripHTML, titleColoursRegex} from "@/util";
+import {
+	decodeHTMLEntities,
+	endWorldNameRegex,
+	getMiddle,
+	netherWorldNameRegex,
+	stripHTML,
+	titleColoursRegex
+} from "@/util";
 import {getLinePoints} from "@/util/lines";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
@@ -331,6 +338,10 @@ export function buildAreas(data: any): Map<string, LiveAtlasAreaMarker> {
 }
 
 export function buildArea(area: MarkerArea): LiveAtlasAreaMarker {
+	const x = area.x || [0, 0],
+		y = [area.ybottom || 0, area.ytop || 0] as [number, number],
+		z = area.z || [0, 0];
+
 	return {
 		style: {
 			color: area.color || '#ff0000',
@@ -340,11 +351,8 @@ export function buildArea(area: MarkerArea): LiveAtlasAreaMarker {
 			fillOpacity: area.fillopacity || 0,
 		},
 		outline: !area.fillopacity,
-		points: getPoints(
-			area.x || [0, 0],
-			[area.ybottom || 0, area.ytop || 0],
-			area.z || [0, 0],
-			!area.fillopacity),
+		location: {x: getMiddle(x), y: getMiddle(y), z: getMiddle(z)},
+		points: getPoints(x, y, z, !area.fillopacity),
 		minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
 		maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
 
@@ -370,13 +378,18 @@ export function buildLines(data: any): Map<string, LiveAtlasLineMarker> {
 }
 
 export function buildLine(line: MarkerLine): LiveAtlasLineMarker {
+	const x = line.x || [0, 0],
+		y = line.y || [0, 0],
+		z = line.z || [0, 0];
+
 	return {
 		style: {
 			color: line.color || '#ff0000',
 			opacity: line.opacity || 1,
 			weight: line.weight || 1,
 		},
-		points: getLinePoints(line.x || [0, 0], line.y || [0, 0], line.z || [0, 0]),
+		location: {x: getMiddle(x), y: getMiddle(y), z: getMiddle(z)},
+		points: getLinePoints(x, y, z),
 		minZoom: typeof line.minzoom !== 'undefined' && line.minzoom > -1 ? line.minzoom : undefined,
 		maxZoom: typeof line.maxzoom !== 'undefined' && line.maxzoom > -1 ? line.maxzoom : undefined,
 

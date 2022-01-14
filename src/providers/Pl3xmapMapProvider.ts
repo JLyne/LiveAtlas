@@ -34,7 +34,7 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {ActionTypes} from "@/store/action-types";
-import {stripHTML, titleColoursRegex} from "@/util";
+import {getMiddleFromPoints, stripHTML, titleColoursRegex} from "@/util";
 
 export default class Pl3xmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -320,11 +320,12 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				fillRule: area.fillRule,
 			},
 			points: [
-				area.points[0],
-				{x: area.points[0].x, z: area.points[1].z},
-				area.points[1],
-				{x: area.points[1].x, z: area.points[0].z},
+				{x: area.points[0].x, y: 0, z: area.points[0].z},
+				{x: area.points[0].x, y: 0, z: area.points[1].z},
+				{x: area.points[1].x, y: 0, z: area.points[1].z},
+				{x: area.points[1].x, y: 0, z: area.points[0].z},
 			],
+			location: getMiddleFromPoints(area.points),
 			outline: false,
 
 			tooltip: stripHTML(area.tooltip),
@@ -335,6 +336,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}
 
 	private static buildArea(area: any): LiveAtlasAreaMarker {
+		const points = this.addY(area.points);
+
 		return {
 			style: {
 				stroke: typeof area.stroke !== 'undefined' ? !!area.stroke : true,
@@ -346,7 +349,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				fillOpacity: area.fillOpacity || 0.2,
 				fillRule: area.fillRule,
 			},
-			points: area.points,
+			points,
+			location: getMiddleFromPoints(points),
 			outline: false,
 
 			tooltip: stripHTML(area.tooltip),
@@ -357,6 +361,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}
 
 	private static buildLine(line: any): LiveAtlasLineMarker {
+		const points = this.addY(line.points);
+
 		return {
 			style: {
 				stroke: typeof line.stroke !== 'undefined' ? !!line.stroke : true,
@@ -364,7 +370,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				weight: line.weight || 3,
 				opacity: typeof line.opacity !== 'undefined' ? line.opacity : 1,
 			},
-			points: line.points,
+			points,
+			location: getMiddleFromPoints(points),
 
 			tooltip: stripHTML(line.tooltip),
 			tooltipHTML: line.tooltip,
@@ -397,6 +404,14 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			popup: circle.popup,
 			isPopupHTML: true,
 		};
+	}
+
+	private static addY(points: any) {
+		for (const point of points) {
+			points.y = 0;
+		}
+
+		return points;
 	}
 
 	async loadServerConfiguration(): Promise<void> {

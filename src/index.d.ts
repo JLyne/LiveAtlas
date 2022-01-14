@@ -185,20 +185,18 @@ interface LiveAtlasMarker {
 	tooltipHTML?: string;
 	popup?: string;
 	isPopupHTML?: boolean;
-}
-
-interface LiveAtlasPointMarker extends LiveAtlasMarker {
-	dimensions: PointTuple;
-	icon: string;
 	location: Coordinate;
 	minZoom?: number;
 	maxZoom?: number;
 }
 
+interface LiveAtlasPointMarker extends LiveAtlasMarker {
+	dimensions: PointTuple;
+	icon: string;
+}
+
 interface LiveAtlasPathMarker extends LiveAtlasMarker {
 	style: PathOptions;
-	minZoom?: number;
-	maxZoom?: number;
 }
 
 interface LiveAtlasAreaMarker extends LiveAtlasPathMarker {
@@ -213,7 +211,6 @@ interface LiveAtlasLineMarker extends LiveAtlasPathMarker {
 }
 
 interface LiveAtlasCircleMarker extends LiveAtlasPathMarker {
-	location: Coordinate;
 	radius: PointTuple;
 	style: PathOptions;
 }
