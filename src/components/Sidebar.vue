@@ -68,6 +68,7 @@ export default defineComponent({
 		const store = useStore(),
 			sidebar = ref<HTMLElement | null>(null),
 
+			firstLoad = computed(() => store.state.firstLoad),
 			currentlyVisible = computed(() => store.state.ui.visibleElements),
 			previouslyVisible = computed(() => store.state.ui.previouslyVisibleElements),
 			smallScreen = computed(() => store.state.ui.smallScreen),
@@ -119,8 +120,9 @@ export default defineComponent({
 		const focusMaps = () => focus('.section__heading button');
 		const focusPlayers = () => focus('#players-heading');
 
-		watch(playersVisible, newValue => newValue && nextTick(() => focusPlayers()));
-		watch(mapsVisible, newValue => newValue && nextTick(() => focusMaps()));
+		//Focus sidebar sections when they become visible, except on initial load
+		watch(playersVisible, newValue => newValue && !firstLoad.value && nextTick(() => focusPlayers()));
+		watch(mapsVisible, newValue => newValue && !firstLoad.value && nextTick(() => focusMaps()));
 
 		return {
 			sidebar,

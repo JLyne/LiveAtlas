@@ -43,6 +43,8 @@ import {getMessages} from "@/util";
 
 export type State = {
 	version: string;
+	firstLoad: boolean;
+
 	servers: Map<string, LiveAtlasServerDefinition>;
 	configuration: LiveAtlasServerConfig;
 	configurationHash: number | undefined;
@@ -100,6 +102,7 @@ export type State = {
 
 export const state: State = {
 	version: (process.env.VITE_APP_VERSION || 'Unknown') as string,
+	firstLoad: true,
 	servers: new Map(),
 
 	configuration: {

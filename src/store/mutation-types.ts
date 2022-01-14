@@ -36,6 +36,7 @@ export enum MutationTypes {
 	SET_MAX_PLAYERS = 'setMaxPlayers',
 	SET_PLAYERS_ASYNC = 'setPlayersAsync',
 	SYNC_PLAYERS = 'syncPlayers',
+	SET_LOADED = 'setLoaded',
 
 	SET_CURRENT_SERVER = 'setCurrentServer',
 	SET_CURRENT_MAP = 'setCurrentMap',

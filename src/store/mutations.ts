@@ -30,7 +30,6 @@ import {
 	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
 	LiveAtlasGlobalConfig,
-	LiveAtlasGlobalMessageConfig,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasPlayer,
 	LiveAtlasCircleMarker,
@@ -78,6 +77,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_MAX_PLAYERS](state: S, maxPlayers: number): void
 	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer>
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
+	[MutationTypes.SET_LOADED](state: S, a?: void): void
 	[MutationTypes.SET_CURRENT_SERVER](state: S, server: string): void
 	[MutationTypes.SET_CURRENT_MAP](state: S, payload: CurrentMapPayload): void
 	[MutationTypes.SET_CURRENT_LOCATION](state: S, payload: Coordinate): void
@@ -453,6 +453,11 @@ export const mutations: MutationTree<State> & Mutations = {
 				state.players.delete(key);
 			}
 		}
+	},
+
+	//Sets flag indicating LiveAtlas has fully loaded
+	[MutationTypes.SET_LOADED](state: State) {
+		state.firstLoad = false;
 	},
 
 	//Sets the currently active server

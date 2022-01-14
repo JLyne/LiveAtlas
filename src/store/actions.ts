@@ -25,6 +25,7 @@ import {
 	DynmapTileUpdate,
 } from "@/dynmap";
 import {LiveAtlasMarkerSet, LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
+import {nextTick} from "vue";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(
@@ -96,8 +97,8 @@ export const actions: ActionTree<State, State> & Actions = {
 
 		await state.currentMapProvider!.loadServerConfiguration();
 
-		//Skip default map/ui visibility logic if we already have a map selected (i.e config reload after hash change)
-		if(state.currentMap) {
+		//Skip default map/ui visibility logic if not first load (i.e config reload after hash change)
+		if(!state.firstLoad) {
 			return;
 		}
 
@@ -148,6 +149,8 @@ export const actions: ActionTree<State, State> & Actions = {
 				worldName, mapName
 			});
 		}
+
+		await nextTick(() => commit(MutationTypes.SET_LOADED, undefined));
 	},
 
 	async [ActionTypes.START_UPDATES]({state}) {
