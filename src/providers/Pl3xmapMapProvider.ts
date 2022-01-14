@@ -300,7 +300,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			dimensions: marker.size ? [marker.size.x || 16, marker.size.z || 16] : [16, 16],
 			icon: marker.icon || "default",
 
-			tooltip: stripHTML(marker.tooltip),
+			tooltip: marker.tooltip ? stripHTML(marker.tooltip) : '',
 			tooltipHTML: marker.tooltip,
 			popup: marker.popup,
 			isPopupHTML: true,
@@ -328,7 +328,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			location: getMiddleFromPoints(area.points),
 			outline: false,
 
-			tooltip: stripHTML(area.tooltip),
+			tooltip: area.tooltip ? stripHTML(area.tooltip) : '',
 			tooltipHTML: area.tooltip,
 			popup: area.popup,
 			isPopupHTML: true,
@@ -353,7 +353,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			location: getMiddleFromPoints(points),
 			outline: false,
 
-			tooltip: stripHTML(area.tooltip),
+			tooltip: area.tooltip ? stripHTML(area.tooltip) : '',
 			tooltipHTML: area.tooltip,
 			popup: area.popup,
 			isPopupHTML: true,
@@ -373,7 +373,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			points,
 			location: getMiddleFromPoints(points),
 
-			tooltip: stripHTML(line.tooltip),
+			tooltip: line.tooltip ? stripHTML(line.tooltip) : '',
 			tooltipHTML: line.tooltip,
 			popup: line.popup,
 			isPopupHTML: true,
@@ -399,7 +399,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				fillRule: circle.fillRule,
 			},
 
-			tooltip: stripHTML(circle.tooltip),
+			tooltip: circle.tooltip ? stripHTML(circle.tooltip) : '',
 			tooltipHTML: circle.tooltip,
 			popup: circle.popup,
 			isPopupHTML: true,
