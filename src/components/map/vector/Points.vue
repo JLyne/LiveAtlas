@@ -19,7 +19,7 @@ import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/run
 import {Marker} from 'leaflet';
 import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
-import {createMarker, updateMarker} from "@/util/markers";
+import {createPointMarker, updatePointMarker} from "@/util/points";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import {LiveAtlasPointMarker, LiveAtlasMarkerSet} from "@/index";
 import {nonReactiveState} from "@/store/state";
@@ -52,7 +52,7 @@ export default defineComponent({
 				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				nonReactiveState.markers.get(props.set.id)!.points.forEach((marker: LiveAtlasPointMarker, id: string) => {
-					const layer = createMarker(marker, converter);
+					const layer = createPointMarker(marker, converter);
 
 					layers.set(id, layer);
 					props.layerGroup.addLayer(layer);
@@ -81,7 +81,7 @@ export default defineComponent({
 					if(update.removed) {
 						deleteMarker(update.id);
 					} else {
-						const layer = updateMarker(layers.get(update.id), update.payload as LiveAtlasPointMarker, converter);
+						const layer = updatePointMarker(layers.get(update.id), update.payload as LiveAtlasPointMarker, converter);
 
 						if(!layers.has(update.id)) {
 							props.layerGroup.addLayer(layer);
@@ -104,7 +104,7 @@ export default defineComponent({
 				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				for (const [id, marker] of nonReactiveState.markers.get(props.set.id)!.points) {
-					updateMarker(layers.get(id), marker, converter);
+					updatePointMarker(layers.get(id), marker, converter);
 				}
 			}
 		});
