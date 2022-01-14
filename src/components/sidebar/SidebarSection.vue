@@ -92,7 +92,7 @@ export default defineComponent({
 		margin-bottom: var(--ui-element-spacing);
 		box-sizing: border-box;
 		width: 100%;
-		max-width: 25rem;
+		max-width: 26rem;
 		flex: 0 0 auto;
 
 		.section__heading {

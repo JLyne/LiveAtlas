@@ -121,7 +121,7 @@ export default defineComponent({
 			position: relative;
 			pointer-events: none;
 			z-index: 2;
-			padding-right: 1.2rem;
+			padding-right: 1.5rem;
 		}
 
 		&.player--hidden:not(:hover),
