@@ -57,6 +57,11 @@ interface Coordinate {
 	z: number;
 }
 
+interface Coordinate2D {
+	x: number;
+	y: number;
+}
+
 interface LiveAtlasLocation {
 	x: number;
 	y: number;

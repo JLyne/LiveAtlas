@@ -19,7 +19,7 @@
 
 import {Map as LeafletMap, Coords, DoneCallback} from 'leaflet';
 import {useStore} from "@/store";
-import {Coordinate} from "@/index";
+import {Coordinate, Coordinate2D} from "@/index";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 import {computed, watch} from "@vue/runtime-core";
 import {ComputedRef} from "@vue/reactivity";
@@ -159,7 +159,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 		return 'z'.repeat(amount) + (amount === 0 ? '' : '_');
 	}
 
-	private getTileInfo(coords: Coordinate): TileInformation {
+	private getTileInfo(coords: Coordinate2D): TileInformation {
 		// zoom: max zoomed in = this.options.maxZoom, max zoomed out = 0
 		// izoom: max zoomed in = 0, max zoomed out = this.options.maxZoom
 		// zoomoutlevel: izoom < mapzoomin -> 0, else -> izoom - mapzoomin (which ranges from 0 till mapzoomout)
