@@ -262,9 +262,6 @@ export default class Pl3xmapMapProvider extends MapProvider {
 						break;
 
 					case 'rectangle':
-						areas.set(`area-${areas.size}`, Pl3xmapMapProvider.buildRectangle(marker));
-						break;
-
 					case 'polygon':
 						areas.set(`area-${areas.size}`, Pl3xmapMapProvider.buildArea(marker));
 						break;
@@ -307,7 +304,18 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		};
 	}
 
-	private static buildRectangle(area: any): LiveAtlasAreaMarker {
+	private static buildArea(area: any): LiveAtlasAreaMarker {
+		let points = area.points;
+
+		if(area.type === 'rectangle') {
+			points = [
+				{x: area.points[0].x, y: 0, z: area.points[0].z},
+				{x: area.points[0].x, y: 0, z: area.points[1].z},
+				{x: area.points[1].x, y: 0, z: area.points[1].z},
+				{x: area.points[1].x, y: 0, z: area.points[0].z},
+			];
+		}
+
 		return {
 			style: {
 				stroke: typeof area.stroke !== 'undefined' ? !!area.stroke : true,
@@ -319,38 +327,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				fillOpacity: area.fillOpacity || 0.2,
 				fillRule: area.fillRule,
 			},
-			points: [
-				{x: area.points[0].x, y: 0, z: area.points[0].z},
-				{x: area.points[0].x, y: 0, z: area.points[1].z},
-				{x: area.points[1].x, y: 0, z: area.points[1].z},
-				{x: area.points[1].x, y: 0, z: area.points[0].z},
-			],
-			location: getMiddleFromPoints(area.points),
-			outline: false,
-
-			tooltip: area.tooltip ? stripHTML(area.tooltip) : '',
-			tooltipHTML: area.tooltip,
-			popup: area.popup,
-			isPopupHTML: true,
-		};
-	}
-
-	private static buildArea(area: any): LiveAtlasAreaMarker {
-		const points = this.addY(area.points);
-
-		return {
-			style: {
-				stroke: typeof area.stroke !== 'undefined' ? !!area.stroke : true,
-				color: area.color || '#3388ff',
-				weight: area.weight || 3,
-				opacity: typeof area.opacity !== 'undefined' ? area.opacity : 1,
-				fill: typeof area.fill !== 'undefined' ? !!area.fill : true,
-				fillColor: area.fillColor || area.color || '#3388ff',
-				fillOpacity: area.fillOpacity || 0.2,
-				fillRule: area.fillRule,
-			},
 			points,
-			location: getMiddleFromPoints(points),
+			location: getMiddleFromPoints(area.points),
 			outline: false,
 
 			tooltip: area.tooltip ? stripHTML(area.tooltip) : '',
