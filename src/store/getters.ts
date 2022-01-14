@@ -68,16 +68,11 @@ export const getters: GetterTree<State, State> & Getters = {
 	},
 
 	url(state: State): string {
-		const x = state.currentLocation.x,
-			y = state.currentLocation.y,
-			z = state.currentLocation.z,
-			zoom = state.currentZoom;
-
 		if(!state.currentWorld || !state.currentMap) {
 			return '';
 		}
 
-		return getUrlForLocation(state.currentMap, {x,y,z}, zoom);
+		return getUrlForLocation(state.currentMap, state.currentLocation, state.currentZoom);
 	},
 
 	pageTitle(state: State): string {

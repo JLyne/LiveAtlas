@@ -193,7 +193,7 @@ const validateParsedUrl = (parsed: any) => {
 
 export const getUrlForLocation = (map: LiveAtlasMapDefinition, location: Coordinate, zoom: number): string => {
 	const x = Math.round(location.x),
-			y = Math.round(location.y || 0),
+			y = Math.round(location.y),
 			z = Math.round(location.z),
 			locationString = `${x},${y},${z}`;
 
