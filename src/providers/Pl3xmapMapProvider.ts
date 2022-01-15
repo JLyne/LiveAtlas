@@ -20,11 +20,11 @@ import {
 	LiveAtlasCircleMarker,
 	LiveAtlasComponentConfig,
 	LiveAtlasDimension,
-	LiveAtlasLineMarker,
-	LiveAtlasPointMarker,
-	LiveAtlasMarkerSet, LiveAtlasMarkerSetContents,
+	LiveAtlasLineMarker, LiveAtlasMarker,
+	LiveAtlasMarkerSet,
 	LiveAtlasPartialComponentConfig,
 	LiveAtlasPlayer,
+	LiveAtlasPointMarker,
 	LiveAtlasServerConfig,
 	LiveAtlasServerDefinition,
 	LiveAtlasServerMessageConfig,
@@ -35,6 +35,7 @@ import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {ActionTypes} from "@/store/action-types";
 import {getMiddleFromPoints, stripHTML, titleColoursRegex} from "@/util";
+import {LiveAtlasMarkerType} from "@/util/markers";
 
 export default class Pl3xmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -57,7 +58,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}> = new Map();
 
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
-	private markers = new Map<string, LiveAtlasMarkerSetContents>();
+	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 
 	constructor(config: LiveAtlasServerDefinition) {
 		super(config);
@@ -244,31 +245,33 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				return;
 			}
 
-			const id = set.id;
-
-			const points: Map<string, LiveAtlasPointMarker> = Object.freeze(new Map()),
-				circles: Map<string, LiveAtlasCircleMarker> = Object.freeze(new Map()),
-				areas: Map<string, LiveAtlasAreaMarker> = Object.freeze(new Map()),
-				lines: Map<string, LiveAtlasLineMarker> = Object.freeze(new Map());
+			const id = set.id,
+				markers: Map<string, LiveAtlasMarker> = Object.freeze(new Map());
 
 			(set.markers || []).forEach((marker: any) => {
+				let markerId;
+
 				switch(marker.type) {
 					case 'icon':
-						points.set(`marker-${points.size}`, Pl3xmapMapProvider.buildMarker(marker));
+						markerId = `point_${markers.size}`;
+						markers.set(markerId, Pl3xmapMapProvider.buildMarker(markerId, marker));
 						break;
 
 					case 'polyline':
-						lines.set(`line-${lines.size}`, Pl3xmapMapProvider.buildLine(marker));
+						markerId = `line_${markers.size}`;
+						markers.set(markerId, Pl3xmapMapProvider.buildLine(markerId, marker));
 						break;
 
 					case 'rectangle':
 					case 'polygon':
-						areas.set(`area-${areas.size}`, Pl3xmapMapProvider.buildArea(marker));
+						markerId = `area_${markers.size}`;
+						markers.set(markerId, Pl3xmapMapProvider.buildArea(markerId, marker));
 						break;
 
 					case 'circle':
 					case 'ellipse':
-						circles.set(`circle-${circles.size}`, Pl3xmapMapProvider.buildCircle(marker));
+						markerId = `circle_${markers.size}`;
+						markers.set(markerId, Pl3xmapMapProvider.buildCircle(markerId, marker));
 						break;
 
 					default:
@@ -283,12 +286,14 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				priority: set.order || 0,
 				showLabels: false
 			});
-			this.markers.set(id, Object.seal({points, circles, areas, lines}));
+			this.markers.set(id, markers);
 		});
 	}
 
-	private static buildMarker(marker: any): LiveAtlasPointMarker {
+	private static buildMarker(id: string, marker: any): LiveAtlasPointMarker {
 		return {
+			id,
+			type: LiveAtlasMarkerType.POINT,
 			location: {
 				x: marker.point?.x || 0,
 				y: 0,
@@ -304,7 +309,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		};
 	}
 
-	private static buildArea(area: any): LiveAtlasAreaMarker {
+	private static buildArea(id: string, area: any): LiveAtlasAreaMarker {
 		let points = area.points;
 
 		if(area.type === 'rectangle') {
@@ -317,6 +322,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		}
 
 		return {
+			id,
+			type: LiveAtlasMarkerType.AREA,
 			style: {
 				stroke: typeof area.stroke !== 'undefined' ? !!area.stroke : true,
 				color: area.color || '#3388ff',
@@ -338,10 +345,12 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		};
 	}
 
-	private static buildLine(line: any): LiveAtlasLineMarker {
+	private static buildLine(id: string, line: any): LiveAtlasLineMarker {
 		const points = this.addY(line.points);
 
 		return {
+			id,
+			type: LiveAtlasMarkerType.LINE,
 			style: {
 				stroke: typeof line.stroke !== 'undefined' ? !!line.stroke : true,
 				color: line.color || '#3388ff',
@@ -358,8 +367,10 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		};
 	}
 
-	private static buildCircle(circle: any): LiveAtlasCircleMarker {
+	private static buildCircle(id: string, circle: any): LiveAtlasCircleMarker {
 		return {
+			id,
+			type: LiveAtlasMarkerType.CIRCLE,
 			location: {
 				x: circle.center?.x || 0,
 				y: 0,

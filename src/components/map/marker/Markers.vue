@@ -1,5 +1,5 @@
 <!--
-  - Copyright 2021 James Lyne
+  - Copyright 2022 James Lyne
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -17,14 +17,15 @@
 <script lang="ts">
 import {defineComponent, computed, onMounted, watch, onUnmounted} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import {createArea, updateArea} from "@/util/areas";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
-import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
-import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
-import {LiveAtlasAreaMarker, LiveAtlasMarkerSet} from "@/index";
+import {LiveAtlasAreaMarker, LiveAtlasMarker, LiveAtlasMarkerSet} from "@/index";
 import {nonReactiveState} from "@/store/state";
 import {DynmapMarkerUpdate} from "@/dynmap";
-import {LiveAtlasMarkerType, registerTypeUpdateHandler, unregisterTypeUpdateHandler} from "@/util/markers";
+import {
+	createMarker,
+	registerUpdateHandler, unregisterUpdateHandler, updateMarker
+} from "@/util/markers";
+import {Layer} from "leaflet";
 
 export default defineComponent({
 	props: {
@@ -41,35 +42,35 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore(),
 			currentMap = computed(() => store.state.currentMap),
-			layers = Object.freeze(new Map()) as Map<string, LiveAtlasPolygon | LiveAtlasPolyline>;
+			layers = Object.freeze(new Map()) as Map<string, Layer>;
 
 		let converter = currentMap.value!.locationToLatLng.bind(currentMap.value);
 
-		const createAreas = () => {
-			nonReactiveState.markers.get(props.set.id)!.areas.forEach((area: LiveAtlasAreaMarker, id: string) => {
-				const layer = createArea(area, converter);
+		const createMarkers = () => {
+			nonReactiveState.markers.get(props.set.id)!.forEach((area: LiveAtlasMarker, id: string) => {
+				const layer = createMarker(area, converter);
 
 				layers.set(id, layer);
 				props.layerGroup.addLayer(layer);
 			});
 		};
 
-		const deleteArea = (id: string) => {
-			let area = layers.get(id) as LiveAtlasPolyline;
+		const deleteMarker = (id: string) => {
+			let marker = layers.get(id);
 
-			if(!area) {
+			if(!marker) {
 				return;
 			}
 
-			props.layerGroup.removeLayer(area);
+			props.layerGroup.removeLayer(marker);
 			layers.delete(id);
 		};
 
 		const handleUpdate = (update: DynmapMarkerUpdate) => {
 			if(update.removed) {
-				deleteArea(update.id);
+				deleteMarker(update.id);
 			} else {
-				const layer = updateArea(layers.get(update.id), update.payload as LiveAtlasAreaMarker, converter);
+				const layer = updateMarker(layers.get(update.id), update.payload as LiveAtlasAreaMarker, converter);
 
 				if(!layers.has(update.id)) {
 					props.layerGroup.addLayer(layer);
@@ -83,18 +84,18 @@ export default defineComponent({
 			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
 				converter = newValue.locationToLatLng.bind(newValue);
 
-				for (const [id, area] of nonReactiveState.markers.get(props.set.id)!.areas) {
-					updateArea(layers.get(id), area, converter);
+				for (const [id, area] of nonReactiveState.markers.get(props.set.id)!) {
+					updateMarker(layers.get(id), area, converter);
 				}
 			}
 		});
 
 		onMounted(() => {
-			createAreas();
-			registerTypeUpdateHandler(handleUpdate, props.set.id, LiveAtlasMarkerType.AREA);
+			createMarkers();
+			registerUpdateHandler(handleUpdate, props.set.id);
 		});
 		onUnmounted(() => {
-			unregisterTypeUpdateHandler(handleUpdate, props.set.id, LiveAtlasMarkerType.AREA);
+			unregisterUpdateHandler(handleUpdate, props.set.id);
 		});
 	},
 

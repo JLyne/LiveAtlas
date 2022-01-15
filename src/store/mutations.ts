@@ -32,10 +32,6 @@ import {
 	LiveAtlasGlobalConfig,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasPlayer,
-	LiveAtlasCircleMarker,
-	LiveAtlasLineMarker,
-	LiveAtlasAreaMarker,
-	LiveAtlasPointMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasServerDefinition,
 	LiveAtlasServerConfig,
@@ -43,12 +39,11 @@ import {
 	LiveAtlasPartialComponentConfig,
 	LiveAtlasComponentConfig,
 	LiveAtlasUIModal,
-	LiveAtlasSidebarSectionState, LiveAtlasMarkerSetContents
+	LiveAtlasSidebarSectionState, LiveAtlasMarker
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
 import {getGlobalMessages} from "@/util";
-import {LiveAtlasMarkerType} from "@/util/markers";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -63,7 +58,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
 	[MutationTypes.SET_COMPONENTS](state: S, components: LiveAtlasPartialComponentConfig | LiveAtlasComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, markerSets: Map<string, LiveAtlasMarkerSet>): void
-	[MutationTypes.SET_MARKERS](state: S, markers: Map<string, LiveAtlasMarkerSetContents>): void
+	[MutationTypes.SET_MARKERS](state: S, markers: Map<string, Map<string, LiveAtlasMarker>>): void
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: DynmapMarkerSetUpdate[]): void
 	[MutationTypes.ADD_MARKER_UPDATES](state: S, updates: DynmapMarkerUpdate[]): void
@@ -209,17 +204,12 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		for(const entry of markerSets) {
 			state.markerSets.set(entry[0], entry[1]);
-			nonReactiveState.markers.set(entry[0], {
-				points: new Map<string, LiveAtlasPointMarker>(),
-				areas: new Map<string, LiveAtlasAreaMarker>(),
-				lines: new Map<string, LiveAtlasLineMarker>(),
-				circles: new Map<string, LiveAtlasCircleMarker>(),
-			});
+			nonReactiveState.markers.set(entry[0], new Map());
 		}
 	},
 
 	//Sets the existing marker sets from the last marker fetch
-	[MutationTypes.SET_MARKERS](state: State, markers: Map<string, LiveAtlasMarkerSetContents>) {
+	[MutationTypes.SET_MARKERS](state: State, markers: Map<string, Map<string, LiveAtlasMarker>>) {
 		nonReactiveState.markers.clear();
 
 		for(const entry of markers) {
@@ -261,12 +251,7 @@ export const mutations: MutationTree<State> & Mutations = {
 						label: update.payload.label,
 						hidden: update.payload.hidden,
 					});
-					nonReactiveState.markers.set(update.id, {
-						points: new Map<string, LiveAtlasPointMarker>(),
-						areas: new Map<string, LiveAtlasAreaMarker>(),
-						lines: new Map<string, LiveAtlasLineMarker>(),
-						circles: new Map<string, LiveAtlasCircleMarker>(),
-					});
+					nonReactiveState.markers.set(update.id, new Map());
 				}
 			}
 		}
@@ -281,41 +266,12 @@ export const mutations: MutationTree<State> & Mutations = {
 				continue;
 			}
 
-			setContents = nonReactiveState.markers.get(update.set) as LiveAtlasMarkerSetContents;
+			setContents = nonReactiveState.markers.get(update.set) as Map<string, LiveAtlasMarker>;
 
-			switch (update.type) {
-				case LiveAtlasMarkerType.POINT:
-					if(update.removed) {
-						setContents.points.delete(update.id);
-					} else {
-						setContents.points.set(update.id, update.payload as LiveAtlasPointMarker);
-					}
-
-					continue;
-				case LiveAtlasMarkerType.AREA:
-					if(update.removed) {
-						setContents.areas.delete(update.id);
-					} else {
-						setContents.areas.set(update.id, update.payload as LiveAtlasAreaMarker);
-					}
-
-					continue;
-
-				case LiveAtlasMarkerType.LINE:
-					if(update.removed) {
-						setContents.lines.delete(update.id);
-					} else {
-						setContents.lines.set(update.id, update.payload as LiveAtlasLineMarker);
-					}
-
-					continue;
-
-				case LiveAtlasMarkerType.CIRCLE:
-					if(update.removed) {
-						setContents.circles.delete(update.id);
-					} else {
-						setContents.circles.set(update.id, update.payload as LiveAtlasCircleMarker);
-					}
+			if(update.removed) {
+				setContents.delete(update.id);
+			} else {
+				setContents.set(update.id, update.payload);
 			}
 		}
 

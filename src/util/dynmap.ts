@@ -21,8 +21,9 @@ import {
 	LiveAtlasCircleMarker,
 	LiveAtlasComponentConfig,
 	LiveAtlasDimension,
-	LiveAtlasLineMarker,
-	LiveAtlasPointMarker, LiveAtlasPlayerImageSize,
+	LiveAtlasLineMarker, LiveAtlasMarker,
+	LiveAtlasPlayerImageSize,
+	LiveAtlasPointMarker,
 	LiveAtlasServerConfig,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
@@ -40,7 +41,11 @@ import {getLinePoints} from "@/util/lines";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
 	Configuration,
-	Marker, MarkerArea, MarkerCircle, MarkerLine, MarkerSet,
+	Marker,
+	MarkerArea,
+	MarkerCircle,
+	MarkerLine,
+	MarkerSet,
 	Options,
 	WorldConfiguration,
 	WorldMapConfiguration
@@ -275,21 +280,20 @@ export function buildMarkerSet(id: string, data: MarkerSet): any {
 	}
 }
 
-export function buildMarkers(data: any): Map<string, LiveAtlasPointMarker> {
-	const markers = Object.freeze(new Map()) as Map<string, LiveAtlasPointMarker>;
+export function buildMarkers(data: any, list: Map<string, LiveAtlasMarker>): void {
+	let id;
 
 	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
 			continue;
 		}
 
-		markers.set(key, buildMarker(data[key]));
+		id = `point_${key}`;
+		list.set(id, buildMarker(id, data[key]));
 	}
-
-	return markers;
 }
 
-export function buildMarker(data: Marker): LiveAtlasPointMarker {
+export function buildMarker(id: string, data: Marker): LiveAtlasPointMarker {
 	let dimensions;
 
 	if(data.dim) {
@@ -301,6 +305,8 @@ export function buildMarker(data: Marker): LiveAtlasPointMarker {
 	}
 
 	const marker = {
+		id,
+		type: LiveAtlasMarkerType.POINT,
 		location: {
 			x: data.x || 0,
 			y: data.y || 0,
@@ -314,7 +320,7 @@ export function buildMarker(data: Marker): LiveAtlasPointMarker {
 		tooltipHTML: data.markup ? data.label : undefined,
 		popup: data.desc || undefined,
 		isPopupHTML: true,
-	};
+	} as LiveAtlasPointMarker;
 
 	//Fix double escaping on non-HTML labels
 	if(!marker.tooltipHTML) {
@@ -324,26 +330,27 @@ export function buildMarker(data: Marker): LiveAtlasPointMarker {
 	return marker;
 }
 
-export function buildAreas(data: any): Map<string, LiveAtlasAreaMarker> {
-	const areas = Object.freeze(new Map()) as Map<string, LiveAtlasAreaMarker>;
+export function buildAreas(data: any, list: Map<string, LiveAtlasMarker>): void {
+	let id;
 
 	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
 			continue;
 		}
 
-		areas.set(key, buildArea(data[key]));
+		id = `area_${key}`;
+		list.set(id, buildArea(id, data[key]));
 	}
-
-	return areas;
 }
 
-export function buildArea(area: MarkerArea): LiveAtlasAreaMarker {
+export function buildArea(id: string, area: MarkerArea): LiveAtlasAreaMarker {
 	const x = area.x || [0, 0],
 		y = [area.ybottom || 0, area.ytop || 0] as [number, number],
 		z = area.z || [0, 0];
 
 	return {
+		id,
+		type: LiveAtlasMarkerType.AREA,
 		style: {
 			color: area.color || '#ff0000',
 			opacity: area.opacity || 1,
@@ -364,26 +371,27 @@ export function buildArea(area: MarkerArea): LiveAtlasAreaMarker {
 	};
 }
 
-export function buildLines(data: any): Map<string, LiveAtlasLineMarker> {
-	const lines = Object.freeze(new Map()) as Map<string, LiveAtlasLineMarker>;
+export function buildLines(data: any, list: Map<string, LiveAtlasMarker>): void {
+	let id;
 
 	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
 			continue;
 		}
 
-		lines.set(key, buildLine(data[key]));
+		id = `line_${key}`;
+		list.set(id, buildLine(id, data[key]));
 	}
-
-	return lines;
 }
 
-export function buildLine(line: MarkerLine): LiveAtlasLineMarker {
+export function buildLine(id: string, line: MarkerLine): LiveAtlasLineMarker {
 	const x = line.x || [0, 0],
 		y = line.y || [0, 0],
 		z = line.z || [0, 0];
 
 	return {
+		id,
+		type: LiveAtlasMarkerType.LINE,
 		style: {
 			color: line.color || '#ff0000',
 			opacity: line.opacity || 1,
@@ -401,22 +409,23 @@ export function buildLine(line: MarkerLine): LiveAtlasLineMarker {
 	};
 }
 
-export function buildCircles(data: any): Map<string, LiveAtlasCircleMarker> {
-	const circles = Object.freeze(new Map()) as Map<string, LiveAtlasCircleMarker>;
+export function buildCircles(data: any, list: Map<string, LiveAtlasMarker>): void {
+	let id;
 
 	for (const key in data) {
 		if (!Object.prototype.hasOwnProperty.call(data, key)) {
 			continue;
 		}
 
-		circles.set(key, buildCircle(data[key]));
+		id = `circle_${key}`;
+		list.set(id, buildCircle(id, data[key]));
 	}
-
-	return circles;
 }
 
-export function buildCircle(circle: MarkerCircle): LiveAtlasCircleMarker {
+export function buildCircle(id: string, circle: MarkerCircle): LiveAtlasCircleMarker {
 	return {
+		id,
+		type: LiveAtlasMarkerType.CIRCLE,
 		location: {
 			x: circle.x || 0,
 			y: circle.y || 0,
@@ -499,17 +508,21 @@ export function buildUpdates(data: Array<any>, lastUpdate: Date) {
 					updates.markerSets.push(Object.freeze(update as DynmapMarkerSetUpdate));
 				} else {
 					if (entry.msg.startsWith("marker")) {
+						update.id = `point_${entry.id}`;
 						update.type = LiveAtlasMarkerType.POINT;
-						update.payload = update.removed ? undefined : buildMarker(entry);
+						update.payload = update.removed ? undefined : buildMarker(update.id, entry);
 					} else if (entry.msg.startsWith("area")) {
+						update.id = `area_${entry.id}`;
 						update.type = LiveAtlasMarkerType.AREA;
-						update.payload = update.removed ? undefined : buildArea(entry);
+						update.payload = update.removed ? undefined : buildArea(update.id, entry);
 					} else if (entry.msg.startsWith("circle")) {
+						update.id = `circle_${entry.id}`;
 						update.type = LiveAtlasMarkerType.CIRCLE;
-						update.payload = update.removed ? undefined : buildCircle(entry);
+						update.payload = update.removed ? undefined : buildCircle(update.id, entry);
 					} else if (entry.msg.startsWith("line")) {
+						update.id = `line_${entry.id}`;
 						update.type = LiveAtlasMarkerType.LINE;
-						update.payload = update.removed ? undefined : buildLine(entry);
+						update.payload = update.removed ? undefined : buildLine(update.id, entry);
 					}
 
 					updates.markers.push(Object.freeze(update as DynmapMarkerUpdate));

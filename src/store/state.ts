@@ -36,7 +36,7 @@ import {
 	LiveAtlasChat,
 	LiveAtlasUIModal,
 	LiveAtlasSidebarSectionState,
-	LiveAtlasMarkerSetContents
+	LiveAtlasMarker
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {getMessages} from "@/util";
@@ -220,5 +220,5 @@ export const state: State = {
 };
 
 export const nonReactiveState = Object.freeze({
-	markers: new Map<string, LiveAtlasMarkerSetContents>(),
+	markers: new Map<string, Map<string, LiveAtlasMarker>>(),
 });

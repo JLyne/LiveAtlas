@@ -22,6 +22,7 @@ import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {globalMessages, serverMessages} from "../messages";
+import {LiveAtlasMarkerType} from "@/util/markers";
 
 declare module "*.png" {
    const value: any;
@@ -178,14 +179,9 @@ interface LiveAtlasMarkerSet {
 	showLabels?: boolean;
 }
 
-interface LiveAtlasMarkerSetContents {
-	points: Map<string, LiveAtlasPointMarker>,
-	areas: Map<string, LiveAtlasAreaMarker>;
-	lines: Map<string, LiveAtlasLineMarker>;
-	circles: Map<string, LiveAtlasCircleMarker>;
-}
-
 interface LiveAtlasMarker {
+	id: string;
+	type: LiveAtlasMarkerType;
 	tooltip: string;
 	tooltipHTML?: string;
 	popup?: string;
@@ -196,6 +192,7 @@ interface LiveAtlasMarker {
 }
 
 interface LiveAtlasPointMarker extends LiveAtlasMarker {
+	type: LiveAtlasMarkerType.POINT;
 	dimensions: PointTuple;
 	icon: string;
 }
@@ -204,20 +201,21 @@ interface LiveAtlasPathMarker extends LiveAtlasMarker {
 	style: PathOptions;
 }
 
-interface LiveAtlasAreaMarker extends LiveAtlasPathMarker {
-	style: PolylineOptions;
-	outline: boolean;
-	points: Coordinate[] | Coordinate[][] | Coordinate[][][]
-}
-
 interface LiveAtlasLineMarker extends LiveAtlasPathMarker {
+	type: LiveAtlasMarkerType.LINE;
 	points: Coordinate[];
 	style: PolylineOptions;
 }
 
+interface LiveAtlasAreaMarker extends LiveAtlasLineMarker {
+	type: LiveAtlasMarkerType.AREA;
+	outline: boolean;
+	points: Coordinate[] | Coordinate[][] | Coordinate[][][];
+}
+
 interface LiveAtlasCircleMarker extends LiveAtlasPathMarker {
+	type: LiveAtlasMarkerType.CIRCLE;
 	radius: PointTuple;
-	style: PathOptions;
 }
 
 interface HeadQueueEntry {
