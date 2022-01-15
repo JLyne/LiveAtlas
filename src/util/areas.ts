@@ -62,7 +62,16 @@ export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefine
 
 	area.closePopup();
 	area.unbindPopup();
-	area.bindPopup(() => createPopup(options, 'AreaPopup'));
+	area.closeTooltip();
+	area.unbindTooltip();
+
+	if (options.popup) {
+		area.bindPopup(() => createPopup(options, 'AreaPopup'));
+	}
+
+	if (options.tooltip) {
+		area.bindTooltip(() => options.tooltipHTML || options.tooltip, tooltipOptions);
+	}
 
 	if(dirty) {
 		area.redraw();

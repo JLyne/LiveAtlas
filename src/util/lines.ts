@@ -44,7 +44,17 @@ export const updateLine = (line: LiveAtlasPolyline | undefined, options: LiveAtl
 
 	line.closePopup();
 	line.unbindPopup();
-	line.bindPopup(() => createPopup(options, 'LinePopup'));
+	line.closeTooltip();
+	line.unbindTooltip();
+
+	if (options.popup) {
+		line.bindPopup(() => createPopup(options, 'AreaPopup'));
+	}
+
+	if (options.tooltip) {
+		line.bindTooltip(() => options.tooltipHTML || options.tooltip, tooltipOptions);
+	}
+
 	line.setStyle(options.style);
 	line.setLatLngs(options.points.map(projectPointsMapCallback, converter));
 	line.redraw();

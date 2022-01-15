@@ -48,7 +48,17 @@ export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | unde
 
 	circle.closePopup();
 	circle.unbindPopup();
-	circle.bindPopup(() => createPopup(options, 'CirclePopup'));
+	circle.closeTooltip();
+	circle.unbindTooltip();
+
+	if (options.popup) {
+		circle.bindPopup(() => createPopup(options, 'AreaPopup'));
+	}
+
+	if (options.tooltip) {
+		circle.bindTooltip(() => options.tooltipHTML || options.tooltip, tooltipOptions);
+	}
+
 	circle.setStyle(options.style);
 	circle.setLatLngs(getCirclePoints(options, converter, outline));
 	circle.redraw();
