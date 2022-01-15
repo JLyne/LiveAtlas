@@ -30,10 +30,10 @@ import {
 	LiveAtlasPointMarker
 } from "@/index";
 import {Layer} from "leaflet";
-import {createCircle, updateCircle} from "@/util/circles";
-import {createPointMarker, updatePointMarker} from "@/util/points";
-import {createArea, updateArea} from "@/util/areas";
-import {createLine, updateLine} from "@/util/lines";
+import {createCircleLayer, updateCircleLayer} from "@/util/circles";
+import {createPointLayer, updatePointLayer} from "@/util/points";
+import {createAreaLayer, updateAreaLayer} from "@/util/areas";
+import {createLineLayer, updateLineLayer} from "@/util/lines";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
@@ -105,28 +105,28 @@ const handlePendingUpdates = async () => {
 	}
 };
 
-export const createMarker = (options: LiveAtlasMarker, converter: Function): Layer => {
+export const createMarkerLayer = (options: LiveAtlasMarker, converter: Function): Layer => {
 	switch(options.type) {
 		case LiveAtlasMarkerType.POINT:
-			return createPointMarker(options as LiveAtlasPointMarker, converter);
+			return createPointLayer(options as LiveAtlasPointMarker, converter);
 		case LiveAtlasMarkerType.AREA:
-			return createArea(options as LiveAtlasAreaMarker, converter);
+			return createAreaLayer(options as LiveAtlasAreaMarker, converter);
 		case LiveAtlasMarkerType.LINE:
-			return createLine(options as LiveAtlasLineMarker, converter);
+			return createLineLayer(options as LiveAtlasLineMarker, converter);
 		case LiveAtlasMarkerType.CIRCLE:
-			return createCircle(options as LiveAtlasCircleMarker, converter);
+			return createCircleLayer(options as LiveAtlasCircleMarker, converter);
 	}
 }
 
-export const updateMarker = (marker: Layer | undefined, options: LiveAtlasMarker, converter: Function): Layer => {
+export const updateMarkerLayer = (marker: Layer | undefined, options: LiveAtlasMarker, converter: Function): Layer => {
 	switch(options.type) {
 		case LiveAtlasMarkerType.POINT:
-			return updatePointMarker(marker as GenericMarker, options as LiveAtlasPointMarker, converter);
+			return updatePointLayer(marker as GenericMarker, options as LiveAtlasPointMarker, converter);
 		case LiveAtlasMarkerType.AREA:
-			return updateArea(marker as LiveAtlasPolygon | LiveAtlasPolyline, options as LiveAtlasAreaMarker, converter);
+			return updateAreaLayer(marker as LiveAtlasPolygon | LiveAtlasPolyline, options as LiveAtlasAreaMarker, converter);
 		case LiveAtlasMarkerType.LINE:
-			return updateLine(marker as LiveAtlasPolyline, options as LiveAtlasLineMarker, converter);
+			return updateLineLayer(marker as LiveAtlasPolyline, options as LiveAtlasLineMarker, converter);
 		case LiveAtlasMarkerType.CIRCLE:
-			return updateCircle(marker as LiveAtlasPolyline | LiveAtlasPolygon, options as LiveAtlasCircleMarker, converter);
+			return updateCircleLayer(marker as LiveAtlasPolyline | LiveAtlasPolygon, options as LiveAtlasCircleMarker, converter);
 	}
 }

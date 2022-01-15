@@ -23,7 +23,7 @@ import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import {Coordinate, LiveAtlasAreaMarker} from "@/index";
 import {arePointsEqual, createPopup, isStyleEqual, tooltipOptions} from "@/util/paths";
 
-export const createArea = (options: LiveAtlasAreaMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const createAreaLayer = (options: LiveAtlasAreaMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[] | LatLngExpression[][],
 		area = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
@@ -39,9 +39,9 @@ export const createArea = (options: LiveAtlasAreaMarker, converter: Function): L
 	return area;
 };
 
-export const updateArea = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasAreaMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const updateAreaLayer = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasAreaMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	if (!area) {
-		return createArea(options, converter);
+		return createAreaLayer(options, converter);
 	}
 
 	const points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[] | LatLngExpression[][],

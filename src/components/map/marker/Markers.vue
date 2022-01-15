@@ -22,8 +22,8 @@ import {LiveAtlasAreaMarker, LiveAtlasMarker, LiveAtlasMarkerSet} from "@/index"
 import {nonReactiveState} from "@/store/state";
 import {DynmapMarkerUpdate} from "@/dynmap";
 import {
-	createMarker,
-	registerUpdateHandler, unregisterUpdateHandler, updateMarker
+	createMarkerLayer,
+	registerUpdateHandler, unregisterUpdateHandler, updateMarkerLayer
 } from "@/util/markers";
 import {Layer} from "leaflet";
 
@@ -48,7 +48,7 @@ export default defineComponent({
 
 		const createMarkers = () => {
 			nonReactiveState.markers.get(props.set.id)!.forEach((area: LiveAtlasMarker, id: string) => {
-				const layer = createMarker(area, converter);
+				const layer = createMarkerLayer(area, converter);
 
 				layers.set(id, layer);
 				props.layerGroup.addLayer(layer);
@@ -70,7 +70,7 @@ export default defineComponent({
 			if(update.removed) {
 				deleteMarker(update.id);
 			} else {
-				const layer = updateMarker(layers.get(update.id), update.payload as LiveAtlasAreaMarker, converter);
+				const layer = updateMarkerLayer(layers.get(update.id), update.payload as LiveAtlasAreaMarker, converter);
 
 				if(!layers.has(update.id)) {
 					props.layerGroup.addLayer(layer);
@@ -85,7 +85,7 @@ export default defineComponent({
 				converter = newValue.locationToLatLng.bind(newValue);
 
 				for (const [id, area] of nonReactiveState.markers.get(props.set.id)!) {
-					updateMarker(layers.get(id), area, converter);
+					updateMarkerLayer(layers.get(id), area, converter);
 				}
 			}
 		});

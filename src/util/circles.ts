@@ -23,7 +23,7 @@ import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import {LiveAtlasCircleMarker} from "@/index";
 import {createPopup, tooltipOptions} from "@/util/paths";
 
-export const createCircle = (options: LiveAtlasCircleMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const createCircleLayer = (options: LiveAtlasCircleMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getCirclePoints(options, converter, outline),
 		circle = outline ? new LiveAtlasPolyline(points, options) : new LiveAtlasPolygon(points, options);
@@ -39,9 +39,9 @@ export const createCircle = (options: LiveAtlasCircleMarker, converter: Function
 	return circle;
 };
 
-export const updateCircle = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasCircleMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
+export const updateCircleLayer = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasCircleMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	if (!circle) {
-		return createCircle(options, converter);
+		return createCircleLayer(options, converter);
 	}
 
 	const outline = (options.style && options.style.fillOpacity && (options.style.fillOpacity <= 0)) as boolean;
