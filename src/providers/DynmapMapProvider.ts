@@ -183,6 +183,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 		this.store.commit(MutationTypes.SET_WORLD_STATE, worldState);
 		this.store.commit(MutationTypes.ADD_MARKER_SET_UPDATES, updates.markerSets);
+		this.store.commit(MutationTypes.ADD_MARKER_UPDATES, updates.markers);
 		this.store.commit(MutationTypes.ADD_TILE_UPDATES, updates.tiles);
 		this.store.commit(MutationTypes.ADD_CHAT, updates.chat);
 

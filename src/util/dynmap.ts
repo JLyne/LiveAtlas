@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {DynmapMarkerSetUpdates, DynmapTileUpdate, DynmapUpdate} from "@/dynmap";
+import {DynmapMarkerSetUpdate, DynmapMarkerUpdate, DynmapTileUpdate} from "@/dynmap";
 import {
 	LiveAtlasAreaMarker,
 	LiveAtlasChat,
@@ -46,6 +46,7 @@ import {
 	WorldMapConfiguration
 } from "dynmap";
 import {PointTuple} from "leaflet";
+import {LiveAtlasMarkerType} from "@/util/markers";
 
 export function buildServerConfig(response: Options): LiveAtlasServerConfig {
 	let title = 'Dynmap';
@@ -441,7 +442,8 @@ export function buildCircle(circle: MarkerCircle): LiveAtlasCircleMarker {
 
 export function buildUpdates(data: Array<any>, lastUpdate: Date) {
 	const updates = {
-			markerSets: new Map<string, DynmapMarkerSetUpdates>(),
+			markerSets: [] as DynmapMarkerSetUpdate[],
+			markers: [] as DynmapMarkerUpdate[],
 			tiles: [] as DynmapTileUpdate[],
 			chat: [] as LiveAtlasChat[],
 		},
@@ -483,39 +485,34 @@ export function buildUpdates(data: Array<any>, lastUpdate: Date) {
 					continue;
 				}
 
-				if (!updates.markerSets.has(set)) {
-					updates.markerSets.set(set, {
-						areaUpdates: [],
-						markerUpdates: [],
-						lineUpdates: [],
-						circleUpdates: [],
-						removed: false,
-					});
-				}
-
-				const markerSetUpdates = updates.markerSets.get(set),
-					update: DynmapUpdate = {
-						id: entry.id,
-						removed: entry.msg.endsWith('deleted'),
-					};
+				const update: any = {
+					id: entry.id,
+					removed: entry.msg.endsWith('deleted'),
+					set,
+				};
 
 				if (entry.msg.startsWith("set")) {
-					markerSetUpdates!.removed = update.removed;
-					markerSetUpdates!.payload = update.removed ? undefined : buildMarkerSet(set, entry);
-				} else if (entry.msg.startsWith("marker")) {
-					update.payload = update.removed ? undefined : buildMarker(entry);
-					markerSetUpdates!.markerUpdates.push(Object.freeze(update));
-				} else if (entry.msg.startsWith("area")) {
-					update.payload = update.removed ? undefined : buildArea(entry);
-					markerSetUpdates!.areaUpdates.push(Object.freeze(update));
+					if(!update.removed) {
+						update.payload = buildMarkerSet(set, entry);
+					}
 
-				} else if (entry.msg.startsWith("circle")) {
-					update.payload = update.removed ? undefined : buildCircle(entry);
-					markerSetUpdates!.circleUpdates.push(Object.freeze(update));
+					updates.markerSets.push(Object.freeze(update as DynmapMarkerSetUpdate));
+				} else {
+					if (entry.msg.startsWith("marker")) {
+						update.type = LiveAtlasMarkerType.POINT;
+						update.payload = update.removed ? undefined : buildMarker(entry);
+					} else if (entry.msg.startsWith("area")) {
+						update.type = LiveAtlasMarkerType.AREA;
+						update.payload = update.removed ? undefined : buildArea(entry);
+					} else if (entry.msg.startsWith("circle")) {
+						update.type = LiveAtlasMarkerType.CIRCLE;
+						update.payload = update.removed ? undefined : buildCircle(entry);
+					} else if (entry.msg.startsWith("line")) {
+						update.type = LiveAtlasMarkerType.LINE;
+						update.payload = update.removed ? undefined : buildLine(entry);
+					}
 
-				} else if (entry.msg.startsWith("line")) {
-					update.payload = update.removed ? undefined : buildLine(entry);
-					markerSetUpdates!.lineUpdates.push(Object.freeze(update));
+					updates.markers.push(Object.freeze(update as DynmapMarkerUpdate));
 				}
 
 				accepted++;

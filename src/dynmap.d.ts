@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import {LiveAtlasAreaMarker, LiveAtlasCircleMarker, LiveAtlasLineMarker, LiveAtlasPointMarker} from "@/index";
+import {
+	LiveAtlasAreaMarker,
+	LiveAtlasCircleMarker,
+	LiveAtlasLineMarker,
+	LiveAtlasMarker, LiveAtlasMarkerType,
+	LiveAtlasPointMarker
+} from "@/index";
 
 declare global {
 	// noinspection JSUnusedGlobalSymbols
@@ -33,12 +39,9 @@ type DynmapUrlConfig = {
 	markers: string;
 }
 
-interface DynmapMarkerSetUpdates {
-	markerUpdates: Array<DynmapMarkerUpdate>
-	areaUpdates: Array<DynmapAreaUpdate>
-	circleUpdates: Array<DynmapCircleUpdate>
-	lineUpdates: Array<DynmapLineUpdate>
-	removed?: boolean
+interface DynmapMarkerSetUpdate {
+	id: string,
+	removed: boolean
 	payload?: {
 		showLabels: boolean;
 		hidden: boolean;
@@ -49,25 +52,27 @@ interface DynmapMarkerSetUpdates {
 	}
 }
 
-interface DynmapUpdate {
+interface DynmapMarkerUpdate {
+	set: string,
 	id: string,
+	type: LiveAtlasMarkerType,
 	removed: boolean,
-	payload?: any,
+	payload: LiveAtlasMarker,
 }
 
-interface DynmapMarkerUpdate extends DynmapUpdate {
+interface DynmapPointUpdate extends DynmapMarkerUpdate {
 	payload?: LiveAtlasPointMarker
 }
 
-interface DynmapAreaUpdate extends DynmapUpdate {
+interface DynmapAreaUpdate extends DynmapMarkerUpdate {
 	payload?: LiveAtlasAreaMarker
 }
 
-interface DynmapCircleUpdate extends DynmapUpdate {
+interface DynmapCircleUpdate extends DynmapMarkerUpdate {
 	payload?: LiveAtlasCircleMarker
 }
 
-interface DynmapLineUpdate extends DynmapUpdate {
+interface DynmapLineUpdate extends DynmapMarkerUpdate {
 	payload?: LiveAtlasLineMarker
 }
 

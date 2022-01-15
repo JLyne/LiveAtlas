@@ -15,15 +15,16 @@
   -->
 
 <script lang="ts">
-import {defineComponent, computed, onMounted, onUnmounted, watch} from "@vue/runtime-core";
+import {defineComponent, computed, onMounted, watch, onUnmounted} from "@vue/runtime-core";
 import {useStore} from "@/store";
-import {ActionTypes} from "@/store/action-types";
 import {createCircle, updateCircle} from "@/util/circles";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import {LiveAtlasCircleMarker, LiveAtlasMarkerSet} from "@/index";
 import {nonReactiveState} from "@/store/state";
+import {DynmapMarkerUpdate} from "@/dynmap";
+import {LiveAtlasMarkerType, registerTypeUpdateHandler, unregisterTypeUpdateHandler} from "@/util/markers";
 
 export default defineComponent({
 	props: {
@@ -38,71 +39,49 @@ export default defineComponent({
 	},
 
 	setup(props) {
-		let updateFrame = 0;
-
 		const store = useStore(),
 			currentMap = computed(() => store.state.currentMap),
-			pendingUpdates = computed(() => {
-				const markerSetUpdates = store.state.pendingSetUpdates.get(props.set.id);
+			layers = Object.freeze(new Map<string, LiveAtlasPolyline | LiveAtlasPolygon>());
 
-				return markerSetUpdates && markerSetUpdates.circleUpdates.length;
-			}),
-			layers = Object.freeze(new Map<string, LiveAtlasPolyline | LiveAtlasPolygon>()),
+		let converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
-			createCircles = () => {
-				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
+		const createCircles = () => {
+			nonReactiveState.markers.get(props.set.id)!.circles.forEach((circle: LiveAtlasCircleMarker, id: string) => {
+				const layer = createCircle(circle, converter);
 
-				nonReactiveState.markers.get(props.set.id)!.circles.forEach((circle: LiveAtlasCircleMarker, id: string) => {
-					const layer = createCircle(circle, converter);
+				layers.set(id, layer);
+				props.layerGroup.addLayer(layer);
+			});
+		};
 
-					layers.set(id, layer);
+		const deleteCircle = (id: string) => {
+			let circle = layers.get(id) as LiveAtlasPolyline;
+
+			if (!circle) {
+				return;
+			}
+
+			props.layerGroup.removeLayer(circle);
+			layers.delete(id);
+		};
+
+		const handleUpdate = (update: DynmapMarkerUpdate) => {
+			if(update.removed) {
+				deleteCircle(update.id);
+			} else {
+				const layer = updateCircle(layers.get(update.id), update.payload as LiveAtlasCircleMarker, converter);
+
+				if(!layers.has(update.id)) {
 					props.layerGroup.addLayer(layer);
-				});
-			},
-
-			deleteCircle = (id: string) => {
-				let circle = layers.get(id) as LiveAtlasPolyline;
-
-				if (!circle) {
-					return;
 				}
 
-				props.layerGroup.removeLayer(circle);
-				layers.delete(id);
-			},
-
-			handlePendingUpdates = async () => {
-				const updates = await store.dispatch(ActionTypes.POP_CIRCLE_UPDATES, {
-					markerSet: props.set.id,
-					amount: 10,
-				}),
-					converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
-
-				for(const update of updates) {
-					if(update.removed) {
-						deleteCircle(update.id);
-					} else {
-						const layer = updateCircle(layers.get(update.id), update.payload as LiveAtlasCircleMarker, converter)
-
-						if(!layers.has(update.id)) {
-							props.layerGroup.addLayer(layer);
-						}
-
-						layers.set(update.id, layer);
-					}
-				}
-
-				if(pendingUpdates.value) {
-					// eslint-disable-next-line no-unused-vars
-					updateFrame = requestAnimationFrame(() => handlePendingUpdates());
-				} else {
-					updateFrame = 0;
-				}
-			};
+				layers.set(update.id, layer);
+			}
+		};
 
 		watch(currentMap, (newValue, oldValue) => {
 			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
-				const converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
+				converter = currentMap.value!.locationToLatLng.bind(store.state.currentMap);
 
 				for (const [id, circle] of nonReactiveState.markers.get(props.set.id)!.circles) {
 					updateCircle(layers.get(id), circle, converter);
@@ -110,14 +89,13 @@ export default defineComponent({
 			}
 		});
 
-		watch(pendingUpdates, (newValue, oldValue) => {
-			if(newValue && newValue > 0 && oldValue === 0 && !updateFrame) {
-				updateFrame = requestAnimationFrame(() => handlePendingUpdates());
-			}
+		onMounted(() => {
+			createCircles();
+			registerTypeUpdateHandler(handleUpdate, props.set.id, LiveAtlasMarkerType.CIRCLE);
 		});
-
-		onMounted(() => createCircles());
-		onUnmounted(() => updateFrame && cancelAnimationFrame(updateFrame));
+		onUnmounted(() => {
+			unregisterTypeUpdateHandler(handleUpdate, props.set.id, LiveAtlasMarkerType.CIRCLE);
+		});
 	},
 
 	render() {

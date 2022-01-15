@@ -15,7 +15,7 @@
  */
 
 import {
-	DynmapMarkerSetUpdates,
+	DynmapMarkerUpdate,
 	DynmapTileUpdate
 } from "@/dynmap";
 import {
@@ -66,7 +66,7 @@ export type State = {
 		messages: LiveAtlasChat[];
 	};
 
-	pendingSetUpdates: Map<string, DynmapMarkerSetUpdates>;
+	pendingMarkerUpdates: DynmapMarkerUpdate[];
 	pendingTileUpdates: Array<DynmapTileUpdate>;
 
 	followTarget?: LiveAtlasPlayer;
@@ -134,7 +134,7 @@ export const state: State = {
 
 	markerSets: new Map(), //Markers sets from world_markers.json, doesn't include the markers themselves for performance reasons
 
-	pendingSetUpdates: new Map(), //Pending updates to markers/areas/etc for each marker set
+	pendingMarkerUpdates: [],  //Pending updates to markers/areas/etc for each marker set
 	pendingTileUpdates: [], //Pending updates to map tiles
 
 	//Dynmap optional components

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 James Lyne
+ * Copyright 2022 James Lyne
  *
  * Some portions of this file were taken from https://github.com/webbukkit/dynmap.
  * These portions are Copyright 2020 Dynmap Contributors.
@@ -17,69 +17,102 @@
  * limitations under the License.
  */
 
-import {LeafletMouseEvent, Marker} from "leaflet";
-import {GenericIcon} from "@/leaflet/icon/GenericIcon";
-import {GenericMarker} from "@/leaflet/marker/GenericMarker";
-import {LiveAtlasPointMarker} from "@/index";
+import {useStore} from "@/store";
+import {ActionTypes} from "@/store/action-types";
+import {DynmapMarkerUpdate} from "@/dynmap";
+import {computed, watch} from "@vue/runtime-core";
+import {ComputedRef} from "@vue/reactivity";
 
-export const createMarker = (options: LiveAtlasPointMarker, converter: Function): Marker => {
-	const marker = new GenericMarker(converter(options.location), options);
+export type LiveAtlasMarkerUpdateCallback = ((update: DynmapMarkerUpdate) => void);
 
-	marker.on('click', (e: LeafletMouseEvent) => {
-		if(!e.target.getPopup() || e.target.isPopupOpen()) {
-			e.target._map.panTo(e.target.getLatLng());
+export enum LiveAtlasMarkerType {
+	POINT,
+	AREA,
+	LINE,
+	CIRCLE
+}
+
+let updateFrame = 0;
+let pendingUpdates: ComputedRef;
+
+const setHandlers: { [key:string]: Set<LiveAtlasMarkerUpdateCallback>} = {};
+const typeHandlers: { [key:string]: Map<LiveAtlasMarkerType, Set<LiveAtlasMarkerUpdateCallback>>} = {};
+
+export const startUpdateHandling = () => {
+	const store = useStore();
+
+	pendingUpdates = computed(() => store.state.pendingMarkerUpdates.length);
+
+	watch(pendingUpdates, (newValue, oldValue) => {
+		if(newValue && newValue > 0 && oldValue === 0 && !updateFrame) {
+			updateFrame = requestAnimationFrame(() => handlePendingUpdates());
 		}
 	});
+}
 
-	if(options.popup) {
-		marker.bindPopup(() => createPopup(options));
+export const stopUpdateHandling = () => {
+	if(updateFrame) {
+		cancelAnimationFrame(updateFrame);
+		updateFrame = 0;
+	}
+}
+
+export const registerUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string) => {
+	if(!setHandlers[set]) {
+		setHandlers[set] = new Set();
 	}
 
-	return marker;
-};
+	setHandlers[set].add(callback);
+}
 
-export const updateMarker = (marker: Marker | undefined, options: LiveAtlasPointMarker, converter: Function): Marker => {
-	if (!marker) {
-		return createMarker(options, converter);
+export const registerTypeUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string, type: LiveAtlasMarkerType) => {
+	if(!typeHandlers[set]) {
+		typeHandlers[set] = new Map();
 	}
 
-	const oldLocation = marker.getLatLng(),
-		newLocation = converter(options.location);
+	if(typeHandlers[set].has(type)) {
+		typeHandlers[set].get(type)!.add(callback);
+	} else {
+		typeHandlers[set].set(type, new Set([callback]));
+	}
+}
 
-	if(!oldLocation.equals(newLocation)) {
-		marker.setLatLng(newLocation);
+export const unregisterUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string) => {
+	if(!setHandlers[set]) {
+		return;
 	}
 
-	if(marker instanceof GenericMarker) {
-		const icon = marker.getIcon();
+	setHandlers[set].delete(callback);
+}
 
-		if(icon && icon instanceof GenericIcon) {
-			icon.update({
-				icon: options.icon,
-				label: options.tooltip,
-				iconSize: options.dimensions,
-				isHtml: !!options.tooltipHTML,
-			});
+export const unregisterTypeUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string, type: LiveAtlasMarkerType) => {
+	if(typeHandlers[set]) {
+		return;
+	}
+
+	if(typeHandlers[set].has(type)) {
+		typeHandlers[set].get(type)!.delete(callback);
+	}
+}
+
+const handlePendingUpdates = async () => {
+	const store = useStore(),
+		updates = await store.dispatch(ActionTypes.POP_MARKER_UPDATES, 10);
+
+	for(const update of updates) {
+		if(setHandlers[update.set]) {
+			setHandlers[update.set].forEach(callback => callback(update));
+		}
+
+		if(typeHandlers[update.set] && typeHandlers[update.set].has(update.type)) {
+			typeHandlers[update.set].get(update.type)!.forEach(callback => callback(update));
 		}
 	}
 
-	marker.closePopup();
-	marker.unbindPopup();
-
-	if(options.popup) {
-		marker.bindPopup(() => createPopup(options));
+	if(pendingUpdates.value) {
+		// eslint-disable-next-line no-unused-vars
+		updateFrame = requestAnimationFrame(() => handlePendingUpdates());
+	} else {
+		updateFrame = 0;
 	}
-
-	return marker;
 };
-
-const createPopup = (options: LiveAtlasPointMarker) => {
-	const popup = document.createElement('span');
-
-	if (options.popup) {
-		popup.classList.add('MarkerPopup');
-		popup.insertAdjacentHTML('afterbegin', options.popup);
-	}
-
-	return popup;
-}
