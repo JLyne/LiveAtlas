@@ -33,7 +33,7 @@ export const createArea = (options: LiveAtlasAreaMarker, converter: Function): L
 	}
 
 	if (options.tooltip) {
-		area.bindTooltip(() => options.tooltip as string, tooltipOptions);
+		area.bindTooltip(() => options.tooltipHTML || options.tooltip, tooltipOptions);
 	}
 
 	return area;

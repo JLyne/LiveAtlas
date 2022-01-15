@@ -31,7 +31,7 @@ export const createLine = (options: LiveAtlasLineMarker, converter: Function): L
 	}
 
 	if (options.tooltip) {
-		line.bindTooltip(() => options.tooltip as string, tooltipOptions);
+		line.bindTooltip(() => options.tooltipHTML || options.tooltip, tooltipOptions);
 	}
 
 	return line;

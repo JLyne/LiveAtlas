@@ -33,7 +33,7 @@ export const createCircle = (options: LiveAtlasCircleMarker, converter: Function
 	}
 
 	if (options.tooltip) {
-		circle.bindTooltip(() => options.tooltip as string, tooltipOptions);
+		circle.bindTooltip(() => options.tooltipHTML || options.tooltip, tooltipOptions);
 	}
 
 	return circle;
