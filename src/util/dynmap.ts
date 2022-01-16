@@ -441,12 +441,12 @@ export function buildCircle(id: string, circle: MarkerCircle): LiveAtlasCircleMa
 			max: {
 				x: (circle.x || 0) + (circle.xr || 0),
 				y: circle.y || 0,
-				z: (circle.z || 0) + (circle.z || 0),
+				z: (circle.z || 0) + (circle.zr || 0),
 			},
 			min: {
 				x: (circle.x || 0) - (circle.xr || 0),
 				y: circle.y || 0,
-				z: (circle.z || 0) - (circle.z || 0),
+				z: (circle.z || 0) - (circle.zr || 0),
 			}
 		},
 		radius: [circle.xr || 0, circle.zr || 0],
