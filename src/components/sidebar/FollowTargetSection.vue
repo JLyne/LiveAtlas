@@ -19,12 +19,12 @@
 		<h2>{{ heading }}</h2>
 
 		<div :class="{'following__target': true, 'following__target--hidden': target.hidden}">
-			<img v-if="imagesEnabled" width="32" height="32" class="target__icon" :src="image" alt="" />
+			<img v-if="imagesEnabled" width="48" height="48" class="target__icon" :src="image" alt="" />
 			<span class="target__name" v-html="target.displayName"></span>
 			<span class="target__status">{{ status }}</span>
-			<span class="target__location" v-show="!target.hidden" v-clipboard:copy="location"
+			<span class="target__location" v-clipboard:copy="location"
 			      v-clipboard:success="copySuccess"
-			      v-clipboard:error="copyError">{{ location }}</span>
+			      v-clipboard:error="copyError">{{ location }}&#8288;</span>
 			<button class="target__unfollow" type="button" :title="messageUnfollowTitle"
 				@click.prevent="unfollow" :aria-label="messageUnfollow">
 				<SvgIcon name="cross"></SvgIcon>
@@ -74,7 +74,7 @@ export default defineComponent({
 
 			location = computed(() => {
 				if (props.target.hidden) {
-					return messageHidden.value;
+					return '';
 				}
 
 				return `${Math.floor(props.target.location.x)}, ${props.target.location.y}, ${Math.floor(props.target.location.z)}`;
@@ -118,8 +118,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 	.sidebar__section.following {
 		margin-top: auto;
-		min-height: 0;
 		flex: 0 0 auto;
+		position: sticky;
+		bottom: 0.2rem;
+		z-index: 3;
 
 		.following__target {
 			display: grid;
