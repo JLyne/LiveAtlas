@@ -23,7 +23,7 @@ import {nonReactiveState} from "@/store/state";
 import {DynmapMarkerUpdate} from "@/dynmap";
 import {
 	createMarkerLayer,
-	registerUpdateHandler, unregisterUpdateHandler, updateMarkerLayer
+	registerSetUpdateHandler, unregisterSetUpdateHandler, updateMarkerLayer
 } from "@/util/markers";
 import {Layer} from "leaflet";
 
@@ -92,10 +92,10 @@ export default defineComponent({
 
 		onMounted(() => {
 			createMarkers();
-			registerUpdateHandler(handleUpdate, props.set.id);
+			registerSetUpdateHandler(handleUpdate, props.set.id);
 		});
 		onUnmounted(() => {
-			unregisterUpdateHandler(handleUpdate, props.set.id);
+			unregisterSetUpdateHandler(handleUpdate, props.set.id);
 		});
 	},
 

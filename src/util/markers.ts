@@ -50,7 +50,8 @@ export enum LiveAtlasMarkerType {
 let updateFrame = 0;
 let pendingUpdates: ComputedRef;
 
-const updateHandlers: { [key:string]: Set<LiveAtlasMarkerUpdateCallback>} = {};
+const updateHandlers: Set<LiveAtlasMarkerUpdateCallback> = new Set();
+const setUpdateHandlers: { [key:string]: Set<LiveAtlasMarkerUpdateCallback>} = {};
 
 export const startUpdateHandling = () => {
 	const store = useStore();
@@ -71,20 +72,28 @@ export const stopUpdateHandling = () => {
 	}
 }
 
-export const registerUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string) => {
-	if(!updateHandlers[set]) {
-		updateHandlers[set] = new Set();
-	}
-
-	updateHandlers[set].add(callback);
+export const registerUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback) => {
+	updateHandlers.add(callback);
 }
 
-export const unregisterUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string) => {
-	if(!updateHandlers[set]) {
+export const unregisterUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback) => {
+	updateHandlers.delete(callback);
+}
+
+export const registerSetUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string) => {
+	if(!setUpdateHandlers[set]) {
+		setUpdateHandlers[set] = new Set();
+	}
+
+	setUpdateHandlers[set].add(callback);
+}
+
+export const unregisterSetUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string) => {
+	if(!setUpdateHandlers[set]) {
 		return;
 	}
 
-	updateHandlers[set].delete(callback);
+	setUpdateHandlers[set].delete(callback);
 }
 
 const handlePendingUpdates = async () => {
@@ -92,8 +101,10 @@ const handlePendingUpdates = async () => {
 		updates = await store.dispatch(ActionTypes.POP_MARKER_UPDATES, 10);
 
 	for(const update of updates) {
-		if(updateHandlers[update.set]) {
-			updateHandlers[update.set].forEach(callback => callback(update));
+		updateHandlers.forEach(callback => callback(update));
+
+		if(setUpdateHandlers[update.set]) {
+			setUpdateHandlers[update.set].forEach(callback => callback(update));
 		}
 	}
 
