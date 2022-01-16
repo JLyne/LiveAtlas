@@ -36,7 +36,7 @@ import {
 	LiveAtlasChat,
 	LiveAtlasUIModal,
 	LiveAtlasSidebarSectionState,
-	LiveAtlasMarker
+	LiveAtlasMarker, LiveAtlasMapViewTarget
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {getMessages} from "@/util";
@@ -70,7 +70,7 @@ export type State = {
 	pendingTileUpdates: Array<DynmapTileUpdate>;
 
 	followTarget?: LiveAtlasPlayer;
-	panTarget?: LiveAtlasPlayer;
+	viewTarget?: LiveAtlasMapViewTarget;
 
 	currentMapProvider?: Readonly<LiveAtlasMapProvider>;
 	currentServer?: LiveAtlasServerDefinition;
@@ -181,7 +181,7 @@ export const state: State = {
 	},
 
 	followTarget: undefined,
-	panTarget: undefined,
+	viewTarget: undefined,
 
 	currentMapProvider: undefined,
 	currentServer: undefined,

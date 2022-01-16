@@ -83,6 +83,13 @@ interface LiveAtlasBounds {
 	world?: string;
 }
 
+interface LiveAtlasMapViewTarget {
+	location: LiveAtlasLocation | LiveAtlasBounds;
+	map?: string;
+	zoom?: number;
+	options?: FitBoundsOptions;
+}
+
 interface LiveAtlasGlobalConfig {
 	servers: Map<string, LiveAtlasServerDefinition>;
 	messages: LiveAtlasGlobalMessageConfig;

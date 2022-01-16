@@ -39,7 +39,7 @@ import {
 	LiveAtlasPartialComponentConfig,
 	LiveAtlasComponentConfig,
 	LiveAtlasUIModal,
-	LiveAtlasSidebarSectionState, LiveAtlasMarker
+	LiveAtlasSidebarSectionState, LiveAtlasMarker, LiveAtlasMapViewTarget
 } from "@/index";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
@@ -79,9 +79,9 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_PARSED_URL](state: S, payload: LiveAtlasParsedUrl): void
 	[MutationTypes.CLEAR_PARSED_URL](state: S): void
 	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: LiveAtlasPlayer): void
-	[MutationTypes.SET_PAN_TARGET](state: S, payload: LiveAtlasPlayer): void
+	[MutationTypes.SET_VIEW_TARGET](state: S, payload: LiveAtlasMapViewTarget): void
 	[MutationTypes.CLEAR_FOLLOW_TARGET](state: S, a?: void): void
-	[MutationTypes.CLEAR_PAN_TARGET](state: S, a?: void): void
+	[MutationTypes.CLEAR_VIEW_TARGET](state: S, a?: void): void
 
 	[MutationTypes.SET_SCREEN_SIZE](state: S, payload: {width: number, height: number}): void
 	[MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY](state: S, payload: LiveAtlasUIElement): void
@@ -163,7 +163,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.maps.clear();
 
 		state.followTarget = undefined;
-		state.panTarget = undefined;
+		state.viewTarget = undefined;
 
 		state.currentWorldState.timeOfDay = 0;
 		state.currentWorldState.raining = false;
@@ -448,9 +448,9 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Set the pan target, which the map will immediately pan to once
-	[MutationTypes.SET_PAN_TARGET](state: State, player: LiveAtlasPlayer) {
+	[MutationTypes.SET_VIEW_TARGET](state: State, target: LiveAtlasMapViewTarget) {
 		state.followTarget = undefined;
-		state.panTarget = player;
+		state.viewTarget = target;
 	},
 
 	//Clear the follow target
@@ -459,8 +459,8 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Clear the pan target
-	[MutationTypes.CLEAR_PAN_TARGET](state: State) {
-		state.panTarget = undefined;
+	[MutationTypes.CLEAR_VIEW_TARGET](state: State) {
+		state.viewTarget = undefined;
 	},
 
 	[MutationTypes.SET_SCREEN_SIZE](state: State, payload: {width: number, height: number}): void {
@@ -532,7 +532,7 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Cleanup for switching servers or reloading the configuration
 	[MutationTypes.RESET](state: State): void {
 		state.followTarget = undefined;
-		state.panTarget = undefined;
+		state.viewTarget = undefined;
 
 		state.players.clear();
 		state.sortedPlayers.splice(0, state.sortedPlayers.length);

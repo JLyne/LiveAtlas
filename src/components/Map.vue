@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import {computed, ref, defineComponent} from "@vue/runtime-core";
-import {CRS, LatLng} from 'leaflet';
+import {CRS, LatLng, LatLngBounds, PanOptions, ZoomPanOptions} from 'leaflet';
 import {useStore} from '@/store';
 import MapLayer from "@/components/map/layer/MapLayer.vue";
 import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
@@ -50,7 +50,7 @@ import {MutationTypes} from "@/store/mutation-types";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {LoadingControl} from "@/leaflet/control/LoadingControl";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
-import {Coordinate, LiveAtlasPlayer} from "@/index";
+import {LiveAtlasLocation, LiveAtlasPlayer, LiveAtlasMapViewTarget} from "@/index";
 import LoginControl from "@/components/map/control/LoginControl.vue";
 
 export default defineComponent({
@@ -88,12 +88,11 @@ export default defineComponent({
 			mapBackground = computed(() => store.getters.mapBackground),
 
 			followTarget = computed(() => store.state.followTarget),
-			panTarget = computed(() => store.state.panTarget),
+			viewTarget = computed(() => store.state.viewTarget),
 			parsedUrl = computed(() => store.state.parsedUrl),
 
 			//Location and zoom to pan to upon next projection change
-			scheduledPan = ref<Coordinate|null>(null),
-			scheduledZoom = ref<number|null>(null),
+			scheduledView = ref<LiveAtlasMapViewTarget|null>(null),
 
 			mapTitle = computed(() => store.state.messages.mapTitle);
 
@@ -112,15 +111,14 @@ export default defineComponent({
 
 			logoControls,
 			followTarget,
-			panTarget,
+			viewTarget,
 			parsedUrl,
 			mapBackground,
 
 			currentWorld,
 			currentMap,
 
-			scheduledPan,
-			scheduledZoom,
+			scheduledView,
 
 			mapTitle
 		}
@@ -135,85 +133,82 @@ export default defineComponent({
 			},
 			deep: true
 		},
-		panTarget(newValue) {
-			if(newValue) {
-				//Immediately clear if on the correct world, to allow repeated panning
-				if(this.currentWorld && newValue.location.world === this.currentWorld.name) {
-					useStore().commit(MutationTypes.CLEAR_PAN_TARGET, undefined);
-				}
+		viewTarget: {
+			handler(newValue) {
+				if (newValue) {
+					//Immediately clear if on the correct world, to allow repeated panning
+					if (this.currentWorld && newValue.location.world === this.currentWorld.name) {
+						useStore().commit(MutationTypes.CLEAR_VIEW_TARGET, undefined);
+					}
 
-				this.updateFollow(newValue, false);
-			}
+					this.setView(newValue);
+				}
+			},
+			deep: true
 		},
 		currentMap(newValue, oldValue) {
 			if(this.leaflet && newValue) {
-				let panTarget = this.scheduledPan;
+				let viewTarget = this.scheduledView;
 
-				if(!panTarget && oldValue) {
-					panTarget = oldValue.latLngToLocation(this.leaflet.getCenter(), 64);
-				} else if(!panTarget) {
-					panTarget = {x: 0, y: 0, z: 0};
+				if(!viewTarget && oldValue) {
+					viewTarget = {location: oldValue.latLngToLocation(this.leaflet.getCenter(), 64) as LiveAtlasLocation};
+				} else if(!viewTarget) {
+					viewTarget = {location: {x: 0, y: 0, z: 0} as LiveAtlasLocation};
 				}
 
-				if(this.scheduledZoom) {
-					this.leaflet!.setZoom(this.scheduledZoom, {
-						animate: false,
-					});
-				}
-
-				this.leaflet.panTo(newValue.locationToLatLng(panTarget), {
+				viewTarget.options = {
 					animate: false,
-					noMoveStart: true,
-				});
+					noMoveStart: false,
+				}
 
-				this.scheduledZoom = null;
-				this.scheduledPan = null;
+				this.setView(viewTarget);
+				this.scheduledView = null;
 			}
 		},
 		currentWorld(newValue, oldValue) {
 			const store = useStore();
 
 			if(newValue) {
-				let location: Coordinate | null = this.scheduledPan;
+				let viewTarget = this.scheduledView || {} as LiveAtlasMapViewTarget;
 
 				// Abort if follow target is present, to avoid panning twice
 				if(store.state.followTarget && store.state.followTarget.location.world === newValue.name) {
 					return;
 				// Abort if pan target is present, to avoid panning to the wrong place.
 				// Also clear it to allow repeated panning.
-				} else if(store.state.panTarget && store.state.panTarget.location.world === newValue.name) {
-					store.commit(MutationTypes.CLEAR_PAN_TARGET, undefined);
+				} else if(store.state.viewTarget && store.state.viewTarget.location.world === newValue.name) {
+					store.commit(MutationTypes.CLEAR_VIEW_TARGET, undefined);
 					return;
 				// Otherwise pan to url location, if present
 				} else if(store.state.parsedUrl?.location) {
-					location = store.state.parsedUrl.location;
+					viewTarget.location = store.state.parsedUrl.location;
 
 					if(!oldValue) {
 						if(typeof store.state.parsedUrl?.zoom !== 'undefined') {
-							this.scheduledZoom = store.state.parsedUrl?.zoom;
+							viewTarget.zoom = store.state.parsedUrl?.zoom;
 						} else if(typeof newValue.defaultZoom !== 'undefined') {
-							this.scheduledZoom = newValue.defaultZoom;
+							viewTarget.zoom = newValue.defaultZoom;
 						} else {
-							this.scheduledZoom = store.state.configuration.defaultZoom;
+							viewTarget.zoom = store.state.configuration.defaultZoom;
 						}
 					}
 
 					store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
 				// Otherwise pan to world center
 				} else {
-					location = newValue.center;
+					viewTarget.location = newValue.center;
 				}
 
-				if(this.scheduledZoom == null) {
+				if(viewTarget.zoom == null) {
 					if(typeof newValue.defaultZoom !== 'undefined') {
-						this.scheduledZoom = newValue.defaultZoom;
+						viewTarget.zoom = newValue.defaultZoom;
 					} else {
-						this.scheduledZoom = store.state.configuration.defaultZoom;
+						viewTarget.zoom = store.state.configuration.defaultZoom;
 					}
 				}
 
 				//Set pan location for when the projection changes
-				this.scheduledPan = location;
+				this.scheduledView = viewTarget;
 			}
 		},
 		parsedUrl: {
@@ -222,36 +217,15 @@ export default defineComponent({
 					return;
 				}
 
-				//URL points to different map
-				if(newValue.world !== this.currentWorld!.name || newValue.map !== this.currentMap!.name) {
-					//Set scheduled pan for after map change
-					this.scheduledPan = newValue.location;
-					this.scheduledZoom = newValue.zoom;
-
-					try {
-						useStore().commit(MutationTypes.SET_CURRENT_MAP, {
-							worldName: newValue.world,
-							mapName: newValue.map
-						});
-					} catch(e) {
-						//Clear scheduled pan if change fails
-						console.warn(`Failed to handle URL change`, e);
-						this.scheduledPan = null;
-						this.scheduledZoom = null;
-					}
-				} else { //Same map, just pan
-					this.scheduledPan = null;
-					this.scheduledZoom = null;
-
-					this.leaflet.setZoom(newValue.zoom, {
-						animate: false,
-					});
-
-					this.leaflet.panTo(this.currentMap.locationToLatLng(newValue.location), {
+				this.setView({
+					location: {...newValue.location, world: newValue.world},
+					map: newValue.map,
+					zoom: newValue.zoom,
+					options: {
 						animate: false,
 						noMoveStart: true,
-					});
-				}
+					}
+				});
 			},
 			deep: true,
 		}
@@ -304,61 +278,73 @@ export default defineComponent({
 				this.leaflet.getContainer().focus();
 			}
 		},
-		updateFollow(player: LiveAtlasPlayer, newFollow: boolean) {
+		setView(target: LiveAtlasMapViewTarget) {
 			const store = useStore(),
-				followMapName = store.state.configuration.followMap,
-				currentWorld = store.state.currentWorld;
-
-			let targetWorld = null;
+				currentWorld = store.state.currentWorld,
+				currentMap = store.state.currentMap?.name,
+				targetWorld = target.location.world ? store.state.worlds.get(target.location.world) : currentWorld;
 
 			if(!this.leaflet) {
-				console.warn(`Cannot follow ${player.name}. Map not yet initialized.`);
+				console.warn('Ignoring setView as leaflet not initialised');
 				return;
 			}
+
+			if(!targetWorld) {
+				console.warn(`Ignoring setView with unknown world ${target.location.world}`);
+				return;
+			}
+
+			if(targetWorld && (targetWorld !== currentWorld) || (target.map && currentMap !== target.map)) {
+				const mapName = target.map && targetWorld!.maps.has(target.map) ?
+					targetWorld!.maps.get(target.map)!.name :
+					targetWorld!.maps.entries().next().value[1].name;
+
+				this.scheduledView = target;
+
+				try {
+					store.commit(MutationTypes.SET_CURRENT_MAP, {worldName: targetWorld!.name, mapName});
+				} catch(e) {
+					//Clear scheduled move if change fails
+					console.warn(`Failed to handle map setView`, e);
+					this.scheduledView = null;
+				}
+			} else {
+				console.debug('Moving to', JSON.stringify(target));
+				if(typeof target.zoom !== 'undefined') {
+					this.leaflet!.setZoom(target.zoom, target.options as ZoomPanOptions);
+				}
+
+				if('min' in target.location) { // Bounds
+					this.leaflet!.fitBounds(new LatLngBounds(
+						store.state.currentMap?.locationToLatLng(target.location.min) as LatLng,
+						store.state.currentMap?.locationToLatLng(target.location.max) as LatLng,
+					), target.options);
+				} else { // Location
+					const location = store.state.currentMap?.locationToLatLng(target.location) as LatLng;
+					this.leaflet!.panTo(location, target.options as PanOptions);
+				}
+			}
+		},
+		updateFollow(player: LiveAtlasPlayer, newFollow: boolean) {
+			const store = useStore(),
+				currentWorld = store.state.currentWorld;
+
+			let map = undefined;
 
 			if(player.hidden) {
 				console.warn(`Cannot follow ${player.name}. Player is hidden from the map.`);
 				return;
 			}
 
-			if(!player.location.world) {
-				console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
-				return;
+			if(!currentWorld || currentWorld.name !== player.location.world || newFollow) {
+				map = store.state.configuration.followMap;
 			}
 
-			if(!currentWorld || currentWorld.name !== player.location.world) {
-				targetWorld = store.state.worlds.get(player.location.world);
-			} else {
-				targetWorld = currentWorld;
-			}
-
-			if (!targetWorld) {
-				console.warn(`Cannot follow ${player.name}. Player isn't in a known world.`);
-				return;
-			}
-
-			let map = followMapName && targetWorld.maps.has(followMapName)
-				? targetWorld.maps.get(followMapName)
-				: targetWorld.maps.entries().next().value[1]
-
-			if(map !== store.state.currentMap && (targetWorld !== currentWorld || newFollow)) {
-				this.scheduledPan = player.location;
-
-				if(newFollow && store.state.configuration.followZoom) {
-					console.log(`Setting zoom for new follow ${store.state.configuration.followZoom}`);
-					this.scheduledZoom = store.state.configuration.followZoom;
-				}
-
-				console.log(`Switching map to match player ${targetWorld.name} ${map.name}`);
-				store.commit(MutationTypes.SET_CURRENT_MAP, {worldName: targetWorld.name, mapName: map.name});
-			} else {
-				this.leaflet!.panTo(store.state.currentMap?.locationToLatLng(player.location));
-
-				if(newFollow && store.state.configuration.followZoom) {
-					console.log(`Setting zoom for new follow ${store.state.configuration.followZoom}`);
-					this.leaflet!.setZoom(store.state.configuration.followZoom);
-				}
-			}
+			this.setView({
+				location: player.location,
+				map,
+				zoom: (newFollow) ? store.state.configuration.followZoom : undefined,
+			});
 		}
 	}
 })

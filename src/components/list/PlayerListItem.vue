@@ -62,11 +62,11 @@ export default defineComponent({
 				}
 			}),
 
-			followTarget = computed(() => store.state.followTarget ? store.state.followTarget.name : undefined),
+			followTarget = computed(() => store.state.followTarget?.name),
 
 			pan = () => {
 				if(!props.player.hidden) {
-					store.commit(MutationTypes.SET_PAN_TARGET, props.player);
+					store.commit(MutationTypes.SET_VIEW_TARGET, {location: props.player.location});
 				}
 			},
 

@@ -44,10 +44,10 @@ export enum MutationTypes {
 	CLEAR_PARSED_URL = 'clearParsedUrl',
 
 	SET_FOLLOW_TARGET = 'setFollowTarget',
-	SET_PAN_TARGET = 'setPanTarget',
+	SET_VIEW_TARGET = 'setViewTarget',
 
 	CLEAR_FOLLOW_TARGET = 'clearFollow',
-	CLEAR_PAN_TARGET = 'clearPanTarget',
+	CLEAR_VIEW_TARGET = 'clearViewTarget',
 
 	SET_SCREEN_SIZE = 'setScreenSize',
 	TOGGLE_UI_ELEMENT_VISIBILITY = 'toggleUIElementVisibility',
