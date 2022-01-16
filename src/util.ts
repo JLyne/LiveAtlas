@@ -18,8 +18,8 @@ import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
 	Coordinate,
-	HeadQueueEntry,
-	LiveAtlasGlobalMessageConfig,
+	HeadQueueEntry, LiveAtlasBounds,
+	LiveAtlasGlobalMessageConfig, LiveAtlasLocation,
 	LiveAtlasMessageConfig,
 	LiveAtlasPlayer,
 	LiveAtlasPlayerImageSize,
@@ -249,29 +249,35 @@ const _getMessages = (messageKeys: any, config: any = {}) => {
 	return messages as LiveAtlasGlobalMessageConfig;
 }
 
-export const getMiddle = (points: number[]) => {
-	const min = Math.min.apply(this, points),
-		max = Math.max.apply(this, points);
-
-	return min + ((max - min) / 2)
+export const getBounds = (x: number[], y: number[], z: number[]): LiveAtlasBounds => {
+	return {
+		min: {x: Math.min.apply(null, x), y: Math.min.apply(null, y), z: Math.min.apply(null, z)},
+		max: {x: Math.max.apply(null, x), y: Math.max.apply(null, y), z: Math.max.apply(null, z)},
+	};
 }
 
-export const getMiddleFromPoints = (points: Coordinate[]): Coordinate => {
-	const min = {x: points[0].x, y: points[0].y, z: points[0].z},
-		max = {...min};
+export const getBoundsFromPoints = (points: Coordinate[]): LiveAtlasBounds => {
+	const bounds = {
+		max: {...points[0]},
+		min: {...points[0]},
+	}
 
 	for (const point of points) {
-		min.x = Math.min(min.x, point.x);
-		max.x = Math.max(min.x, point.x);
-		min.y = Math.min(min.y, point.y);
-		max.y = Math.max(min.y, point.y);
-		min.z = Math.min(min.z, point.z);
-		max.z = Math.max(min.z, point.z);
+		bounds.max.x = Math.max(point.x, bounds.max.x);
+		bounds.max.y = Math.max(point.y, bounds.max.y);
+		bounds.max.z = Math.max(point.z, bounds.max.z);
+		bounds.min.x = Math.min(point.x, bounds.min.x);
+		bounds.min.y = Math.min(point.y, bounds.min.y);
+		bounds.min.z = Math.min(point.z, bounds.min.z);
 	}
 
+	return bounds;
+}
+
+export const getMiddle = (bounds: LiveAtlasBounds): LiveAtlasLocation => {
 	return {
-		x: min.x + ((max.x - min.x) / 2),
-		y: min.y + ((max.y - min.y) / 2),
-		z: min.z + ((max.z - min.z) / 2),
-	}
+		x: bounds.min.x + ((bounds.max.x - bounds.min.x) / 2),
+		y: bounds.min.y + ((bounds.max.y - bounds.min.y) / 2),
+		z: bounds.min.z + ((bounds.max.z - bounds.min.z) / 2),
+	};
 }

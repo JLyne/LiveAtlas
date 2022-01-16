@@ -31,7 +31,7 @@ import {
 import {getPoints} from "@/util/areas";
 import {
 	decodeHTMLEntities,
-	endWorldNameRegex,
+	endWorldNameRegex, getBounds,
 	getMiddle,
 	netherWorldNameRegex,
 	stripHTML,
@@ -346,7 +346,9 @@ export function buildAreas(data: any, list: Map<string, LiveAtlasMarker>): void 
 export function buildArea(id: string, area: MarkerArea): LiveAtlasAreaMarker {
 	const x = area.x || [0, 0],
 		y = [area.ybottom || 0, area.ytop || 0] as [number, number],
-		z = area.z || [0, 0];
+		z = area.z || [0, 0],
+		bounds = getBounds(x, y, z),
+		location = getMiddle(bounds);
 
 	return {
 		id,
@@ -359,7 +361,8 @@ export function buildArea(id: string, area: MarkerArea): LiveAtlasAreaMarker {
 			fillOpacity: area.fillopacity || 0,
 		},
 		outline: !area.fillopacity,
-		location: {x: getMiddle(x), y: getMiddle(y), z: getMiddle(z)},
+		bounds,
+		location,
 		points: getPoints(x, y, z, !area.fillopacity),
 		minZoom: typeof area.minzoom !== 'undefined' && area.minzoom > -1 ? area.minzoom : undefined,
 		maxZoom: typeof area.maxzoom !== 'undefined' && area.maxzoom > -1 ? area.maxzoom : undefined,
@@ -387,7 +390,9 @@ export function buildLines(data: any, list: Map<string, LiveAtlasMarker>): void 
 export function buildLine(id: string, line: MarkerLine): LiveAtlasLineMarker {
 	const x = line.x || [0, 0],
 		y = line.y || [0, 0],
-		z = line.z || [0, 0];
+		z = line.z || [0, 0],
+		bounds = getBounds(x, y, z),
+		location = getMiddle(bounds);
 
 	return {
 		id,
@@ -397,7 +402,8 @@ export function buildLine(id: string, line: MarkerLine): LiveAtlasLineMarker {
 			opacity: line.opacity || 1,
 			weight: line.weight || 1,
 		},
-		location: {x: getMiddle(x), y: getMiddle(y), z: getMiddle(z)},
+		location,
+		bounds,
 		points: getLinePoints(x, y, z),
 		minZoom: typeof line.minzoom !== 'undefined' && line.minzoom > -1 ? line.minzoom : undefined,
 		maxZoom: typeof line.maxzoom !== 'undefined' && line.maxzoom > -1 ? line.maxzoom : undefined,
@@ -430,6 +436,18 @@ export function buildCircle(id: string, circle: MarkerCircle): LiveAtlasCircleMa
 			x: circle.x || 0,
 			y: circle.y || 0,
 			z: circle.z || 0,
+		},
+		bounds: {
+			max: {
+				x: (circle.x || 0) + (circle.xr || 0),
+				y: circle.y || 0,
+				z: (circle.z || 0) + (circle.z || 0),
+			},
+			min: {
+				x: (circle.x || 0) - (circle.xr || 0),
+				y: circle.y || 0,
+				z: (circle.z || 0) - (circle.z || 0),
+			}
 		},
 		radius: [circle.xr || 0, circle.zr || 0],
 		style: {

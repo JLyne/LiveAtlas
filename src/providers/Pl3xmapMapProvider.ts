@@ -34,8 +34,9 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {ActionTypes} from "@/store/action-types";
-import {getMiddleFromPoints, stripHTML, titleColoursRegex} from "@/util";
+import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
+import {PointTuple} from "leaflet";
 
 export default class Pl3xmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -310,7 +311,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}
 
 	private static buildArea(id: string, area: any): LiveAtlasAreaMarker {
-		let points = area.points;
+		let points;
 
 		if(area.type === 'rectangle') {
 			points = [
@@ -319,7 +320,11 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				{x: area.points[1].x, y: 0, z: area.points[1].z},
 				{x: area.points[1].x, y: 0, z: area.points[0].z},
 			];
+		} else {
+			points = this.addY(area.points);
 		}
+
+		const bounds = getBoundsFromPoints(points);
 
 		return {
 			id,
@@ -329,13 +334,14 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				color: area.color || '#3388ff',
 				weight: area.weight || 3,
 				opacity: typeof area.opacity !== 'undefined' ? area.opacity : 1,
-				fill: typeof area.stroke !== 'undefined' ? !!area.stroke : true,
+				fill: typeof area.fill !== 'undefined' ? !!area.fill : true,
 				fillColor: area.fillColor || area.color || '#3388ff',
 				fillOpacity: area.fillOpacity || 0.2,
 				fillRule: area.fillRule,
 			},
 			points,
-			location: getMiddleFromPoints(area.points),
+			bounds,
+			location: getMiddle(bounds),
 			outline: false,
 
 			tooltip: area.tooltip ? stripHTML(area.tooltip) : '',
@@ -346,7 +352,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}
 
 	private static buildLine(id: string, line: any): LiveAtlasLineMarker {
-		const points = this.addY(line.points);
+		const points = this.addY(line.points),
+			bounds = getBoundsFromPoints(points);
 
 		return {
 			id,
@@ -358,8 +365,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				opacity: typeof line.opacity !== 'undefined' ? line.opacity : 1,
 			},
 			points,
-			location: getMiddleFromPoints(points),
-
+			bounds,
+			location: getMiddle(bounds),
 			tooltip: line.tooltip ? stripHTML(line.tooltip) : '',
 			tooltipHTML: line.tooltip,
 			popup: line.popup,
@@ -368,15 +375,22 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}
 
 	private static buildCircle(id: string, circle: any): LiveAtlasCircleMarker {
-		return {
-			id,
-			type: LiveAtlasMarkerType.CIRCLE,
-			location: {
+		const radius = [circle.radiusX || circle.radius || 0, circle.radiusZ || circle.radius || 0] as PointTuple,
+			location = {
 				x: circle.center?.x || 0,
 				y: 0,
 				z: circle.center?.z || 0,
+			};
+
+		return {
+			id,
+			type: LiveAtlasMarkerType.CIRCLE,
+			location,
+			radius,
+			bounds: {
+				max: {x: location.x + radius[0], y: 0, z: location.z + radius[1] },
+				min: {x: location.x - radius[0], y: 0, z: location.z - radius[1] },
 			},
-			radius: [circle.radiusX || circle.radius || 0, circle.radiusZ || circle.radius || 0],
 			style: {
 				stroke: typeof circle.stroke !== 'undefined' ? !!circle.stroke : true,
 				color: circle.color || '#3388ff',

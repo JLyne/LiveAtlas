@@ -17,7 +17,14 @@
 import {State} from "@/store";
 import {DynmapUrlConfig} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {Coords, DoneCallback, InternalTiles, PathOptions, PointTuple, PolylineOptions} from "leaflet";
+import {
+	Coords,
+	DoneCallback, FitBoundsOptions,
+	InternalTiles,
+	PathOptions,
+	PointTuple,
+	PolylineOptions
+} from "leaflet";
 import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
@@ -67,6 +74,12 @@ interface LiveAtlasLocation {
 	x: number;
 	y: number;
 	z: number;
+	world?: string;
+}
+
+interface LiveAtlasBounds {
+	min: Coordinate;
+	max: Coordinate;
 	world?: string;
 }
 
@@ -199,6 +212,7 @@ interface LiveAtlasPointMarker extends LiveAtlasMarker {
 
 interface LiveAtlasPathMarker extends LiveAtlasMarker {
 	style: PathOptions;
+	bounds: LiveAtlasBounds;
 }
 
 interface LiveAtlasLineMarker extends LiveAtlasPathMarker {
@@ -210,7 +224,7 @@ interface LiveAtlasLineMarker extends LiveAtlasPathMarker {
 interface LiveAtlasAreaMarker extends LiveAtlasLineMarker {
 	type: LiveAtlasMarkerType.AREA;
 	outline: boolean;
-	points: Coordinate[] | Coordinate[][] | Coordinate[][][];
+	points: Coordinate[] | Coordinate[][];
 }
 
 interface LiveAtlasCircleMarker extends LiveAtlasPathMarker {
