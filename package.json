@@ -39,7 +39,7 @@
     "@vue/vue3-jest": "^27.0.0-alpha.1",
     "cpy-cli": "^3.1.1",
     "eslint": "^8.6",
-    "eslint-plugin-vue": "^8.0",
+    "eslint-plugin-vue": "^8.3",
     "jest": "^27.4.7",
     "jest-in-case": "^1.0.2",
     "npm-run-all": "^4.1.5",
