@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<input v-if="filteredPlayers && search" class="section__search" type="text" name="search"
+	<input ref="searchInput" v-if="filteredPlayers && search" class="section__search" type="text" name="search"
 			       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
 	<RadioList v-if="filteredPlayers.length" :aria-labelledby="ariaLabelledby">
 		<PlayerListItem v-for="player in filteredPlayers" :key="player.name" :player="player"></PlayerListItem>
@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import PlayerListItem from "./PlayerListItem.vue";
-import {computed, defineComponent} from "@vue/runtime-core";
+import {computed, defineComponent, watch} from "@vue/runtime-core";
 import RadioList from "@/components/util/RadioList.vue";
 import {LiveAtlasPlayer} from "@/index";
 import {useStore} from "@/store";
@@ -59,6 +59,7 @@ export default defineComponent({
 			messagePlayersSearchPlaceholder = computed(() => store.state.messages.playersSearchPlaceholder),
 
 			searchQuery = ref(""),
+			searchInput = ref<HTMLInputElement | null>(null),
 
 			filteredPlayers = computed(() => {
 				const query = searchQuery.value.toLowerCase();
@@ -72,12 +73,15 @@ export default defineComponent({
 				e.stopImmediatePropagation();
 			};
 
+		watch(searchQuery, () => searchInput.value!.nextElementSibling!.scrollIntoView());
+
 		return {
 			messageSkeletonPlayers,
 			messageSkeletonPlayersSearch,
 			messagePlayersSearchPlaceholder,
 
 			searchQuery,
+			searchInput,
 
 			filteredPlayers,
 			onKeydown

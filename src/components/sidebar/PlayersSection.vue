@@ -54,3 +54,9 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style lang="scss" scoped>
+	::v-deep(.menu) {
+		scroll-margin-top: 8.2rem;
+	}
+</style>
