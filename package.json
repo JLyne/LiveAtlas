@@ -20,7 +20,7 @@
     "leaflet": "git+https://github.com/JLyne/leaflet.git",
     "lodash.debounce": "^4.0.8",
     "modern-normalize": "^1.1.0",
-    "vue": "^3.2.21",
+    "vue": "^3.2.27",
     "vuex": "^4.0"
   },
   "devDependencies": {
