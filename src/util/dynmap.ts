@@ -308,9 +308,9 @@ export function buildMarker(id: string, data: Marker): LiveAtlasPointMarker {
 		id,
 		type: LiveAtlasMarkerType.POINT,
 		location: {
-			x: !isNaN(data.x) ? data.x + 0.5 : 0,
-			y: !isNaN(data.y) ? data.y + 0.5 : 0,
-			z: !isNaN(data.z) ? data.z + 0.5 : 0,
+			x: !isNaN(data.x) ? Number.isInteger(data.x) ? data.x + 0.5 : data.x : 0,
+			y: !isNaN(data.y) ? Number.isInteger(data.y) ? data.y + 0.5 : data.y : 0,
+			z: !isNaN(data.z) ? Number.isInteger(data.z) ? data.z + 0.5 : data.z : 0,
 		},
 		dimensions: (dimensions || [16, 16]) as PointTuple,
 		icon: data.icon || "default",
