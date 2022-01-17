@@ -262,12 +262,17 @@ input {
 		}
 	}
 
-	& > li > button, & > input[type=radio] + label {
+	& > li > button, & > input[type=radio] + label, & > button {
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
 		text-align: left;
 		border-radius: 0.5rem;
+	}
+
+	& > button {
+		width: 100%;
+		text-align: center;
 	}
 }
 

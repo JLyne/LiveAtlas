@@ -23,6 +23,12 @@ export const globalMessages = [
 	'chatErrorDisabled',
 	'chatErrorUnknown',
 	'serversHeading',
+	'markersHeading',
+	'markersSkeleton',
+	'markersSetSkeleton',
+	'markersUnnamed',
+	'markersSearchPlaceholder',
+	'markersSearchSkeleton',
 	'worldsSkeleton',
 	'playersSkeleton',
 	'playersTitle',
@@ -67,6 +73,7 @@ export const globalMessages = [
 	'logoutErrorUnknown',
 	'logoutSuccess',
 	'closeTitle',
+	'showMore',
 ] as const;
 
 export const serverMessages = [

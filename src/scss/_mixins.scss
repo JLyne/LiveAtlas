@@ -61,6 +61,13 @@
 			margin: auto;
 		}
 	}
+
+	> span {
+		display: block;
+		text-overflow: inherit;
+		overflow: inherit;
+		white-space: inherit;
+	}
 }
 
 @mixin button-hovered {

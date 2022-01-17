@@ -24,6 +24,13 @@
 			        @click="handleSectionClick" @keydown="handleSectionKeydown">
 				<SvgIcon :name="mapCount > 1 ? 'maps' : 'servers'"></SvgIcon>
 			</button>
+			<button class="button--markers" data-section="markers"
+			        :title="messageMarkers"
+			        :aria-label="messageMarkers"
+			        :aria-expanded="markersVisible"
+			        @click="handleSectionClick" @keydown="handleSectionKeydown">
+				<SvgIcon name="marker_point"></SvgIcon>
+			</button>
 			<button v-if="playerMakersEnabled" class="button--players" data-section="players"
 			        :title="messagePlayers" :aria-label="messagePlayers" :aria-expanded="playersVisible"
 			        @click="handleSectionClick" @keydown="handleSectionKeydown">
@@ -33,6 +40,7 @@
 		<div class="sidebar__content" @keydown="handleSidebarKeydown">
 			<ServersSection v-if="serverCount > 1" :hidden="!mapsVisible"></ServersSection>
 			<WorldsSection v-if="mapCount > 1" :hidden="!mapsVisible"></WorldsSection>
+			<MarkersSection v-if="previouslyVisible.has('markers')" :hidden="!markersVisible"></MarkersSection>
 			<PlayersSection v-if="playerMakersEnabled && previouslyVisible.has('players')" :hidden="!playersVisible"></PlayersSection>
 			<FollowTargetSection v-if="following" :hidden="!followVisible" :target="following"></FollowTargetSection>
 		</div>
@@ -45,12 +53,14 @@ import FollowTargetSection from './sidebar/FollowTargetSection.vue';
 import PlayersSection from "@/components/sidebar/PlayersSection.vue";
 import ServersSection from "@/components/sidebar/ServersSection.vue";
 import WorldsSection from "@/components/sidebar/WorldsSection.vue";
+import MarkersSection from "@/components/sidebar/MarkersSection.vue";
 import {useStore} from "@/store";
 import SvgIcon from "@/components/SvgIcon.vue";
 import {MutationTypes} from "@/store/mutation-types";
 import "@/assets/icons/players.svg";
 import "@/assets/icons/maps.svg";
 import "@/assets/icons/servers.svg";
+import "@/assets/icons/marker_point.svg";
 import {nextTick, ref, watch} from "vue";
 import {handleKeyboardEvent} from "@/util/events";
 import {focus} from "@/util";
@@ -58,6 +68,7 @@ import {LiveAtlasSidebarSection} from "@/index";
 
 export default defineComponent({
 	components: {
+		MarkersSection,
 		WorldsSection,
 		ServersSection,
 		PlayersSection,
@@ -79,12 +90,14 @@ export default defineComponent({
 
 			messageWorlds = computed(() => store.state.messages.worldsHeading),
 			messageServers = computed(() => store.state.messages.serversHeading),
+			messageMarkers = computed(() => store.state.messages.markersHeading),
 			messagePlayers = computed(() => store.getters.playersHeading),
 
 			playerMakersEnabled = computed(() => !!store.state.components.playerMarkers),
 
 			playersVisible = computed(() => currentlyVisible.value.has('players')),
 			mapsVisible = computed(() => currentlyVisible.value.has('maps')),
+			markersVisible = computed(() => currentlyVisible.value.has('markers')),
 			followVisible = computed(() => {
 				//Show following alongside playerlist on small screens
 				return (!smallScreen.value && following.value)
@@ -132,6 +145,7 @@ export default defineComponent({
 		//Focus sidebar sections when they become visible, except on initial load
 		watch(playersVisible, newValue => newValue && !firstLoad.value && nextTick(() => focusSection('players')));
 		watch(mapsVisible, newValue => newValue && !firstLoad.value && nextTick(() => focusSection('maps')));
+		watch(markersVisible, newValue => newValue && !firstLoad.value && nextTick(() => focusSection('markers')));
 
 		return {
 			sidebar,
@@ -142,11 +156,13 @@ export default defineComponent({
 
 			messageWorlds,
 			messageServers,
+			messageMarkers,
 			messagePlayers,
 
 			previouslyVisible,
 			playersVisible,
 			mapsVisible,
+			markersVisible,
 			followVisible,
 			playerMakersEnabled,
 

@@ -215,6 +215,7 @@ export const state: State = {
 			servers: {},
 			players: {},
 			maps: {},
+			markers: {},
 		},
 	}
 };
