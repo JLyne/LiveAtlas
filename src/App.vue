@@ -29,7 +29,7 @@ import Sidebar from './components/Sidebar.vue';
 import ChatBox from './components/ChatBox.vue';
 import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
-import {parseUrl} from '@/util';
+import {clearHeadCache, parseUrl} from '@/util';
 import {hideSplash, showSplash, showSplashError} from '@/util/splash';
 import {MutationTypes} from "@/store/mutation-types";
 import {LiveAtlasServerDefinition, LiveAtlasUIElement} from "@/index";
@@ -170,6 +170,7 @@ export default defineComponent({
 				return;
 			}
 
+			clearHeadCache();
 			loadingAttempts.value = 0;
 			window.history.replaceState({}, '', newServer.id);
 			loadConfiguration();

@@ -126,6 +126,11 @@ const tickHeadQueue = () => {
 	tickHeadQueue();
 }
 
+export const clearHeadCache = () => {
+	headCache.clear();
+	headQueue.splice(0);
+}
+
 export const parseUrl = (url: URL) => {
 	const query = new URLSearchParams(url.search),
 		hash = url.hash.replace('#', '');
