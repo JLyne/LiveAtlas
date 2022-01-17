@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<input v-if="filteredPlayers && search" id="players__search" type="text" name="search"
+	<input v-if="filteredPlayers && search" class="section__search" type="text" name="search"
 			       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
 	<RadioList v-if="filteredPlayers.length" :aria-labelledby="ariaLabelledby">
 		<PlayerListItem v-for="player in filteredPlayers" :key="player.name" :player="player"></PlayerListItem>
@@ -85,21 +85,3 @@ export default defineComponent({
 	}
 });
 </script>
-
-<style lang="scss" scoped>
-	.players {
-		#players__search {
-			margin-bottom: 1.5rem;
-			padding: 0.5rem 1rem;
-			box-sizing: border-box;
-			width: 100%;
-			position: sticky;
-			top: 4.8rem;
-			z-index: 3;
-
-			& + .section__skeleton {
-				margin-top: 0;
-			}
-		}
-	}
-</style>

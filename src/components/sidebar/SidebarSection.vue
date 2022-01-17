@@ -154,6 +154,21 @@ export default defineComponent({
 			}
 		}
 
+		.section__search {
+			margin-bottom: 1.5rem;
+			padding: 0.5rem 1rem;
+			box-sizing: border-box;
+			width: 100%;
+			position: sticky;
+			top: 4.8rem;
+			z-index: 3;
+			box-shadow: 0 1.5rem 0.5em var(--background-base);
+
+			& + .section__skeleton {
+				margin-top: 0;
+			}
+		}
+
 		.section__skeleton {
 			font-style: italic;
 			color: var(--text-disabled);
