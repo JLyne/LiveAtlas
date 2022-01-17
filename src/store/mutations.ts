@@ -413,10 +413,15 @@ export const mutations: MutationTree<State> & Mutations = {
 		const newWorld = state.worlds.get(worldName);
 
 		if(state.currentWorld !== newWorld) {
-			state.currentWorld = state.worlds.get(worldName);
+			state.currentWorld = newWorld;
 			state.markerSets.clear();
 			state.pendingMarkerUpdates.splice(0);
 			state.pendingTileUpdates.splice(0);
+
+			// Cancel follow when switching to a different world
+			if(state.followTarget && state.followTarget.location.world !== newWorld!.name) {
+				state.followTarget = undefined;
+			}
 		}
 
 		state.currentMap = state.maps.get(mapName);
