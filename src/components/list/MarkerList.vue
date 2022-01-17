@@ -102,7 +102,7 @@ export default defineComponent({
 				}
 			});
 
-			total.value = setContents.size;
+			total.value = count;
 		};
 
 		const showMore = () => {
