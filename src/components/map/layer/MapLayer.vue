@@ -18,10 +18,8 @@
 import {defineComponent, onUnmounted, computed, watch} from "@vue/runtime-core";
 import {Map} from 'leaflet';
 import {useStore} from "@/store";
-import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {LiveAtlasTileLayer} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
-import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 
 export default defineComponent({
 	props: {
@@ -54,17 +52,10 @@ export default defineComponent({
 			refreshTimeout = setTimeout(refresh, props.map.tileUpdateInterval);
 		};
 
-		if(store.state.currentServer?.type === 'dynmap') {
-			layer = new DynmapTileLayer({
-				errorTileUrl: 'images/blank.png',
-				mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map))),
-			});
-		} else {
-			layer = new Pl3xmapTileLayer({
-				errorTileUrl: 'images/blank.png',
-				mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map)))
-			});
-		}
+		layer = store.state.currentMapProvider!.createTileLayer({
+			errorTileUrl: 'images/blank.png',
+			mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map))),
+		});
 
 		const enableLayer = () => {
 				props.leaflet.addLayer(layer);

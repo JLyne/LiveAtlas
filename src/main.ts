@@ -23,10 +23,13 @@ import 'leaflet/dist/leaflet.css';
 import '@/scss/style.scss';
 
 import {MutationTypes} from "@/store/mutation-types";
-import {showSplashError} from "@/util/splash";
 import { VueClipboard } from '@soerenmartius/vue3-clipboard';
 import Notifications from '@kyvg/vue3-notification'
-import {getServerDefinitions} from "@/util/config";
+import {loadConfig, registerMapProvider} from "@/util/config";
+import DynmapMapProvider from "@/providers/DynmapMapProvider";
+import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
+import {showSplashError} from "@/util/splash";
+import ConfigurationError from "@/errors/ConfigurationError";
 
 const splash = document.getElementById('splash'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
@@ -49,10 +52,14 @@ store.subscribe((mutation, state) => {
 	}
 });
 
-try {
-	const config = window.liveAtlasConfig;
-	config.servers = getServerDefinitions(config);
+registerMapProvider('dynmap', DynmapMapProvider);
+registerMapProvider('pl3xmap', Pl3xmapMapProvider);
+registerMapProvider('squaremap', Pl3xmapMapProvider);
 
+const config = window.liveAtlasConfig;
+
+try {
+	config.servers = loadConfig(config);
 	store.commit(MutationTypes.INIT, config);
 
 	if(store.state.servers.size > 1) {
@@ -76,7 +83,12 @@ try {
 
 	// app.config.performance = true;
 	app.mount('#app');
-} catch(e) {
-	console.error('LiveAtlas configuration is invalid: ', e);
-	showSplashError('LiveAtlas configuration is invalid:\n' + e, true);
+} catch (e) {
+	if(e instanceof ConfigurationError) {
+		console.error('LiveAtlas configuration is invalid:', e);
+		showSplashError('LiveAtlas configuration is invalid:\n' + e, true);
+	} else {
+		console.error('LiveAtlas failed to load:', e);
+		showSplashError('LiveAtlas failed to load:\n' + e, true);
+	}
 }

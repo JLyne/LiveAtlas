@@ -18,7 +18,6 @@ import {
 	HeadQueueEntry, LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasPlayer,
-	LiveAtlasServerDefinition,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import ChatError from "@/errors/ChatError";
@@ -36,6 +35,10 @@ import {
 } from "@/util/dynmap";
 import {getImagePixelSize} from "@/util";
 import {MarkerSet} from "dynmap";
+import {DynmapUrlConfig} from "@/dynmap";
+import ConfigurationError from "@/errors/ConfigurationError";
+import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
+import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 
 export default class DynmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -50,12 +53,41 @@ export default class DynmapMapProvider extends MapProvider {
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 
-	constructor(config: LiveAtlasServerDefinition) {
+	constructor(config: DynmapUrlConfig) {
 		super(config);
+		this.validateConfig();
+	}
+
+	private validateConfig() {
+		if(typeof this.config !== 'undefined') {
+			if (!this.config || this.config.constructor !== Object) {
+				throw new ConfigurationError(`Dynmap configuration object missing`);
+			}
+
+			if (!this.config.configuration) {
+				throw new ConfigurationError(`Dynmap configuration URL missing`);
+			}
+
+			if (!this.config.update) {
+				throw new ConfigurationError(`Dynmap update URL missing`);
+			}
+
+			if (!this.config.markers) {
+				throw new ConfigurationError(`Dynmap markers URL missing`);
+			}
+
+			if (!this.config.tiles) {
+				throw new ConfigurationError(`Dynmap tiles URL missing`);
+			}
+
+			if (!this.config.sendmessage) {
+				throw new ConfigurationError(`Dynmap sendmessage URL missing`);
+			}
+		}
 	}
 
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
-		const url = `${this.config.dynmap!.markers}_markers_/marker_${world.name}.json`;
+		const url = `${this.config.markers}_markers_/marker_${world.name}.json`;
 
 		if(this.markersAbort) {
 			this.markersAbort.abort();
@@ -93,7 +125,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 		this.configurationAbort = new AbortController();
 
-		const response = await this.getJSON(this.config.dynmap!.configuration, this.configurationAbort.signal);
+		const response = await this.getJSON(this.config.configuration, this.configurationAbort.signal);
 
 		if (response.error) {
 			throw new Error(response.error);
@@ -122,8 +154,12 @@ export default class DynmapMapProvider extends MapProvider {
 		this.markers.clear();
 	}
 
+	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer {
+		return new DynmapTileLayer(options);
+	}
+
 	private async getUpdate(): Promise<void> {
-		let url = this.config.dynmap!.update;
+		let url = this.config.update;
 		url = url.replace('{world}', this.store.state.currentWorld!.name);
 		url = url.replace('{timestamp}', this.updateTimestamp.getTime().toString());
 
@@ -200,7 +236,7 @@ export default class DynmapMapProvider extends MapProvider {
 			return Promise.reject(this.store.state.messages.chatErrorDisabled);
 		}
 
-		return fetch(this.config.dynmap!.sendmessage, {
+		return fetch(this.config.sendmessage, {
 			method: 'POST',
 			credentials: 'include',
 			body: JSON.stringify({
@@ -259,14 +295,26 @@ export default class DynmapMapProvider extends MapProvider {
 		}
 
 		this.updateTimeout = null;
+
+		if(this.configurationAbort) {
+			this.configurationAbort.abort();
+		}
+
+		if(this.updateAbort) {
+			this.updateAbort.abort();
+		}
+
+		if(this.markersAbort) {
+			this.markersAbort.abort();
+		}
 	}
 
 	getTilesUrl(): string {
-        return this.config.dynmap!.tiles;
+        return this.config.tiles;
     }
 
 	getPlayerHeadUrl(head: HeadQueueEntry): string {
-		const baseUrl = `${this.config.dynmap!.markers}faces/`;
+		const baseUrl = `${this.config.markers}faces/`;
 
 		if(head.size === 'body') {
 			return `${baseUrl}body/${head.name}.png`;
@@ -277,7 +325,7 @@ export default class DynmapMapProvider extends MapProvider {
     }
 
     getMarkerIconUrl(icon: string): string {
-        return `${this.config.dynmap!.markers}_markers_/${icon}.png`;
+        return `${this.config.markers}_markers_/${icon}.png`;
     }
 
     async login(data: any) {
@@ -294,7 +342,7 @@ export default class DynmapMapProvider extends MapProvider {
 			body.append('j_password', data.password || '');
 
 
-			const response = await DynmapMapProvider.fetchJSON(this.config.dynmap!.login, {
+			const response = await DynmapMapProvider.fetchJSON(this.config.login, {
 				method: 'POST',
 				body,
 			});
@@ -323,7 +371,7 @@ export default class DynmapMapProvider extends MapProvider {
 		}
 
 		try {
-			await DynmapMapProvider.fetchJSON(this.config.dynmap!.login, {
+			await DynmapMapProvider.fetchJSON(this.config.login, {
 				method: 'POST',
 			});
 
@@ -348,7 +396,7 @@ export default class DynmapMapProvider extends MapProvider {
 			body.append('j_verify_password', data.password || '');
 			body.append('j_passcode', data.code || '');
 
-			const response = await DynmapMapProvider.fetchJSON(this.config.dynmap!.register, {
+			const response = await DynmapMapProvider.fetchJSON(this.config.register, {
 				method: 'POST',
 				body,
 			});
@@ -371,22 +419,6 @@ export default class DynmapMapProvider extends MapProvider {
 			console.error(this.store.state.messages.registerErrorUnknown);
 			console.trace(e);
 			return Promise.reject(this.store.state.messages.registerErrorUnknown);
-		}
-	}
-
-	destroy() {
-		super.destroy();
-
-		if(this.configurationAbort) {
-			this.configurationAbort.abort();
-		}
-
-		if(this.updateAbort) {
-			this.updateAbort.abort();
-		}
-
-		if(this.markersAbort) {
-			this.markersAbort.abort();
 		}
 	}
 

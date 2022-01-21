@@ -169,6 +169,7 @@ export default defineComponent({
 			const store = useStore();
 
 			if(newValue) {
+				store.state.currentMapProvider!.populateWorld(newValue);
 				let viewTarget = this.scheduledView || {} as LiveAtlasMapViewTarget;
 
 				// Abort if follow target is present, to avoid panning twice

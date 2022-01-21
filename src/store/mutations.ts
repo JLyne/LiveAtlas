@@ -33,7 +33,6 @@ import {
 	LiveAtlasServerMessageConfig,
 	LiveAtlasPlayer,
 	LiveAtlasMarkerSet,
-	LiveAtlasServerDefinition,
 	LiveAtlasServerConfig,
 	LiveAtlasChat,
 	LiveAtlasPartialComponentConfig,
@@ -41,9 +40,8 @@ import {
 	LiveAtlasUIModal,
 	LiveAtlasSidebarSectionState, LiveAtlasMarker, LiveAtlasMapViewTarget
 } from "@/index";
-import DynmapMapProvider from "@/providers/DynmapMapProvider";
-import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
 import {getGlobalMessages} from "@/util";
+import {getServerMapProvider} from "@/util/config";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -383,19 +381,9 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		if(state.currentMapProvider) {
 			state.currentMapProvider.stopUpdates();
-			state.currentMapProvider.destroy();
 		}
 
-		switch(state.currentServer!.type) {
-			case 'pl3xmap':
-				state.currentMapProvider = Object.seal(
-					new Pl3xmapMapProvider(state.servers.get(serverName) as LiveAtlasServerDefinition));
-				break;
-			case 'dynmap':
-				state.currentMapProvider = Object.seal(
-					new DynmapMapProvider(state.servers.get(serverName) as LiveAtlasServerDefinition));
-				break;
-		}
+		state.currentMapProvider = getServerMapProvider(serverName);
 	},
 
 	//Sets the currently active map/world

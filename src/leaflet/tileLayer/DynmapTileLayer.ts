@@ -18,7 +18,7 @@
  */
 
 import {Map as LeafletMap, Coords, DoneCallback} from 'leaflet';
-import {useStore} from "@/store";
+import {Store, useStore} from "@/store";
 import {Coordinate, Coordinate2D} from "@/index";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 import {computed, watch} from "@vue/runtime-core";
@@ -27,12 +27,12 @@ import {WatchStopHandle} from "vue";
 import {ActionTypes} from "@/store/action-types";
 import {TileInformation} from "dynmap";
 
-const store = useStore();
 
 // noinspection JSUnusedGlobalSymbols
 export class DynmapTileLayer extends LiveAtlasTileLayer {
 	private readonly _namedTiles: Map<any, any>;
 	private readonly _baseUrl: string;
+	private readonly _store: Store = useStore();
 
 	private readonly _night: ComputedRef<boolean>;
 	private readonly _pendingUpdates: ComputedRef<boolean>;
@@ -44,11 +44,11 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 		super('', options);
 
 		this._mapSettings = options.mapSettings;
-		this._baseUrl = store.state.currentMapProvider!.getTilesUrl();
+		this._baseUrl = this._store.state.currentMapProvider!.getTilesUrl();
 		this._namedTiles = Object.seal(new Map());
 
-		this._pendingUpdates = computed(() => !!store.state.pendingTileUpdates.length);
-		this._night = computed(() => store.getters.night);
+		this._pendingUpdates = computed(() => !!this._store.state.pendingTileUpdates.length);
+		this._night = computed(() => this._store.getters.night);
 	}
 
 	onAdd(map: LeafletMap) {
@@ -183,7 +183,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 	}
 
 	private async handlePendingUpdates() {
-		const updates = await store.dispatch(ActionTypes.POP_TILE_UPDATES, 10);
+		const updates = await this._store.dispatch(ActionTypes.POP_TILE_UPDATES, 10);
 
 		for(const update of updates) {
 			this.updateNamedTile(update.name, update.timestamp);

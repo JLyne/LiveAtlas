@@ -30,6 +30,7 @@ import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {globalMessages, serverMessages} from "../messages";
 import {LiveAtlasMarkerType} from "@/util/markers";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 
 declare module "*.png" {
    const value: any;
@@ -100,7 +101,6 @@ interface LiveAtlasGlobalConfig {
 interface LiveAtlasServerDefinition {
 	id: string;
 	label?: string;
-	type: 'dynmap' | 'pl3xmap';
 	dynmap?: DynmapUrlConfig;
 	pl3xmap?: string;
 	squaremap?: string;
@@ -178,11 +178,11 @@ interface LiveAtlasMapProvider {
 	populateWorld(world: LiveAtlasWorldDefinition): Promise<void>;
 	startUpdates(): void;
 	stopUpdates(): void;
+	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer;
 	sendChatMessage(message: string): void;
 	login(formData: FormData): void;
 	logout(): void;
 	register(formData: FormData): void;
-	destroy(): void;
 
 	getPlayerHeadUrl(entry: HeadQueueEntry): string;
 	getTilesUrl(): string;

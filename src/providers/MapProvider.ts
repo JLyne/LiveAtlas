@@ -17,31 +17,22 @@
 import {
 	HeadQueueEntry,
 	LiveAtlasMapProvider,
-	LiveAtlasServerDefinition,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {useStore} from "@/store";
-import {computed, watch} from "@vue/runtime-core";
-import {WatchStopHandle} from "vue";
+import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 
 export default abstract class MapProvider implements LiveAtlasMapProvider {
 	protected readonly store = useStore();
-	protected readonly config: LiveAtlasServerDefinition;
-	private readonly currentWorldUnwatch: WatchStopHandle;
+	protected config: any;
 
-	protected constructor(config: LiveAtlasServerDefinition) {
+	protected constructor(config: any) {
 		this.config = config;
-		const currentWorld = computed(() => this.store.state.currentWorld);
-
-		this.currentWorldUnwatch = watch(currentWorld, (newValue) => {
-			if (newValue) {
-				this.populateWorld(newValue);
-			}
-		});
 	}
 
 	abstract loadServerConfiguration(): Promise<void>;
 	abstract populateWorld(world: LiveAtlasWorldDefinition): Promise<void>;
+	abstract createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer;
 
 	abstract startUpdates(): void;
 	abstract stopUpdates(): void;
@@ -50,7 +41,7 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
     abstract getTilesUrl(): string;
     abstract getMarkerIconUrl(icon: string): string;
 
-    sendChatMessage(message: string) {
+	sendChatMessage(message: string) {
 		throw new Error('Provider does not support chat');
 	}
 
@@ -64,10 +55,6 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 
 	async register(data: any) {
 		throw new Error('Provider does not support registration');
-	}
-
-	destroy() {
-		this.currentWorldUnwatch();
 	}
 
 	protected static async fetchJSON(url: string, options: any) {

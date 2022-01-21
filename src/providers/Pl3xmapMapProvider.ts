@@ -26,7 +26,6 @@ import {
 	LiveAtlasPlayer,
 	LiveAtlasPointMarker,
 	LiveAtlasServerConfig,
-	LiveAtlasServerDefinition,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
 } from "@/index";
@@ -37,6 +36,9 @@ import {ActionTypes} from "@/store/action-types";
 import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {PointTuple} from "leaflet";
+import ConfigurationError from "@/errors/ConfigurationError";
+import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
+import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 
 export default class Pl3xmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -61,8 +63,16 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 
-	constructor(config: LiveAtlasServerDefinition) {
+	constructor(config: string) {
 		super(config);
+
+		if(!this.config) {
+			throw new ConfigurationError("URL missing");
+		}
+
+		if(this.config.slice(-1) !== '/') {
+			this.config = `${config}/`;
+		}
 	}
 
 	private static buildServerConfig(response: any): LiveAtlasServerConfig {
@@ -168,7 +178,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				background: 'transparent',
 				backgroundDay: 'transparent',
 				backgroundNight: 'transparent',
-				icon: world.icon ? `${this.config.pl3xmap}images/icon/${world.icon}.png` : undefined,
+				icon: world.icon ? `${this.config}images/icon/${world.icon}.png` : undefined,
 				imageFormat: 'png',
 				name: 'flat',
 				displayName: 'Flat',
@@ -226,7 +236,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}
 
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
-		const url = `${this.config.pl3xmap}tiles/${world.name}/markers.json`;
+		const url = `${this.config}tiles/${world.name}/markers.json`;
 
 		if(this.markersAbort) {
 			this.markersAbort.abort();
@@ -424,7 +434,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 		this.configurationAbort = new AbortController();
 
-		const baseUrl = this.config.pl3xmap,
+		const baseUrl = this.config,
 			response = await Pl3xmapMapProvider.getJSON(`${baseUrl}tiles/settings.json`, this.configurationAbort.signal);
 
 		if (response.error) {
@@ -459,8 +469,12 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		this.markers.clear();
 	}
 
+	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer {
+		return new Pl3xmapTileLayer(options);
+	}
+
 	private async getPlayers(): Promise<Set<LiveAtlasPlayer>> {
-		const url = `${this.config.pl3xmap}tiles/players.json`;
+		const url = `${this.config}tiles/players.json`;
 
 		if(this.playersAbort) {
 			this.playersAbort.abort();
@@ -557,23 +571,6 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 		this.markerUpdateTimeout = null;
 		this.playerUpdateTimeout = null;
-	}
-
-    getTilesUrl(): string {
-        return `${this.config.pl3xmap}tiles/`;
-    }
-
-	getPlayerHeadUrl(head: HeadQueueEntry): string {
-		//TODO: Listen to config
-        return 'https://mc-heads.net/avatar/{uuid}/16'.replace('{uuid}', head.uuid || '');
-    }
-
-    getMarkerIconUrl(icon: string): string {
-        return `${this.config.pl3xmap}images/icon/registered/${icon}.png`;
-    }
-
-	destroy() {
-		super.destroy();
 
 		if(this.configurationAbort) {
 			this.configurationAbort.abort();
@@ -587,4 +584,17 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			this.markersAbort.abort();
 		}
 	}
+
+    getTilesUrl(): string {
+        return `${this.config}tiles/`;
+    }
+
+	getPlayerHeadUrl(head: HeadQueueEntry): string {
+		//TODO: Listen to config
+        return 'https://mc-heads.net/avatar/{uuid}/16'.replace('{uuid}', head.uuid || '');
+    }
+
+    getMarkerIconUrl(icon: string): string {
+        return `${this.config}images/icon/registered/${icon}.png`;
+    }
 }
