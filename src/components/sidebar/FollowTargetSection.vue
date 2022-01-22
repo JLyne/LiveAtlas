@@ -56,7 +56,7 @@ export default defineComponent({
 		const store = useStore(),
 			imagesEnabled = computed(() => store.state.components.playerList.showImages),
 			image = ref(defaultImage),
-			account = ref(props.target.name),
+			account = computed(() => props.target.name),
 
 			heading = computed(() => store.state.messages.followingHeading),
 			messageUnfollow = computed(() => store.state.messages.followingUnfollow),
