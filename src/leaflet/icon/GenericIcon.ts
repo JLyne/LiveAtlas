@@ -138,8 +138,8 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 
 	update(options: GenericIconOptions) {
 		if(this._image && options.icon !== this.options.icon) {
-			this._image!.src = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon);
 			this.options.icon = options.icon;
+			this._image!.src = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon);
 		}
 
 		const iconSize = point(options.iconSize || [16, 16] as PointExpression),
