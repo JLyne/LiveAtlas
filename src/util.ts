@@ -263,18 +263,24 @@ export const getBounds = (x: number[], y: number[], z: number[]): LiveAtlasBound
 
 export const getBoundsFromPoints = (points: Coordinate[]): LiveAtlasBounds => {
 	const bounds = {
-		max: {...points[0]},
-		min: {...points[0]},
+		max: {x: -Infinity, y: -Infinity, z: -Infinity},
+		min: {x: Infinity, y: Infinity, z: Infinity},
 	}
 
-	for (const point of points) {
-		bounds.max.x = Math.max(point.x, bounds.max.x);
-		bounds.max.y = Math.max(point.y, bounds.max.y);
-		bounds.max.z = Math.max(point.z, bounds.max.z);
-		bounds.min.x = Math.min(point.x, bounds.min.x);
-		bounds.min.y = Math.min(point.y, bounds.min.y);
-		bounds.min.z = Math.min(point.z, bounds.min.z);
+	const handlePoint = (point: any) => {
+		if(Array.isArray(point)) {
+			point.map(handlePoint);
+		} else {
+			bounds.max.x = Math.max(point.x, bounds.max.x);
+			bounds.max.y = Math.max(point.y, bounds.max.y);
+			bounds.max.z = Math.max(point.z, bounds.max.z);
+			bounds.min.x = Math.min(point.x, bounds.min.x);
+			bounds.min.y = Math.min(point.y, bounds.min.y);
+			bounds.min.z = Math.min(point.z, bounds.min.z);
+		}
 	}
+
+	points.map(handlePoint);
 
 	return bounds;
 }
