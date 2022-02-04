@@ -112,21 +112,20 @@ export const actions: ActionTree<State, State> & Actions = {
 		}
 
 		if(worldName) {
-			const world = state.worlds.get(worldName) as LiveAtlasWorldDefinition;
-
 			// Use config default map if it exists
-			if(state.configuration.defaultMap && world.maps.has(state.configuration.defaultMap)) {
+			if(state.configuration.defaultMap && state.maps.has(`${worldName}_${state.configuration.defaultMap}`)) {
 				mapName = state.configuration.defaultMap;
 			}
 
 			// Prefer map from parsed url if present and it exists
-			if(state.parsedUrl?.map && world.maps.has(state.parsedUrl.map)) {
+			if(state.parsedUrl?.map && state.maps.has(`${worldName}_${state.parsedUrl.map}`)) {
 				mapName = state.parsedUrl.map;
 			}
 
 			// Use first map, if any, if neither of the above exist
 			if(!mapName) {
-				mapName = world.maps.size ? world.maps.entries().next().value[1].name : undefined;
+				const world = state.worlds.get(worldName) as LiveAtlasWorldDefinition;
+				mapName = world.maps.size ? world.maps.values().next().value.name : undefined;
 			}
 		}
 

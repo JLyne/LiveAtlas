@@ -15,14 +15,16 @@
   -->
 
 <template>
-	<div class="world">
+	<div v-if="maps.length" class="world">
 		<span class="world__name" aria-hidden="true">{{ world.displayName }}</span>
 		<div class="world__maps menu">
-			<template v-for="[key, map] in world.maps" :key="`${world.name}_${key}`">
-				<input :id="`${name}-${world.name}-${key}`" type="radio" :name="name"
-				       v-bind:value="[world.name,map.name]" v-model="currentMap"
-				       :aria-labelledby="`${name}-${world.name}-${key}-label`">
-				<label :id="`${name}-${world.name}-${key}-label`" class="map" :for="`${name}-${world.name}-${key}`" :title="`${world.displayName} - ${map.displayName}`">
+			<template v-for="map in maps" :key="`${map.world.name}_${map.name}`">
+				<input :id="`${name}-${map.world.name}-${map.name}`" type="radio" :name="name"
+				       v-bind:value="[map.world.name,map.name]" v-model="currentMap"
+				       :aria-labelledby="`${name}-${map.world.name}-${map.name}-label`">
+				<label :id="`${name}-${map.world.name}-${map.name}-label`" class="map"
+				       :for="`${name}-${map.world.name}-${map.name}`"
+				       :title="`${map.world.displayName} - ${map.displayName}`">
 					<img v-if="map.hasCustomIcon()" :src="map.getIcon()" alt="" />
 					<SvgIcon v-else :name="map.getIcon()"></SvgIcon>
 				</label>
@@ -48,6 +50,7 @@ import "@/assets/icons/block_other.svg";
 import "@/assets/icons/block_other_flat.svg";
 import "@/assets/icons/block_skylands.svg";
 import {LiveAtlasWorldDefinition} from "@/index";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default defineComponent({
 	name: 'WorldListItem',
@@ -63,8 +66,21 @@ export default defineComponent({
 		}
 	},
 
-	setup() {
+	setup(props) {
 		const store = useStore(),
+			maps = computed(() => {
+				const maps: LiveAtlasMapDefinition[] = [];
+
+				//Filter out maps appended to other worlds
+				props.world.maps.forEach(map => {
+					console.log(map.appendedWorld, props.world);
+					if(!map.appendedWorld || map.appendedWorld.name === props.world.name) {
+						maps.push(map);
+					}
+				});
+
+				return maps;
+			}),
 			currentMap = computed({
 				get: () => store.state.currentMap ? [store.state.currentWorld!.name, store.state.currentMap.name] : undefined,
 				set: (value) => value && store.commit(MutationTypes.SET_CURRENT_MAP, {
@@ -74,7 +90,8 @@ export default defineComponent({
 			});
 
 		return {
-			currentMap
+			currentMap,
+			maps
 		}
 	}
 });

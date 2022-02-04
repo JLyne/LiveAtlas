@@ -169,7 +169,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		worlds.forEach(world => {
 			state.worlds.set(world.name, world);
-			world.maps.forEach(map => state.maps.set(`${world.name}_${map.name}`, map));
+			world.maps.forEach(map => state.maps.set(`${map.world.name}_${map.name}`, map));
 		});
 
 		//Update current world if a world with the same name still exists, otherwise clear

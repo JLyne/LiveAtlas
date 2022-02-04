@@ -35,7 +35,7 @@
 			<li role="none">
 				<button type="button" role="menuitem" @click.prevent="pan">{{ messageCenterHere }}</button>
 			</li>
-			<WorldListItem v-if="currentWorld && mapCount > 1" :world="currentWorld" name="context"></WorldListItem>
+			<WorldListItem v-if="currentMap && mapCount > 1" :world="currentMap.appendedWorld || currentMap.world" name="context"></WorldListItem>
 		</ul>
 	</nav>
 </template>
@@ -72,10 +72,17 @@ export default defineComponent({
 			menuElement = ref<HTMLInputElement | null>(null),
 			menuVisible = computed(() => !!event.value),
 
-			currentWorld = computed(() => store.state.currentWorld),
 			currentMap = computed(() => store.state.currentMap),
 			currentZoom = computed(() => store.state.currentZoom),
-			mapCount = computed(() => currentWorld.value ? currentWorld.value.maps.size : 0),
+			mapCount = computed(() => {
+				if(!currentMap.value) {
+					return 0;
+				}
+
+				//Use appendedWorld if present for map list
+				return currentMap.value?.appendedWorld ?
+					currentMap.value?.appendedWorld.maps.size : currentMap.value.world.maps.size;
+			}),
 
 			location = computed(() => {
 				if (!event.value || !currentMap.value) {
@@ -221,7 +228,7 @@ export default defineComponent({
 
 			locationLabel,
 			locationCopy,
-			currentWorld,
+			currentMap,
 			mapCount,
 			style,
 

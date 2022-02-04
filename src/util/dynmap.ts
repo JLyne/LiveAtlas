@@ -110,7 +110,7 @@ export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefini
 				y: world.center.y || 0,
 				z: world.center.z || 0
 			},
-			maps: new Map(),
+			maps: new Set(),
 		});
 	});
 
@@ -126,8 +126,11 @@ export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefini
 				return;
 			}
 
-			assignedWorld.maps.set(map.name, Object.freeze(new LiveAtlasMapDefinition({
-				world: actualWorld, //Ignore append_to_world here for Dynmap URL parity
+			// Maps with append_to_world set are added both the original and target world's map set
+			// The world property is always the original world, an additional appendedWorld property contains the target world
+			const mapDef = Object.freeze(new LiveAtlasMapDefinition({
+				world: actualWorld,
+				appendedWorld: actualWorld !== assignedWorld ? assignedWorld : undefined,
 				background: map.background || '#000000',
 				backgroundDay: map.backgroundday || '#000000',
 				backgroundNight: map.backgroundnight || '#000000',
@@ -141,7 +144,13 @@ export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefini
 				worldToMap: map.worldtomap || undefined,
 				nativeZoomLevels: map.mapzoomout || 1,
 				extraZoomLevels: map.mapzoomin || 0
-			})));
+			})) as LiveAtlasMapDefinition;
+
+			actualWorld.maps.add(mapDef);
+
+			if(actualWorld !== assignedWorld) {
+				assignedWorld.maps.add(mapDef);
+			}
 		});
 	});
 

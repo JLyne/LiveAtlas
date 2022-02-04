@@ -156,7 +156,7 @@ interface LiveAtlasWorldDefinition {
 	dimension: LiveAtlasDimension;
 	center: Coordinate;
 	defaultZoom?: number;
-	maps: Map<string, LiveAtlasMapDefinition>;
+	maps: Set<LiveAtlasMapDefinition>;
 }
 
 interface LiveAtlasWorldState {

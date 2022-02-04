@@ -21,6 +21,7 @@ import {ImageFormat} from "dynmap";
 
 export interface LiveAtlasMapDefinitionOptions {
 	world: LiveAtlasWorldDefinition;
+	appendedWorld?: LiveAtlasWorldDefinition; // append_to_world
 	name: string;
 	displayName?: string;
 	icon?: string;
@@ -39,6 +40,7 @@ export interface LiveAtlasMapDefinitionOptions {
 
 export default class LiveAtlasMapDefinition {
 	readonly world: LiveAtlasWorldDefinition;
+	readonly appendedWorld?: LiveAtlasWorldDefinition;
 	readonly name: string;
 	readonly icon?: string;
 	readonly displayName: string;
@@ -55,7 +57,8 @@ export default class LiveAtlasMapDefinition {
 	readonly tileUpdateInterval?: number;
 
 	constructor(options: LiveAtlasMapDefinitionOptions) {
-		this.world = options.world; //Ignore append_to_world here otherwise things break
+		this.world = options.world;
+		this.appendedWorld = options.appendedWorld; // append_to_world
 		this.name = options.name;
 		this.icon = options.icon || undefined;
 		this.displayName = options.displayName || '';

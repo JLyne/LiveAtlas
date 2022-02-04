@@ -296,9 +296,8 @@ export default defineComponent({
 			}
 
 			if(targetWorld && (targetWorld !== currentWorld) || (target.map && currentMap !== target.map)) {
-				const mapName = target.map && targetWorld!.maps.has(target.map) ?
-					targetWorld!.maps.get(target.map)!.name :
-					targetWorld!.maps.entries().next().value[1].name;
+				const map = store.state.maps.get(`${targetWorld.name}_${target.map}`),
+					mapName = map ? map.name : targetWorld.maps.values().next().value.name;
 
 				this.scheduledView = target;
 

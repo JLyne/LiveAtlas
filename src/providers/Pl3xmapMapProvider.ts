@@ -160,7 +160,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				dimension = 'end';
 			}
 
-			const maps: Map<string, LiveAtlasMapDefinition> = new Map();
+			const maps: Set<LiveAtlasMapDefinition> = new Set();
 
 			const w = {
 				name: world.name || '(Unnamed world)',
@@ -172,7 +172,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				maps,
 			};
 
-			maps.set('flat', Object.freeze(new LiveAtlasMapDefinition({
+			maps.add(Object.freeze(new LiveAtlasMapDefinition({
 				world: w,
 
 				background: 'transparent',
