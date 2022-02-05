@@ -184,7 +184,6 @@ interface LiveAtlasMapProvider {
 	logout(): void;
 	register(formData: FormData): void;
 
-	getPlayerHeadUrl(entry: HeadQueueEntry): string;
 	getTilesUrl(): string;
 	getMarkerIconUrl(icon: string): string;
 }
@@ -265,6 +264,7 @@ interface LiveAtlasComponentConfig {
 		markers?: LiveAtlasPlayerMarkerConfig;
 		showImages: boolean;
 		grayHiddenPlayers: boolean;
+		imageUrl: (entry: HeadQueueEntry) => string;
 	};
 	coordinatesControl?: CoordinatesControlOptions;
 	clockControl?: ClockControlOptions;
@@ -285,6 +285,7 @@ interface LiveAtlasPartialComponentConfig {
 		markers?: LiveAtlasPlayerMarkerConfig;
 		showImages?: boolean;
 		grayHiddenPlayers?: boolean;
+		imageUrl?: (entry: HeadQueueEntry) => string;
 	};
 	coordinatesControl?: CoordinatesControlOptions;
 	clockControl?: ClockControlOptions;

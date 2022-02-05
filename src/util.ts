@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import defaultImage from '@/assets/images/player_face.png';
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
@@ -113,6 +114,10 @@ export const getMinecraftHead = (player: LiveAtlasPlayer | string, size: LiveAtl
 	return promise;
 }
 
+export const getDefaultMinecraftHead = () => {
+	return defaultImage;
+}
+
 const tickHeadQueue = () => {
 	if(headsLoading.size > 8 || !headQueue.length) {
 		return;
@@ -121,7 +126,7 @@ const tickHeadQueue = () => {
 	const head = headQueue.pop() as HeadQueueEntry;
 
 	headsLoading.add(head.cacheKey);
-	head.image.src = useStore().state.currentMapProvider!.getPlayerHeadUrl(head);
+	head.image.src = useStore().state.components.players.imageUrl(head);
 
 	tickHeadQueue();
 }

@@ -15,7 +15,6 @@
  */
 
 import {
-	HeadQueueEntry,
 	LiveAtlasAreaMarker,
 	LiveAtlasCircleMarker,
 	LiveAtlasComponentConfig,
@@ -33,7 +32,7 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {ActionTypes} from "@/store/action-types";
-import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex} from "@/util";
+import {getBoundsFromPoints, getDefaultMinecraftHead, getMiddle, stripHTML, titleColoursRegex} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {PointTuple} from "leaflet";
 import ConfigurationError from "@/errors/ConfigurationError";
@@ -121,7 +120,9 @@ export default class Pl3xmapMapProvider extends MapProvider {
 					components: {
 						players: {
 							markers: undefined,
+							imageUrl: getDefaultMinecraftHead,
 							grayHiddenPlayers: true,
+							showImages: true,
 						}
 					},
 				};
@@ -135,6 +136,11 @@ export default class Pl3xmapMapProvider extends MapProvider {
 					updateInterval = worldResponse.player_tracker.update_interval ? worldResponse.player_tracker.update_interval * 1000 : 3000;
 
 				this.worldPlayerUpdateIntervals.set(world.name, updateInterval);
+
+				if(worldResponse.player_tracker?.nameplates?.heads_url) {
+					worldConfig.components.players!.imageUrl = entry =>
+						worldResponse.player_tracker.nameplates.heads_url.replace('{uuid}', entry.uuid);
+				}
 
 				worldConfig.components.players!.markers = {
 					hideByDefault: !!worldResponse.player_tracker?.default_hidden,
@@ -204,6 +210,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 			players: {
 				markers: undefined, //Configured per-world
+				imageUrl: getDefaultMinecraftHead,
 
 				//Not configurable
 				showImages: true,
@@ -591,11 +598,6 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
     getTilesUrl(): string {
         return `${this.config}tiles/`;
-    }
-
-	getPlayerHeadUrl(head: HeadQueueEntry): string {
-		//TODO: Listen to config
-        return 'https://mc-heads.net/avatar/{uuid}/16'.replace('{uuid}', head.uuid || '');
     }
 
     getMarkerIconUrl(icon: string): string {

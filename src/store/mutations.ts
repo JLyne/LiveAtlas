@@ -40,7 +40,7 @@ import {
 	LiveAtlasUIModal,
 	LiveAtlasSidebarSectionState, LiveAtlasMarker, LiveAtlasMapViewTarget
 } from "@/index";
-import {getGlobalMessages} from "@/util";
+import {getDefaultMinecraftHead, getGlobalMessages} from "@/util";
 import {getServerMapProvider} from "@/util/config";
 
 export type CurrentMapPayload = {
@@ -551,7 +551,12 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.configuration.title = '';
 
 		state.components.markers.showLabels= false;
-		state.components.players.markers = undefined;
+		state.components.players = {
+			markers: undefined,
+			showImages: true,
+			grayHiddenPlayers: true,
+			imageUrl: getDefaultMinecraftHead,
+		};
 		state.components.coordinatesControl = undefined;
 		state.components.clockControl = undefined;
 		state.components.linkControl = false;

@@ -37,7 +37,6 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 	abstract startUpdates(): void;
 	abstract stopUpdates(): void;
 
-	abstract getPlayerHeadUrl(head: HeadQueueEntry): string;
     abstract getTilesUrl(): string;
     abstract getMarkerIconUrl(icon: string): string;
 

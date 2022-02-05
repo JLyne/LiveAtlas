@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {DynmapMarkerSetUpdate, DynmapMarkerUpdate, DynmapTileUpdate} from "@/dynmap";
+import {DynmapMarkerSetUpdate, DynmapMarkerUpdate, DynmapTileUpdate, DynmapUrlConfig} from "@/dynmap";
 import {
 	LiveAtlasAreaMarker,
 	LiveAtlasChat,
@@ -31,7 +31,7 @@ import {
 import {getPoints} from "@/util/areas";
 import {
 	decodeHTMLEntities,
-	endWorldNameRegex, getBounds,
+	endWorldNameRegex, getBounds, getImagePixelSize,
 	getMiddle,
 	netherWorldNameRegex,
 	stripHTML,
@@ -157,7 +157,7 @@ export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefini
 	return Array.from(worlds.values());
 }
 
-export function buildComponents(response: Configuration): LiveAtlasComponentConfig {
+export function buildComponents(response: Configuration, config: DynmapUrlConfig): LiveAtlasComponentConfig {
 	const components: LiveAtlasComponentConfig = {
 		markers: {
 			showLabels: false,
@@ -167,6 +167,16 @@ export function buildComponents(response: Configuration): LiveAtlasComponentConf
 		players: {
 			markers: undefined,
 			grayHiddenPlayers: false,
+			imageUrl: entry => {
+				const baseUrl = `${config.markers}faces/`;
+
+				if(entry.size === 'body') {
+					return `${baseUrl}body/${entry.name}.png`;
+				}
+
+				const pixels = getImagePixelSize(entry.size);
+				return `${baseUrl}${pixels}x${pixels}/${entry.name}.png`;
+			},
 			showImages: response.showplayerfacesinmenu || false,
 		},
 		coordinatesControl: undefined,

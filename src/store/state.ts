@@ -39,7 +39,7 @@ import {
 	LiveAtlasMarker, LiveAtlasMapViewTarget
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {getMessages} from "@/util";
+import {getDefaultMinecraftHead, getMessages} from "@/util";
 
 export type State = {
 	version: string;
@@ -155,6 +155,9 @@ export const state: State = {
 
 			// ("showplayerfacesinmenu" setting in dynmap)
 			showImages: false,
+
+			// (world-settings.x.player-tracker.heads-url in squaremap)
+			imageUrl: getDefaultMinecraftHead,
 		},
 
 		//Optional "coords" component. Adds control showing coordinates on map mouseover

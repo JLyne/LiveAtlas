@@ -15,7 +15,7 @@
  */
 
 import {
-	HeadQueueEntry, LiveAtlasMarker,
+	LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasPlayer,
 	LiveAtlasWorldDefinition
@@ -33,7 +33,6 @@ import {
 	buildMessagesConfig,
 	buildServerConfig, buildUpdates, buildWorlds
 } from "@/util/dynmap";
-import {getImagePixelSize} from "@/util";
 import {MarkerSet} from "dynmap";
 import {DynmapUrlConfig} from "@/dynmap";
 import ConfigurationError from "@/errors/ConfigurationError";
@@ -140,7 +139,7 @@ export default class DynmapMapProvider extends MapProvider {
 		this.store.commit(MutationTypes.SET_MAX_PLAYERS, response.maxcount || 0);
 		this.store.commit(MutationTypes.SET_SERVER_MESSAGES, buildMessagesConfig(response));
 		this.store.commit(MutationTypes.SET_WORLDS, buildWorlds(response));
-		this.store.commit(MutationTypes.SET_COMPONENTS, buildComponents(response));
+		this.store.commit(MutationTypes.SET_COMPONENTS, buildComponents(response, this.config));
 		this.store.commit(MutationTypes.SET_LOGGED_IN, response.loggedin || false);
 	}
 
@@ -311,17 +310,6 @@ export default class DynmapMapProvider extends MapProvider {
 
 	getTilesUrl(): string {
         return this.config.tiles;
-    }
-
-	getPlayerHeadUrl(head: HeadQueueEntry): string {
-		const baseUrl = `${this.config.markers}faces/`;
-
-		if(head.size === 'body') {
-			return `${baseUrl}body/${head.name}.png`;
-		}
-
-		const pixels = getImagePixelSize(head.size);
-		return `${baseUrl}${pixels}x${pixels}/${head.name}.png`;
     }
 
     getMarkerIconUrl(icon: string): string {
