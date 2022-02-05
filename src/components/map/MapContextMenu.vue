@@ -169,7 +169,6 @@ export default defineComponent({
 		watch(event, value => {
 			if(value) {
 				props.leaflet.closePopup();
-				props.leaflet.closeTooltip();
 				nextTick(() => menuElement.value && focusFirstItem());
 			}
 		});
