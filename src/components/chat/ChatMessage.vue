@@ -16,7 +16,7 @@
 
 <template>
 	<li :class="`message message--${message.type}`">
-		<img v-if="showFace" width="16" height="16" class="message__face" :src="image" alt="" />
+		<PlayerImage v-if="showFace" :player="message.playerAccount" width="16" height="16" class="message__face" />
 		<span v-if="messageChannel" class="message__channel" v-html="messageChannel"></span>
 		<span v-if="showSender" class="message__sender" v-html="message.playerName"></span>
 		<span class="message__content" v-html="messageContent"></span>
@@ -24,13 +24,13 @@
 </template>
 
 <script lang="ts">
-	import {defineComponent, ref, onMounted, computed} from "@vue/runtime-core";
-	import {getMinecraftHead} from '@/util';
+	import {defineComponent, computed} from "@vue/runtime-core";
 	import {useStore} from "@/store";
-	import defaultImage from '@/assets/images/player_face.png';
 	import {LiveAtlasChat} from "@/index";
+	import PlayerImage from "@/components/PlayerImage.vue";
 
 	export default defineComponent({
+		components: {PlayerImage},
 		props: {
 			message: {
 				type: Object as () => LiveAtlasChat,
@@ -39,8 +39,7 @@
 		},
 		setup(props) {
 			const store = useStore();
-			let image = ref(defaultImage),
-				showFace = computed(() => store.state.components.chatBox?.showPlayerFaces && props.message.playerAccount),
+			let showFace = computed(() => store.state.components.chatBox?.showPlayerFaces && props.message.playerAccount),
 				showSender = computed(() => props.message.playerName && props.message.type === 'chat'),
 				messageChannel = computed(() => props.message.type === 'chat' ? props.message.channel : undefined),
 				messageContent = computed(() => {
@@ -64,15 +63,7 @@
 					}
 				})
 
-			onMounted(() => {
-				if(showFace.value) {
-					getMinecraftHead(props.message.playerAccount as string, 'small')
-						.then((result) => image.value = result.src).catch(() => {});
-				}
-			});
-
 			return {
-				image,
 				showFace,
 				showSender,
 				messageChannel,

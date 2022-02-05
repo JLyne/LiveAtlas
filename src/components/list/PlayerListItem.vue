@@ -20,21 +20,21 @@
 	<label :for="`player-${player.name}`"
 	       :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}" :title="title"
 	       @click.prevent="onLabelClick">
-		<img v-if="imagesEnabled" width="16" height="16" class="player__icon" :src="image" alt="" aria-hidden="true" />
+		<PlayerImage v-if="imagesEnabled" :player="player" width="16" height="16" class="player__icon" aria-hidden="true"></PlayerImage>
 		<span class="player__name" v-html="player.displayName"></span>
 	</label>
 </template>
 
 <script lang="ts">
-import {defineComponent, computed, ref, onMounted} from 'vue';
+import {defineComponent, computed} from 'vue';
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {getMinecraftHead} from '@/util';
-import defaultImage from '@/assets/images/player_face.png';
 import {LiveAtlasPlayer} from "@/index";
+import PlayerImage from "@/components/PlayerImage.vue";
 
 export default defineComponent({
 	name: 'PlayerListItem',
+	components: {PlayerImage},
 	props: {
 		player: {
 			type: Object as () => LiveAtlasPlayer,
@@ -44,7 +44,6 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore(),
 			imagesEnabled = computed(() => store.state.components.players.showImages),
-			image = ref(defaultImage),
 
 			otherWorld = computed(() => {
 				return store.state.components.players.grayHiddenPlayers
@@ -90,15 +89,8 @@ export default defineComponent({
 				}
 			};
 
-		onMounted(() => {
-			if(imagesEnabled.value) {
-				getMinecraftHead(props.player, 'small').then((result) => image.value = result.src).catch(() => {});
-			}
-		});
-
 		return {
 			imagesEnabled,
-			image,
 			title,
 			otherWorld,
 			followTarget,

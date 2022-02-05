@@ -19,7 +19,7 @@
 		<h2>{{ heading }}</h2>
 
 		<div :class="{'following__target': true, 'following__target--hidden': target.hidden}">
-			<img v-if="imagesEnabled" width="48" height="48" class="target__icon" :src="image" alt="" />
+			<PlayerImage v-if="imagesEnabled" :player="target" class="target__icon" width="48" height="48"></PlayerImage>
 			<span class="target__name" v-html="target.displayName"></span>
 			<span class="target__status">{{ status }}</span>
 			<span class="target__location" v-clipboard:copy="location"
@@ -36,16 +36,16 @@
 <script lang="ts">
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {computed, defineComponent, onMounted, ref, watch} from "@vue/runtime-core";
-import {clipboardError, clipboardSuccess, getMinecraftHead} from '@/util';
-import defaultImage from '@/assets/images/player_face.png';
+import {computed, defineComponent} from "@vue/runtime-core";
+import {clipboardError, clipboardSuccess} from '@/util';
 import {LiveAtlasPlayer} from "@/index";
 import SvgIcon from "@/components/SvgIcon.vue";
 import "@/assets/icons/cross.svg";
+import PlayerImage from "@/components/PlayerImage.vue";
 
 export default defineComponent({
 	name: 'FollowTargetSection',
-	components: {SvgIcon},
+	components: {PlayerImage, SvgIcon},
 	props: {
 		target: {
 			type: Object as () => LiveAtlasPlayer,
@@ -55,8 +55,6 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore(),
 			imagesEnabled = computed(() => store.state.components.players.showImages),
-			image = ref(defaultImage),
-			account = computed(() => props.target.name),
 
 			heading = computed(() => store.state.messages.followingHeading),
 			messageUnfollow = computed(() => store.state.messages.followingUnfollow),
@@ -82,25 +80,10 @@ export default defineComponent({
 
 			unfollow = () => {
 				store.commit(MutationTypes.CLEAR_FOLLOW_TARGET, undefined);
-			},
-			updatePlayerImage = async () => {
-				image.value = defaultImage;
-
-				if (imagesEnabled.value) {
-					try {
-						const result = await getMinecraftHead(props.target, 'small');
-						image.value = result.src;
-					} catch (e) {
-					}
-				}
 			};
-
-		watch(account, () => updatePlayerImage());
-		onMounted(() => updatePlayerImage());
 
 		return {
 			imagesEnabled,
-			image,
 			unfollow,
 			heading,
 			messageUnfollow,
