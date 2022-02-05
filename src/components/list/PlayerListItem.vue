@@ -43,11 +43,11 @@ export default defineComponent({
 	},
 	setup(props) {
 		const store = useStore(),
-			imagesEnabled = computed(() => store.state.components.playerList.showImages),
+			imagesEnabled = computed(() => store.state.components.players.showImages),
 			image = ref(defaultImage),
 
 			otherWorld = computed(() => {
-				return store.state.components.playerMarkers?.grayHiddenPlayers
+				return store.state.components.players.grayHiddenPlayers
 					&& !props.player.hidden
 					&& (!store.state.currentWorld || store.state.currentWorld.name !== props.player.location.world);
 			}),

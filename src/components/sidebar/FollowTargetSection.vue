@@ -54,7 +54,7 @@ export default defineComponent({
 	},
 	setup(props) {
 		const store = useStore(),
-			imagesEnabled = computed(() => store.state.components.playerList.showImages),
+			imagesEnabled = computed(() => store.state.components.players.showImages),
 			image = ref(defaultImage),
 			account = computed(() => props.target.name),
 

@@ -118,7 +118,12 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		filteredWorlds.forEach((world: any, index: number) => {
 			const worldResponse = worldResponses[index],
 				worldConfig: {components: LiveAtlasPartialComponentConfig } = {
-					components: {},
+					components: {
+						players: {
+							markers: undefined,
+							grayHiddenPlayers: true,
+						}
+					},
 				};
 
 			this.worldMarkerUpdateIntervals.set(world.name, worldResponse.marker_update_interval || 3000);
@@ -131,8 +136,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 				this.worldPlayerUpdateIntervals.set(world.name, updateInterval);
 
-				worldConfig.components.playerMarkers = {
-					grayHiddenPlayers: true,
+				worldConfig.components.players!.markers = {
 					hideByDefault: !!worldResponse.player_tracker?.default_hidden,
 					layerName: worldResponse.player_tracker?.label || '',
 					layerPriority: worldResponse.player_tracker?.priority,
@@ -141,8 +145,6 @@ export default class Pl3xmapMapProvider extends MapProvider {
 					showArmor: armor,
 					showYaw: true,
 				}
-			} else {
-				worldConfig.components.playerMarkers = undefined;
 			}
 
 			this.worldComponents.set(world.name, worldConfig);
@@ -200,15 +202,17 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			linkControl: !!response.ui?.link?.enabled,
 			layerControl: !!response.ui?.coordinates?.enabled,
 
-			//Configured per-world
-			playerMarkers: undefined,
+			players: {
+				markers: undefined, //Configured per-world
+
+				//Not configurable
+				showImages: true,
+				grayHiddenPlayers: true,
+			},
 
 			//Not configurable
 			markers: {
 				showLabels: false,
-			},
-			playerList: {
-				showImages: true,
 			},
 
 			//Not used by pl3xmap
@@ -536,7 +540,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 	private async updatePlayers() {
 		try {
-			if(this.store.state.components.playerMarkers) {
+			if(this.store.getters.playerMarkersEnabled) {
 				const players = await this.getPlayers();
 
 				this.playerUpdateTimestamp = new Date();

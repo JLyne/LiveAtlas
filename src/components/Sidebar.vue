@@ -93,7 +93,7 @@ export default defineComponent({
 			messageMarkers = computed(() => store.state.messages.markersHeading),
 			messagePlayers = computed(() => store.getters.playersHeading),
 
-			playerMakersEnabled = computed(() => !!store.state.components.playerMarkers),
+			playerMakersEnabled = computed(() => store.getters.playerMarkersEnabled),
 
 			playersVisible = computed(() => currentlyVisible.value.has('players')),
 			mapsVisible = computed(() => currentlyVisible.value.has('maps')),

@@ -164,8 +164,9 @@ export function buildComponents(response: Configuration): LiveAtlasComponentConf
 		},
 		chatBox: undefined,
 		chatBalloons: false,
-		playerMarkers: undefined,
-		playerList: {
+		players: {
+			markers: undefined,
+			grayHiddenPlayers: false,
 			showImages: response.showplayerfacesinmenu || false,
 		},
 		coordinatesControl: undefined,
@@ -197,8 +198,8 @@ export function buildComponents(response: Configuration): LiveAtlasComponentConf
 					imageSize = 'body';
 				}
 
-				components.playerMarkers = {
-					grayHiddenPlayers: response.grayplayerswhenhidden || false,
+				components.players.grayHiddenPlayers = response.grayplayerswhenhidden || false;
+				components.players.markers = {
 					hideByDefault: component.hidebydefault || false,
 					layerName: component.label || "Players",
 					layerPriority: component.layerprio || 0,

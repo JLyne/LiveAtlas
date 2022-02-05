@@ -32,7 +32,7 @@ export type Getters = {
 
 export const getters: GetterTree<State, State> & Getters = {
 	playerMarkersEnabled(state: State): boolean {
-		return state.components.playerMarkers !== undefined;
+		return state.components.players.markers !== undefined;
 	},
 
 	coordinatesControlEnabled(state: State): boolean {

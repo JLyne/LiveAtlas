@@ -38,7 +38,7 @@ export default defineComponent({
 		let chatBalloonCutoff = 0; //Not reactive to avoid unnecessary playerChat recalculations
 
 		const store = useStore(),
-			componentSettings = computed(() => store.state.components.playerMarkers),
+			componentSettings = computed(() => store.state.components.players.markers),
 			currentMap = computed(() => store.state.currentMap),
 			currentWorld = computed(() => store.state.currentWorld),
 			chatBalloonsEnabled = computed(() => store.state.components.chatBalloons),

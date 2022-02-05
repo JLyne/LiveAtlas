@@ -261,10 +261,11 @@ interface LiveAtlasComponentConfig {
 	markers: {
 		showLabels: boolean;
 	};
-	playerMarkers?: LiveAtlasPlayerMarkerConfig;
-	playerList: {
+	players: {
+		markers?: LiveAtlasPlayerMarkerConfig;
 		showImages: boolean;
-	},
+		grayHiddenPlayers: boolean;
+	};
 	coordinatesControl?: CoordinatesControlOptions;
 	clockControl?: ClockControlOptions;
 	linkControl: boolean;
@@ -280,7 +281,11 @@ interface LiveAtlasPartialComponentConfig {
 	markers?: {
 		showLabels: boolean;
 	};
-	playerMarkers?: LiveAtlasPlayerMarkerConfig;
+	players?: {
+		markers?: LiveAtlasPlayerMarkerConfig;
+		showImages?: boolean;
+		grayHiddenPlayers?: boolean;
+	};
 	coordinatesControl?: CoordinatesControlOptions;
 	clockControl?: ClockControlOptions;
 	linkControl?: boolean;
@@ -293,7 +298,6 @@ interface LiveAtlasPartialComponentConfig {
 }
 
 interface LiveAtlasPlayerMarkerConfig {
-	grayHiddenPlayers: boolean;
 	hideByDefault: boolean;
 	layerName: string;
 	layerPriority: number;

@@ -551,7 +551,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.configuration.title = '';
 
 		state.components.markers.showLabels= false;
-		state.components.playerMarkers = undefined;
+		state.components.players.markers = undefined;
 		state.components.coordinatesControl = undefined;
 		state.components.clockControl = undefined;
 		state.components.linkControl = false;

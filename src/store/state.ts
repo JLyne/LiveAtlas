@@ -144,11 +144,16 @@ export const state: State = {
 			showLabels: false,
 		},
 
-		// Optional "playermarkers" component. Settings for online player markers.
-		// If not present, player markers will be disabled
-		playerMarkers: undefined,
+		// Settings for player related UI elements and markers
+		players: {
+			// Settings for online player markers
+			// (playermarkers component in Dynmap, world-settings.x.player-tracker in squaremap)
+			// If not present, player markers will be disabled
+			markers: undefined,
 
-		playerList: {
+			grayHiddenPlayers: true,
+
+			// ("showplayerfacesinmenu" setting in dynmap)
 			showImages: false,
 		},
 

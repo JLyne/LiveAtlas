@@ -43,7 +43,7 @@ export default defineComponent({
 			players = computed(() => store.state.players),
 			playerCount = computed(() => store.state.players.size),
 			playersAboveMarkers = computed(() => store.state.ui.playersAboveMarkers),
-			componentSettings = computed(() => store.state.components.playerMarkers),
+			componentSettings = computed(() => store.state.components.players.markers),
 			layerGroup = new LayerGroup([],{
 				pane: 'players'
 			});
@@ -55,12 +55,12 @@ export default defineComponent({
 				props.leaflet.getLayerManager().addLayer(
 					layerGroup,
 					true,
-					store.state.components.playerMarkers!.layerName,
+					store.state.components.players.markers!.layerName,
 					componentSettings.value!.layerPriority);
 			} else {
 				props.leaflet.getLayerManager().addHiddenLayer(
 					layerGroup,
-					store.state.components.playerMarkers!.layerName,
+					store.state.components.players.markers!.layerName,
 					componentSettings.value!.layerPriority);
 			}
 		});
