@@ -73,7 +73,6 @@ export default defineComponent({
 
 				//Filter out maps appended to other worlds
 				props.world.maps.forEach(map => {
-					console.log(map.appendedWorld, props.world);
 					if(!map.appendedWorld || map.appendedWorld.name === props.world.name) {
 						maps.push(map);
 					}
