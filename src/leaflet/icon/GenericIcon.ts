@@ -51,6 +51,8 @@ const defaultOptions: GenericIconOptions = {
 
 export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 	declare options: GenericIconOptions;
+	declare createShadow: (oldIcon?: HTMLElement) => HTMLElement;
+
 	private _image?: HTMLImageElement;
 	private _label?: HTMLSpanElement;
 	private _container?: HTMLDivElement;
@@ -95,11 +97,6 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		this._container = div;
 
 		return div;
-	}
-
-	createShadow(oldIcon?: HTMLElement): HTMLElement {
-		// @ts-ignore - Typings are wrong here, can return null
-		return null;
 	}
 
 	createLabel() {

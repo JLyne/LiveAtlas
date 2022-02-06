@@ -36,6 +36,7 @@ export interface PlayerIconOptions extends BaseIconOptions {
 
 export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 	declare options: PlayerIconOptions;
+	declare createShadow: (oldIcon?: HTMLElement) => HTMLElement;
 
 	private readonly _player: LiveAtlasPlayer;
 	private _container?: HTMLDivElement;
@@ -118,11 +119,6 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		this.update();
 
 		return this._container;
-	}
-
-	createShadow(oldIcon?: HTMLElement): HTMLElement {
-		// @ts-ignore - Typings are wrong here, can return null
-		return null;
 	}
 
 	updateImage() {
