@@ -17,8 +17,9 @@
 import {LatLng, MarkerOptions, Marker, Map, Util} from 'leaflet';
 import {PlayerIcon} from "@/leaflet/icon/PlayerIcon";
 import {LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
-import {watch} from "@vue/runtime-core";
-import {WatchStopHandle} from "vue";
+import {computed, watch} from "@vue/runtime-core";
+import {nextTick, WatchStopHandle} from "vue";
+import {useStore} from "@/store";
 
 export interface PlayerMarkerOptions extends MarkerOptions {
 	imageSize: LiveAtlasPlayerImageSize,
@@ -30,10 +31,12 @@ export interface PlayerMarkerOptions extends MarkerOptions {
 
 export class PlayerMarker extends Marker {
 	declare options: PlayerMarkerOptions;
+	declare _icon: HTMLElement | null;
 
 	private readonly _PlayerIcon: PlayerIcon;
 	private readonly _player: LiveAtlasPlayer;
 	private _playerUnwatch?: WatchStopHandle;
+	private _imageUrlUnwatch?: WatchStopHandle;
 
 	constructor(player: LiveAtlasPlayer, options: PlayerMarkerOptions) {
 		super(new LatLng(0, 0), options);
@@ -51,13 +54,25 @@ export class PlayerMarker extends Marker {
 	}
 
 	onAdd(map: Map) {
+		const imageUrl = computed(() => useStore().state.components.players.imageUrl);
+
 		this._playerUnwatch = watch(this._player, () => this._PlayerIcon.update(), {deep: true});
+		this._imageUrlUnwatch = watch(imageUrl, () => nextTick(() => this._PlayerIcon.updateImage()));
+
 		return super.onAdd(map);
 	}
 
 	onRemove(map: Map): this {
 		if(this._playerUnwatch) {
 			this._playerUnwatch();
+		}
+
+		if(this._imageUrlUnwatch) {
+			this._imageUrlUnwatch();
+		}
+
+		if(this._icon) {
+			this._PlayerIcon.detach();
 		}
 
 		return super.onRemove(map);

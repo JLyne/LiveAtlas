@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-import {BaseIconOptions, DomUtil, Icon, Layer, LayerOptions, Util} from 'leaflet';
+import {BaseIconOptions, Icon, Layer, LayerOptions, Util} from 'leaflet';
 import {getImagePixelSize, getMinecraftHead} from '@/util';
 import defaultImage from '@/assets/images/player_face.png';
 import {LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
@@ -57,9 +57,11 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		this._player = player;
 	}
 
-	createIcon(oldIcon: HTMLElement) {
-		if (oldIcon) {
-			DomUtil.remove(oldIcon);
+	createIcon() {
+		// Reuse detached icon if it exists
+		if (this._container) {
+			this.update();
+			return this._container;
 		}
 
 		this._currentName = undefined;
@@ -80,10 +82,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 			this._playerImage = playerImage.cloneNode() as HTMLImageElement;
 			this._playerImage.height = this._playerImage.width = getImagePixelSize(this.options.imageSize);
 
-			getMinecraftHead(this._player, this.options.imageSize).then(head => {
-				this._playerImage!.src = head.src;
-			}).catch(() => {});
-
+			this.updateImage();
 			this._playerInfo.appendChild(this._playerImage);
 		}
 
@@ -126,6 +125,12 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		return null;
 	}
 
+	updateImage() {
+		getMinecraftHead(this._player, this.options.imageSize).then(head => {
+			this._playerImage!.src = head.src;
+		}).catch(() => {});
+	}
+
 	update() {
 		if(!this._container) {
 			return;
@@ -161,6 +166,12 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 				this._currentYaw = this._currentYaw + delta;
 				this._playerYaw!.style.setProperty('--player-yaw', `${this._currentYaw}deg`);
 			}
+		}
+	}
+
+	detach() {
+		if(this._container && this._container.parentNode) {
+			this._container = this._container.parentNode.removeChild(this._container);
 		}
 	}
 }
