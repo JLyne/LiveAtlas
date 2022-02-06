@@ -132,14 +132,15 @@ export const state: State = {
 		messages: [],
 	},
 
-	markerSets: new Map(), //Markers sets from world_markers.json, doesn't include the markers themselves for performance reasons
+	markerSets: new Map(), //Marker sets from world_markers.json, doesn't include the markers themselves for performance reasons
 
-	pendingMarkerUpdates: [],  //Pending updates to markers/areas/etc for each marker set
+	pendingMarkerUpdates: [],  //Pending updates to markers/areas/etc
 	pendingTileUpdates: [], //Pending updates to map tiles
 
-	//Dynmap optional components
+	// Map plugin provided settings for various parts of LiveAtlas
 	components: {
-		// "markers" component. Only used for default showLabels settings
+		// Settings for markers
+		// (markers component in Dynmap)
 		markers: {
 			showLabels: false,
 		},
@@ -160,31 +161,41 @@ export const state: State = {
 			imageUrl: getDefaultMinecraftHead,
 		},
 
-		//Optional "coords" component. Adds control showing coordinates on map mouseover
+		// Settings for coordinates control
+		// ("coords" component in dynmap, settings.ui.coordinates in squaremap)
+		// Adds control showing coordinates on map mouseover
 		coordinatesControl: undefined,
 
-		//Optional clock component. Used for both "digitalclock" and "timeofdayclock". Shows world time/weather.
+		// Settings for world time/weather clock
+		// ("digitalclock"/"timeofdayclock" components in dynmap)
 		clockControl: undefined,
 
-		//Optional "link" component. Adds button to copy url for current position
+		// Settings for copy URL button
+		// ("link" component in dynmap, settings.ui.link in squaremap)
 		linkControl: false,
 
-		//Layers control
+		// Enabled state of map layer control
+		// ("showlayercontrol" setting in dynmap)
 		layerControl: false,
 
-		//Optional "logo" controls.
+		// Settings for additional controls containing arbitrary text, images and links
+		// ("logo" components in dynmap)
 		logoControls: [],
 
-		//Chat message sending functionality
+		// Settings for chat message sending functionality
+		// ("chat" component in dynmap)
 		chatSending: undefined,
 
-		//Chat box
+		// Settings for chat box
+		// ("chatbox" component in dynmap)
 		chatBox: undefined,
 
-		//Chat balloons showing messages above player markers
+		// Enabled state of player chat balloons
+		// ("chatballoon" component in dynmap)
 		chatBalloons: false,
 
-		//Login/registering
+		// Enabled state of login/registration functionality
+		// ("login-enabled" setting in dynmap)
 		login: false,
 	},
 
