@@ -40,6 +40,7 @@ export default defineComponent({
 			image = ref(defaultImage),
 			name = computed(() => typeof props.player === 'string' ? props.player : props.player.name),
 			imagesEnabled = computed(() => store.state.components.players.showImages),
+			imageUrl = computed(() => store.state.components.players.imageUrl),
 
 			updatePlayerImage = async () => {
 				image.value = defaultImage;
@@ -54,6 +55,7 @@ export default defineComponent({
 			};
 
 		watch(name, () => updatePlayerImage());
+		watch(imageUrl, () => updatePlayerImage());
 		onMounted(() => updatePlayerImage());
 
 		return {

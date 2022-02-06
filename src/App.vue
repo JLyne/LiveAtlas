@@ -55,6 +55,7 @@ export default defineComponent({
 			configurationHash = computed(() => store.state.configurationHash),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
+			playerImageUrl = computed(() => store.state.components.players.imageUrl),
 
 			loggedIn = computed(() => store.state.loggedIn), //Whether the user is currently logged in
 			loginRequired = computed(() => store.state.loginRequired), //Whether logging is required to view the current server
@@ -198,6 +199,9 @@ export default defineComponent({
 			} else {
 				store.commit(MutationTypes.HIDE_UI_MODAL, 'login');
 			}
+		});
+		watch(playerImageUrl, () => {
+			clearHeadCache();
 		});
 
 		handleUrl();
