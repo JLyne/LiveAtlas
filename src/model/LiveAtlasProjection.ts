@@ -52,8 +52,8 @@ export class LiveAtlasProjection {
 
 	latLngToLocation(latLng: LatLng, y: number): Coordinate {
 		const ptw = this.mapToWorld,
-			lon = this.tileSize + latLng.lat * (1 << this.nativeZoomLevels),
-			lat = latLng.lng * (1 << this.nativeZoomLevels),
+			lat = this.tileSize + latLng.lat * (1 << this.nativeZoomLevels),
+			lon = latLng.lng * (1 << this.nativeZoomLevels),
 			x = ptw[0] * lon + ptw[1] * lat + ptw[2] * y,
 			z = ptw[6] * lon + ptw[7] * lat + ptw[8] * y;
 
