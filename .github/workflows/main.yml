@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: echo VITE_VERSION=git-${GITHUB_SHA::6} > .env
+      - run: echo VITE_APP_VERSION=git-${GITHUB_SHA::6} > .env
       - run: cat .env
       - uses: actions/setup-node@v2
         with:
