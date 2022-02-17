@@ -26,7 +26,6 @@ export class Pl3xmapTileLayer extends LiveAtlasTileLayer {
 
 		super(`${baseUrl}${worldName}/{z}/{x}_{y}.png`, options);
 
-		options.tileSize = 512;
 		options.zoomReverse = false;
 
 		Util.setOptions(this, options);

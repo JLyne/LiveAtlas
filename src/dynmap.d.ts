@@ -29,6 +29,12 @@ declare global {
 	}
 }
 
+declare module 'dynmap' {
+	interface WorldMapConfiguration {
+		tilescale?: number;
+	}
+}
+
 type DynmapUrlConfig = {
 	configuration: string;
 	update: string;

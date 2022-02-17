@@ -23,18 +23,21 @@ import {Coordinate} from "@/index";
 export interface LiveAtlasProjectionOptions {
 	mapToWorld: [number, number, number, number, number, number, number, number, number],
 	worldToMap: [number, number, number, number, number, number, number, number, number],
-	nativeZoomLevels: number
+	nativeZoomLevels: number,
+	tileSize: number,
 }
 
 export class LiveAtlasProjection {
 	private readonly mapToWorld: [number, number, number, number, number, number, number, number, number];
 	private readonly worldToMap: [number, number, number, number, number, number, number, number, number];
 	private readonly nativeZoomLevels: number;
+	private readonly tileSize: number;
 
 	constructor(options: LiveAtlasProjectionOptions) {
 		this.mapToWorld = options.mapToWorld || [0, 0, 0, 0, 0, 0, 0, 0];
 		this.worldToMap = options.worldToMap || [0, 0, 0, 0, 0, 0, 0, 0];
 		this.nativeZoomLevels = options.nativeZoomLevels || 1;
+		this.tileSize = options.tileSize;
 	}
 
 	locationToLatLng(location: Coordinate): LatLng {
@@ -43,16 +46,16 @@ export class LiveAtlasProjection {
 			lng = wtp[0] * location.x + wtp[1] * location.y + wtp[2] * location.z;
 
 		return new LatLng(
-			-((128 - lat) / (1 << this.nativeZoomLevels)),
+			-((this.tileSize - lat) / (1 << this.nativeZoomLevels)),
 			lng / (1 << this.nativeZoomLevels));
 	}
 
 	latLngToLocation(latLng: LatLng, y: number): Coordinate {
 		const ptw = this.mapToWorld,
+			lon = this.tileSize + latLng.lat * (1 << this.nativeZoomLevels),
 			lat = latLng.lng * (1 << this.nativeZoomLevels),
-			lon = 128 + latLng.lat * (1 << this.nativeZoomLevels),
-			x = ptw[0] * lat + ptw[1] * lon + ptw[2] * y,
-			z = ptw[6] * lat + ptw[7] * lon + ptw[8] * y;
+			x = ptw[0] * lon + ptw[1] * lat + ptw[2] * y,
+			z = ptw[6] * lon + ptw[7] * lat + ptw[8] * y;
 
 		return {x: x, y: y, z: z};
 	}

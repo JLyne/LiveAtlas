@@ -136,6 +136,7 @@ export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefini
 				backgroundNight: map.backgroundnight || '#000000',
 				icon: (map.icon || undefined) as string | undefined,
 				imageFormat: map['image-format'] || 'png',
+				tileSize: 128 << (map.tilescale || 0),
 				name: map.name || '(Unnamed map)',
 				nightAndDay: map.nightandday || false,
 				prefix: map.prefix || '',

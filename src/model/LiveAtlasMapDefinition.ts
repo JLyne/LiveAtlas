@@ -30,6 +30,7 @@ export interface LiveAtlasMapDefinitionOptions {
 	backgroundDay?: string;
 	backgroundNight?: string;
 	imageFormat: ImageFormat;
+	tileSize: number;
 	prefix?: string;
 	mapToWorld?: [number, number, number, number, number, number, number, number, number];
 	worldToMap?: [number, number, number, number, number, number, number, number, number];
@@ -49,6 +50,7 @@ export default class LiveAtlasMapDefinition {
 	readonly backgroundDay?: string;
 	readonly backgroundNight?: string;
 	readonly imageFormat: ImageFormat;
+	readonly tileSize: number;
 	readonly prefix: string;
 	private readonly projection?: Readonly<LiveAtlasProjection>;
 	readonly nativeZoomLevels: number;
@@ -69,6 +71,7 @@ export default class LiveAtlasMapDefinition {
 		this.backgroundNight = options.backgroundNight || '#000000';
 
 		this.imageFormat = options.imageFormat;
+		this.tileSize = options.tileSize;
 		this.prefix = options.prefix || '';
 
 		this.nativeZoomLevels = options.nativeZoomLevels || 1;
@@ -81,6 +84,7 @@ export default class LiveAtlasMapDefinition {
 				mapToWorld: options.mapToWorld || [0, 0, 0, 0, 0, 0, 0, 0, 0],
 				worldToMap: options.worldToMap || [0, 0, 0, 0, 0, 0, 0, 0, 0],
 				nativeZoomLevels: this.nativeZoomLevels,
+				tileSize: this.tileSize
 			});
 		}
 	}

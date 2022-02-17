@@ -56,7 +56,7 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 		options.maxZoom = this._mapSettings.nativeZoomLevels + this._mapSettings.extraZoomLevels;
 		options.maxNativeZoom = this._mapSettings.nativeZoomLevels;
 		options.zoomReverse = true;
-		options.tileSize = 128;
+		options.tileSize = this._mapSettings.tileSize;
 		options.minZoom = 0;
 
 		Util.setOptions(this, options);
