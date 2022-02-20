@@ -31,7 +31,7 @@
 		</template>
 	</div>
 
-	<MapContextMenu :leaflet="leaflet" v-if="leaflet"></MapContextMenu>
+	<MapContextMenu v-if="contextMenuEnabled && leaflet" :leaflet="leaflet"></MapContextMenu>
 </template>
 
 <script lang="ts">
@@ -81,6 +81,7 @@ export default defineComponent({
 			linkControlEnabled = computed(() => store.state.components.linkControl),
 			chatBoxEnabled = computed(() => store.state.components.chatBox),
 			loginEnabled = computed(() => store.state.components.login),
+			contextMenuEnabled = computed(() => !store.state.ui.disableContextMenu),
 			logoControls = computed(() => store.state.components.logoControls),
 
 			currentWorld = computed(() => store.state.currentWorld),
@@ -108,6 +109,7 @@ export default defineComponent({
 			linkControlEnabled,
 			chatBoxEnabled,
 			loginEnabled,
+			contextMenuEnabled,
 
 			logoControls,
 			followTarget,

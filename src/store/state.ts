@@ -84,6 +84,7 @@ export type State = {
 		playersAboveMarkers: boolean;
 		playersSearch: boolean;
 		compactPlayerMarkers: boolean;
+		disableContextMenu: boolean;
 
 		screenWidth: number;
 		screenHeight: number;
@@ -222,6 +223,7 @@ export const state: State = {
 		playersAboveMarkers: true,
 		playersSearch: true,
 		compactPlayerMarkers: false,
+		disableContextMenu: false,
 
 		screenWidth: window.innerWidth,
 		screenHeight: window.innerHeight,

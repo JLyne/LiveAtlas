@@ -122,6 +122,7 @@ interface LiveAtlasUIConfig {
 	playersAboveMarkers: boolean;
 	playersSearch: boolean;
 	compactPlayerMarkers: boolean;
+	disableContextMenu: boolean;
 }
 
 export type LiveAtlasUIElement = 'layers' | 'chat' | LiveAtlasSidebarSection;

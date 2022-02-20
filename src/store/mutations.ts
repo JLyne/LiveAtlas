@@ -129,6 +129,10 @@ export const mutations: MutationTree<State> & Mutations = {
 			state.ui.compactPlayerMarkers = uiConfig.compactPlayerMarkers;
 		}
 
+		if(typeof uiConfig.disableContextMenu === 'boolean') {
+			state.ui.disableContextMenu = uiConfig.disableContextMenu;
+		}
+
 		if(typeof uiConfig.playersSearch === 'boolean') {
 			state.ui.playersSearch = uiConfig.playersSearch;
 		}
