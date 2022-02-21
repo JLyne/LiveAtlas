@@ -19,8 +19,10 @@ import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
 	Coordinate,
-	HeadQueueEntry, LiveAtlasBounds,
-	LiveAtlasGlobalMessageConfig, LiveAtlasLocation,
+	HeadQueueEntry,
+	LiveAtlasBounds,
+	LiveAtlasGlobalMessageConfig,
+	LiveAtlasLocation,
 	LiveAtlasMessageConfig,
 	LiveAtlasPlayer,
 	LiveAtlasPlayerImageSize,
@@ -296,4 +298,74 @@ export const getMiddle = (bounds: LiveAtlasBounds): LiveAtlasLocation => {
 		y: bounds.min.y + ((bounds.max.y - bounds.min.y) / 2),
 		z: bounds.min.z + ((bounds.max.z - bounds.min.z) / 2),
 	};
+}
+
+const createIframeSandbox = () => {
+	const frame = document.createElement('iframe');
+	frame.hidden = true;
+	frame.sandbox.add('allow-scripts');
+	frame.srcdoc = `<script>window.addEventListener("message", function(e) {	
+		if(!e.data?.key) {
+			console.warn('Ignoring postmessage without key');
+			return;
+		}
+		
+	 	try {
+			e.source.postMessage({
+				key: e.data.key,
+				success: true,
+				result: Function('', "'use strict';" + e.data.code)(),
+			}, e.origin);
+	 	} catch(ex) {
+			e.source.postMessage({
+				key: e.data.key,
+				success: false,
+				error: ex
+			}, e.origin);
+	 	}
+	})</script>`;
+
+	window.addEventListener('message', e => {
+		if(e.origin !== "null" || e.source !== frame.contentWindow) {
+			console.warn('Ignoring postmessage with invalid source');
+			return;
+		}
+
+		if(!e.data?.key) {
+			console.warn('Ignoring postmessage without key');
+			return;
+		}
+
+		if(!sandboxSuccessCallbacks.has(e.data.key)) {
+			console.warn('Ignoring postmessage with invalid key');
+			return;
+		}
+
+		if(e.data.success) {
+			sandboxSuccessCallbacks.get(e.data.key)!.call(this, e.data.result);
+		} else {
+			sandboxErrorCallbacks.get(e.data.key)!.call(this, e.data.error);
+		}
+    });
+
+	document.body.appendChild(frame);
+	return frame.contentWindow;
+}
+
+const sandboxWindow: Window | null = createIframeSandbox();
+const sandboxSuccessCallbacks: Map<number, (result?: any) => void> = new Map();
+const sandboxErrorCallbacks: Map<number, (reason?: any) => void> = new Map();
+
+export const runSandboxed = async (code: string) => {
+	return new Promise((resolve, reject) => {
+		const key = Math.random();
+
+		sandboxSuccessCallbacks.set(key, resolve);
+		sandboxErrorCallbacks.set(key, reject);
+
+		sandboxWindow!.postMessage({
+			key,
+			code,
+		}, '*');
+	});
 }

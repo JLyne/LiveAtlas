@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 James Lyne
+ * Copyright 2022 James Lyne
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import DynmapMapProvider from "@/providers/DynmapMapProvider";
 import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
 import {showSplashError} from "@/util/splash";
 import ConfigurationError from "@/errors/ConfigurationError";
+import OverviewerMapProvider from "@/providers/OverviewerMapProvider";
 
 const splash = document.getElementById('splash'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
@@ -55,6 +56,7 @@ store.subscribe((mutation, state) => {
 registerMapProvider('dynmap', DynmapMapProvider);
 registerMapProvider('pl3xmap', Pl3xmapMapProvider);
 registerMapProvider('squaremap', Pl3xmapMapProvider);
+registerMapProvider('overviewer', OverviewerMapProvider);
 
 const config = window.liveAtlasConfig;
 

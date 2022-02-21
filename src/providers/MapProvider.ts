@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 James Lyne
+ * Copyright 2022 James Lyne
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,8 +56,8 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 		throw new Error('Provider does not support registration');
 	}
 
-	protected static async fetchJSON(url: string, options: any) {
-		let response, json;
+	protected static async fetch(url: string, options: any) {
+		let response;
 
 		try {
 			response = await fetch(url, options);
@@ -76,6 +76,30 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 			throw new Error(`Network request failed (${response.statusText || 'Unknown'})`);
 		}
 
+		return response;
+	}
+
+	protected static async fetchText(url: string, options: any) {
+		const response = await this.fetch(url, options);
+		let text;
+
+		try {
+			text = await response.text();
+		} catch(e) {
+			if(e instanceof DOMException && e.name === 'AbortError') {
+				console.warn(`Request aborted (${url}`);
+			}
+
+			throw e;
+		}
+
+		return text;
+	}
+
+	protected static async fetchJSON(url: string, options: any) {
+		const response = await this.fetch(url, options);
+		let json;
+
 		try {
 			json = await response.json();
 		} catch(e) {
@@ -88,6 +112,10 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 		}
 
 		return json;
+	}
+
+	protected static async getText(url: string, signal: AbortSignal) {
+		return MapProvider.fetchText(url, {signal, credentials: 'include'});
 	}
 
 	protected static async getJSON(url: string, signal: AbortSignal) {

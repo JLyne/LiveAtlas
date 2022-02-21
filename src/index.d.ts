@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 James Lyne
+ * Copyright 2022 James Lyne
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,6 +104,7 @@ interface LiveAtlasServerDefinition {
 	dynmap?: DynmapUrlConfig;
 	pl3xmap?: string;
 	squaremap?: string;
+	overviewer?: string;
 }
 
 // Messages defined directly in LiveAtlas and used for all servers

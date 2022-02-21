@@ -3,6 +3,7 @@
     <module2copyright>
       <element module="Dynmap" copyright="Dynmap" />
       <element module="Original" copyright="Original" />
+      <element module="Overviewer." copyright="Overviewer" />
     </module2copyright>
   </settings>
 </component>
