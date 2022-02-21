@@ -1,5 +1,8 @@
 /*
- * Copyright 2021 James Lyne
+ * Copyright 2022 James Lyne
+ *
+ * Some portions of this file were taken from https://github.com/webbukkit/dynmap.
+ * These portions are Copyright 2020 Dynmap Contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
