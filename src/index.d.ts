@@ -20,7 +20,7 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
 	Coords,
 	DoneCallback, FitBoundsOptions,
-	InternalTiles,
+	InternalTiles, LatLng,
 	PathOptions,
 	PointTuple,
 	PolylineOptions
@@ -158,6 +158,11 @@ interface LiveAtlasWorldDefinition {
 	center: Coordinate;
 	defaultZoom?: number;
 	maps: Set<LiveAtlasMapDefinition>;
+}
+
+interface LiveAtlasProjection {
+	locationToLatLng(location: Coordinate): LatLng;
+	latLngToLocation(latLng: LatLng, y: number): Coordinate;
 }
 
 interface LiveAtlasWorldState {

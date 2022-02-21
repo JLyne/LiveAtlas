@@ -52,6 +52,7 @@ import {
 } from "dynmap";
 import {PointTuple} from "leaflet";
 import {LiveAtlasMarkerType} from "@/util/markers";
+import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 
 export function buildServerConfig(response: Options): LiveAtlasServerConfig {
 	let title = 'Dynmap';
@@ -126,6 +127,9 @@ export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefini
 				return;
 			}
 
+			const tileSize = 128 << (map.tilescale || 0),
+				nativeZoomLevels = map.mapzoomout || 1;
+
 			// Maps with append_to_world set are added both the original and target world's map set
 			// The world property is always the original world, an additional appendedWorld property contains the target world
 			const mapDef = Object.freeze(new LiveAtlasMapDefinition({
@@ -136,14 +140,18 @@ export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefini
 				backgroundNight: map.backgroundnight || '#000000',
 				icon: (map.icon || undefined) as string | undefined,
 				imageFormat: map['image-format'] || 'png',
-				tileSize: 128 << (map.tilescale || 0),
+				tileSize,
 				name: map.name || '(Unnamed map)',
 				nightAndDay: map.nightandday || false,
 				prefix: map.prefix || '',
 				displayName: map.title || '',
-				mapToWorld: map.maptoworld || undefined,
-				worldToMap: map.worldtomap || undefined,
-				nativeZoomLevels: map.mapzoomout || 1,
+				projection: new DynmapProjection({
+					mapToWorld: map.maptoworld || undefined,
+					worldToMap: map.worldtomap || undefined,
+					nativeZoomLevels,
+					tileSize,
+				}),
+				nativeZoomLevels,
 				extraZoomLevels: map.mapzoomin || 0
 			})) as LiveAtlasMapDefinition;
 

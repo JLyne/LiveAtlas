@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import {Coordinate, LiveAtlasWorldDefinition} from "@/index";
+import {Coordinate, LiveAtlasProjection, LiveAtlasWorldDefinition} from "@/index";
 import {LatLng} from "leaflet";
-import {LiveAtlasProjection} from "@/model/LiveAtlasProjection";
 import {ImageFormat} from "dynmap";
 
 export interface LiveAtlasMapDefinitionOptions {
@@ -32,8 +31,7 @@ export interface LiveAtlasMapDefinitionOptions {
 	imageFormat: ImageFormat;
 	tileSize: number;
 	prefix?: string;
-	mapToWorld?: [number, number, number, number, number, number, number, number, number];
-	worldToMap?: [number, number, number, number, number, number, number, number, number];
+	projection?: LiveAtlasProjection;
 	nativeZoomLevels: number;
 	extraZoomLevels: number;
 	tileUpdateInterval?: number;
@@ -52,7 +50,7 @@ export default class LiveAtlasMapDefinition {
 	readonly imageFormat: ImageFormat;
 	readonly tileSize: number;
 	readonly prefix: string;
-	private readonly projection?: Readonly<LiveAtlasProjection>;
+	readonly projection?: LiveAtlasProjection;
 	readonly nativeZoomLevels: number;
 	readonly extraZoomLevels: number;
 	readonly scale: number;
@@ -73,20 +71,12 @@ export default class LiveAtlasMapDefinition {
 		this.imageFormat = options.imageFormat;
 		this.tileSize = options.tileSize;
 		this.prefix = options.prefix || '';
+		this.projection = options.projection || undefined;
 
 		this.nativeZoomLevels = options.nativeZoomLevels || 1;
 		this.extraZoomLevels = options.extraZoomLevels || 0;
 		this.scale = (1 / Math.pow(2, this.nativeZoomLevels));
 		this.tileUpdateInterval = options.tileUpdateInterval || undefined;
-
-		if(options.mapToWorld || options.worldToMap) {
-			this.projection = new LiveAtlasProjection({
-				mapToWorld: options.mapToWorld || [0, 0, 0, 0, 0, 0, 0, 0, 0],
-				worldToMap: options.worldToMap || [0, 0, 0, 0, 0, 0, 0, 0, 0],
-				nativeZoomLevels: this.nativeZoomLevels,
-				tileSize: this.tileSize
-			});
-		}
 	}
 
 	locationToLatLng(location: Coordinate): LatLng {

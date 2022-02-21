@@ -18,22 +18,22 @@
  */
 
 import {LatLng} from 'leaflet';
-import {Coordinate} from "@/index";
+import {Coordinate, LiveAtlasProjection} from "@/index";
 
-export interface LiveAtlasProjectionOptions {
+export interface DynmapProjectionOptions {
 	mapToWorld: [number, number, number, number, number, number, number, number, number],
 	worldToMap: [number, number, number, number, number, number, number, number, number],
 	nativeZoomLevels: number,
 	tileSize: number,
 }
 
-export class LiveAtlasProjection {
+export class DynmapProjection implements LiveAtlasProjection {
 	private readonly mapToWorld: [number, number, number, number, number, number, number, number, number];
 	private readonly worldToMap: [number, number, number, number, number, number, number, number, number];
 	private readonly nativeZoomLevels: number;
 	private readonly tileSize: number;
 
-	constructor(options: LiveAtlasProjectionOptions) {
+	constructor(options: DynmapProjectionOptions) {
 		this.mapToWorld = options.mapToWorld || [0, 0, 0, 0, 0, 0, 0, 0];
 		this.worldToMap = options.worldToMap || [0, 0, 0, 0, 0, 0, 0, 0];
 		this.nativeZoomLevels = options.nativeZoomLevels || 1;
