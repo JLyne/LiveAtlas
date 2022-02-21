@@ -100,6 +100,10 @@ export default class OverviewerMapProvider extends MapProvider {
 				return;
 			}
 
+			if(tileset?.isOverlay) {
+				return;
+			}
+
 			const world = worlds.get(tileset.world) as LiveAtlasWorldDefinition,
 				nativeZoomLevels = tileset.zoomLevels,
 				tileSize = serverResponse.CONST.tileSize;
