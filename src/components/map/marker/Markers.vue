@@ -82,10 +82,13 @@ export default defineComponent({
 
 		watch(currentMap, (newValue, oldValue) => {
 			if(newValue && (!oldValue || oldValue.world === newValue.world)) {
-				converter = newValue.locationToLatLng.bind(newValue);
+				//Prevent error if this marker set has just been removed due to the map change
+				if(nonReactiveState.markers.has(props.set.id)) {
+					converter = newValue.locationToLatLng.bind(newValue);
 
-				for (const [id, area] of nonReactiveState.markers.get(props.set.id)!) {
-					updateMarkerLayer(layers.get(id), area, converter);
+					for (const [id, area] of nonReactiveState.markers.get(props.set.id)!) {
+						updateMarkerLayer(layers.get(id), area, converter);
+					}
 				}
 			}
 		});
