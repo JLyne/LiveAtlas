@@ -311,10 +311,6 @@ export default class DynmapMapProvider extends MapProvider {
 		}
 	}
 
-	getTilesUrl(): string {
-        return this.config.tiles;
-    }
-
     getMarkerIconUrl(icon: string): string {
         return `${this.config.markers}_markers_/${icon}.png`;
     }

@@ -15,16 +15,12 @@
  */
 
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
-import {useStore} from "@/store";
 import {Util} from "leaflet";
 
 // noinspection JSUnusedGlobalSymbols
 export class Pl3xmapTileLayer extends LiveAtlasTileLayer {
 	constructor(options: LiveAtlasTileLayerOptions) {
-		const worldName = options.mapSettings.world.name,
-			baseUrl = useStore().state.currentMapProvider!.getTilesUrl();
-
-		super(`${baseUrl}${worldName}/{z}/{x}_{y}.png`, options);
+		super(`${options.mapSettings.baseUrl}${options.mapSettings.world.name}/{z}/{x}_{y}.png`, options);
 
 		options.zoomReverse = false;
 

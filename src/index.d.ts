@@ -192,7 +192,6 @@ interface LiveAtlasMapProvider {
 	logout(): void;
 	register(formData: FormData): void;
 
-	getTilesUrl(): string;
 	getMarkerIconUrl(icon: string): string;
 }
 

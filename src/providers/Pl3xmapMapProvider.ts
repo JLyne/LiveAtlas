@@ -600,10 +600,6 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		}
 	}
 
-    getTilesUrl(): string {
-        return `${this.config}tiles/`;
-    }
-
     getMarkerIconUrl(icon: string): string {
         return `${this.config}images/icon/registered/${icon}.png`;
     }

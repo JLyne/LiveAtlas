@@ -307,10 +307,6 @@ export default class OverviewerMapProvider extends MapProvider {
 		return new OverviewerTileLayer(options);
 	}
 
-    getTilesUrl(): string {
-        return this.config;
-    }
-
     getMarkerIconUrl(icon: string): string {
         return this.config + icon;
     }

@@ -44,7 +44,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 		super('', options);
 
 		this._mapSettings = options.mapSettings;
-		this._baseUrl = this._store.state.currentMapProvider!.getTilesUrl();
+		this._baseUrl = options.mapSettings.baseUrl;
 		this._namedTiles = Object.seal(new Map());
 
 		this._pendingUpdates = computed(() => !!this._store.state.pendingTileUpdates.length);

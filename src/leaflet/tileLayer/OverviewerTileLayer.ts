@@ -18,13 +18,11 @@
  */
 
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
-import {Store, useStore} from "@/store";
 import {Coords, Util} from "leaflet";
 
 // noinspection JSUnusedGlobalSymbols
 export class OverviewerTileLayer extends LiveAtlasTileLayer {
 	private readonly _baseUrl: string;
-	private readonly _store: Store = useStore();
 
 	constructor(options: LiveAtlasTileLayerOptions) {
 		super('', options);
@@ -34,7 +32,7 @@ export class OverviewerTileLayer extends LiveAtlasTileLayer {
 		Util.setOptions(this, options);
 
 		this._mapSettings = options.mapSettings;
-		this._baseUrl = this._store.state.currentMapProvider!.getTilesUrl();
+		this._baseUrl = options.mapSettings.baseUrl;
 	}
 
 	getTileUrl(coords: Coords): string {
