@@ -149,22 +149,28 @@ export default defineComponent({
 			deep: true
 		},
 		currentMap(newValue, oldValue) {
-			if(this.leaflet && newValue) {
-				let viewTarget = this.scheduledView;
+			const store = useStore();
 
-				if(!viewTarget && oldValue) {
-					viewTarget = {location: oldValue.latLngToLocation(this.leaflet.getCenter(), 64) as LiveAtlasLocation};
-				} else if(!viewTarget) {
-					viewTarget = {location: {x: 0, y: 0, z: 0} as LiveAtlasLocation};
+			if(newValue) {
+				store.state.currentMapProvider!.populateMap(newValue);
+
+				if(this.leaflet) {
+					let viewTarget = this.scheduledView;
+
+					if(!viewTarget && oldValue) {
+						viewTarget = {location: oldValue.latLngToLocation(this.leaflet.getCenter(), 64) as LiveAtlasLocation};
+					} else if(!viewTarget) {
+						viewTarget = {location: {x: 0, y: 0, z: 0} as LiveAtlasLocation};
+					}
+
+					viewTarget.options = {
+						animate: false,
+						noMoveStart: false,
+					}
+
+					this.setView(viewTarget);
+					this.scheduledView = null;
 				}
-
-				viewTarget.options = {
-					animate: false,
-					noMoveStart: false,
-				}
-
-				this.setView(viewTarget);
-				this.scheduledView = null;
 			}
 		},
 		currentWorld(newValue, oldValue) {

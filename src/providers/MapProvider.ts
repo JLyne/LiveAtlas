@@ -15,12 +15,12 @@
  */
 
 import {
-	HeadQueueEntry,
 	LiveAtlasMapProvider,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {useStore} from "@/store";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default abstract class MapProvider implements LiveAtlasMapProvider {
 	protected readonly store = useStore();
@@ -31,14 +31,16 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 	}
 
 	abstract loadServerConfiguration(): Promise<void>;
-	abstract populateWorld(world: LiveAtlasWorldDefinition): Promise<void>;
 	abstract createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer;
-
-	abstract startUpdates(): void;
-	abstract stopUpdates(): void;
 
     abstract getTilesUrl(): string;
     abstract getMarkerIconUrl(icon: string): string;
+
+	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {}
+	async populateMap(map: LiveAtlasMapDefinition): Promise<void> {}
+
+	startUpdates(): void {}
+	stopUpdates(): void {}
 
 	sendChatMessage(message: string) {
 		throw new Error('Provider does not support chat');

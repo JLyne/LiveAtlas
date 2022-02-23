@@ -30,7 +30,7 @@ import {ClockControlOptions} from "@/leaflet/control/ClockControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {globalMessages, serverMessages} from "../messages";
 import {LiveAtlasMarkerType} from "@/util/markers";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 
 declare module "*.png" {
    const value: any;
@@ -183,6 +183,7 @@ interface LiveAtlasParsedUrl {
 interface LiveAtlasMapProvider {
 	loadServerConfiguration(): Promise<void>;
 	populateWorld(world: LiveAtlasWorldDefinition): Promise<void>;
+	populateMap(map: LiveAtlasMapDefinition): Promise<void>;
 	startUpdates(): void;
 	stopUpdates(): void;
 	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer;
