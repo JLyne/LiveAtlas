@@ -247,7 +247,7 @@ export default class OverviewerMapProvider extends MapProvider {
 
 				(markers[set.groupName]?.raw || []).forEach((marker: any, index: number) => {
 					const id = `marker_${index}`;
-					setContents.set(id, OverviewerMapProvider.buildMarker(id, marker, set.icon));
+					setContents.set(id, OverviewerMapProvider.buildMarker(id, marker, set));
 				});
 
 				this.mapMarkers.get(map)!.set(set.groupName, setContents);
@@ -255,11 +255,12 @@ export default class OverviewerMapProvider extends MapProvider {
 		}
 	}
 
-	private static buildMarker(id: string, data: any, defaultIcon: string): LiveAtlasMarker {
+	private static buildMarker(id: string, data: any, markerSet: any): LiveAtlasMarker {
 		const marker: any = {
 			id,
-			title: stripHTML(data.hovertext.trim()),
-			popup: data.text,
+			tooltip: stripHTML(data.hovertext.trim()),
+			tooltipHTML: data.hovertext.trim(),
+			popup: markerSet.createInfoWindow ? data.text : undefined,
 			isPopupHTML: true,
 		}
 
@@ -275,7 +276,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		} else {
 			marker.type = LiveAtlasMarkerType.POINT;
 			marker.location = {x: data.x, y: data.y, z: data.z};
-			marker.icon = data.icon || defaultIcon;
+			marker.icon = data.icon || markerSet.icon;
 		}
 
 		return marker as LiveAtlasMarker;
