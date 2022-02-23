@@ -20,7 +20,7 @@
 		<img width="16" height="16" v-if="icon" class="marker__icon" :src="icon" alt="" />
 		<SvgIcon v-else :name="defaultIcon" class="marker__icon"></SvgIcon>
 		<span class="marker__label">{{ marker.tooltip || messageUnnamed }}</span>
-		<span class="marker__location">X: {{ marker.location.x }}, Z: {{ marker.location.z }}</span>
+		<span class="marker__location">X: {{ location.x }}, Z: {{ location.z }}</span>
 	</label>
 </template>
 
@@ -54,6 +54,10 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore(),
 			messageUnnamed = computed(() => store.state.messages.markersUnnamed),
+			location = computed(() => ({
+				x: Math.round(props.marker.location.x),
+				z: Math.round(props.marker.location.z),
+			})),
 			icon = computed(() => {
 				if('icon' in props.marker) {
 					return store.state.currentMapProvider!.getMarkerIconUrl((props.marker as LiveAtlasPointMarker).icon);
@@ -94,6 +98,7 @@ export default defineComponent({
 			defaultIcon,
 			messageUnnamed,
 			pan,
+			location,
 		}
 	}
 });
