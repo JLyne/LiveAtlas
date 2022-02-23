@@ -183,17 +183,20 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			maps.add(Object.freeze(new LiveAtlasMapDefinition({
 				world: w,
 
+				name: 'flat',
+				displayName: 'Flat',
+				icon: world.icon ? `${this.config}images/icon/${world.icon}.png` : undefined,
+
+				baseUrl: `${this.config}tiles/`,
+				imageFormat: 'png',
+				tileSize: 512,
+
 				background: 'transparent',
 				backgroundDay: 'transparent',
 				backgroundNight: 'transparent',
-				icon: world.icon ? `${this.config}images/icon/${world.icon}.png` : undefined,
-				imageFormat: 'png',
-				tileSize: 512,
-				name: 'flat',
-				displayName: 'Flat',
 
 				nativeZoomLevels: worldResponse.zoom.max || 1,
-				extraZoomLevels: worldResponse.zoom.extra || 0,
+				extraZoomLevels: worldResponse.zoom.extra,
 				tileUpdateInterval: worldResponse.tiles_update_interval ? worldResponse.tiles_update_interval * 1000 : undefined,
 			})));
 

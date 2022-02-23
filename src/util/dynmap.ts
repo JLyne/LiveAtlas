@@ -91,7 +91,7 @@ export function buildMessagesConfig(response: Options): LiveAtlasServerMessageCo
 	}
 }
 
-export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefinition> {
+export function buildWorlds(response: Configuration, config: DynmapUrlConfig): Array<LiveAtlasWorldDefinition> {
 	const worlds: Map<string, LiveAtlasWorldDefinition> = new Map<string, LiveAtlasWorldDefinition>();
 
 	//Get all the worlds first so we can handle append_to_world properly
@@ -138,24 +138,29 @@ export function buildWorlds(response: Configuration): Array<LiveAtlasWorldDefini
 			const mapDef = Object.freeze(new LiveAtlasMapDefinition({
 				world: actualWorld,
 				appendedWorld: actualWorld !== assignedWorld ? assignedWorld : undefined,
-				background: map.background || '#000000',
-				backgroundDay: map.backgroundday || '#000000',
-				backgroundNight: map.backgroundnight || '#000000',
+
+				name: map.name || '(Unnamed map)',
+				displayName: map.title,
 				icon: (map.icon || undefined) as string | undefined,
+
+				baseUrl: config.tiles,
 				imageFormat: map['image-format'] || 'png',
 				tileSize,
-				name: map.name || '(Unnamed map)',
-				nightAndDay: map.nightandday || false,
-				prefix: map.prefix || '',
-				displayName: map.title || '',
 				projection: new DynmapProjection({
 					mapToWorld: map.maptoworld || undefined,
 					worldToMap: map.worldtomap || undefined,
 					nativeZoomLevels,
 					tileSize,
 				}),
+				prefix: map.prefix || '',
+
+				background: map.background || '#000000',
+				nightAndDay: map.nightandday,
+				backgroundDay: map.backgroundday || '#000000',
+				backgroundNight: map.backgroundnight || '#000000',
+
 				nativeZoomLevels,
-				extraZoomLevels: map.mapzoomin || 0
+				extraZoomLevels: map.mapzoomin
 			})) as LiveAtlasMapDefinition;
 
 			actualWorld.maps.add(mapDef);

@@ -141,7 +141,7 @@ export default class DynmapMapProvider extends MapProvider {
 		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, response.confighash || 0);
 		this.store.commit(MutationTypes.SET_MAX_PLAYERS, response.maxcount || 0);
 		this.store.commit(MutationTypes.SET_SERVER_MESSAGES, buildMessagesConfig(response));
-		this.store.commit(MutationTypes.SET_WORLDS, buildWorlds(response));
+		this.store.commit(MutationTypes.SET_WORLDS, buildWorlds(response, this.config));
 		this.store.commit(MutationTypes.SET_COMPONENTS, buildComponents(response, this.config));
 		this.store.commit(MutationTypes.SET_LOGGED_IN, response.loggedin || false);
 	}

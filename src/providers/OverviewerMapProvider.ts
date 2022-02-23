@@ -115,15 +115,12 @@ export default class OverviewerMapProvider extends MapProvider {
 
 			world.maps.add(new LiveAtlasMapDefinition({
 				world,
+
 				name: tileset.path,
 				displayName: tileset.name || tileset.path,
-				background: tileset.bgcolor,
-				imageFormat: tileset.imgextension,
-				nativeZoomLevels,
-				extraZoomLevels: 0,
-				defaultZoom: tileset.defaultZoom,
+
+				baseUrl: this.config,
 				tileSize,
-				prefix: tileset.base,
 				projection: new OverviewerProjection({
 					upperRight: serverResponse.CONST.UPPERRIGHT,
 					lowerLeft: serverResponse.CONST.LOWERLEFT,
@@ -132,9 +129,19 @@ export default class OverviewerMapProvider extends MapProvider {
 					nativeZoomLevels,
 					tileSize,
 				}),
+				prefix: tileset.base,
+
+				background: tileset.bgcolor,
+				imageFormat: tileset.imgextension,
+
+				nativeZoomLevels,
+				minZoom: tileset.minZoom,
+				maxZoom: tileset.maxZoom,
+				defaultZoom: tileset.defaultZoom,
+
 				center: {
 					x: tileset?.center[0] || 0,
-					y: tileset?.center[1] || 0,
+					y: tileset?.center[1] || 64,
 					z: tileset?.center[2] || 0,
 				}
 			}));
