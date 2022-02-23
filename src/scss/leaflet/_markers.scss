@@ -199,6 +199,13 @@
 		}
 	}
 
+	.marker__icon {
+		&.icon--auto {
+			margin-top: -50%;
+			margin-left: -50%;
+		}
+	}
+
 	&:hover, &:focus {
 		z-index: 1000;
 

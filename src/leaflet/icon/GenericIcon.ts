@@ -72,20 +72,24 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		}
 
 		const div = markerContainer.cloneNode(false) as HTMLDivElement,
-			url = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon),
-			size = point(this.options.iconSize as PointExpression);
+			url = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon);
 
 		this._image = markerIcon.cloneNode(false) as HTMLImageElement;
-
-		this._image.width = size.x;
-		this._image.height = size.y;
 		this._image.src = url;
 
 		div.appendChild(this._image);
-		div.style.marginLeft = `${-(size.x / 2)}px`;
-		div.style.marginTop = `${-(size.y / 2)}px`;
-		div.style.height = `${size.y}px`;
 		div.classList.add('marker', 'leaflet-marker-icon');
+
+		this._image.classList.toggle('icon--auto', !this.options.iconSize);
+
+		if(this.options.iconSize) {
+			const size = point(this.options.iconSize as PointExpression);
+			this._image.width = size.x;
+			this._image.height = size.y;
+			div.style.marginLeft = `${-(size.x / 2)}px`;
+			div.style.marginTop = `${-(size.y / 2)}px`;
+			div.style.height = `${size.y}px`;
+		}
 
 		if(this.options.className) {
 			div.classList.add(this.options.className);
@@ -139,13 +143,15 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 			this._image!.src = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon);
 		}
 
-		const iconSize = point(options.iconSize || [16, 16] as PointExpression),
-			oldSize = point(this.options.iconSize as PointExpression);
+		this.options.iconSize = options.iconSize;
 
-		if(this._image && (iconSize.x !== oldSize.x || iconSize.y !== oldSize.y)) {
-			this._image!.width = iconSize.x;
-			this._image!.height = iconSize.y;
-			this.options.iconSize = options.iconSize;
+		if(this._image) {
+			this._image.classList.toggle('icon--auto', !this.options.iconSize);
+			const iconSize = this.options.iconSize ? point(options.iconSize || [16, 16] as PointExpression) : undefined;
+			// @ts-ignore
+			this._image!.width = iconSize ? iconSize.x : 'auto';
+			// @ts-ignore
+			this._image!.height = iconSize ? iconSize.y : 'auto';
 		}
 
 		if(this._label && (options.label !== this.options.label || options.isHtml !== this.options.isHtml)) {
