@@ -205,7 +205,7 @@ export default defineComponent({
 					store.commit(MutationTypes.CLEAR_PARSED_URL, undefined);
 				// Otherwise pan to world center
 				} else {
-					viewTarget.location = newValue.center;
+					viewTarget.location = store.state.currentMap?.center || newValue.center;
 				}
 
 				if(viewTarget.zoom == null) {

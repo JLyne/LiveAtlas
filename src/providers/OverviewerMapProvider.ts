@@ -132,6 +132,11 @@ export default class OverviewerMapProvider extends MapProvider {
 					nativeZoomLevels,
 					tileSize,
 				}),
+				center: {
+					x: tileset?.center[0] || 0,
+					y: tileset?.center[1] || 0,
+					z: tileset?.center[2] || 0,
+				}
 			}));
 
 			this.mapMarkerSets.set(tileset.path, new Map());
