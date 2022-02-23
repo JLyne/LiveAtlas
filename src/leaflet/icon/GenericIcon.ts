@@ -109,13 +109,14 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		}
 
 		this._image?.removeEventListener('mouseover', this._onHover);
-
-		const size = point(this.options.iconSize as PointExpression),
-			sizeClass = [size.x, size.y].join('x');
-
 		this._label = markerLabel.cloneNode(false) as HTMLSpanElement;
 
-		this._label.classList.add(/*'markerName_' + set.id,*/ `marker__label--${sizeClass}`);
+		if(this.options.iconSize) {
+			const size = point(this.options.iconSize as PointExpression),
+				sizeClass = [size.x, size.y].join('x');
+
+			this._label.classList.add(/*'markerName_' + set.id,*/ `marker__label--${sizeClass}`);
+		}
 
 		if (this.options.isHtml) {
 			this._label.innerHTML = this.options.label;
