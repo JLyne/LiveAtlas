@@ -41,7 +41,7 @@ export default class OverviewerMapProvider extends MapProvider {
 	private markersAbort?: AbortController = undefined;
 	private readonly markersRegex: RegExp = /^overviewer.util.injectMarkerScript\('([\w.]+)'\);?$/mgi;
 	private readonly mapMarkerSets: Map<string, Map<string, LiveAtlasMarkerSet>> = new Map();
-	private readonly mapMarkers: Map<string, Map<string, Map<string, LiveAtlasMarker>>> = new Map();
+	private readonly mapMarkers: Map<string, Map<string, Map<string, LiveAtlasMarker>>> = Object.freeze(new Map());
 
 	constructor(config: string) {
 		super(config);
@@ -193,25 +193,34 @@ export default class OverviewerMapProvider extends MapProvider {
 	private async getMarkerSets(): Promise<void> {
 		this.markersAbort = new AbortController();
 
+		//Overviewer markers are stored in multiple files
+		//baseMarkers.js - makes calls to injectMarkerScript to load additional files
+		//markers.js - If present, maps marker sets to specific maps
+		//markersDB.js - If present, contains markers for each marker set
+		//additional files - i.e. regions.js, can add extra marker sets and/or markers
 		const response = await OverviewerMapProvider.getText(`${this.config}/baseMarkers.js`, this.markersAbort.signal),
+			//Don't need to run this JS as getting the filenames from injectMarkerScript calls is enough
 			files = response.matchAll(this.markersRegex);
 
-		let markerSets: any = {}, markers: any = {};
+		let markerSets: any = {}, markers: any = {}, result: any;
 
 		for(const file of files) {
 			let code = await OverviewerMapProvider.getText(`${this.config}/${file[1]}`, this.markersAbort.signal);
 
 			switch(file[1]) {
+				//Contains list of marker sets per map in markers object
 				case 'markers.js':
 					markerSets = await runSandboxed(code += 'return markers || {};');
 					break;
 
+				//Contains list of markers per marker set in markersDB object
 				case 'markersDB.js':
 					markers = await runSandboxed(code += 'return markersDB || {};');
 					break;
 
+				//Additional files can add to either of the above objects
 				default:
-					const result: any = await runSandboxed(`var markers = {}, markersDB = {}; ${code} return {markers, markersDB}`);
+					result = await runSandboxed(`var markers = {}, markersDB = {}; ${code} return {markers, markersDB}`);
 					markerSets = Object.assign(markerSets, result.markers);
 					markers = Object.assign(markers, result.markersDB);
 
@@ -219,6 +228,7 @@ export default class OverviewerMapProvider extends MapProvider {
 			}
 		}
 
+		//Organise defined markers and sets in to per-map maps
 		for(const map in markerSets) {
 			if(!Object.prototype.hasOwnProperty.call(markerSets, map) || !this.mapMarkerSets.has(map)) {
 				console.warn(`Ignoring unknown map ${map} in marker set list`);
@@ -237,7 +247,7 @@ export default class OverviewerMapProvider extends MapProvider {
 
 				(markers[set.groupName]?.raw || []).forEach((marker: any, index: number) => {
 					const id = `marker_${index}`;
-					setContents.set(id, this.buildMarker(id, marker, set.icon));
+					setContents.set(id, OverviewerMapProvider.buildMarker(id, marker, set.icon));
 				});
 
 				this.mapMarkers.get(map)!.set(set.groupName, setContents);
@@ -245,7 +255,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		}
 	}
 
-	private buildMarker(id: string, data: any, defaultIcon: string): LiveAtlasMarker {
+	private static buildMarker(id: string, data: any, defaultIcon: string): LiveAtlasMarker {
 		const marker: any = {
 			id,
 			title: stripHTML(data.hovertext.trim()),
@@ -299,8 +309,8 @@ export default class OverviewerMapProvider extends MapProvider {
 	}
 
 	async populateMap(map:LiveAtlasMapDefinition) {
-		this.store.commit(MutationTypes.SET_MARKER_SETS, this.mapMarkerSets.get(map.name)!);
-		this.store.commit(MutationTypes.SET_MARKERS, this.mapMarkers.get(map.name)!);
+		this.store.commit(MutationTypes.SET_MARKER_SETS, this.mapMarkerSets.get(map.name) || new Map());
+		this.store.commit(MutationTypes.SET_MARKERS, this.mapMarkers.get(map.name) || new Map());
 	}
 
 	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer {
