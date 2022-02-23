@@ -18,24 +18,30 @@
  */
 
 import {
-	LiveAtlasComponentConfig, LiveAtlasDimension,
+	LiveAtlasComponentConfig,
+	LiveAtlasDimension,
+	LiveAtlasMarker,
+	LiveAtlasMarkerSet,
 	LiveAtlasServerConfig,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
-import {
-	getDefaultMinecraftHead, runSandboxed,
-} from "@/util";
+import {getBoundsFromPoints, getDefaultMinecraftHead, getMiddle, runSandboxed, stripHTML,} from "@/util";
 import ConfigurationError from "@/errors/ConfigurationError";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 import {OverviewerTileLayer} from "@/leaflet/tileLayer/OverviewerTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
+import {LiveAtlasMarkerType} from "@/util/markers";
 
 export default class OverviewerMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
+	private markersAbort?: AbortController = undefined;
+	private readonly markersRegex: RegExp = /^overviewer.util.injectMarkerScript\('([\w.]+)'\);?$/mgi;
+	private readonly mapMarkerSets: Map<string, Map<string, LiveAtlasMarkerSet>> = new Map();
+	private readonly mapMarkers: Map<string, Map<string, Map<string, LiveAtlasMarker>>> = new Map();
 
 	constructor(config: string) {
 		super(config);
@@ -127,6 +133,9 @@ export default class OverviewerMapProvider extends MapProvider {
 					tileSize,
 				}),
 			}));
+
+			this.mapMarkerSets.set(tileset.path, new Map());
+			this.mapMarkers.set(tileset.path, new Map());
 		});
 
 		return Array.from(worlds.values());
@@ -169,6 +178,87 @@ export default class OverviewerMapProvider extends MapProvider {
 		return components;
 	}
 
+	private async getMarkerSets(): Promise<void> {
+		this.markersAbort = new AbortController();
+
+		const response = await OverviewerMapProvider.getText(`${this.config}/baseMarkers.js`, this.markersAbort.signal),
+			files = response.matchAll(this.markersRegex);
+
+		let markerSets: any = {}, markers: any = {};
+
+		for(const file of files) {
+			let code = await OverviewerMapProvider.getText(`${this.config}/${file[1]}`, this.markersAbort.signal);
+
+			switch(file[1]) {
+				case 'markers.js':
+					markerSets = await runSandboxed(code += 'return markers || {};');
+					break;
+
+				case 'markersDB.js':
+					markers = await runSandboxed(code += 'return markersDB || {};');
+					break;
+
+				default:
+					const result: any = await runSandboxed(`var markers = {}, markersDB = {}; ${code} return {markers, markersDB}`);
+					markerSets = Object.assign(markerSets, result.markers);
+					markers = Object.assign(markers, result.markersDB);
+
+					break;
+			}
+		}
+
+		for(const map in markerSets) {
+			if(!Object.prototype.hasOwnProperty.call(markerSets, map) || !this.mapMarkerSets.has(map)) {
+				console.warn(`Ignoring unknown map ${map} in marker set list`);
+				continue;
+			}
+
+			markerSets[map].forEach((set: any, index: number) => {
+				this.mapMarkerSets.get(map)!.set(set.groupName, {
+					id: set.groupName,
+					hidden: !set.checked,
+					label: set.displayName,
+					priority: index,
+				});
+
+				const setContents = new Map<string, LiveAtlasMarker>();
+
+				(markers[set.groupName]?.raw || []).forEach((marker: any, index: number) => {
+					const id = `marker_${index}`;
+					setContents.set(id, this.buildMarker(id, marker, set.icon));
+				});
+
+				this.mapMarkers.get(map)!.set(set.groupName, setContents);
+			});
+		}
+	}
+
+	private buildMarker(id: string, data: any, defaultIcon: string): LiveAtlasMarker {
+		const marker: any = {
+			id,
+			title: stripHTML(data.hovertext.trim()),
+			popup: data.text,
+			isPopupHTML: true,
+		}
+
+		if(typeof data.points !== 'undefined') {
+			marker.style = {
+				color: data.strokeColor,
+				weight: data.strokeWeight,
+				fill: data.fill,
+			};
+			marker.location = getMiddle(getBoundsFromPoints(data.points));
+			marker.points = data.points;
+			marker.type = data.isLine ? LiveAtlasMarkerType.LINE : LiveAtlasMarkerType.AREA;
+		} else {
+			marker.type = LiveAtlasMarkerType.POINT;
+			marker.location = {x: data.x, y: data.y, z: data.z};
+			marker.icon = data.icon || defaultIcon;
+		}
+
+		return marker as LiveAtlasMarker;
+	}
+
 	async loadServerConfiguration(): Promise<void> {
 		if(this.configurationAbort) {
 			this.configurationAbort.abort();
@@ -180,33 +270,29 @@ export default class OverviewerMapProvider extends MapProvider {
 			response = await OverviewerMapProvider.getText(`${baseUrl}overviewerConfig.js`, this.configurationAbort.signal);
 
 		try {
-			const result = await runSandboxed(response + ' return overviewerConfig;'),
-				config = OverviewerMapProvider.buildServerConfig(result);
+			//Overviewer's config is a JS object rather than JSON, so we need to run the JS to evaluate it :(
+			//Doing this in an iframe to at least attempt to protect from bad things
+			const result = await runSandboxed(response + ' return overviewerConfig;');
 
-			this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
+			this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, OverviewerMapProvider.buildServerConfig(result));
 			this.store.commit(MutationTypes.SET_SERVER_MESSAGES, OverviewerMapProvider.buildMessagesConfig(result));
 			this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(result));
 			this.store.commit(MutationTypes.SET_COMPONENTS, OverviewerMapProvider.buildComponents(result));
+
+			await this.getMarkerSets();
 		} catch(e) {
 			console.error(e);
 			throw e;
 		}
 	}
 
-	async populateWorld(world: LiveAtlasWorldDefinition) {
-		//TODO
+	async populateMap(map:LiveAtlasMapDefinition) {
+		this.store.commit(MutationTypes.SET_MARKER_SETS, this.mapMarkerSets.get(map.name)!);
+		this.store.commit(MutationTypes.SET_MARKERS, this.mapMarkers.get(map.name)!);
 	}
 
 	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer {
 		return new OverviewerTileLayer(options);
-	}
-
-	startUpdates() {
-		//TODO
-	}
-
-	stopUpdates() {
-		//TODO
 	}
 
     getTilesUrl(): string {
@@ -214,6 +300,6 @@ export default class OverviewerMapProvider extends MapProvider {
     }
 
     getMarkerIconUrl(icon: string): string {
-        return ''; //TODO
+        return this.config + icon;
     }
 }
