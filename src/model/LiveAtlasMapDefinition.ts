@@ -34,6 +34,7 @@ export interface LiveAtlasMapDefinitionOptions {
 	projection?: LiveAtlasProjection;
 	nativeZoomLevels: number;
 	extraZoomLevels: number;
+	defaultZoom?: number;
 	tileUpdateInterval?: number;
 	center?: Coordinate;
 }
@@ -54,6 +55,7 @@ export default class LiveAtlasMapDefinition {
 	readonly projection?: LiveAtlasProjection;
 	readonly nativeZoomLevels: number;
 	readonly extraZoomLevels: number;
+	readonly defaultZoom?: number;
 	readonly scale: number;
 	readonly tileUpdateInterval?: number;
 	readonly center?: Coordinate;
@@ -77,6 +79,7 @@ export default class LiveAtlasMapDefinition {
 
 		this.nativeZoomLevels = options.nativeZoomLevels || 1;
 		this.extraZoomLevels = options.extraZoomLevels || 0;
+		this.defaultZoom = options.defaultZoom || 0;
 		this.scale = (1 / Math.pow(2, this.nativeZoomLevels));
 		this.tileUpdateInterval = options.tileUpdateInterval || undefined;
 		this.center = options.center || undefined;

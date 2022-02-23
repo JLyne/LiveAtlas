@@ -61,7 +61,7 @@ export default class OverviewerMapProvider extends MapProvider {
 
 			//Not used by overviewer
 			expandUI: false,
-			defaultZoom: 1,
+			defaultZoom: 0,
 			defaultMap: undefined,
 			defaultWorld: undefined,
 			followMap: undefined,
@@ -95,7 +95,6 @@ export default class OverviewerMapProvider extends MapProvider {
 				dimension: 'overworld' as LiveAtlasDimension,
 				seaLevel: 64,
 				center: {x: 0, y: 64, z: 0},
-				defaultZoom: undefined,
 				maps: new Set<LiveAtlasMapDefinition>(),
 			});
 		});
@@ -122,6 +121,7 @@ export default class OverviewerMapProvider extends MapProvider {
 				imageFormat: tileset.imgextension,
 				nativeZoomLevels,
 				extraZoomLevels: 0,
+				defaultZoom: tileset.defaultZoom,
 				tileSize,
 				prefix: tileset.base,
 				projection: new OverviewerProjection({

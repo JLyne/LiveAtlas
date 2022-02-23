@@ -192,12 +192,15 @@ export default defineComponent({
 				} else if(store.state.parsedUrl?.location) {
 					viewTarget.location = store.state.parsedUrl.location;
 
+					//Determine initial zoom
 					if(!oldValue) {
-						if(typeof store.state.parsedUrl?.zoom !== 'undefined') {
+						if(typeof store.state.parsedUrl?.zoom !== 'undefined') { //Zoom from URL
 							viewTarget.zoom = store.state.parsedUrl?.zoom;
-						} else if(typeof newValue.defaultZoom !== 'undefined') {
+						} else if(typeof store.state.currentMap?.defaultZoom !== 'undefined') { //Map default zoom
+							viewTarget.zoom = store.state.currentMap?.defaultZoom;
+						}else if(typeof newValue.defaultZoom !== 'undefined') { //World default zoom
 							viewTarget.zoom = newValue.defaultZoom;
-						} else {
+						} else { //Global default zoom
 							viewTarget.zoom = store.state.configuration.defaultZoom;
 						}
 					}
@@ -209,9 +212,11 @@ export default defineComponent({
 				}
 
 				if(viewTarget.zoom == null) {
-					if(typeof newValue.defaultZoom !== 'undefined') {
+					if(typeof store.state.currentMap?.defaultZoom !== 'undefined') { //Map default zoom
+						viewTarget.zoom = store.state.currentMap?.defaultZoom;
+					} else if(typeof newValue.defaultZoom !== 'undefined') { //World default zoom
 						viewTarget.zoom = newValue.defaultZoom;
-					} else {
+					} else { //Global default zoom
 						viewTarget.zoom = store.state.configuration.defaultZoom;
 					}
 				}
