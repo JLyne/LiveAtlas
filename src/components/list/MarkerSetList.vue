@@ -109,7 +109,7 @@ export default defineComponent({
 			}
 		}
 
-		watch(props.markerSets, () => checkSets);
+		watch(props.markerSets, () => checkSets());
 		watch(currentSet, (newValue, oldValue) => nextTick(() => updateFocus(newValue, oldValue)));
 
 		onMounted(() => {
