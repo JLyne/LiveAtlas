@@ -18,6 +18,7 @@
  */
 
 import {
+	LiveAtlasAreaMarker,
 	LiveAtlasComponentConfig,
 	LiveAtlasDimension,
 	LiveAtlasMarker,
@@ -279,7 +280,7 @@ export default class OverviewerMapProvider extends MapProvider {
 			marker.iconUrl = this.config + (data.icon || markerSet.icon);
 		}
 
-		return marker as LiveAtlasMarker;
+		return marker as LiveAtlasMarker | LiveAtlasAreaMarker;
 	}
 
 	async loadServerConfiguration(): Promise<void> {

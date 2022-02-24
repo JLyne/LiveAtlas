@@ -33,7 +33,7 @@ export class GenericMarker extends Marker {
 		this.options.icon = new GenericIcon({
 			iconUrl: options.iconUrl,
 			label: options.tooltipHTML || options.tooltip,
-			iconSize: options.dimensions,
+			iconSize: options.iconSize,
 			isHtml: !!options.tooltipHTML,
 		});
 

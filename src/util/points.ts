@@ -54,7 +54,7 @@ export const updatePointLayer = (marker: Marker | undefined, options: LiveAtlasP
 			icon.update({
 				iconUrl: options.iconUrl,
 				label: options.tooltipHTML || options.tooltip,
-				iconSize: options.dimensions,
+				iconSize: options.iconSize,
 				isHtml: !!options.tooltipHTML,
 			});
 		}

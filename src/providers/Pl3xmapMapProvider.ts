@@ -325,7 +325,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				y: 0,
 				z: marker.point?.z || 0,
 			},
-			dimensions: marker.size ? [marker.size.x || 16, marker.size.z || 16] : [16, 16],
+			iconSize: marker.size ? [marker.size.x || 16, marker.size.z || 16] : [16, 16],
 			iconUrl: `${this.config}images/icon/registered/${marker.icon || "default"}.png`,
 
 			tooltip: marker.tooltip ? stripHTML(marker.tooltip) : '',

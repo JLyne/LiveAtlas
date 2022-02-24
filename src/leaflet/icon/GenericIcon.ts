@@ -24,7 +24,7 @@ export interface GenericIconOptions extends BaseIconOptions {
 	label: string;
 	isHtml?: boolean;
 	showLabel?: boolean;
-	iconSize: PointTuple;
+	iconSize?: PointTuple;
     className?: string;
 }
 
@@ -40,7 +40,7 @@ markerLabel.className = 'marker__label';
 const defaultOptions: GenericIconOptions = {
 	iconUrl: 'default',
 	label: '',
-	iconSize: [16, 16],
+	iconSize: undefined,
 	popupAnchor: [0, 0],
 	iconAnchor: [0, 0],
 	tooltipAnchor: [0, 0],

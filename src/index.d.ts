@@ -217,8 +217,8 @@ interface LiveAtlasMarker {
 
 interface LiveAtlasPointMarker extends LiveAtlasMarker {
 	type: LiveAtlasMarkerType.POINT;
-	dimensions: PointTuple;
 	iconUrl: string;
+	iconSize?: PointTuple;
 }
 
 interface LiveAtlasPathMarker extends LiveAtlasMarker {
