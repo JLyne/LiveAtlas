@@ -79,8 +79,7 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 
 		div.appendChild(this._image);
 		div.classList.add('marker', 'leaflet-marker-icon');
-
-		this._image.classList.toggle('icon--auto', !this.options.iconSize);
+		div.classList.toggle('marker--auto-size', !this.options.iconSize);
 
 		if(this.options.iconSize) {
 			const size = point(this.options.iconSize as PointExpression);
@@ -145,9 +144,9 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		}
 
 		this.options.iconSize = options.iconSize;
+		this._container!.classList.toggle('marker--auto-size', !this.options.iconSize);
 
 		if(this._image) {
-			this._image.classList.toggle('icon--auto', !this.options.iconSize);
 			const iconSize = this.options.iconSize ? point(options.iconSize || [16, 16] as PointExpression) : undefined;
 			// @ts-ignore
 			this._image!.width = iconSize ? iconSize.x : 'auto';

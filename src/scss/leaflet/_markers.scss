@@ -190,19 +190,25 @@
 		background: var(--background-marker);
 		padding: 0.2rem;
 		display: none;
-		margin-left: 0.2rem;
 		width: max-content;
 		max-width: 30rem;
+		position: absolute;
+		left: calc(100% + 0.2rem);
 
 		@at-root .leaflet-pane--show-labels .marker__label {
 			display: block !important;
 		}
 	}
 
-	.marker__icon {
-		&.icon--auto {
+	&.marker--auto-size {
+		.marker__icon {
 			margin-top: -50%;
 			margin-left: -50%;
+		}
+
+		.marker__label {
+			margin-top: -50%;
+			left: calc(50% + 0.2rem);
 		}
 	}
 
