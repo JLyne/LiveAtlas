@@ -71,22 +71,10 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		}
 
 		const div = markerContainer.cloneNode(false) as HTMLDivElement;
-
 		this._image = markerIcon.cloneNode(false) as HTMLImageElement;
-		this._image.src = this.options.iconUrl;
 
 		div.appendChild(this._image);
 		div.classList.add('marker', 'leaflet-marker-icon');
-		div.classList.toggle('marker--auto-size', !this.options.iconSize);
-
-		if(this.options.iconSize) {
-			const size = point(this.options.iconSize as PointExpression);
-			this._image.width = size.x;
-			this._image.height = size.y;
-			div.style.marginLeft = `${-(size.x / 2)}px`;
-			div.style.marginTop = `${-(size.y / 2)}px`;
-			div.style.height = `${size.y}px`;
-		}
 
 		if(this.options.className) {
 			div.classList.add(this.options.className);
@@ -96,6 +84,7 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		this._image.addEventListener('mouseover', this._onHover);
 
 		this._container = div;
+		this.update();
 
 		return div;
 	}
@@ -108,18 +97,7 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		this._image?.removeEventListener('mouseover', this._onHover);
 		this._label = markerLabel.cloneNode(false) as HTMLSpanElement;
 
-		if(this.options.iconSize) {
-			const size = point(this.options.iconSize as PointExpression),
-				sizeClass = [size.x, size.y].join('x');
-
-			this._label.classList.add(/*'markerName_' + set.id,*/ `marker__label--${sizeClass}`);
-		}
-
-		if (this.options.isHtml) {
-			this._label.innerHTML = this.options.label;
-		} else {
-			this._label.textContent = this.options.label;
-		}
+		this.update();
 
 		this._container!.appendChild(this._label);
 		this._labelCreated = true;
@@ -135,32 +113,46 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		this._labelCreated = false;
 	}
 
-	update(options: GenericIconOptions) {
-		if(this._image && options.iconUrl !== this.options.iconUrl) {
+	update(options?: GenericIconOptions) {
+		if(options) {
 			this.options.iconUrl = options.iconUrl;
-			this._image!.src = this.options.iconUrl;
+			this.options.iconSize = options.iconSize;
+			this.options.isHtml = options.isHtml;
+			this.options.label = options.label;
 		}
 
-		this.options.iconSize = options.iconSize;
+		if(!this._container) {
+			return;
+		}
+
 		this._container!.classList.toggle('marker--auto-size', !this.options.iconSize);
 
 		if(this._image) {
-			const iconSize = this.options.iconSize ? point(options.iconSize || [16, 16] as PointExpression) : undefined;
-			// @ts-ignore
-			this._image!.width = iconSize ? iconSize.x : 'auto';
-			// @ts-ignore
-			this._image!.height = iconSize ? iconSize.y : 'auto';
-		}
+			const iconSize = this.options.iconSize ? point(this.options.iconSize as PointExpression) : undefined;
 
-		if(this._label && (options.label !== this.options.label || options.isHtml !== this.options.isHtml)) {
-			if (options.isHtml) {
-				this._label!.innerHTML = options.label;
+			if(iconSize) {
+				this._image.width = iconSize.x;
+				this._image.height = iconSize.y;
 			} else {
-				this._label!.textContent = options.label;
+				this._image.removeAttribute('width');
+				this._image.removeAttribute('height');
 			}
 
-			this.options.isHtml = options.isHtml;
-			this.options.label = options.label;
+			this._container.style.marginLeft = iconSize ? `${-(iconSize.x / 2)}px` : '';
+			this._container.style.marginTop = iconSize ? `${-(iconSize.y / 2)}px` : '';
+			this._container.style.height = iconSize ? `${iconSize.y}px` : 'auto';
+
+			if(this._image.src !== this.options.iconUrl) {
+				this._image.src = this.options.iconUrl;
+			}
+		}
+
+		if(this._label) {
+			if (this.options.isHtml && this._label.innerHTML !== this.options.label) {
+				this._label.innerHTML = this.options.label;
+			} else if(this._label.textContent !== this.options.label) {
+				this._label.textContent = this.options.label;
+			}
 		}
 	}
 }
