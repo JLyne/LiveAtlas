@@ -33,8 +33,6 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 	abstract loadServerConfiguration(): Promise<void>;
 	abstract createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer;
 
-    abstract getMarkerIconUrl(icon: string): string;
-
 	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {}
 	async populateMap(map: LiveAtlasMapDefinition): Promise<void> {}
 

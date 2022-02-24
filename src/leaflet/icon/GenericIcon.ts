@@ -18,10 +18,9 @@
  */
 
 import {PointExpression, Icon, DomUtil, point, BaseIconOptions, PointTuple, Layer, LayerOptions, Util} from 'leaflet';
-import {useStore} from "@/store";
 
 export interface GenericIconOptions extends BaseIconOptions {
-	icon: string;
+	iconUrl: string;
 	label: string;
 	isHtml?: boolean;
 	showLabel?: boolean;
@@ -39,7 +38,7 @@ const markerLabel: HTMLSpanElement = document.createElement('span');
 markerLabel.className = 'marker__label';
 
 const defaultOptions: GenericIconOptions = {
-	icon: 'default',
+	iconUrl: 'default',
 	label: '',
 	iconSize: [16, 16],
 	popupAnchor: [0, 0],
@@ -71,11 +70,10 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 			DomUtil.remove(oldIcon);
 		}
 
-		const div = markerContainer.cloneNode(false) as HTMLDivElement,
-			url = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon);
+		const div = markerContainer.cloneNode(false) as HTMLDivElement;
 
 		this._image = markerIcon.cloneNode(false) as HTMLImageElement;
-		this._image.src = url;
+		this._image.src = this.options.iconUrl;
 
 		div.appendChild(this._image);
 		div.classList.add('marker', 'leaflet-marker-icon');
@@ -138,9 +136,9 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 	}
 
 	update(options: GenericIconOptions) {
-		if(this._image && options.icon !== this.options.icon) {
-			this.options.icon = options.icon;
-			this._image!.src = useStore().state.currentMapProvider!.getMarkerIconUrl(this.options.icon);
+		if(this._image && options.iconUrl !== this.options.iconUrl) {
+			this.options.iconUrl = options.iconUrl;
+			this._image!.src = this.options.iconUrl;
 		}
 
 		this.options.iconSize = options.iconSize;

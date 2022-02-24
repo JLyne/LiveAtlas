@@ -60,7 +60,7 @@ export default defineComponent({
 			})),
 			icon = computed(() => {
 				if('icon' in props.marker) {
-					return store.state.currentMapProvider!.getMarkerIconUrl((props.marker as LiveAtlasPointMarker).icon);
+					return (props.marker as LiveAtlasPointMarker).iconUrl;
 				}
 
 				return undefined;

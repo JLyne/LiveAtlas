@@ -317,7 +317,7 @@ export function buildMarkerSet(id: string, data: MarkerSet): any {
 	}
 }
 
-export function buildMarkers(data: any, list: Map<string, LiveAtlasMarker>): void {
+export function buildMarkers(data: any, list: Map<string, LiveAtlasMarker>, config: DynmapUrlConfig): void {
 	let id;
 
 	for (const key in data) {
@@ -326,11 +326,11 @@ export function buildMarkers(data: any, list: Map<string, LiveAtlasMarker>): voi
 		}
 
 		id = `point_${key}`;
-		list.set(id, buildMarker(id, data[key]));
+		list.set(id, buildMarker(id, data[key], config));
 	}
 }
 
-export function buildMarker(id: string, data: Marker): LiveAtlasPointMarker {
+function buildMarker(id: string, data: Marker, config: DynmapUrlConfig): LiveAtlasPointMarker {
 	let dimensions;
 
 	if(data.dim) {
@@ -350,7 +350,7 @@ export function buildMarker(id: string, data: Marker): LiveAtlasPointMarker {
 			z: !isNaN(data.z) ? Number.isInteger(data.z) ? data.z + 0.5 : data.z : 0,
 		},
 		dimensions: (dimensions || [16, 16]) as PointTuple,
-		icon: data.icon || "default",
+		iconUrl: `${config.markers}_markers_/${data.icon || "default"}.png`,
 		minZoom: typeof data.minzoom !== 'undefined' && data.minzoom > -1 ? data.minzoom : undefined,
 		maxZoom: typeof data.maxzoom !== 'undefined' && data.maxzoom > -1 ? data.maxzoom : undefined,
 		tooltip: data.markup ? stripHTML(data.label) : data.label,
@@ -504,7 +504,7 @@ export function buildCircle(id: string, circle: MarkerCircle): LiveAtlasCircleMa
 	};
 }
 
-export function buildUpdates(data: Array<any>, lastUpdate: Date) {
+export function buildUpdates(data: Array<any>, lastUpdate: Date, config: DynmapUrlConfig) {
 	const updates = {
 			markerSets: [] as DynmapMarkerSetUpdate[],
 			markers: [] as DynmapMarkerUpdate[],
@@ -565,7 +565,7 @@ export function buildUpdates(data: Array<any>, lastUpdate: Date) {
 					if (entry.msg.startsWith("marker")) {
 						update.id = `point_${entry.id}`;
 						update.type = LiveAtlasMarkerType.POINT;
-						update.payload = update.removed ? undefined : buildMarker(update.id, entry);
+						update.payload = update.removed ? undefined : buildMarker(update.id, entry, config);
 					} else if (entry.msg.startsWith("area")) {
 						update.id = `area_${entry.id}`;
 						update.type = LiveAtlasMarkerType.AREA;

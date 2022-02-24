@@ -280,7 +280,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				switch(marker.type) {
 					case 'icon':
 						markerId = `point_${markers.size}`;
-						markers.set(markerId, Pl3xmapMapProvider.buildMarker(markerId, marker));
+						markers.set(markerId, this.buildMarker(markerId, marker));
 						break;
 
 					case 'polyline':
@@ -316,7 +316,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		});
 	}
 
-	private static buildMarker(id: string, marker: any): LiveAtlasPointMarker {
+	private buildMarker(id: string, marker: any): LiveAtlasPointMarker {
 		return {
 			id,
 			type: LiveAtlasMarkerType.POINT,
@@ -326,7 +326,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				z: marker.point?.z || 0,
 			},
 			dimensions: marker.size ? [marker.size.x || 16, marker.size.z || 16] : [16, 16],
-			icon: marker.icon || "default",
+			iconUrl: `${this.config}images/icon/registered/${marker.icon || "default"}.png`,
 
 			tooltip: marker.tooltip ? stripHTML(marker.tooltip) : '',
 			tooltipHTML: marker.tooltip,
@@ -599,8 +599,4 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			this.markersAbort.abort();
 		}
 	}
-
-    getMarkerIconUrl(icon: string): string {
-        return `${this.config}images/icon/registered/${icon}.png`;
-    }
 }

@@ -31,7 +31,7 @@ export class GenericMarker extends Marker {
 		super(latLng, {});
 
 		this.options.icon = new GenericIcon({
-			icon: options.icon,
+			iconUrl: options.iconUrl,
 			label: options.tooltipHTML || options.tooltip,
 			iconSize: options.dimensions,
 			isHtml: !!options.tooltipHTML,

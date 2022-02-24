@@ -52,7 +52,7 @@ export const updatePointLayer = (marker: Marker | undefined, options: LiveAtlasP
 
 		if(icon && icon instanceof GenericIcon) {
 			icon.update({
-				icon: options.icon,
+				iconUrl: options.iconUrl,
 				label: options.tooltipHTML || options.tooltip,
 				iconSize: options.dimensions,
 				isHtml: !!options.tooltipHTML,

@@ -247,7 +247,7 @@ export default class OverviewerMapProvider extends MapProvider {
 
 				(markers[set.groupName]?.raw || []).forEach((marker: any, index: number) => {
 					const id = `marker_${index}`;
-					setContents.set(id, OverviewerMapProvider.buildMarker(id, marker, set));
+					setContents.set(id, this.buildMarker(id, marker, set));
 				});
 
 				this.mapMarkers.get(map)!.set(set.groupName, setContents);
@@ -255,7 +255,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		}
 	}
 
-	private static buildMarker(id: string, data: any, markerSet: any): LiveAtlasMarker {
+	private buildMarker(id: string, data: any, markerSet: any): LiveAtlasMarker {
 		const marker: any = {
 			id,
 			tooltip: stripHTML(data.hovertext.trim()),
@@ -276,7 +276,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		} else {
 			marker.type = LiveAtlasMarkerType.POINT;
 			marker.location = {x: data.x, y: data.y, z: data.z};
-			marker.icon = data.icon || markerSet.icon;
+			marker.iconUrl = this.config + (data.icon || markerSet.icon);
 		}
 
 		return marker as LiveAtlasMarker;
@@ -317,8 +317,4 @@ export default class OverviewerMapProvider extends MapProvider {
 	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer {
 		return new OverviewerTileLayer(options);
 	}
-
-    getMarkerIconUrl(icon: string): string {
-        return this.config + icon;
-    }
 }

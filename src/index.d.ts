@@ -191,8 +191,6 @@ interface LiveAtlasMapProvider {
 	login(formData: FormData): void;
 	logout(): void;
 	register(formData: FormData): void;
-
-	getMarkerIconUrl(icon: string): string;
 }
 
 interface LiveAtlasMarkerSet {
@@ -220,7 +218,7 @@ interface LiveAtlasMarker {
 interface LiveAtlasPointMarker extends LiveAtlasMarker {
 	type: LiveAtlasMarkerType.POINT;
 	dimensions: PointTuple;
-	icon: string;
+	iconUrl: string;
 }
 
 interface LiveAtlasPathMarker extends LiveAtlasMarker {

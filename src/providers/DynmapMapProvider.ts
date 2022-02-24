@@ -110,7 +110,7 @@ export default class DynmapMapProvider extends MapProvider {
 				markerSet = buildMarkerSet(key, set),
 				markers = new Map<string, LiveAtlasMarker>();
 
-			buildMarkers(set.markers || {}, markers);
+			buildMarkers(set.markers || {}, markers, this.config);
 			buildAreas(set.areas || {}, markers);
 			buildLines(set.lines || {}, markers);
 			buildCircles(set.circles || {}, markers);
@@ -173,7 +173,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 		const response = await this.getJSON(url, this.updateAbort.signal);
 		const players: Set<LiveAtlasPlayer> = new Set(),
-			updates = buildUpdates(response.updates || [], this.updateTimestamp),
+			updates = buildUpdates(response.updates || [], this.updateTimestamp, this.config),
 			worldState = {
 				timeOfDay: response.servertime || 0,
 				thundering: response.isThundering || false,
@@ -310,10 +310,6 @@ export default class DynmapMapProvider extends MapProvider {
 			this.markersAbort.abort();
 		}
 	}
-
-    getMarkerIconUrl(icon: string): string {
-        return `${this.config.markers}_markers_/${icon}.png`;
-    }
 
     async login(data: any) {
 		if (!this.store.getters.loginEnabled) {
