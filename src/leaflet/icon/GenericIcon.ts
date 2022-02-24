@@ -25,6 +25,7 @@ export interface GenericIconOptions extends BaseIconOptions {
 	isHtml?: boolean;
 	showLabel?: boolean;
 	iconSize?: PointTuple;
+	iconAnchor?: PointTuple;
     className?: string;
 }
 
@@ -117,6 +118,7 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		if(options) {
 			this.options.iconUrl = options.iconUrl;
 			this.options.iconSize = options.iconSize;
+			this.options.iconAnchor = options.iconAnchor;
 			this.options.isHtml = options.isHtml;
 			this.options.label = options.label;
 		}
@@ -128,7 +130,10 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 		this._container!.classList.toggle('marker--auto-size', !this.options.iconSize);
 
 		if(this._image) {
-			const iconSize = this.options.iconSize ? point(this.options.iconSize as PointExpression) : undefined;
+			const iconSize = this.options.iconSize ? point(this.options.iconSize as PointExpression) : undefined,
+				iconAnchor = this.options.iconAnchor ? point(this.options.iconAnchor as PointExpression) : undefined,
+				marginLeft = iconAnchor ? -iconAnchor.x : iconSize ? -(iconSize.x / 2) : 0,
+				marginTop = iconAnchor ? -iconAnchor.y : iconSize ? -(iconSize.y / 2) : 0;
 
 			if(iconSize) {
 				this._image.width = iconSize.x;
@@ -138,8 +143,8 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 				this._image.removeAttribute('height');
 			}
 
-			this._container.style.marginLeft = iconSize ? `${-(iconSize.x / 2)}px` : '';
-			this._container.style.marginTop = iconSize ? `${-(iconSize.y / 2)}px` : '';
+			this._container.style.marginLeft = marginLeft ? `${marginLeft}px` : '';
+			this._container.style.marginTop = marginTop ? `${marginTop}px` : '';
 			this._container.style.height = iconSize ? `${iconSize.y}px` : 'auto';
 
 			if(this._image.src !== this.options.iconUrl) {

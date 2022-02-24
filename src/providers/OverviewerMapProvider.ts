@@ -22,7 +22,7 @@ import {
 	LiveAtlasComponentConfig,
 	LiveAtlasDimension,
 	LiveAtlasMarker,
-	LiveAtlasMarkerSet,
+	LiveAtlasMarkerSet, LiveAtlasPointMarker,
 	LiveAtlasServerConfig,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
@@ -147,8 +147,40 @@ export default class OverviewerMapProvider extends MapProvider {
 				}
 			}));
 
-			this.mapMarkerSets.set(tileset.path, new Map());
-			this.mapMarkers.set(tileset.path, new Map());
+			//Spawn marker
+			const markerSets = new Map<string, LiveAtlasMarkerSet>(),
+				markers = new Map<string, Map<string, LiveAtlasMarker>>();
+
+			if(Array.isArray(tileset.spawn)) {
+				markerSets.set('spawn', {
+					id: 'spawn',
+					label: tileset.poititle,
+					hidden: false,
+					priority: 0,
+				});
+
+				const setContents = new Map<string, LiveAtlasMarker>();
+
+				setContents.set('spawn', {
+					id: 'spawn',
+					type: LiveAtlasMarkerType.POINT,
+					iconUrl: this.config + serverResponse?.CONST?.image?.spawnMarker,
+					iconSize: [32, 37],
+                    iconAnchor: [15, 33],
+					tooltip: 'Spawn',
+					location: {
+						x: tileset.spawn[0],
+						y: tileset.spawn[1],
+						z: tileset.spawn[2],
+					}
+				} as LiveAtlasPointMarker);
+
+				markers.set('spawn', setContents);
+			}
+
+			this.mapMarkerSets.set(tileset.path, markerSets);
+			this.mapMarkers.set(tileset.path, markers);
+
 		});
 
 		return Array.from(worlds.values());

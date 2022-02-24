@@ -34,6 +34,7 @@ export class GenericMarker extends Marker {
 			iconUrl: options.iconUrl,
 			label: options.tooltipHTML || options.tooltip,
 			iconSize: options.iconSize,
+			iconAnchor: options.iconAnchor,
 			isHtml: !!options.tooltipHTML,
 		});
 
