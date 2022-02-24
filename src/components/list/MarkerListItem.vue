@@ -59,7 +59,7 @@ export default defineComponent({
 				z: Math.round(props.marker.location.z),
 			})),
 			icon = computed(() => {
-				if('icon' in props.marker) {
+				if('iconUrl' in props.marker) {
 					return (props.marker as LiveAtlasPointMarker).iconUrl;
 				}
 
