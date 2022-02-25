@@ -15,7 +15,7 @@
  */
 
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {Coords, DomUtil, DoneCallback, TileLayer, TileLayerOptions, Util} from "leaflet";
+import {Map as LeafletMap, Coords, DomUtil, DoneCallback, TileLayer, TileLayerOptions, Util} from "leaflet";
 import {LiveAtlasInternalTiles, LiveAtlasTileElement} from "@/index";
 import falseFn = Util.falseFn;
 
@@ -33,6 +33,7 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 	private readonly tileTemplate: LiveAtlasTileElement;
 	protected readonly loadQueue: LiveAtlasTileElement[] = [];
 	private readonly loadingTiles: Set<LiveAtlasTileElement> = Object.seal(new Set());
+	private refreshTimeout?: ReturnType<typeof setTimeout>;
 
 	private static genericLoadError = new Error('Tile failed to load');
 
@@ -60,10 +61,6 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 		options.minZoom = 0;
 
 		Util.setOptions(this, options);
-
-		if (options.mapSettings === null) {
-			throw new TypeError("mapSettings missing");
-		}
 	}
 
 	// @method createTile(coords: Object, done?: Function): HTMLElement
@@ -209,5 +206,29 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 
 		// @ts-ignore
 		super._removeTile(key);
+	}
+
+	onAdd(map: LeafletMap): this {
+		if(this._mapSettings.tileUpdateInterval) {
+			this.refreshTimeout = setTimeout(() => this.handlePeriodicRefresh(), this._mapSettings.tileUpdateInterval);
+		}
+
+		return super.onAdd(map);
+	}
+
+	remove() {
+		if(this.refreshTimeout) {
+			clearTimeout(this.refreshTimeout);
+		}
+
+		return super.remove();
+	}
+
+	private handlePeriodicRefresh() {
+		if(this._map) {
+			this.refresh();
+		}
+
+		this.refreshTimeout = setTimeout(() => this.handlePeriodicRefresh(), this._mapSettings.tileUpdateInterval);
 	}
 }

@@ -41,47 +41,23 @@ export default defineComponent({
 		const store = useStore(),
 			active = computed(() => props.map === store.state.currentMap);
 
-		let refreshTimeout: null | ReturnType<typeof setTimeout> = null,
-			layer: LiveAtlasTileLayer;
-
-		const refresh = () => {
-			if(active.value) {
-				layer.refresh();
-			}
-
-			refreshTimeout = setTimeout(refresh, props.map.tileUpdateInterval);
-		};
+		let layer: LiveAtlasTileLayer;
 
 		layer = store.state.currentMapProvider!.createTileLayer({
 			errorTileUrl: 'images/blank.png',
 			mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map))),
 		});
 
-		const enableLayer = () => {
-				props.leaflet.addLayer(layer);
-			},
+		const enableLayer = () => props.leaflet.addLayer(layer),
+			disableLayer = () => layer.remove();
 
-			disableLayer = () => {
-				layer.remove();
-			};
-
-		watch(active, (newValue) => newValue ? enableLayer() : disableLayer());
+		watch(active, newValue => newValue ? enableLayer() : disableLayer());
 
 		if(active.value) {
 			enableLayer();
 		}
 
-		if(props.map.tileUpdateInterval) {
-			refreshTimeout = setTimeout(refresh, props.map.tileUpdateInterval);
-		}
-
-		onUnmounted(() => {
-			disableLayer();
-
-			if(refreshTimeout) {
-				clearTimeout(refreshTimeout);
-			}
-		});
+		onUnmounted(() => disableLayer());
 	},
 
 	render() {
