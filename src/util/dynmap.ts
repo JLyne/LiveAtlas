@@ -143,7 +143,7 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): A
 				displayName: map.title,
 				icon: (map.icon || undefined) as string | undefined,
 
-				baseUrl: config.tiles,
+				baseUrl: `${config.tiles}${actualWorld.name}/`,
 				imageFormat: map['image-format'] || 'png',
 				tileSize,
 				projection: new DynmapProjection({

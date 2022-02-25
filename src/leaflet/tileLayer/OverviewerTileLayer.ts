@@ -22,23 +22,15 @@ import {Coords, Util} from "leaflet";
 
 // noinspection JSUnusedGlobalSymbols
 export class OverviewerTileLayer extends LiveAtlasTileLayer {
-	private readonly _baseUrl: string;
-
 	constructor(options: LiveAtlasTileLayerOptions) {
-		super('', options);
+		super(options);
 
-		options.zoomReverse = false;
-
-		Util.setOptions(this, options);
-
-		this._mapSettings = options.mapSettings;
-		this._baseUrl = options.mapSettings.baseUrl;
+		Util.setOptions(this, {zoomReverse: false});
 	}
 
 	getTileUrl(coords: Coords): string {
-		let url = this._mapSettings.name;
-		const zoom = coords.z,
-			urlBase = this._mapSettings.prefix;
+		let url = this.options.prefix;
+		const zoom = coords.z;
 
 		if(coords.x < 0 || coords.x >= Math.pow(2, zoom) ||
 			coords.y < 0 || coords.y >= Math.pow(2, zoom)) {
@@ -52,10 +44,10 @@ export class OverviewerTileLayer extends LiveAtlasTileLayer {
 				url += '/' + (x + 2 * y);
 			}
 		}
-		url = url + '.' + this._mapSettings.imageFormat;
+		url += `.${this.options.imageFormat}`;
 		// if(typeof overviewerConfig.map.cacheTag !== 'undefined') {
 		// 	url += '?c=' + overviewerConfig.map.cacheTag;
 		// }
-		return(this._baseUrl + urlBase + url);
+		return this.options.baseUrl + url;
 	}
 }

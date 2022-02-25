@@ -193,14 +193,21 @@ interface LiveAtlasMapProvider {
 	register(formData: FormData): void;
 }
 
-interface LiveAtlasMarkerSet {
+interface LiveAtlasOverlay {
 	id: string,
 	label: string;
 	hidden: boolean;
 	priority: number;
 	minZoom?: number;
 	maxZoom?: number;
+}
+
+interface LiveAtlasMarkerSet extends LiveAtlasOverlay {
 	showLabels?: boolean;
+}
+
+interface LiveAtlasTileLayerOverlay extends LiveAtlasOverlay {
+	tileLayerOptions: LiveAtlasTileLayerOptions;
 }
 
 interface LiveAtlasMarker {

@@ -187,7 +187,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				displayName: 'Flat',
 				icon: world.icon ? `${this.config}images/icon/${world.icon}.png` : undefined,
 
-				baseUrl: `${this.config}tiles/`,
+				baseUrl: `${this.config}tiles/${w.name}/`,
 				imageFormat: 'png',
 				tileSize: 512,
 

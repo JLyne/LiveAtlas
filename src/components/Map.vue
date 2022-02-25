@@ -17,7 +17,9 @@
 <template>
 	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs" :aria-label="mapTitle">
 		<template v-if="leaflet">
-			<MapLayer v-for="[name, map] in maps" :key="name" :map="map" :name="name" :leaflet="leaflet"></MapLayer>
+			<TileLayer v-for="[name, map] in maps" :key="name" :options="map" :leaflet="leaflet"></TileLayer>
+
+			<TileLayerOverlay v-for="[name, overlay] in overlays" :key="name" :options="overlay" :leaflet="leaflet"></TileLayerOverlay>
 			<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
 			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>
 
@@ -38,7 +40,7 @@
 import {computed, ref, defineComponent} from "@vue/runtime-core";
 import {CRS, LatLng, LatLngBounds, PanOptions, ZoomPanOptions} from 'leaflet';
 import {useStore} from '@/store';
-import MapLayer from "@/components/map/layer/MapLayer.vue";
+import TileLayer from "@/components/map/layer/TileLayer.vue";
 import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
 import MarkerSetLayer from "@/components/map/layer/MarkerSetLayer.vue";
 import CoordinatesControl from "@/components/map/control/CoordinatesControl.vue";
@@ -52,11 +54,13 @@ import {LoadingControl} from "@/leaflet/control/LoadingControl";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
 import {LiveAtlasLocation, LiveAtlasPlayer, LiveAtlasMapViewTarget} from "@/index";
 import LoginControl from "@/components/map/control/LoginControl.vue";
+import TileLayerOverlay from "@/components/map/layer/TileLayerOverlay.vue";
 
 export default defineComponent({
 	components: {
+		TileLayerOverlay,
 		MapContextMenu,
-		MapLayer,
+		TileLayer,
 		PlayersLayer,
 		MarkerSetLayer,
 		CoordinatesControl,
@@ -72,6 +76,7 @@ export default defineComponent({
 			leaflet = undefined as any,
 
 			maps = computed(() => store.state.maps),
+			overlays = computed(() => store.state.currentMap?.overlays),
 			markerSets = computed(() => store.state.markerSets),
 			configuration = computed(() => store.state.configuration),
 
@@ -100,6 +105,7 @@ export default defineComponent({
 		return {
 			leaflet,
 			maps,
+			overlays,
 			markerSets,
 			configuration,
 

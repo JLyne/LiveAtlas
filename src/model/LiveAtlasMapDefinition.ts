@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import {Coordinate, LiveAtlasProjection, LiveAtlasWorldDefinition} from "@/index";
+import {Coordinate, LiveAtlasProjection, LiveAtlasTileLayerOverlay, LiveAtlasWorldDefinition} from "@/index";
 import {LatLng} from "leaflet";
 import {ImageFormat} from "dynmap";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 
-export interface LiveAtlasMapDefinitionOptions {
+export interface LiveAtlasMapDefinitionOptions extends LiveAtlasTileLayerOptions {
 	world: LiveAtlasWorldDefinition;
 	appendedWorld?: LiveAtlasWorldDefinition; // append_to_world
 
@@ -45,9 +46,10 @@ export interface LiveAtlasMapDefinitionOptions {
 
 	tileUpdateInterval?: number;
 	center?: Coordinate;
+	overlays?: Map<string, LiveAtlasTileLayerOverlay>;
 }
 
-export default class LiveAtlasMapDefinition {
+export default class LiveAtlasMapDefinition implements LiveAtlasTileLayerOptions {
 	readonly world: LiveAtlasWorldDefinition;
 	readonly appendedWorld?: LiveAtlasWorldDefinition;
 
@@ -74,6 +76,7 @@ export default class LiveAtlasMapDefinition {
 
 	readonly tileUpdateInterval?: number;
 	readonly center?: Coordinate;
+	readonly overlays: Map<string, LiveAtlasTileLayerOverlay>;
 
 	readonly scale: number;
 
@@ -104,6 +107,8 @@ export default class LiveAtlasMapDefinition {
 
 		this.tileUpdateInterval = options.tileUpdateInterval || undefined;
 		this.center = options.center || undefined;
+
+		this.overlays = options.overlays || new Map();
 
 		this.scale = (1 / Math.pow(2, this.nativeZoomLevels));
 	}

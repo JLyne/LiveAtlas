@@ -19,11 +19,9 @@ import {Util} from "leaflet";
 
 // noinspection JSUnusedGlobalSymbols
 export class Pl3xmapTileLayer extends LiveAtlasTileLayer {
-	constructor(options: LiveAtlasTileLayerOptions) {
-		super(`${options.mapSettings.baseUrl}${options.mapSettings.world.name}/{z}/{x}_{y}.png`, options);
-
-		options.zoomReverse = false;
-
-		Util.setOptions(this, options);
+	constructor(map: LiveAtlasTileLayerOptions) {
+		super(map);
+		this._url = `${map.baseUrl}{z}/{x}_{y}.png`;
+		Util.setOptions(this, {zoomReverse: false});
 	}
 }

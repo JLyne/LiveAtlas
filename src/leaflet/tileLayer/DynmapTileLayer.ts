@@ -31,7 +31,6 @@ import {TileInformation} from "dynmap";
 // noinspection JSUnusedGlobalSymbols
 export class DynmapTileLayer extends LiveAtlasTileLayer {
 	private readonly _namedTiles: Map<any, any>;
-	private readonly _baseUrl: string;
 	private readonly _store: Store = useStore();
 
 	private readonly _night: ComputedRef<boolean>;
@@ -41,12 +40,9 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 	private _updateFrame: number = 0;
 
 	constructor(options: LiveAtlasTileLayerOptions) {
-		super('', options);
+		super(options);
 
-		this._mapSettings = options.mapSettings;
-		this._baseUrl = options.mapSettings.baseUrl;
 		this._namedTiles = Object.seal(new Map());
-
 		this._pendingUpdates = computed(() => !!this._store.state.pendingTileUpdates.length);
 		this._night = computed(() => this._store.getters.night);
 	}
@@ -62,7 +58,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 		});
 
 		this._nightUnwatch = watch(this._night, () =>  {
-			if(this._mapSettings.nightAndDay) {
+			if(this.options.nightAndDay) {
 				this.redraw();
 			}
 		});
@@ -83,8 +79,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 	}
 
 	private getTileUrlFromName(name: string, timestamp?: number) {
-		const path = escape(`${this._mapSettings.world.name}/${name}`);
-		let url = `${this._baseUrl}${path}`;
+		let url = this.options.baseUrl + name;
 
 		if(typeof timestamp !== 'undefined') {
 			url += (url.indexOf('?') === -1 ? `?timestamp=${timestamp}` : `&timestamp=${timestamp}`);
@@ -164,21 +159,21 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 		// izoom: max zoomed in = 0, max zoomed out = this.options.maxZoom
 		// zoomoutlevel: izoom < mapzoomin -> 0, else -> izoom - mapzoomin (which ranges from 0 till mapzoomout)
 		const izoom = this._getZoomForUrl(),
-			zoomoutlevel = Math.max(0, izoom - this._mapSettings.extraZoomLevels),
+			zoomoutlevel = Math.max(0, izoom - (this.options.extraZoomLevels || 0)),
 			scale = (1 << zoomoutlevel),
 			x = scale * coords.x,
 			y = scale * coords.y;
 
 		return {
-			prefix: this._mapSettings.prefix,
-			nightday: (this._mapSettings.nightAndDay && !this._night.value) ? '_day' : '',
+			prefix: this.options.prefix || '',
+			nightday: (this.options.nightAndDay && !this._night.value) ? '_day' : '',
 			scaledx: x >> 5,
 			scaledy: y >> 5,
 			zoom: this.zoomprefix(zoomoutlevel),
 			zoomprefix: (zoomoutlevel == 0) ? "" : (this.zoomprefix(zoomoutlevel) + "_"),
 			x: x,
 			y: y,
-			fmt: this._mapSettings.imageFormat || 'png'
+			fmt: this.options.imageFormat || 'png'
 		};
 	}
 

@@ -120,7 +120,7 @@ export default class OverviewerMapProvider extends MapProvider {
 				name: tileset.path,
 				displayName: tileset.name || tileset.path,
 
-				baseUrl: this.config,
+				baseUrl: `${this.config}${tileset.base}/${tileset.path}`,
 				tileSize,
 				projection: new OverviewerProjection({
 					upperRight: serverResponse.CONST.UPPERRIGHT,

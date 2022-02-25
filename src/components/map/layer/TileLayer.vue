@@ -15,38 +15,29 @@
   -->
 
 <script lang="ts">
-import {defineComponent, onUnmounted, computed, watch} from "@vue/runtime-core";
-import {Map} from 'leaflet';
+import {computed, defineComponent, onUnmounted, watch} from "@vue/runtime-core";
 import {useStore} from "@/store";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {LiveAtlasTileLayer} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 
 export default defineComponent({
 	props: {
-		name: {
-			type: String,
-			required: true
-		},
-		map: {
-			type: Object as () => LiveAtlasMapDefinition,
+		options: {
+			type: Object as () => LiveAtlasTileLayerOptions,
 			required: true
 		},
 		leaflet: {
-			type: Object as () => Map,
+			type: Object as () => LiveAtlasLeafletMap,
 			required: true,
 		}
 	},
 
 	setup(props) {
 		const store = useStore(),
-			active = computed(() => props.map === store.state.currentMap);
+			active = computed(() => props.options instanceof LiveAtlasMapDefinition && props.options === store.state.currentMap);
 
-		let layer: LiveAtlasTileLayer;
-
-		layer = store.state.currentMapProvider!.createTileLayer({
-			errorTileUrl: 'images/blank.png',
-			mapSettings: Object.freeze(JSON.parse(JSON.stringify(props.map))),
-		});
+		let layer = store.state.currentMapProvider!.createTileLayer(Object.freeze(JSON.parse(JSON.stringify(props.options))));
 
 		const enableLayer = () => props.leaflet.addLayer(layer),
 			disableLayer = () => layer.remove();

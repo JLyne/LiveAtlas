@@ -14,33 +14,66 @@
  * limitations under the License.
  */
 
-import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {Map as LeafletMap, Coords, DomUtil, DoneCallback, TileLayer, TileLayerOptions, Util} from "leaflet";
 import {LiveAtlasInternalTiles, LiveAtlasTileElement} from "@/index";
 import falseFn = Util.falseFn;
+import {ImageFormat} from "dynmap";
 
-export interface LiveAtlasTileLayerOptions extends TileLayerOptions {
-	mapSettings: LiveAtlasMapDefinition;
-	errorTileUrl: string;
+export interface LiveAtlasTileLayerOptions {
+	baseUrl: string;
+	tileSize: number;
+	imageFormat: ImageFormat;
+	prefix?: string;
+	nightAndDay?: boolean;
+	nativeZoomLevels: number;
+	extraZoomLevels?: number;
+	minZoom?: number;
+	maxZoom?: number;
+	tileUpdateInterval?: number;
+}
+
+export interface LiveAtlasTileLayerInternalOptions extends TileLayerOptions {
+	baseUrl: string;
+	imageFormat: ImageFormat;
+	prefix: string;
+	nightAndDay: boolean;
+	extraZoomLevels: number;
+	tileUpdateInterval?: number;
 }
 
 // noinspection JSUnusedGlobalSymbols
 export abstract class LiveAtlasTileLayer extends TileLayer {
-	declare options: LiveAtlasTileLayerOptions;
+	declare options: LiveAtlasTileLayerInternalOptions;
 	declare _tiles: LiveAtlasInternalTiles;
+	declare _url: string;
 
-	protected _mapSettings: LiveAtlasMapDefinition;
-	private readonly tileTemplate: LiveAtlasTileElement;
+	protected readonly tileTemplate: LiveAtlasTileElement;
 	protected readonly loadQueue: LiveAtlasTileElement[] = [];
-	private readonly loadingTiles: Set<LiveAtlasTileElement> = Object.seal(new Set());
-	private refreshTimeout?: ReturnType<typeof setTimeout>;
+	protected readonly loadingTiles: Set<LiveAtlasTileElement> = Object.seal(new Set());
+	protected refreshTimeout?: ReturnType<typeof setTimeout>;
 
-	private static genericLoadError = new Error('Tile failed to load');
+	protected static genericLoadError = new Error('Tile failed to load');
 
-	protected constructor(url: string, options: LiveAtlasTileLayerOptions) {
-		super(url, options);
+	protected constructor(options: LiveAtlasTileLayerOptions) {
+		super('', {
+			errorTileUrl: 'images/blank.png',
+			zoomReverse: true,
+			tileSize: options.tileSize,
+			maxNativeZoom: options.nativeZoomLevels,
+			minZoom: options.minZoom,
+			maxZoom: options.maxZoom || options.nativeZoomLevels + (options.extraZoomLevels || 0),
+		});
 
-		this._mapSettings = options.mapSettings;
+		Util.setOptions(this, {
+			imageFormat: options.imageFormat,
+			baseUrl: options.baseUrl,
+			tileUpdateInterval: options.tileUpdateInterval,
+			nightAndDay: !!options.nightAndDay,
+			prefix: options.prefix || '',
+			extraZoomLevels: options.extraZoomLevels || 0,
+			nativeZoomLevels: options.nativeZoomLevels,
+		});
+
 		this.tileTemplate = DomUtil.create('img', 'leaflet-tile') as LiveAtlasTileElement;
 		this.tileTemplate.style.width = this.tileTemplate.style.height = this.options.tileSize + 'px';
 		this.tileTemplate.alt = '';
@@ -53,14 +86,6 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 		}
 
 		Object.seal(this.tileTemplate);
-
-		options.maxZoom = this._mapSettings.nativeZoomLevels + this._mapSettings.extraZoomLevels;
-		options.maxNativeZoom = this._mapSettings.nativeZoomLevels;
-		options.zoomReverse = true;
-		options.tileSize = this._mapSettings.tileSize;
-		options.minZoom = 0;
-
-		Util.setOptions(this, options);
 	}
 
 	// @method createTile(coords: Object, done?: Function): HTMLElement
@@ -209,8 +234,8 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 	}
 
 	onAdd(map: LeafletMap): this {
-		if(this._mapSettings.tileUpdateInterval) {
-			this.refreshTimeout = setTimeout(() => this.handlePeriodicRefresh(), this._mapSettings.tileUpdateInterval);
+		if(this.options.tileUpdateInterval) {
+			this.refreshTimeout = setTimeout(() => this.handlePeriodicRefresh(), this.options.tileUpdateInterval);
 		}
 
 		return super.onAdd(map);
@@ -229,6 +254,6 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 			this.refresh();
 		}
 
-		this.refreshTimeout = setTimeout(() => this.handlePeriodicRefresh(), this._mapSettings.tileUpdateInterval);
+		this.refreshTimeout = setTimeout(() => this.handlePeriodicRefresh(), this.options.tileUpdateInterval);
 	}
 }
