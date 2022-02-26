@@ -23,6 +23,12 @@ import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import {Coordinate, LiveAtlasAreaMarker} from "@/index";
 import {arePointsEqual, createPopup, isStyleEqual, tooltipOptions} from "@/util/paths";
 
+/**
+ * Creates a {@link LiveAtlasPolyline} or {@link LiveAtlasPolygon} with the given options
+ * @param {LiveAtlasAreaMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @return The created LiveAtlasPolyline or LiveAtlasPolygon
+ */
 export const createAreaLayer = (options: LiveAtlasAreaMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = options.points.map(projectPointsMapCallback, converter) as LatLngExpression[] | LatLngExpression[][],
@@ -39,6 +45,13 @@ export const createAreaLayer = (options: LiveAtlasAreaMarker, converter: Functio
 	return area;
 };
 
+/**
+ * Updates or creates a {@link LiveAtlasPolyline} or {@link LiveAtlasPolygon} with the given options
+ * @param {LiveAtlasPolyline | LiveAtlasPolygon} area Optional existing LiveAtlasPolyline or LiveAtlasPolygon
+ * @param {LiveAtlasAreaMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @returns The created or updated LiveAtlasPolyline or LiveAtlasPolygon
+ */
 export const updateAreaLayer = (area: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasAreaMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	if (!area) {
 		return createAreaLayer(options, converter);
@@ -80,6 +93,14 @@ export const updateAreaLayer = (area: LiveAtlasPolyline | LiveAtlasPolygon | und
 	return area;
 };
 
+/**
+ * Recursively applies the given function to the given array of {@link Coordinate}
+ * @param point
+ * @see {@link createAreaLayer}
+ * @see {@link updateAreaLayer}
+ * @returns Projected points as {@link LatLngExpression}
+ * @private
+ */
 const projectPointsMapCallback = function(this: Function, point: Coordinate | Coordinate[] | Coordinate[][]): LatLngExpression | LatLngExpression[] {
 	if(Array.isArray(point)) {
 		return point.map(projectPointsMapCallback, this) as LatLngExpression[];
@@ -89,6 +110,14 @@ const projectPointsMapCallback = function(this: Function, point: Coordinate | Co
 	}
 };
 
+/**
+ * Calculates shape points for the given individual x y and z arrays
+ * @param {number[]} x Array of x coordinates
+ * @param {[number, number]} y Array of y coordinates
+ * @param {number[]} z Array of z coordinates
+ * @param outline Whether the resulting points will be used in a shape without a fill color
+ * @returns Array of Coordinates
+ */
 export const getPoints = (x: number[], y: [number, number], z: number[], outline: boolean): Coordinate[] | Coordinate[][] => {
 	if (x.length === 2) {	/* Only 2 points */
 		if (y[0] === y[1]) {
@@ -105,7 +134,16 @@ export const getPoints = (x: number[], y: [number, number], z: number[], outline
 	}
 };
 
-export const get3DBoxPoints = (x: number[], y: [number, number], z: number[]): Coordinate[][] => {
+/**
+ * Calculates cuboid points for the given individual x y and z arrays
+ * @param {number[]} x Array of x coordinates
+ * @param {[number, number]} y Array of y coordinates
+ * @param {number[]} z Array of z coordinates
+ * @private
+ * @see {@link getPoints}
+ * @returns Array of Coordinates
+ */
+const get3DBoxPoints = (x: number[], y: [number, number], z: number[]): Coordinate[][] => {
 	const maxX = x[0],
 		minX = x[1],
 		maxY = y[0],
@@ -148,7 +186,17 @@ export const get3DBoxPoints = (x: number[], y: [number, number], z: number[]): C
 	];
 };
 
-export const get2DBoxPoints = (x: number[], y: [number, number], z: number[], outline: boolean): Coordinate[] => {
+/**
+ * Calculates rectangle points for the given individual x y and z arrays
+ * @param {number[]} x Array of x coordinates
+ * @param {[number, number]} y Array of y coordinates
+ * @param {number[]} z Array of z coordinates
+ * @param outline Whether the resulting points will be used in a shape without a fill color
+ * @private
+ * @see {@link getPoints}
+ * @returns Array of Coordinates
+ */
+const get2DBoxPoints = (x: number[], y: [number, number], z: number[], outline: boolean): Coordinate[] => {
 	const maxX = x[0],
 		minX = x[1],
 		minY = y[1],
@@ -173,7 +221,16 @@ export const get2DBoxPoints = (x: number[], y: [number, number], z: number[], ou
 	}
 };
 
-export const get3DShapePoints = (x: number[], y: [number, number], z: number[]): Coordinate[][] => {
+/**
+ * Calculates non-cuobidal 3d shape points for the given individual x y and z arrays
+ * @param {number[]} x Array of x coordinates
+ * @param {[number, number]} y Array of y coordinates
+ * @param {number[]} z Array of z coordinates
+ * @private
+ * @see {@link getPoints}
+ * @returns Array of Coordinates
+ */
+const get3DShapePoints = (x: number[], y: [number, number], z: number[]): Coordinate[][] => {
 	const toplist = [],
 		botlist = [],
 		polylist = [];
@@ -198,7 +255,17 @@ export const get3DShapePoints = (x: number[], y: [number, number], z: number[]):
 	return polylist;
 };
 
-export const get2DShapePoints = (x: number[], y: [number, number], z: number[], outline: boolean): Coordinate[] => {
+/**
+ * Calculates non-quadrilateral 2d shape points for the given individual x y and z arrays
+ * @param {number[]} x Array of x coordinates
+ * @param {[number, number]} y Array of y coordinates
+ * @param {number[]} z Array of z coordinates
+ * @param outline Whether the resulting points will be used in a shape without a fill color
+ * @private
+ * @see {@link getPoints}
+ * @returns Array of Coordinates
+ */
+const get2DShapePoints = (x: number[], y: [number, number], z: number[], outline: boolean): Coordinate[] => {
 	const points = [];
 
 	for (let i = 0; i < x.length; i++) {

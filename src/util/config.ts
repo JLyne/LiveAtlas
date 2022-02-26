@@ -21,11 +21,16 @@ import {useStore} from "@/store";
 import MapProvider from "@/providers/MapProvider";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
-const expectedConfigVersion = 1;
+const expectedConfigVersion = 1,
+	registeredProviders: Map<string, new (config: any) => MapProvider> = new Map(),
+	serverProviders: Map<string, MapProvider> = new Map();
 
-const registeredProviders: Map<string, new (config: any) => MapProvider> = new Map();
-const serverProviders: Map<string, MapProvider> = new Map();
-
+/**
+ * Registers the given {@link MapProvider} with the given id
+ * Server entries in {@link LiveAtlasGlobalConfig} with the given id will use the given MapProvider
+ * @param {string} id The id
+ * @param {new (config: any) => MapProvider} provider The MapProvider
+ */
 export const registerMapProvider = (id: string, provider: new (config: any) => MapProvider) => {
 	if(registeredProviders.has(id)) {
 		throw new TypeError(`${id} is already registered`);
@@ -34,10 +39,22 @@ export const registerMapProvider = (id: string, provider: new (config: any) => M
 	registeredProviders.set(id, provider);
 }
 
+/**
+ * Gets the MapProvider for the given server
+ * @param {string} server Name of the server
+ * @returns The MapProvider, if one exists
+ */
 export const getServerMapProvider = (server: string): MapProvider | undefined => {
 	return serverProviders.get(server);
 }
 
+/**
+ * Attempts to load server definitions from the provided config object
+ * @param {Object} config Config object to load server definitions from
+ * @returns Map of loaded servers
+ * @see {@link loadConfig}
+ * @private
+ */
 const loadLiveAtlasConfig = (config: any): Map<string, LiveAtlasServerDefinition> => {
 	const check = '\nCheck your server configuration in index.html is correct.',
 		result = new Map<string, LiveAtlasServerDefinition>();
@@ -78,6 +95,12 @@ const loadLiveAtlasConfig = (config: any): Map<string, LiveAtlasServerDefinition
 	return result;
 };
 
+/**
+ * Attempts to load a Dynmap server definition from the given object
+ * @param {Object} config Config object to load from
+ * @see {@link loadConfig}
+ * @private
+ */
 const loadDefaultConfig = (config: DynmapUrlConfig): Map<string, LiveAtlasServerDefinition> => {
 	const check = '\nCheck your standalone/config.js file exists and is being loaded correctly.';
 	const result = new Map<string, LiveAtlasServerDefinition>();
@@ -97,6 +120,14 @@ const loadDefaultConfig = (config: DynmapUrlConfig): Map<string, LiveAtlasServer
 	return result;
 };
 
+/**
+ * Attempts to load server definitions from the provided config object
+ * If no servers definitions are present in the object, an attempt will be made to load a Dynmap server definition from
+ * a global dynmap config object defined by standalone/config.js
+ * @param {Object} config Config object to load server definitions from
+ * @returns Map of loaded servers
+ * @private
+ */
 export const loadConfig = (config: LiveAtlasGlobalConfig): Map<string, LiveAtlasServerDefinition> => {
 	if (!config) {
 		throw new ConfigurationError(`No configuration found.\nCheck for any syntax errors in your configuration in index.html. Your browser console may contain additional information.`);

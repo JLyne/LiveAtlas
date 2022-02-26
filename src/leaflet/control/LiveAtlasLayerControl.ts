@@ -30,6 +30,10 @@ import LayersOptions = Control.LayersOptions;
 
 const store = useStore();
 
+/**
+ * Extension of leaflet's standard {@link Control.Layers}
+ * Sorts layers by position, adds additional keyboard navigation, adjusts to viewport size and tracks expanded state in vuex
+ */
 export class LiveAtlasLayerControl extends Control.Layers {
 	declare _map ?: LeafletMap;
 	declare _overlaysList?: HTMLElement;

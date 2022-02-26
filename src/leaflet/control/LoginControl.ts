@@ -26,6 +26,9 @@ import {ActionTypes} from "@/store/action-types";
 import {notify} from "@kyvg/vue3-notification";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
+/**
+ * Leaflet map control providing a login/logout button which opens the login modal/logs out on click
+ */
 export class LoginControl extends Control {
 	declare _map: LiveAtlasLeafletMap;
 	declare options: ControlOptions;

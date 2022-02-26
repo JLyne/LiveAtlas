@@ -25,7 +25,7 @@ const playerImageCache = new Map<string, HTMLImageElement>(),
 	playerImageQueue: PlayerImageQueueEntry[] = [];
 
 /**
- * Returns the corresponding pixel size for the given {@see LiveAtlasPlayerImageSize}
+ * Returns the corresponding pixel size for the given {@link LiveAtlasPlayerImageSize}
  * @param {LiveAtlasPlayerImageSize} imageSize The image size to get the pixel size for
  * @returns The pixel size
  */
@@ -42,12 +42,12 @@ export const getImagePixelSize = (imageSize: LiveAtlasPlayerImageSize) => {
 }
 
 /**
- * Creates an {@see HTMLImageElement} containing an image representing the given {@see LiveAtlasPlayer}
- * at the given {@see LiveAtlasPlayerImageSize} and ensures it has loaded successfully
+ * Creates an {@link HTMLImageElement} containing an image representing the given {@link LiveAtlasPlayer}
+ * at the given {@link LiveAtlasPlayerImageSize} and ensures it has loaded successfully
  *
  * If an image has previously been loaded for the same player and image size, a cached copy of the image element
  * will be returned; Otherwise an attempt will be made to load the player image from the URL specified by the current
- * {@see LiveAtlasMapProvider}
+ * {@link LiveAtlasMapProvider}
  *
  * The number of concurrent image loads is limited and additional loads will be queued. If this method is called
  * with the same player and image size multiple times, the load will only be queued once and the same element will be
@@ -55,7 +55,8 @@ export const getImagePixelSize = (imageSize: LiveAtlasPlayerImageSize) => {
  *
  * @param {LiveAtlasPlayer} player The player to retrieve the image for
  * @param {LiveAtlasPlayerImageSize} size The image size to retrieve
- * @returns {Promise<HTMLImageElement>} A promise which will resolve to a {@see HTMLImageElement} with the loaded player
+ * @see {@link getDefaultPlayerImage}
+ * @returns {Promise<HTMLImageElement>} A promise which will resolve to a HTMLImageElement with the loaded player
  * image as the src. The promise will reject if the image fails to load
  */
 export const getPlayerImage = (player: LiveAtlasPlayer | string, size: LiveAtlasPlayerImageSize): Promise<HTMLImageElement> => {
@@ -105,7 +106,8 @@ export const getPlayerImage = (player: LiveAtlasPlayer | string, size: LiveAtlas
 
 /**
  * Returns the default "Steve" player image. This image can be used as a placeholder whilst waiting for
- * {@see getPlayerImage} to complete
+ * {@link getPlayerImage} to complete
+ * @see {@link getPlayerImage}
  * @returns The default player image
  */
 export const getDefaultPlayerImage = () => {
@@ -131,7 +133,7 @@ const tickPlayerImageQueue = () => {
 
 /**
  * Clears the player image cache
- * Future calls to {@see getPlayerImage} will result in fresh image loads
+ * Future calls to {@link getPlayerImage} will result in fresh image loads
  */
 export const clearPlayerImageCache = () => {
 	playerImageCache.clear();

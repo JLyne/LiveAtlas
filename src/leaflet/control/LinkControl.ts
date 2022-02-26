@@ -24,6 +24,9 @@ import { toClipboard } from '@soerenmartius/vue3-clipboard';
 import {notify} from "@kyvg/vue3-notification";
 import {computed} from "@vue/runtime-core";
 
+/**
+ * Leaflet map control providing a button for copying a link for the current map view to the clipboard
+ */
 export class LinkControl extends Control {
 	declare options: ControlOptions
 

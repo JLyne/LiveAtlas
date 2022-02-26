@@ -21,6 +21,9 @@ import {watch} from "@vue/runtime-core";
 
 import "@/assets/icons/chat.svg";
 
+/**
+ * Leaflet map control providing a chat button which opens the chatbox on click
+ */
 export class ChatControl extends Control {
 	declare options: ControlOptions
 

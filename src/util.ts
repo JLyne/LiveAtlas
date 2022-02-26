@@ -22,7 +22,7 @@ import {
 	LiveAtlasDimension,
 	LiveAtlasGlobalMessageConfig,
 	LiveAtlasLocation,
-	LiveAtlasMessageConfig,
+	LiveAtlasMessageConfig, LiveAtlasParsedUrl,
 } from "@/index";
 import {notify} from "@kyvg/vue3-notification";
 import {globalMessages, serverMessages} from "../messages";
@@ -34,6 +34,11 @@ export const titleColoursRegex = /§[0-9a-f]/ig;
 export const netherWorldNameRegex = /[_\s]?nether([\s_]|$)/i;
 export const endWorldNameRegex = /(^|[_\s])end([\s_]|$)/i;
 
+/**
+ * Calculates 24 hour time of day and the current day from the given server time
+ * @param {number} serverTime Server time in ticks
+ * @returns The equivalent 24 hour time, current day and whether it is currently day or night
+ */
 export const getMinecraftTime = (serverTime: number) => {
 	const day = serverTime >= 0 && serverTime < 13700;
 
@@ -51,14 +56,26 @@ export const getMinecraftTime = (serverTime: number) => {
 	};
 }
 
-export const parseUrl = (url: URL) => {
+/**
+ * Parses the given {@link URL} into a {@link LiveAtlasParsedUrl}, if the URL matches any known URL formats
+ * @param {URL} url The URL to parse
+ * @returns {LiveAtlasParsedUrl | null} A LiveAtlasParsedUrl if the provided URL matched any known URL formats,
+ * otherwise null
+ */
+export const parseUrl = (url: URL): LiveAtlasParsedUrl | null => {
 	const query = new URLSearchParams(url.search),
 		hash = url.hash.replace('#', '');
 
 	return hash ? parseMapHash(hash) : parseMapSearchParams(query);
 }
 
-export const parseMapHash = (hash: string) => {
+/**
+ * Parses the given hash into a {@link LiveAtlasParsedUrl}, if the hash matches the LiveAtlas URL hash format
+ * @param {string} hash The hash to parse
+ * @returns {LiveAtlasParsedUrl | null} A LiveAtlasParsedUrl if the provided hash matched the LiveAtlas URL
+ * hash format, otherwise null
+ */
+export const parseMapHash = (hash: string): LiveAtlasParsedUrl | null => {
 	const parts = hash.replace('#', '').split(';');
 
 	const world = parts[0] || undefined,
@@ -81,7 +98,13 @@ export const parseMapHash = (hash: string) => {
 	});
 }
 
-export const parseMapSearchParams = (query: URLSearchParams) => {
+/**
+ * Parses the given {@link URLSearchParams} into a {@link LiveAtlasParsedUrl}, if it matches any known query string formats
+ * @param {URLSearchParams} query The URLSearchParams to parse
+ * @returns {LiveAtlasParsedUrl | null} A LiveAtlasParsedUrl if the provided hash matched the LiveAtlas URL
+ * hash format, otherwise null
+ */
+export const parseMapSearchParams = (query: URLSearchParams): LiveAtlasParsedUrl | null => {
 	const world = query.get('worldname') /* Dynmap */ || query.get('world') /* Pl3xmap */ || undefined,
 		map = query.has('worldname') ? query.get('mapname') || undefined : undefined, //Dynmap only
 		location = [
@@ -104,6 +127,15 @@ export const parseMapSearchParams = (query: URLSearchParams) => {
 	});
 }
 
+/**
+ * Validates the given {@link LiveAtlasParsedUrl} to ensure all required properties are present and have valid values
+ * @param {LiveAtlasParsedUrl} parsed The parsed URL to validate
+ * @return {LiveAtlasParsedUrl | null} The parsed URL, possibly modified to ensure validity, or null if it is invalid
+ * and cannot be fixed
+ * @see {@link parseMapSearchParams}
+ * @see {@link parseMapHash}
+ * @private
+ */
 const validateParsedUrl = (parsed: any) => {
 	if(typeof parsed.zoom !== 'undefined' && (isNaN(parsed.zoom) || parsed.zoom < 0 || !isFinite(parsed.zoom))) {
 		parsed.zoom = undefined;
@@ -116,6 +148,14 @@ const validateParsedUrl = (parsed: any) => {
 	return parsed;
 }
 
+/**
+ * Generates a LiveAtlas formatted URL hash representing the given {@link LiveAtlasMapDefinition}map, {@link Coordinate}
+ * location and zoom level
+ * @param {LiveAtlasMapDefinition} map The map
+ * @param {Coordinate} location The location
+ * @param {number} zoom The zoom level
+ * @return {string} The URL hash (including the #), or an empty string if a valid hash cannot be constructed
+ */
 export const getUrlForLocation = (map: LiveAtlasMapDefinition, location: Coordinate, zoom: number): string => {
 	const x = Math.round(location.x),
 			y = Math.round(location.y),
@@ -129,6 +169,10 @@ export const getUrlForLocation = (map: LiveAtlasMapDefinition, location: Coordin
 		return `#${map.world.name};${map.name};${locationString};${zoom}`;
 }
 
+/**
+ * Focuses the first html element which matches the given selector, if any
+ * @param {string} selector The selector string
+ */
 export const focus = (selector: string) => {
 	const element = document.querySelector(selector);
 
@@ -139,31 +183,74 @@ export const focus = (selector: string) => {
 
 const decodeTextarea = document.createElement('textarea');
 
+/**
+ * Decodes HTML entities in the given string using a <textarea>
+ * @param {string} text The text to decode HTML entities in
+ * @returns {string} The given text with any HTML entities decoded
+ */
 export const decodeHTMLEntities = (text: string) => {
 	decodeTextarea.innerHTML = text;
 	return decodeTextarea.textContent || '';
 }
 
+/**
+ * Strips HTML from the given string using a contextual {@link DocumentFragment} and converts <br>s to spaces
+ * @param {string} text The text to strip HTML from
+ * @returns {string} The given text with HTML stripped
+ */
 export const stripHTML = (text: string) => {
 	return documentRange.createContextualFragment(text.replace(brToSpaceRegex,'&nbsp;')).textContent || '';
 }
 
+/**
+ * Default success callback function for VueClipboard, will display a notification with the configured copy success
+ * message
+ */
 export const clipboardSuccess = () => () => notify(useStore().state.messages.copyToClipboardSuccess);
 
+/**
+ * Default error callback function for VueClipboard, will display a notification with the configured copy error
+ * message
+ */
 export const clipboardError = () => (e: Error) => {
 	notify({ type: 'error', text: useStore().state.messages.copyToClipboardError });
 	console.error('Error copying to clipboard', e);
 };
 
+/**
+ * Creates a {@link LiveAtlasMessageConfig} from the provided config object. The provided object will be checked for all
+ * expected LiveAtlasMessageConfig messages, with fallback "Missing message" messages being used when a message is
+ * missing from the provided object.
+ * @param {Object} config Config object containing messages to include in the final LiveAtlasMessageConfig. Should
+ * contain a complete or subset of keys from LiveAtlasMessageConfig, additional keys will be ignored.
+ */
 export const getMessages = (config: any = {}) => {
 	return Object.assign(_getMessages(globalMessages, config),
 		_getMessages(serverMessages, config)) as LiveAtlasMessageConfig;
 }
 
+/**
+ * Creates a {@link LiveAtlasGlobalMessageConfig} from the provided config object. The provided object will be checked
+ * for all expected LiveAtlasGlobalMessageConfig messages, with fallback "Missing message" messages being used
+ * when a message is missing from the provided object.
+ * @param {Object} config Config object containing messages to include in the final LiveAtlasGlobalMessageConfig.
+ * Should contain a complete or subset of keys from LiveAtlasGlobalMessageConfig, additional keys will be ignored.
+ */
 export const getGlobalMessages = (config: any = {}) => {
 	return _getMessages(globalMessages, config) as LiveAtlasGlobalMessageConfig;
 }
 
+/**
+ * Creates an object containing the keys present in the messageKeys object and the values present in the config object.
+ *
+ * For each key, the config object is checked for a corresponding value. A fallback "Missing message" value is used if
+ * config object does not contain a value.
+ * @param {Object} messageKeys The object to take the keys from
+ * @param {Object} config The object to take the values from, if present
+ * @see {@link getMessages}
+ * @see {@link getGlobalMessages}
+ * @private
+ */
 const _getMessages = (messageKeys: any, config: any = {}) => {
 	const messages: any = {};
 
@@ -190,7 +277,7 @@ export const getBounds = (x: number[], y: number[], z: number[]): LiveAtlasBound
 }
 
 /**
- * Determines the bounds required to enclose the given array of {@see Coordinate}s
+ * Determines the bounds required to enclose the given array of {@link Coordinate}s
  * Multiple dimension arrays are accepted and will be handled recursively
  * @param {Coordinate[]} points Points to determine the bounds for
  * @returns {LiveAtlasBounds} The calculated bounds
@@ -220,7 +307,7 @@ export const getBoundsFromPoints = (points: Coordinate[]): LiveAtlasBounds => {
 }
 
 /**
- * Determines the center point of the given {@see LiveAtlasBounds}
+ * Determines the center point of the given {@link LiveAtlasBounds}
  * @param {LiveAtlasBounds} bounds The bounds to find the center point for
  * @return {LiveAtlasLocation} The center point
  */
@@ -233,7 +320,8 @@ export const getMiddle = (bounds: LiveAtlasBounds): LiveAtlasLocation => {
 }
 
 /**
- * Creates an "allow-scripts" sandboxed <iframe> to be used by {@see runSandboxed}
+ * Creates an "allow-scripts" sandboxed <iframe>
+ * @see {@link runSandboxed}
  * @returns {Window} The iframe's contentWindow
  */
 const createIframeSandbox = () => {

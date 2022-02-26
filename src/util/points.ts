@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-import {LeafletMouseEvent, Marker} from "leaflet";
+import {LeafletMouseEvent} from "leaflet";
 import {GenericIcon} from "@/leaflet/icon/GenericIcon";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 import {LiveAtlasPointMarker} from "@/index";
 
-export const createPointLayer = (options: LiveAtlasPointMarker, converter: Function): Marker => {
+/**
+ * Creates a {@link GenericMarker} with the given options
+ * @param {LiveAtlasPointMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @return The created GenericMarker
+ */
+export const createPointLayer = (options: LiveAtlasPointMarker, converter: Function): GenericMarker => {
 	const marker = new GenericMarker(converter(options.location), options);
 
 	marker.on('click', (e: LeafletMouseEvent) => {
@@ -35,7 +41,14 @@ export const createPointLayer = (options: LiveAtlasPointMarker, converter: Funct
 	return marker;
 };
 
-export const updatePointLayer = (marker: Marker | undefined, options: LiveAtlasPointMarker, converter: Function): Marker => {
+/**
+ * Updates or creates a {@link GenericMarker} with the given options
+ * @param {?GenericMarker} marker Optional existing GenericMarker to update
+ * @param {LiveAtlasPointMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @returns The created or updated GenericMarker
+ */
+export const updatePointLayer = (marker: GenericMarker | undefined, options: LiveAtlasPointMarker, converter: Function): GenericMarker => {
 	if (!marker) {
 		return createPointLayer(options, converter);
 	}
@@ -71,6 +84,12 @@ export const updatePointLayer = (marker: Marker | undefined, options: LiveAtlasP
 	return marker;
 };
 
+/**
+ * Creates a popup element for the given marker
+ * @param {LiveAtlasPointMarker} options Marker options
+ * @returns {HTMLSpanElement} The marker element
+ * @private
+ */
 const createPopup = (options: LiveAtlasPointMarker) => {
 	const popup = document.createElement('span');
 

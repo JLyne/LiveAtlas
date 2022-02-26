@@ -37,6 +37,9 @@ export interface LoadingControlOptions extends ControlOptions {
 	delayIndicator?: number;
 }
 
+/**
+ * Leaflet map control which displays a loading spinner when any tiles are loading
+ */
 export class LoadingControl extends Control {
 	declare options: LoadingControlOptions;
 

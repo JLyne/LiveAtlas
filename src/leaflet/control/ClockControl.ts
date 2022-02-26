@@ -37,6 +37,9 @@ export interface ClockControlOptions extends ControlOptions {
 	showWeather: boolean;
 }
 
+/**
+ * Leaflet map control providing a clock which can display the current in-game time of day and weather
+ */
 export class ClockControl extends Control {
 	declare options: ClockControlOptions;
 	declare _container?: HTMLElement;

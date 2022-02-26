@@ -30,6 +30,9 @@ export interface CoordinatesControlOptions extends ControlOptions {
 	label: string;
 }
 
+/**
+ * Leaflet map control which displays in-game block coordinates when hovering over or tapping the map
+ */
 export class CoordinatesControl extends Control {
 	declare options: CoordinatesControlOptions;
 	declare _map ?: Map;

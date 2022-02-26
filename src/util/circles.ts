@@ -23,6 +23,12 @@ import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import {LiveAtlasCircleMarker} from "@/index";
 import {createPopup, tooltipOptions} from "@/util/paths";
 
+/**
+ * Creates a {@link LiveAtlasPolygon} with the given options
+ * @param {LiveAtlasCircleMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @return The created LiveAtlasPolygon
+ */
 export const createCircleLayer = (options: LiveAtlasCircleMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	const outline = !options.style.fillOpacity || (options.style.fillOpacity <= 0),
 		points = getCirclePoints(options, converter, outline),
@@ -39,6 +45,13 @@ export const createCircleLayer = (options: LiveAtlasCircleMarker, converter: Fun
 	return circle;
 };
 
+/**
+ * Updates or creates a {@link LiveAtlasPolyline} with the given options
+ * @param {?LiveAtlasPolyline | LiveAtlasPolygon | undefined} circle Optional existing LiveAtlasPolyline or LiveAtlasPolygons
+ * @param {LiveAtlasCircleMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @returns The created or updated LiveAtlasPolyline or LiveAtlasPolygon
+ */
 export const updateCircleLayer = (circle: LiveAtlasPolyline | LiveAtlasPolygon | undefined, options: LiveAtlasCircleMarker, converter: Function): LiveAtlasPolyline | LiveAtlasPolygon => {
 	if (!circle) {
 		return createCircleLayer(options, converter);
@@ -66,6 +79,13 @@ export const updateCircleLayer = (circle: LiveAtlasPolyline | LiveAtlasPolygon |
 	return circle;
 }
 
+/**
+ * Calculates projected points for the given {@link LiveAtlasCircleMarker}
+ * @param {LiveAtlasCircleMarker} options LiveAtlasCircleMarker to calculate points for
+ * @param {Function} converter Function for projecting the points
+ * @param outline Whether the resulting points will be used in a shape without a fill color
+ * @returns Array of projected points
+ */
 export const getCirclePoints = (options: LiveAtlasCircleMarker, converter: Function, outline: boolean): LatLngExpression[] => {
 	const points = [];
 

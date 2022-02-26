@@ -22,6 +22,12 @@ import {Coordinate, LiveAtlasLineMarker} from "@/index";
 import {LatLngExpression} from "leaflet";
 import {createPopup, tooltipOptions} from "@/util/paths";
 
+/**
+ * Creates a {@link LiveAtlasPolyline} with the given options
+ * @param {LiveAtlasLineMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @return The created LiveAtlasPolyline
+ */
 export const createLineLayer = (options: LiveAtlasLineMarker, converter: Function): LiveAtlasPolyline => {
 	const points = options.points.map(projectPointsMapCallback, converter),
 		line = new LiveAtlasPolyline(points, options);
@@ -37,6 +43,13 @@ export const createLineLayer = (options: LiveAtlasLineMarker, converter: Functio
 	return line;
 };
 
+/**
+ * Updates or creates a {@link LiveAtlasPolyline} with the given options
+ * @param {?LiveAtlasPolyline} line Optional existing LiveAtlasPolyline
+ * @param {LiveAtlasLineMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @returns The created or updated LiveAtlasPolyline
+ */
 export const updateLineLayer = (line: LiveAtlasPolyline | undefined, options: LiveAtlasLineMarker, converter: Function): LiveAtlasPolyline => {
 	if (!line) {
 		return createLineLayer(options, converter);
@@ -62,6 +75,13 @@ export const updateLineLayer = (line: LiveAtlasPolyline | undefined, options: Li
 	return line;
 }
 
+/**
+ * Recursively applies the given function to the given array of {@link Coordinate}
+ * @param point
+ * @see {@link createAreaLayer}
+ * @see {@link updateAreaLayer}
+ * @private
+ */
 const projectPointsMapCallback = function(point: Coordinate): LatLngExpression {
 	if(Array.isArray(point)) {
 		return projectPointsMapCallback(point);
@@ -71,6 +91,13 @@ const projectPointsMapCallback = function(point: Coordinate): LatLngExpression {
 	}
 };
 
+/**
+ * Calculates line points for the given individual x y and z arrays
+ * @param {number[]} x Array of x coordinates
+ * @param {[number, number]} y Array of y coordinates
+ * @param {number[]} z Array of z coordinates
+ * @returns Array of Coordinates
+ */
 export const getLinePoints = (x: number[], y: number[], z: number[]): Coordinate[] => {
 	const points = [];
 

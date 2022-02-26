@@ -24,11 +24,23 @@ export const tooltipOptions = {
 	interactive: false,
 };
 
+/**
+ * Determines if the 2 given arrays of {@link LatLngExpression} are equal by comparing the JSON serialised representations
+ * @param {LatLngExpression | LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]} oldPoints Points to compare
+ * @param {LatLngExpression | LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]} newPoints Other points to compare
+ * @return Whether both arrays of points are considered equal
+ */
 export const arePointsEqual = (oldPoints: LatLngExpression | LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][],
 						newPoints: LatLngExpression | LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]) => {
 	return JSON.stringify(oldPoints) === JSON.stringify(newPoints);
 }
 
+/**
+ * Determines if the 2 given {@link PathOptions} are equal by comapring their properties
+ * @param {PathOptions} oldStyle PathOptions to compare
+ * @param {PathOptions} newStyle Other PathOptions to compare
+ * @return Whether both PathOptions are considered equal
+ */
 export const isStyleEqual = (oldStyle: PathOptions, newStyle: PathOptions) => {
 	return oldStyle && newStyle
 		&& (oldStyle.color === newStyle.color)
@@ -38,6 +50,12 @@ export const isStyleEqual = (oldStyle: PathOptions, newStyle: PathOptions) => {
 		&& (oldStyle.fillOpacity === newStyle.fillOpacity)
 }
 
+/**
+ * Creates a popup element for the given marker
+ * @param {LiveAtlasPointMarker} options Marker options
+ * @param {string} className Classname to add to the popup element
+ * @returns {HTMLSpanElement} The marker element
+ */
 export const createPopup = (options: LiveAtlasPathMarker, className: string): HTMLElement => {
 	const popup = document.createElement('span');
 

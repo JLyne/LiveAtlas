@@ -25,6 +25,10 @@ export interface LogoControlOptions extends ControlOptions {
 	text: string;
 }
 
+/**
+ * Leaflet map control which displays an arbitrary image or text with an optional link
+ * Intended for use for dynmap logo components
+ */
 export class LogoControl extends Control {
 	declare options: LogoControlOptions;
 

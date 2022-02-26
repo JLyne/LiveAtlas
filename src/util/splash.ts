@@ -21,6 +21,10 @@ const app = document.getElementById('app'),
 	splashErrorMessage = document.getElementById('splash__error-message'),
 	splashRetry = document.getElementById('splash__error-retry');
 
+/**
+ * Shows the LiveAtlas splash screen, if it isn't already visible
+ * @param reset If true, any existing errors or retry counts will be removed
+ */
 export const showSplash = function(reset: boolean) {
 	if(!splash || !app) {
 		return;
@@ -48,6 +52,10 @@ export const showSplash = function(reset: boolean) {
 	});
 };
 
+/**
+ * Hides the LiveAtlas splash screen, if it is visible
+ * The splash screen is not fully hidden immediately, as it has a CSS defined fade out animation
+ */
 export const hideSplash = () => {
 	if(!splash || !app) {
 		return;
@@ -63,6 +71,16 @@ export const hideSplash = () => {
 	});
 };
 
+/**
+ * Displays the given error message on the splash screen
+ * If the splash screen is not currently visible {@link showSplash} should also be called
+ * @see {@link showSplash}
+ * @param {string} message The error message to display
+ * @param {boolean} fatal If true the loading spinner will be hidden to indicate a fatal error. This does not stop any
+ * ongoing processes the loading indicator was indicating
+ * @param {?number} attempts Optional number of previous retry attempts that occurred before the current error. If
+ * provided this will be displayed after the error message
+ */
 export const showSplashError = (message: string, fatal: boolean, attempts?: number) => {
 	if(splashError) {
 		splashError.setAttribute('aria-hidden', 'false');

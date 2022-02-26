@@ -53,6 +53,9 @@ let pendingUpdates: ComputedRef;
 const updateHandlers: Set<LiveAtlasMarkerUpdateCallback> = new Set();
 const setUpdateHandlers: { [key:string]: Set<LiveAtlasMarkerUpdateCallback>} = {};
 
+/**
+ * Starts handling of pending marker updates
+ */
 export const startUpdateHandling = () => {
 	const store = useStore();
 
@@ -65,6 +68,9 @@ export const startUpdateHandling = () => {
 	});
 }
 
+/**
+ * Stops handling of pending marker updates
+ */
 export const stopUpdateHandling = () => {
 	if(updateFrame) {
 		cancelAnimationFrame(updateFrame);
@@ -72,14 +78,27 @@ export const stopUpdateHandling = () => {
 	}
 }
 
+/**
+ * Registers the given callback as a global handler for marker updates
+ * @param {LiveAtlasMarkerUpdateCallback} callback The callback
+ */
 export const registerUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback) => {
 	updateHandlers.add(callback);
 }
 
+/**
+ * Unregisters the given callback as a global handler for marker updates
+ * @param {LiveAtlasMarkerUpdateCallback} callback The callback
+ */
 export const unregisterUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback) => {
 	updateHandlers.delete(callback);
 }
 
+/**
+ * Registers the given callback as a handler for marker updates in the given marker set
+ * @param {LiveAtlasMarkerUpdateCallback} callback The callback
+ * @param {string} set: The marker set id
+ */
 export const registerSetUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string) => {
 	if(!setUpdateHandlers[set]) {
 		setUpdateHandlers[set] = new Set();
@@ -88,6 +107,11 @@ export const registerSetUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback
 	setUpdateHandlers[set].add(callback);
 }
 
+/**
+ * Unregisters the given callback as a handler for marker updates in the given marker set
+ * @param {LiveAtlasMarkerUpdateCallback} callback The callback
+ * @param {string} set: The marker set id
+ */
 export const unregisterSetUpdateHandler = (callback: LiveAtlasMarkerUpdateCallback, set: string) => {
 	if(!setUpdateHandlers[set]) {
 		return;
@@ -96,6 +120,12 @@ export const unregisterSetUpdateHandler = (callback: LiveAtlasMarkerUpdateCallba
 	setUpdateHandlers[set].delete(callback);
 }
 
+/**
+ * Handles pending marker updates, if any exist
+ * Up to 10 updates will be taken from the list and the appropriate registered update handlers will be called
+ * If further updates remain, an animation frame will be scheduled for further calls
+ * @private
+ */
 const handlePendingUpdates = async () => {
 	const store = useStore(),
 		updates = await store.dispatch(ActionTypes.POP_MARKER_UPDATES, 10);
@@ -116,6 +146,16 @@ const handlePendingUpdates = async () => {
 	}
 };
 
+/**
+ * Creates the appropriate type of marker layer for the given {@link LiveAtlasMarker}
+ * @param {LiveAtlasMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @returns The created layer
+ * @see createPointLayer
+ * @see createAreaLayer
+ * @see createCircleLayer
+ * @see createLineLayer
+ */
 export const createMarkerLayer = (options: LiveAtlasMarker, converter: Function): Layer => {
 	switch(options.type) {
 		case LiveAtlasMarkerType.POINT:
@@ -129,6 +169,17 @@ export const createMarkerLayer = (options: LiveAtlasMarker, converter: Function)
 	}
 }
 
+/**
+ * Updates or creates an appropriate type of marker layer with the given options
+ * @param {?Layer} marker Optional existing marker layer to update
+ * @param {?LiveAtlasMarker} options Marker options
+ * @param {Function} converter Function for projecting the marker location onto the map
+ * @returns The created layer
+ * @see updatePointLayer
+ * @see updateAreaLayer
+ * @see updateCircleLayer
+ * @see updateLineLayer
+ */
 export const updateMarkerLayer = (marker: Layer | undefined, options: LiveAtlasMarker, converter: Function): Layer => {
 	switch(options.type) {
 		case LiveAtlasMarkerType.POINT:
