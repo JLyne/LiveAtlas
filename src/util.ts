@@ -14,29 +14,21 @@
  * limitations under the License.
  */
 
-import defaultImage from '@/assets/images/player_face.png';
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
 	Coordinate,
-	HeadQueueEntry,
-	LiveAtlasBounds, LiveAtlasDimension,
+	LiveAtlasBounds,
+	LiveAtlasDimension,
 	LiveAtlasGlobalMessageConfig,
 	LiveAtlasLocation,
 	LiveAtlasMessageConfig,
-	LiveAtlasPlayer,
-	LiveAtlasPlayerImageSize,
 } from "@/index";
 import {notify} from "@kyvg/vue3-notification";
 import {globalMessages, serverMessages} from "../messages";
 
 const documentRange = document.createRange(),
-	brToSpaceRegex = /<br \/>/g,
-	headCache = new Map<string, HTMLImageElement>(),
-	headUnresolvedCache = new Map<string, Promise<HTMLImageElement>>(),
-	headsLoading = new Set<string>(),
-
-	headQueue: HeadQueueEntry[] = [];
+	brToSpaceRegex = /<br \/>/g;
 
 export const titleColoursRegex = /§[0-9a-f]/ig;
 export const netherWorldNameRegex = /[_\s]?nether([\s_]|$)/i;
@@ -57,84 +49,6 @@ export const getMinecraftTime = (serverTime: number) => {
 		day: day,
 		night: !day
 	};
-}
-
-export const getImagePixelSize = (imageSize: LiveAtlasPlayerImageSize) => {
-	switch(imageSize) {
-		case 'large':
-		case 'body':
-			return 32;
-
-		case 'small':
-		default:
-			return 16;
-	}
-}
-
-export const getMinecraftHead = (player: LiveAtlasPlayer | string, size: LiveAtlasPlayerImageSize): Promise<HTMLImageElement> => {
-	const account = typeof  player === 'string' ? player : player.name,
-		uuid = typeof  player === 'string' ? undefined : player.uuid,
-		cacheKey = `${account}-${size}`;
-
-	if(headCache.has(cacheKey)) {
-		return Promise.resolve(headCache.get(cacheKey) as HTMLImageElement);
-	}
-
-	if(headUnresolvedCache.has(cacheKey)) {
-		return headUnresolvedCache.get(cacheKey) as Promise<HTMLImageElement>;
-	}
-
-	const promise = new Promise((resolve, reject) => {
-		const faceImage = new Image();
-
-		faceImage.onload = function() {
-			headCache.set(cacheKey, faceImage);
-			headsLoading.delete(cacheKey);
-			tickHeadQueue();
-			resolve(faceImage);
-		};
-
-		faceImage.onerror = function(e) {
-			console.warn(`Failed to retrieve face of ${account} with size ${size}!`);
-			headsLoading.delete(cacheKey);
-			tickHeadQueue();
-			reject(e);
-		};
-
-		headQueue.push({
-			name: account,
-			uuid,
-			size,
-			cacheKey,
-			image: faceImage,
-		});
-	}).finally(() => headUnresolvedCache.delete(cacheKey)) as Promise<HTMLImageElement>;
-
-	headUnresolvedCache.set(cacheKey, promise);
-	tickHeadQueue();
-
-	return promise;
-}
-
-export const getDefaultMinecraftHead = () => {
-	return defaultImage;
-}
-
-const tickHeadQueue = () => {
-	if(headsLoading.size > 8 || !headQueue.length) {
-		return;
-	}
-
-	const head = headQueue.pop() as HeadQueueEntry;
-
-	headsLoading.add(head.cacheKey);
-	head.image.src = useStore().state.components.players.imageUrl(head);
-
-	tickHeadQueue();
-}
-
-export const clearHeadCache = () => {
-	headCache.clear();
 }
 
 export const parseUrl = (url: URL) => {

@@ -18,9 +18,9 @@
  */
 
 import {BaseIconOptions, Icon, Layer, LayerOptions, Util} from 'leaflet';
-import {getImagePixelSize, getMinecraftHead} from '@/util';
 import defaultImage from '@/assets/images/player_face.png';
 import {LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
+import {getImagePixelSize, getPlayerImage} from "@/util/images";
 
 const playerImage: HTMLImageElement = document.createElement('img');
 playerImage.src = defaultImage;
@@ -122,7 +122,7 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 	}
 
 	updateImage() {
-		getMinecraftHead(this._player, this.options.imageSize).then(head => {
+		getPlayerImage(this._player, this.options.imageSize).then(head => {
 			this._playerImage!.src = head.src;
 		}).catch(() => {});
 	}

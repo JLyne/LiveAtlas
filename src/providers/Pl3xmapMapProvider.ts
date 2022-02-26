@@ -32,12 +32,13 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {ActionTypes} from "@/store/action-types";
-import {getBoundsFromPoints, getDefaultMinecraftHead, getMiddle, stripHTML, titleColoursRegex} from "@/util";
+import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {PointTuple} from "leaflet";
 import ConfigurationError from "@/errors/ConfigurationError";
 import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {getDefaultPlayerImage} from "@/util/images";
 
 export default class Pl3xmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -120,7 +121,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 					components: {
 						players: {
 							markers: undefined,
-							imageUrl: getDefaultMinecraftHead,
+							imageUrl: getDefaultPlayerImage,
 							grayHiddenPlayers: true,
 							showImages: true,
 						}
@@ -214,7 +215,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 			players: {
 				markers: undefined, //Configured per-world
-				imageUrl: getDefaultMinecraftHead,
+				imageUrl: getDefaultPlayerImage,
 
 				//Not configurable
 				showImages: true,

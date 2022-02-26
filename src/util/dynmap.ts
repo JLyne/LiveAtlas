@@ -32,8 +32,7 @@ import {
 } from "@/index";
 import {getPoints} from "@/util/areas";
 import {
-	decodeHTMLEntities, getBounds, getImagePixelSize,
-	getMiddle, guessWorldDimension,
+	decodeHTMLEntities, getBounds, getMiddle, guessWorldDimension,
 	stripHTML,
 	titleColoursRegex
 } from "@/util";
@@ -53,6 +52,7 @@ import {
 import {PointTuple} from "leaflet";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
+import {getImagePixelSize} from "@/util/images";
 
 export function buildServerConfig(response: Options): LiveAtlasServerConfig {
 	let title = 'Dynmap';

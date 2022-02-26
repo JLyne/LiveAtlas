@@ -251,7 +251,7 @@ interface LiveAtlasCircleMarker extends LiveAtlasPathMarker {
 	radius: PointTuple;
 }
 
-interface HeadQueueEntry {
+interface PlayerImageQueueEntry {
 	cacheKey: string;
 	name: string;
 	uuid?: string;
@@ -277,7 +277,7 @@ interface LiveAtlasComponentConfig {
 		markers?: LiveAtlasPlayerMarkerConfig;
 		showImages: boolean;
 		grayHiddenPlayers: boolean;
-		imageUrl: (entry: HeadQueueEntry) => string;
+		imageUrl: (entry: PlayerImageQueueEntry) => string;
 	};
 	coordinatesControl?: CoordinatesControlOptions;
 	clockControl?: ClockControlOptions;
@@ -298,7 +298,7 @@ interface LiveAtlasPartialComponentConfig {
 		markers?: LiveAtlasPlayerMarkerConfig;
 		showImages?: boolean;
 		grayHiddenPlayers?: boolean;
-		imageUrl?: (entry: HeadQueueEntry) => string;
+		imageUrl?: (entry: PlayerImageQueueEntry) => string;
 	};
 	coordinatesControl?: CoordinatesControlOptions;
 	clockControl?: ClockControlOptions;

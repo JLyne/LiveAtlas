@@ -24,7 +24,7 @@ import {computed, defineComponent, watch} from "@vue/runtime-core";
 import {LiveAtlasPlayer} from "@/index";
 import {onMounted, ref} from "vue";
 import {useStore} from "@/store";
-import {getMinecraftHead} from "@/util";
+import {getPlayerImage} from "@/util/images";
 
 export default defineComponent({
 	name: 'PlayerImage',
@@ -47,7 +47,7 @@ export default defineComponent({
 
 				if (imagesEnabled.value) {
 					try {
-						const result = await getMinecraftHead(props.player, 'small');
+						const result = await getPlayerImage(props.player, 'small');
 						image.value = result.src;
 					} catch (e) {
 					}

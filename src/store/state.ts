@@ -39,7 +39,8 @@ import {
 	LiveAtlasMarker, LiveAtlasMapViewTarget
 } from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {getDefaultMinecraftHead, getMessages} from "@/util";
+import {getMessages} from "@/util";
+import {getDefaultPlayerImage} from "@/util/images";
 
 export type State = {
 	version: string;
@@ -162,7 +163,7 @@ export const state: State = {
 			showImages: false,
 
 			// (world-settings.x.player-tracker.heads-url in squaremap)
-			imageUrl: getDefaultMinecraftHead,
+			imageUrl: getDefaultPlayerImage,
 		},
 
 		// Settings for coordinates control

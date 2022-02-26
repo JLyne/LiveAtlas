@@ -30,7 +30,6 @@ import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {
 	getBoundsFromPoints,
-	getDefaultMinecraftHead,
 	getMiddle,
 	guessWorldDimension,
 	runSandboxed,
@@ -43,6 +42,7 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {useStore} from "@/store";
+import {getDefaultPlayerImage} from "@/util/images";
 
 export default class OverviewerMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -247,7 +247,7 @@ export default class OverviewerMapProvider extends MapProvider {
 			//Not used by Overviewer
 			players: {
 				markers: undefined,
-				imageUrl: getDefaultMinecraftHead,
+				imageUrl: getDefaultPlayerImage,
 				showImages: false,
 				grayHiddenPlayers: false,
 			},
