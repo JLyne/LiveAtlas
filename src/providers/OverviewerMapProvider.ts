@@ -20,7 +20,6 @@
 import {
 	LiveAtlasAreaMarker,
 	LiveAtlasComponentConfig,
-	LiveAtlasDimension,
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet, LiveAtlasPointMarker,
 	LiveAtlasServerConfig,
@@ -29,7 +28,14 @@ import {
 } from "@/index";
 import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
-import {getBoundsFromPoints, getDefaultMinecraftHead, getMiddle, runSandboxed, stripHTML,} from "@/util";
+import {
+	getBoundsFromPoints,
+	getDefaultMinecraftHead,
+	getMiddle,
+	guessWorldDimension,
+	runSandboxed,
+	stripHTML,
+} from "@/util";
 import ConfigurationError from "@/errors/ConfigurationError";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 import {OverviewerTileLayer} from "@/leaflet/tileLayer/OverviewerTileLayer";
@@ -63,7 +69,7 @@ export default class OverviewerMapProvider extends MapProvider {
 
 			//Not used by overviewer
 			expandUI: false,
-			defaultZoom: 0,
+			defaultZoom: 0, //Defined per map
 			defaultMap: undefined,
 			defaultWorld: undefined,
 			followMap: undefined,
@@ -74,9 +80,9 @@ export default class OverviewerMapProvider extends MapProvider {
 	private static buildMessagesConfig(response: any): LiveAtlasServerMessageConfig {
 		return {
 			worldsHeading: 'Worlds',
-			playersHeading: 'Players',
 
-			//Not used by pl3xmap
+			//Not used by overviewer
+			playersHeading: '',
 			chatPlayerJoin: '',
 			chatPlayerQuit: '',
 			chatAnonymousJoin: '',
@@ -95,7 +101,7 @@ export default class OverviewerMapProvider extends MapProvider {
 			worlds.set(world, {
 				name: world,
 				displayName: world,
-				dimension: 'overworld' as LiveAtlasDimension,
+				dimension: guessWorldDimension(world),
 				seaLevel: 64,
 				center: {x: 0, y: 64, z: 0},
 				maps: new Set<LiveAtlasMapDefinition>(),
