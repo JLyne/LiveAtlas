@@ -24,7 +24,7 @@ import {
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet, LiveAtlasPointMarker,
 	LiveAtlasServerConfig,
-	LiveAtlasServerMessageConfig,
+	LiveAtlasServerMessageConfig, LiveAtlasTileLayerOverlay,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {MutationTypes} from "@/store/mutation-types";
@@ -87,7 +87,8 @@ export default class OverviewerMapProvider extends MapProvider {
 	}
 
 	private buildWorlds(serverResponse: any): Array<LiveAtlasWorldDefinition> {
-		const worlds: Map<string, LiveAtlasWorldDefinition> = new Map<string, LiveAtlasWorldDefinition>();
+		const tileSize = serverResponse.CONST.tileSize,
+			worlds: Map<string, LiveAtlasWorldDefinition> = new Map<string, LiveAtlasWorldDefinition>();
 
 		(serverResponse.worlds || []).forEach((world: string) => {
 			worlds.set(world, {
@@ -106,13 +107,18 @@ export default class OverviewerMapProvider extends MapProvider {
 				return;
 			}
 
-			if(tileset?.isOverlay) {
+			const world = worlds.get(tileset.world) as LiveAtlasWorldDefinition,
+				baseUrl = `${this.config}${tileset.base}/${tileset.path}`,
+				prefix = tileset.base,
+				imageFormat = tileset.imgextension,
+				nativeZoomLevels = tileset.zoomLevels,
+				minZoom = tileset.minZoom,
+				maxZoom = tileset.maxZoom;
+
+			//Ignore overlays until all map definitions have been created
+			if(tileset.isOverlay) {
 				return;
 			}
-
-			const world = worlds.get(tileset.world) as LiveAtlasWorldDefinition,
-				nativeZoomLevels = tileset.zoomLevels,
-				tileSize = serverResponse.CONST.tileSize;
 
 			world.maps.add(new LiveAtlasMapDefinition({
 				world,
@@ -120,7 +126,7 @@ export default class OverviewerMapProvider extends MapProvider {
 				name: tileset.path,
 				displayName: tileset.name || tileset.path,
 
-				baseUrl: `${this.config}${tileset.base}/${tileset.path}`,
+				baseUrl,
 				tileSize,
 				projection: new OverviewerProjection({
 					upperRight: serverResponse.CONST.UPPERRIGHT,
@@ -130,21 +136,23 @@ export default class OverviewerMapProvider extends MapProvider {
 					nativeZoomLevels,
 					tileSize,
 				}),
-				prefix: tileset.base,
+				prefix,
 
 				background: tileset.bgcolor,
-				imageFormat: tileset.imgextension,
+				imageFormat,
 
 				nativeZoomLevels,
-				minZoom: tileset.minZoom,
-				maxZoom: tileset.maxZoom,
+				minZoom,
+				maxZoom,
 				defaultZoom: tileset.defaultZoom,
 
 				center: {
 					x: tileset?.center[0] || 0,
 					y: tileset?.center[1] || 64,
 					z: tileset?.center[2] || 0,
-				}
+				},
+
+				overlays: new Map(),
 			}));
 
 			//Spawn marker
@@ -169,9 +177,9 @@ export default class OverviewerMapProvider extends MapProvider {
                     iconAnchor: [15, 33],
 					tooltip: 'Spawn',
 					location: {
-						x: tileset.spawn[0],
-						y: tileset.spawn[1],
-						z: tileset.spawn[2],
+						x: tileset.spawn[0] || 0,
+						y: tileset.spawn[1] || 64,
+						z: tileset.spawn[2] || 0,
 					}
 				} as LiveAtlasPointMarker);
 
@@ -181,6 +189,38 @@ export default class OverviewerMapProvider extends MapProvider {
 			this.mapMarkerSets.set(tileset.path, markerSets);
 			this.mapMarkers.set(tileset.path, markers);
 
+		});
+
+		//Loop over tilesets again to handle overlays and add them to relevant maps
+		(serverResponse.tilesets || []).forEach((tileset: any) => {
+			if(!tileset.isOverlay) {
+				return;
+			}
+
+			const overlay: LiveAtlasTileLayerOverlay = {
+				id: tileset.path,
+				label: tileset.name || tileset.path,
+				hidden: true,
+				priority: 0,
+				tileLayerOptions: {
+					baseUrl: `${this.config}${tileset.base}/${tileset.path}`,
+					tileSize,
+					prefix: tileset.base,
+					imageFormat: tileset.imgextension,
+					nativeZoomLevels: tileset.zoomLevels,
+					minZoom: tileset.minZoom,
+					maxZoom: tileset.maxZoom,
+				}
+			};
+
+			//Add to listed maps, or all maps in defined world if no maps are listed
+			(worlds.get(tileset.world)?.maps || []).forEach(map => {
+				if(!tileset?.tilesets?.length || tileset.tilesets.includes(map.name)) {
+					map.overlays.set(tileset.path, overlay);
+				}
+			});
+
+			return;
 		});
 
 		return Array.from(worlds.values());
