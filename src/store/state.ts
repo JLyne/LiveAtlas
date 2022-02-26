@@ -44,6 +44,7 @@ import {getDefaultMinecraftHead, getMessages} from "@/util";
 export type State = {
 	version: string;
 	firstLoad: boolean;
+	initialTitle: string;
 
 	servers: Map<string, LiveAtlasServerDefinition>;
 	configuration: LiveAtlasServerConfig;
@@ -104,6 +105,8 @@ export type State = {
 export const state: State = {
 	version: (process.env.VITE_APP_VERSION || 'Unknown') as string,
 	firstLoad: true,
+	initialTitle: document.title,
+
 	servers: new Map(),
 
 	configuration: {

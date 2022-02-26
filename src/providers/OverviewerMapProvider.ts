@@ -36,6 +36,7 @@ import {OverviewerTileLayer} from "@/leaflet/tileLayer/OverviewerTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/util/markers";
+import {useStore} from "@/store";
 
 export default class OverviewerMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -58,7 +59,7 @@ export default class OverviewerMapProvider extends MapProvider {
 
 	private static buildServerConfig(response: any): LiveAtlasServerConfig {
 		return {
-			title: 'Minecraft Overviewer',
+			title: useStore().state.initialTitle,
 
 			//Not used by overviewer
 			expandUI: false,
