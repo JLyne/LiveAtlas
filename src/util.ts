@@ -20,7 +20,7 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
 	Coordinate,
 	HeadQueueEntry,
-	LiveAtlasBounds,
+	LiveAtlasBounds, LiveAtlasDimension,
 	LiveAtlasGlobalMessageConfig,
 	LiveAtlasLocation,
 	LiveAtlasMessageConfig,
@@ -39,8 +39,8 @@ const documentRange = document.createRange(),
 	headQueue: HeadQueueEntry[] = [];
 
 export const titleColoursRegex = /§[0-9a-f]/ig;
-export const netherWorldNameRegex = /_?nether(_|$)/i;
-export const endWorldNameRegex = /(^|_)end(_|$)/i;
+export const netherWorldNameRegex = /[_\s]?nether([\s_]|$)/i;
+export const endWorldNameRegex = /(^|[_\s])end([\s_]|$)/i;
 
 export const getMinecraftTime = (serverTime: number) => {
 	const day = serverTime >= 0 && serverTime < 13700;
@@ -260,6 +260,14 @@ const _getMessages = (messageKeys: any, config: any = {}) => {
 	return messages as LiveAtlasGlobalMessageConfig;
 }
 
+/**
+ * Determines the bounds required to enclose the given separate arrays of x, y and z coordinates
+ * All arrays are expected to be the same length
+ * @param {number[]} x X coordinates
+ * @param {number[]} y Y coordinates
+ * @param {number[]} z Z coordinates
+ * @returns {LiveAtlasBounds} The calculated bounds
+ */
 export const getBounds = (x: number[], y: number[], z: number[]): LiveAtlasBounds => {
 	return {
 		min: {x: Math.min.apply(null, x), y: Math.min.apply(null, y), z: Math.min.apply(null, z)},
@@ -267,6 +275,12 @@ export const getBounds = (x: number[], y: number[], z: number[]): LiveAtlasBound
 	};
 }
 
+/**
+ * Determines the bounds required to enclose the given array of {@see Coordinate}s
+ * Multiple dimension arrays are accepted and will be handled recursively
+ * @param {Coordinate[]} points Points to determine the bounds for
+ * @returns {LiveAtlasBounds} The calculated bounds
+ */
 export const getBoundsFromPoints = (points: Coordinate[]): LiveAtlasBounds => {
 	const bounds = {
 		max: {x: -Infinity, y: -Infinity, z: -Infinity},
@@ -291,6 +305,11 @@ export const getBoundsFromPoints = (points: Coordinate[]): LiveAtlasBounds => {
 	return bounds;
 }
 
+/**
+ * Determines the center point of the given {@see LiveAtlasBounds}
+ * @param {LiveAtlasBounds} bounds The bounds to find the center point for
+ * @return {LiveAtlasLocation} The center point
+ */
 export const getMiddle = (bounds: LiveAtlasBounds): LiveAtlasLocation => {
 	return {
 		x: bounds.min.x + ((bounds.max.x - bounds.min.x) / 2),
@@ -299,6 +318,10 @@ export const getMiddle = (bounds: LiveAtlasBounds): LiveAtlasLocation => {
 	};
 }
 
+/**
+ * Creates an "allow-scripts" sandboxed <iframe> to be used by {@see runSandboxed}
+ * @returns {Window} The iframe's contentWindow
+ */
 const createIframeSandbox = () => {
 	const frame = document.createElement('iframe');
 	frame.hidden = true;
@@ -355,6 +378,14 @@ const sandboxWindow: Window | null = createIframeSandbox();
 const sandboxSuccessCallbacks: Map<number, (result?: any) => void> = new Map();
 const sandboxErrorCallbacks: Map<number, (reason?: any) => void> = new Map();
 
+/**
+ * Runs the given untrusted JavaScript code inside an "allow-scripts" sandboxed <iframe>
+ * The executing code cannot access or interfere with LiveAtlas state,
+ * but can still make requests and access many JS APIs
+ * @param {string} code The code to run
+ * @returns {Promise<any>} A promise that will resolve with the return value of the executed JS,
+ * or will reject with any Errors that occurred during execution.
+ */
 export const runSandboxed = async (code: string) => {
 	return new Promise((resolve, reject) => {
 		const key = Math.random();
@@ -367,4 +398,24 @@ export const runSandboxed = async (code: string) => {
 			code,
 		}, '*');
 	});
+}
+
+/**
+ * Attempts to guess the dimension of the given world name
+ * The world name is checked against vanilla nether/end world names and regexes covering
+ * common nether/end world naming conventions
+ * If none of the above match, the world is assumed to be overworld
+ * @param {string} worldName Name of the world to guess
+ * @returns {LiveAtlasDimension} The guessed dimension
+ */
+export const guessWorldDimension = (worldName: string) => {
+	let dimension: LiveAtlasDimension = 'overworld';
+
+	if (netherWorldNameRegex.test(worldName) || (worldName == 'DIM-1')) {
+		dimension = 'nether';
+	} else if (endWorldNameRegex.test(worldName) || (worldName == 'DIM1')) {
+		dimension = 'end';
+	}
+
+	return dimension;
 }

@@ -23,7 +23,6 @@ import {
 	LiveAtlasChat,
 	LiveAtlasCircleMarker,
 	LiveAtlasComponentConfig,
-	LiveAtlasDimension,
 	LiveAtlasLineMarker, LiveAtlasMarker,
 	LiveAtlasPlayerImageSize,
 	LiveAtlasPointMarker,
@@ -33,10 +32,8 @@ import {
 } from "@/index";
 import {getPoints} from "@/util/areas";
 import {
-	decodeHTMLEntities,
-	endWorldNameRegex, getBounds, getImagePixelSize,
-	getMiddle,
-	netherWorldNameRegex,
+	decodeHTMLEntities, getBounds, getImagePixelSize,
+	getMiddle, guessWorldDimension,
 	stripHTML,
 	titleColoursRegex
 } from "@/util";
@@ -96,18 +93,10 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): A
 
 	//Get all the worlds first so we can handle append_to_world properly
 	(response.worlds || []).forEach((world: WorldConfiguration) => {
-		let worldType: LiveAtlasDimension = 'overworld';
-
-		if (netherWorldNameRegex.test(world.name) || (world.name == 'DIM-1')) {
-			worldType = 'nether';
-		} else if (endWorldNameRegex.test(world.name) || (world.name == 'DIM1')) {
-			worldType = 'end';
-		}
-
 		worlds.set(world.name, {
 			name: world.name,
 			displayName: world.title || '',
-			dimension: worldType,
+			dimension: guessWorldDimension(world.name),
 			seaLevel: world.sealevel || 64,
 			center: {
 				x: world.center.x || 0,
