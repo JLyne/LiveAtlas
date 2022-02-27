@@ -76,18 +76,36 @@ export const parseUrl = (url: URL): LiveAtlasParsedUrl | null => {
  * hash format, otherwise null
  */
 export const parseMapHash = (hash: string): LiveAtlasParsedUrl | null => {
-	const parts = hash.replace('#', '').split(';');
+	let world, map, location, zoom;
 
-	const world = parts[0] || undefined,
-		map = parts[1] || undefined,
+	hash = hash.replace('#', '');
+
+	if(hash[0] === '/' && hash.split('/').length === 7) { //Overviewer URL format
+		const parts = hash.split('/');
+
+		zoom = undefined; //FIXME: Not sure how to handle negative values atm
+		world = parts[5];
+		map = parts[6];
+		location = [
+			parts[1],
+			parts[2],
+			parts[3]
+		].map(item => parseFloat(item)).filter(item => !isNaN(item) && isFinite(item));
+	} else { //LiveAtlas URL format
+		const parts = hash.split(';');
+
+		world = parts[0] || undefined;
+		map = parts[1] || undefined;
+
 		location = (parts[2] || '').split(',')
-			.map(item => parseFloat(item))
-			.filter(item => !isNaN(item) && isFinite(item)),
+				.map(item => parseFloat(item))
+				.filter(item => !isNaN(item) && isFinite(item));
 		zoom = typeof parts[3] !== 'undefined' ? parseInt(parts[3]) : undefined;
+	}
 
 	return validateParsedUrl({
-		world,
-		map,
+		world: world ? decodeURIComponent(world) : undefined,
+		map: map ? decodeURIComponent(map) : undefined,
 		location: location.length === 3 ? {
 			x: location[0],
 			y: location[1],
@@ -105,14 +123,18 @@ export const parseMapHash = (hash: string): LiveAtlasParsedUrl | null => {
  * hash format, otherwise null
  */
 export const parseMapSearchParams = (query: URLSearchParams): LiveAtlasParsedUrl | null => {
-	const world = query.get('worldname') /* Dynmap */ || query.get('world') /* Pl3xmap */ || undefined,
-		map = query.has('worldname') ? query.get('mapname') || undefined : undefined, //Dynmap only
-		location = [
-			query.get('x') || '',
-			query.get('y') || '64',
-			query.get('z') || ''
-		].map(item => parseFloat(item)).filter(item => !isNaN(item) && isFinite(item)),
-		zoom = query.has('zoom') ? parseInt(query.get('zoom') as string) : undefined;
+	let world = query.get('worldname') /* Dynmap */ || query.get('world') /* Pl3xmap */ || undefined,
+		map = query.has('worldname') ? query.get('mapname') || undefined : undefined; //Dynmap only
+
+	const location = [
+		query.get('x') || '',
+		query.get('y') || '64',
+		query.get('z') || ''
+	].map(item => parseFloat(item)).filter(item => !isNaN(item) && isFinite(item)),
+	zoom = query.has('zoom') ? parseInt(query.get('zoom') as string) : undefined;
+
+	world = world ? decodeURIComponent(world) : undefined;
+	map = map ? decodeURIComponent(map) : undefined;
 
 	return validateParsedUrl({
 		world,
