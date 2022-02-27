@@ -152,12 +152,10 @@ interface LiveAtlasSortedPlayers extends Array<LiveAtlasPlayer> {
 }
 
 interface LiveAtlasWorldDefinition {
-	seaLevel: number;
 	name: string;
 	displayName: string;
 	dimension: LiveAtlasDimension;
-	center: Coordinate;
-	defaultZoom?: number;
+	seaLevel: number;
 	maps: Set<LiveAtlasMapDefinition>;
 }
 

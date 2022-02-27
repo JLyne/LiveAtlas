@@ -98,11 +98,6 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): A
 			displayName: world.title || '',
 			dimension: guessWorldDimension(world.name),
 			seaLevel: world.sealevel || 64,
-			center: {
-				x: world.center.x || 0,
-				y: world.center.y || 0,
-				z: world.center.z || 0
-			},
 			maps: new Set(),
 		});
 	});
@@ -147,6 +142,12 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): A
 				nightAndDay: map.nightandday,
 				backgroundDay: map.backgroundday || '#000000',
 				backgroundNight: map.backgroundnight || '#000000',
+
+				center: {
+					x: world.center.x || 0,
+					y: world.center.y || 0,
+					z: world.center.z || 0
+				},
 
 				nativeZoomLevels,
 				extraZoomLevels: map.mapzoomin

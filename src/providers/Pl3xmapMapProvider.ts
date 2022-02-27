@@ -176,8 +176,6 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				displayName: world.display_name || world.name,
 				dimension,
 				seaLevel: 0,
-				center: {x: worldResponse.spawn.x, y: 0, z: worldResponse.spawn.z},
-				defaultZoom: worldResponse.zoom.def || 1,
 				maps,
 			};
 
@@ -198,7 +196,10 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 				nativeZoomLevels: worldResponse.zoom.max || 1,
 				extraZoomLevels: worldResponse.zoom.extra,
+				defaultZoom: worldResponse.zoom.def || 1,
 				tileUpdateInterval: worldResponse.tiles_update_interval ? worldResponse.tiles_update_interval * 1000 : undefined,
+
+				center: {x: worldResponse.spawn.x, y: 0, z: worldResponse.spawn.z},
 			})));
 
 			worlds.push(w);

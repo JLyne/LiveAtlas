@@ -103,7 +103,6 @@ export default class OverviewerMapProvider extends MapProvider {
 				displayName: world,
 				dimension: guessWorldDimension(world),
 				seaLevel: 64,
-				center: {x: 0, y: 64, z: 0},
 				maps: new Set<LiveAtlasMapDefinition>(),
 			});
 		});

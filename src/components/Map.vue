@@ -204,8 +204,6 @@ export default defineComponent({
 							viewTarget.zoom = store.state.parsedUrl?.zoom;
 						} else if(typeof store.state.currentMap?.defaultZoom !== 'undefined') { //Map default zoom
 							viewTarget.zoom = store.state.currentMap?.defaultZoom;
-						}else if(typeof newValue.defaultZoom !== 'undefined') { //World default zoom
-							viewTarget.zoom = newValue.defaultZoom;
 						} else { //Global default zoom
 							viewTarget.zoom = store.state.configuration.defaultZoom;
 						}
@@ -220,8 +218,6 @@ export default defineComponent({
 				if(viewTarget.zoom == null) {
 					if(typeof store.state.currentMap?.defaultZoom !== 'undefined') { //Map default zoom
 						viewTarget.zoom = store.state.currentMap?.defaultZoom;
-					} else if(typeof newValue.defaultZoom !== 'undefined') { //World default zoom
-						viewTarget.zoom = newValue.defaultZoom;
 					} else { //Global default zoom
 						viewTarget.zoom = store.state.configuration.defaultZoom;
 					}
