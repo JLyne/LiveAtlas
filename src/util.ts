@@ -344,9 +344,9 @@ export const getMiddle = (bounds: LiveAtlasBounds): LiveAtlasLocation => {
 /**
  * Creates an "allow-scripts" sandboxed <iframe>
  * @see {@link runSandboxed}
- * @returns {Window} The iframe's contentWindow
+ * @returns {Window} A promise that resolves to the iframe's contentWindow
  */
-const createIframeSandbox = () => {
+const createIframeSandbox = async (): Promise<Window> => {
 	const frame = document.createElement('iframe');
 	frame.hidden = true;
 	frame.sandbox.add('allow-scripts');
@@ -394,11 +394,16 @@ const createIframeSandbox = () => {
 		}
     });
 
-	document.body.appendChild(frame);
-	return frame.contentWindow;
+	return new Promise(resolve => {
+		document.body.appendChild(frame);
+
+		frame.onload = () => {
+			resolve(frame.contentWindow as Window);
+		};
+	});
 }
 
-const sandboxWindow: Window | null = createIframeSandbox();
+let sandboxWindow: Window | null = null;
 const sandboxSuccessCallbacks: Map<number, (result?: any) => void> = new Map();
 const sandboxErrorCallbacks: Map<number, (reason?: any) => void> = new Map();
 
@@ -411,6 +416,10 @@ const sandboxErrorCallbacks: Map<number, (reason?: any) => void> = new Map();
  * or will reject with any Errors that occurred during execution.
  */
 export const runSandboxed = async (code: string) => {
+	if(!sandboxWindow) {
+		sandboxWindow = await createIframeSandbox();
+	}
+
 	return new Promise((resolve, reject) => {
 		const key = Math.random();
 
