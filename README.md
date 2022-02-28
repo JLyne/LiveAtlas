@@ -1,11 +1,11 @@
 # LiveAtlas [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Discord](https://img.shields.io/discord/390942438061113344?color=8C9CFE&label=discord&logo=discord&logoColor=white)](https://discord.gg/DBduB9qyv3) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/JLyne/LiveAtlas/Build)](https://github.com/JLyne/LiveAtlas/actions)
 
 
-A [Dynmap](https://github.com/webbukkit/dynmap) and [Pl3xmap](https://github.com/NeumimTo/Pl3xMap)/[Squaremap](https://github.com/jpenilla/squaremap) frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript.
+A map frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript. Supports [Dynmap](https://github.com/webbukkit/dynmap), [Squaremap](https://github.com/jpenilla/squaremap), [Pl3xmap](https://github.com/NeumimTo/Pl3xMap) and [Overviewer](https://github.com/overviewer/Minecraft-Overviewer)
 
 ![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas4.png)
 
-LiveAtlas is an alternative frontend for Dynmap, Pl3xmap and Squaremap, which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in replacement for Dynmap; Pl3xmap and Squaremap maps are supported with some additional configuration.
+LiveAtlas is an alternative frontend which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in replacement for Dynmap; Squaremap, Pl3xmap and Overviewer maps are supported with some additional configuration.
 
 Development is ongoing, but the major features of each map plugin are supported.
 
