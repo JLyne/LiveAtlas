@@ -12,29 +12,7 @@ Development is ongoing, but the major features of each map plugin are supported.
 You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 
 ## Supported map features
-
-| Feature | Dynmap | Pl3xmap/Squaremap |
-| --------------- | --------------- | --------------- |
-| Viewing maps | ✅ | ✅ |
-| Markers | ✅ | ✅ |
-| Player markers | ✅ | ✅ |
-| Player facing direction | n/a | ✅ |
-| Popups | ✅ | ✅ |
-| Tooltips | n/a | ✅ |
-| Tile updates | ✅ | ✅ |
-| Marker updates | ✅ | ❌ |
-| Following players | ✅ | ✅ |
-| Location display | ✅ | ✅ |
-| Link button | ✅ | ✅ |
-| Link button URLs | ✅ | ✅ |
-| Clock | ✅ | n/a |
-| Logos | ✅ | n/a | 
-| Chat |  ✅ | n/a |
-| Chat balloons | ✅ | n/a |
-| Login/register | ✅ | n/a |
-| Inactivity timeout | ❌ | n/a |
-| Custom player head URLs | n/a | ❌ | 
-| Custom map icons | ✅ | ✅ |
+[See the wiki](https://github.com/JLyne/LiveAtlas/wiki/Supported-Maps-and-Features)
 
 ## Supported Browsers
 - Chrome 66+
