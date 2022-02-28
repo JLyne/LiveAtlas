@@ -3,7 +3,7 @@
 
 A map frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript. Supports [Dynmap](https://github.com/webbukkit/dynmap), [Squaremap](https://github.com/jpenilla/squaremap), [Pl3xmap](https://github.com/NeumimTo/Pl3xMap) and [Overviewer](https://github.com/overviewer/Minecraft-Overviewer).
 
-![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas4.png)
+![A LiveAtlas screenshot](https://minecraft.rtgame.co.uk/liveatlas/liveatlas8.png)
 
 LiveAtlas is an alternative frontend which aims to provide a more modern interface and improved performance for busy maps. LiveAtlas is a drop-in replacement for Dynmap; Squaremap, Pl3xmap and Overviewer maps are supported with some additional configuration.
 
