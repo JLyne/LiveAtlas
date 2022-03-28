@@ -52,7 +52,7 @@
     "typescript": "^4.5",
     "vite": "2.7.13",
     "vite-plugin-svg-sprite-component": "^1.0",
-    "vue-tsc": "0.31.4"
+    "vue-tsc": "0.33.9"
   },
   "eslintConfig": {
     "root": true,
