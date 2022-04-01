@@ -24,7 +24,7 @@
 			        @click="handleSectionClick" @keydown="handleSectionKeydown">
 				<SvgIcon :name="mapCount > 1 ? 'maps' : 'servers'"></SvgIcon>
 			</button>
-			<button class="button--markers" data-section="markers"
+			<button v-if="markerUIEnabled" class="button--markers" data-section="markers"
 			        :title="messageMarkers"
 			        :aria-label="messageMarkers"
 			        :aria-expanded="markersVisible"
@@ -93,6 +93,7 @@ export default defineComponent({
 			messageMarkers = computed(() => store.state.messages.markersHeading),
 			messagePlayers = computed(() => store.getters.playersHeading),
 
+			markerUIEnabled = computed(() => store.getters.markerUIEnabled),
 			playerMakersEnabled = computed(() => store.getters.playerMarkersEnabled),
 
 			playersVisible = computed(() => currentlyVisible.value.has('players')),
@@ -165,6 +166,7 @@ export default defineComponent({
 			markersVisible,
 			followVisible,
 			playerMakersEnabled,
+			markerUIEnabled,
 
 			handleSidebarKeydown,
 			handleSectionKeydown,

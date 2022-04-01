@@ -20,6 +20,7 @@ import {getMinecraftTime, getUrlForLocation} from "@/util";
 
 export type Getters = {
 	playerMarkersEnabled(state: State): boolean;
+	markerUIEnabled(state: State): boolean;
 	coordinatesControlEnabled(state: State): boolean;
 	clockControlEnabled(state: State): boolean;
 	loginEnabled(state: State): boolean;
@@ -33,6 +34,10 @@ export type Getters = {
 export const getters: GetterTree<State, State> & Getters = {
 	playerMarkersEnabled(state: State): boolean {
 		return state.components.players.markers !== undefined;
+	},
+
+	markerUIEnabled(state: State): boolean {
+		return !state.ui.disableMarkerUI;
 	},
 
 	coordinatesControlEnabled(state: State): boolean {
