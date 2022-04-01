@@ -16,7 +16,7 @@ You can see it in action [here](https://minecraft.rtgame.co.uk/map/build)
 
 ## Supported Browsers
 - Chrome 66+
-- Edge 18+
+- Edge 80+
 - Firefox 60+
 - Opera 53+
 - Safari 11.1+
