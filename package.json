@@ -35,7 +35,7 @@
     "@vitejs/plugin-vue": "^2.2",
     "@vue/compiler-sfc": "^3.2.31",
     "@vue/eslint-config-typescript": "^10.0",
-    "@vue/test-utils": "^2.0.0-rc.18",
+    "@vue/test-utils": "^2.0.0-rc.21",
     "@vue/vue3-jest": "^27.0.0-alpha.1",
     "cpy-cli": "^3.1.1",
     "eslint": "^8.12",
