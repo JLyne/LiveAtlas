@@ -155,7 +155,7 @@ export default class LiveAtlasMapDefinition implements LiveAtlasTileLayerOptions
 			case 'overworld':
 			default:
 				worldType = 'world';
-				mapType = ['surface', 'flat', 'biome', 'cave'].includes(mapName) ? this.name : 'flat';
+				mapType = ['surface', 'flat', 'biome', 'cave'].includes(mapName) ? mapName : 'flat';
 				break;
 		}
 
