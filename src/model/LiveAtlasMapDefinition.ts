@@ -139,21 +139,23 @@ export default class LiveAtlasMapDefinition implements LiveAtlasTileLayerOptions
 			return this.icon;
 		}
 
+		let mapName = this.name.split(/[^a-zA-Z\d]/, 1)[0];
+
 		switch(this.world.dimension) {
 			case 'nether':
 				worldType = 'nether';
-				mapType = ['surface', 'nether'].includes(this.name) ? 'surface' : 'flat';
+				mapType = ['surface', 'nether'].includes(mapName) ? 'surface' : 'flat';
 				break;
 
 			case 'end':
 				worldType = 'the_end';
-				mapType = ['surface', 'the_end'].includes(this.name) ? 'surface' : 'flat';
+				mapType = ['surface', 'the_end'].includes(mapName) ? 'surface' : 'flat';
 				break;
 
 			case 'overworld':
 			default:
 				worldType = 'world';
-				mapType = ['surface', 'flat', 'biome', 'cave'].includes(this.name) ? this.name : 'flat';
+				mapType = ['surface', 'flat', 'biome', 'cave'].includes(mapName) ? this.name : 'flat';
 				break;
 		}
 
