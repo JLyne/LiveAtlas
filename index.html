@@ -386,5 +386,15 @@
 
     <main id="app" aria-hidden="true"></main>
     <script type="module" src="/src/main.ts"></script>
+
+    <script>
+        window.addEventListener('load', () => {
+            if(!window.liveAtlasLoaded) {
+                document.getElementById('splash__error').setAttribute('aria-hidden', 'false');
+                document.getElementById('splash__error-message').innerText = 'Required LiveAtlas files are missing or failed to load.\nPlease reinstall LiveAtlas.';
+                document.getElementById('splash__spinner').style.visibility = 'hidden';
+            }
+        });
+    </script>
   </body>
 </html>

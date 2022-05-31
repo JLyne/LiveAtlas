@@ -59,6 +59,7 @@ registerMapProvider('squaremap', Pl3xmapMapProvider);
 registerMapProvider('overviewer', OverviewerMapProvider);
 
 const config = window.liveAtlasConfig;
+window.liveAtlasLoaded = true;
 
 try {
 	config.servers = loadConfig(config);
