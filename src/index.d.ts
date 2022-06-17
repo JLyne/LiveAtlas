@@ -126,6 +126,7 @@ interface LiveAtlasUIConfig {
 	compactPlayerMarkers: boolean;
 	disableContextMenu: boolean;
 	disableMarkerUI: boolean;
+	customLoginUrl: string | null;
 }
 
 export type LiveAtlasUIElement = 'layers' | 'chat' | LiveAtlasSidebarSection;

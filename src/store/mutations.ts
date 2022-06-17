@@ -142,6 +142,10 @@ export const mutations: MutationTree<State> & Mutations = {
 			state.ui.playersSearch = uiConfig.playersSearch;
 		}
 
+		if(typeof uiConfig.customLoginUrl === 'string') {
+			state.ui.customLoginUrl = uiConfig.customLoginUrl;
+		}
+
 		state.servers = config.servers;
 
 		if(state.currentServer && !state.servers.has(state.currentServer.id)) {

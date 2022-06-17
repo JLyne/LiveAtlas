@@ -88,6 +88,7 @@ export type State = {
 		compactPlayerMarkers: boolean;
 		disableContextMenu: boolean;
 		disableMarkerUI: boolean;
+		customLoginUrl: string | null;
 
 		screenWidth: number;
 		screenHeight: number;
@@ -230,6 +231,7 @@ export const state: State = {
 		compactPlayerMarkers: false,
 		disableContextMenu: false,
 		disableMarkerUI: false,
+		customLoginUrl: null,
 
 		screenWidth: window.innerWidth,
 		screenHeight: window.innerHeight,

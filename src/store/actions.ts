@@ -205,7 +205,11 @@ export const actions: ActionTree<State, State> & Actions = {
 		if(data) {
 			await state.currentMapProvider!.login(data);
 		} else {
-			commit(MutationTypes.SHOW_UI_MODAL, 'login');
+			if(state.ui.customLoginUrl) {
+				window.location.href = state.ui.customLoginUrl;
+			} else {
+				commit(MutationTypes.SHOW_UI_MODAL, 'login');
+			}
 		}
 	},
 
