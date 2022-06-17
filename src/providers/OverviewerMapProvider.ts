@@ -114,7 +114,7 @@ export default class OverviewerMapProvider extends MapProvider {
 			}
 
 			const world = worlds.get(tileset.world) as LiveAtlasWorldDefinition,
-				baseUrl = `${this.config}${tileset.base}/${tileset.path}`,
+				baseUrl = tileset.base ? `${this.config}${tileset.base}/${tileset.path}` : this.config + tileset.path,
 				prefix = tileset.base,
 				imageFormat = tileset.imgextension,
 				nativeZoomLevels = tileset.zoomLevels,
@@ -209,7 +209,7 @@ export default class OverviewerMapProvider extends MapProvider {
 				hidden: true,
 				priority: 0,
 				tileLayerOptions: {
-					baseUrl: `${this.config}${tileset.base}/${tileset.path}`,
+					baseUrl: tileset.base ? `${this.config}${tileset.base}/${tileset.path}` : this.config + tileset.path,
 					tileSize,
 					prefix: tileset.base,
 					imageFormat: tileset.imgextension,
@@ -277,14 +277,14 @@ export default class OverviewerMapProvider extends MapProvider {
 		//markers.js - If present, maps marker sets to specific maps
 		//markersDB.js - If present, contains markers for each marker set
 		//additional files - i.e. regions.js, can add extra marker sets and/or markers
-		const response = await OverviewerMapProvider.getText(`${this.config}/baseMarkers.js`, this.markersAbort.signal),
+		const response = await OverviewerMapProvider.getText(`${this.config}baseMarkers.js`, this.markersAbort.signal),
 			//Don't need to run this JS as getting the filenames from injectMarkerScript calls is enough
 			files = response.matchAll(this.markersRegex);
 
 		let markerSets: any = {}, markers: any = {}, result: any;
 
 		for(const file of files) {
-			let code = await OverviewerMapProvider.getText(`${this.config}/${file[1]}`, this.markersAbort.signal);
+			let code = await OverviewerMapProvider.getText(`${this.config}${file[1]}`, this.markersAbort.signal);
 
 			switch(file[1]) {
 				//Contains list of marker sets per map in markers object
