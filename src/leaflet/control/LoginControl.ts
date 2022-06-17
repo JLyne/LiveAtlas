@@ -104,7 +104,7 @@ export class LoginControl extends Control {
 				notify(logoutError.value);
 			}
 		} else {
-			this.store.commit(MutationTypes.SHOW_UI_MODAL, 'login');
+			await this.store.dispatch(ActionTypes.LOGIN, null)
 		}
 	}
 }

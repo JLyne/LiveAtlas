@@ -194,7 +194,7 @@ export default defineComponent({
 					element: 'maps',
 					state: false,
 				});
-				store.commit(MutationTypes.SHOW_UI_MODAL, 'login');
+				store.dispatch(ActionTypes.LOGIN, null);
 				notify('Login required');
 				showSplashError('Login required', true, 1);
 			} else {

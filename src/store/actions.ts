@@ -202,7 +202,11 @@ export const actions: ActionTree<State, State> & Actions = {
 	},
 
 	async [ActionTypes.LOGIN]({state, commit}, data: any): Promise<void> {
-		await state.currentMapProvider!.login(data);
+		if(data) {
+			await state.currentMapProvider!.login(data);
+		} else {
+			commit(MutationTypes.SHOW_UI_MODAL, 'login');
+		}
 	},
 
 	async [ActionTypes.LOGOUT]({state}): Promise<void> {

@@ -99,7 +99,7 @@
 					}
 				},
 
-				login = () => store.commit(MutationTypes.SHOW_UI_MODAL, 'login');
+				login = () => store.dispatch(ActionTypes.LOGIN, null);
 
 			watch(chatBoxVisible, newValue => {
 				if(newValue && sendingEnabled.value) {
