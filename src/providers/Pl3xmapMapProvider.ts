@@ -140,7 +140,8 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 				if(worldResponse.player_tracker?.nameplates?.heads_url) {
 					worldConfig.components.players!.imageUrl = entry =>
-						worldResponse.player_tracker.nameplates.heads_url.replace('{uuid}', entry.uuid);
+						worldResponse.player_tracker.nameplates.heads_url
+							.replace('{uuid}', entry.uuid).replace('{name}', entry.name);
 				}
 
 				worldConfig.components.players!.markers = {
