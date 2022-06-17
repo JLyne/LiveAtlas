@@ -49,7 +49,7 @@ export class LiveAtlasLayerControl extends Control.Layers {
 
 	constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersOptions) {
 		// noinspection JSUnusedGlobalSymbols
-		super(baseLayers, overlays, Object.assign(options, {
+		super(baseLayers, overlays, Object.assign(options || {}, {
 			sortLayers: true,
 			sortFunction: (layer1: Layer, layer2: Layer, name1: string, name2: string) => {
 				const priority1 = this._layerPositions.get(layer1) || 0,
