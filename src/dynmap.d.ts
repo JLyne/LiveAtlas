@@ -66,22 +66,6 @@ interface DynmapMarkerUpdate {
 	payload: LiveAtlasMarker,
 }
 
-interface DynmapPointUpdate extends DynmapMarkerUpdate {
-	payload?: LiveAtlasPointMarker
-}
-
-interface DynmapAreaUpdate extends DynmapMarkerUpdate {
-	payload?: LiveAtlasAreaMarker
-}
-
-interface DynmapCircleUpdate extends DynmapMarkerUpdate {
-	payload?: LiveAtlasCircleMarker
-}
-
-interface DynmapLineUpdate extends DynmapMarkerUpdate {
-	payload?: LiveAtlasLineMarker
-}
-
 interface DynmapTileUpdate {
 	name: string
 	timestamp: number

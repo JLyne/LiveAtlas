@@ -93,6 +93,7 @@ export class LiveAtlasLayerControl extends Control.Layers {
 		return this;
 	}
 
+	// noinspection JSUnusedGlobalSymbols
 	_initLayout() {
 		const className = 'leaflet-control-layers',
 			container = this._container = DomUtil.create('div', className),

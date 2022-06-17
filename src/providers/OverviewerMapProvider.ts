@@ -63,7 +63,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		}
 	}
 
-	private static buildServerConfig(response: any): LiveAtlasServerConfig {
+	private static buildServerConfig(ignore: any): LiveAtlasServerConfig {
 		return {
 			title: useStore().state.initialTitle,
 
@@ -77,7 +77,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		};
 	}
 
-	private static buildMessagesConfig(response: any): LiveAtlasServerMessageConfig {
+	private static buildMessagesConfig(ignore: any): LiveAtlasServerMessageConfig {
 		return {
 			worldsHeading: 'Worlds',
 

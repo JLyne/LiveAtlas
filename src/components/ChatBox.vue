@@ -36,7 +36,6 @@
 	import ChatMessage from "@/components/chat/ChatMessage.vue";
 	import {ActionTypes} from "@/store/action-types";
 	import ChatError from "@/errors/ChatError";
-	import {MutationTypes} from "@/store/mutation-types";
 
 	export default defineComponent({
 		components: {
