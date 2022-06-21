@@ -91,8 +91,8 @@ export default defineComponent({
 			messageHidden,
 			status,
 			location,
-			copySuccess: clipboardSuccess(),
-			copyError: clipboardError(),
+			copySuccess: clipboardSuccess(store),
+			copyError: clipboardError(store),
 		}
 	},
 });

@@ -21,8 +21,7 @@ import {Control, ControlOptions, DomUtil} from 'leaflet';
 import {useStore} from "@/store";
 import '@/assets/icons/link.svg';
 import { toClipboard } from '@soerenmartius/vue3-clipboard';
-import {notify} from "@kyvg/vue3-notification";
-import {computed} from "@vue/runtime-core";
+import {clipboardError, clipboardSuccess} from "@/util";
 
 /**
  * Leaflet map control providing a button for copying a link for the current map view to the clipboard
@@ -38,8 +37,8 @@ export class LinkControl extends Control {
 		const store = useStore(),
 			linkButton = DomUtil.create('button',
 				'leaflet-control-button leaflet-control-link') as HTMLButtonElement,
-			copySuccessMessage = computed(() => store.state.messages.copyToClipboardSuccess),
-			copyErrorMessage = computed(() => store.state.messages.copyToClipboardError);
+			copySuccess = clipboardSuccess(store),
+			copyError = clipboardError(store);
 
 		linkButton.type = 'button';
 		linkButton.title = store.state.messages.linkTitle;
@@ -50,13 +49,9 @@ export class LinkControl extends Control {
 
 		linkButton.addEventListener('click', e => {
 			e.preventDefault();
-			toClipboard(window.location.href.split("#")[0] + store.getters.url).then(() => {
-				notify(copySuccessMessage.value);
-			}).catch((e) => {
-				notify({ type: 'error', text: copyErrorMessage.value });
-				console.error('Error copying to clipboard', e);
-			});
-
+			toClipboard(window.location.href.split("#")[0] + store.getters.url)
+				.then(copySuccess)
+				.catch(copyError)
 		});
 
 		return linkButton;

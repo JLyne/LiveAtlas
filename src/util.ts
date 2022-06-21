@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
 	Coordinate,
@@ -26,6 +25,7 @@ import {
 } from "@/index";
 import {notify} from "@kyvg/vue3-notification";
 import {globalMessages, serverMessages} from "../messages";
+import {Store} from "@/store";
 
 const documentRange = document.createRange(),
 	brToSpaceRegex = /<br \/>/g;
@@ -228,14 +228,14 @@ export const stripHTML = (text: string) => {
  * Default success callback function for VueClipboard, will display a notification with the configured copy success
  * message
  */
-export const clipboardSuccess = () => () => notify(useStore().state.messages.copyToClipboardSuccess);
+export const clipboardSuccess = (store: Store) => () => notify(store.state.messages.copyToClipboardSuccess);
 
 /**
  * Default error callback function for VueClipboard, will display a notification with the configured copy error
  * message
  */
-export const clipboardError = () => (e: Error) => {
-	notify({ type: 'error', text: useStore().state.messages.copyToClipboardError });
+export const clipboardError = (store: Store) => (e: Error) => {
+	notify({ type: 'error', text: store.state.messages.copyToClipboardError });
 	console.error('Error copying to clipboard', e);
 };
 

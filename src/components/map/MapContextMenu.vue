@@ -218,8 +218,8 @@ export default defineComponent({
 			messageCopyLink,
 			messageCenterHere,
 
-			copySuccess: clipboardSuccess(),
-			copyError: clipboardError(),
+			copySuccess: clipboardSuccess(store),
+			copyError: clipboardError(store),
 
 			menuVisible,
 			menuElement,
