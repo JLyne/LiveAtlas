@@ -44,5 +44,9 @@ export default defineConfig(({ mode }) => {
       assetsDir: 'live-atlas/assets'
     },
     define: envWithProcessPrefix,
+    test: {
+      globals: true,
+      environment: 'jsdom',
+    },
   }
 });

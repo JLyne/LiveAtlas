@@ -17,8 +17,7 @@
     "types": [
       "vite/client",
       "vue",
-      "jest",
-      "jest-in-case"
+      "jest"
     ],
     "paths": {
       "@/*": [
@@ -35,7 +34,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.vue",
-    "tests/**/*.ts"
+    "test/**/*.ts"
   ],
   "exclude": [
     "node_modules"
