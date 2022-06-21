@@ -70,9 +70,9 @@ export const parseUrl = (url: URL): LiveAtlasParsedUrl | null => {
 }
 
 /**
- * Parses the given hash into a {@link LiveAtlasParsedUrl}, if the hash matches the LiveAtlas URL hash format
+ * Parses the given hash into a {@link LiveAtlasParsedUrl}, if the hash matches the LiveAtlas or Overviewer URL hash format
  * @param {string} hash The hash to parse
- * @returns {LiveAtlasParsedUrl | null} A LiveAtlasParsedUrl if the provided hash matched the LiveAtlas URL
+ * @returns {LiveAtlasParsedUrl | null} A LiveAtlasParsedUrl if the provided hash matched the LiveAtlas or Overviewer URL
  * hash format, otherwise null
  */
 export const parseMapHash = (hash: string): LiveAtlasParsedUrl | null => {
