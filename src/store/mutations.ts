@@ -176,7 +176,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.followTarget = undefined;
 		state.viewTarget = undefined;
 
-		state.currentWorldState.timeOfDay = 0;
+		state.currentWorldState.timeOfDay = undefined;
 		state.currentWorldState.raining = false;
 		state.currentWorldState.thundering = false;
 
@@ -559,7 +559,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentZoom = 0;
 		state.currentLocation = {x: 0, y: 0, z: 0};
 
-		state.currentWorldState.timeOfDay = 0;
+		state.currentWorldState.timeOfDay = undefined;
 		state.currentWorldState.raining = false;
 		state.currentWorldState.thundering = false;
 

@@ -35,22 +35,33 @@ export const titleColoursRegex = /§[0-9a-f]/ig;
 export const netherWorldNameRegex = /[_\s]?nether([\s_]|$)/i;
 export const endWorldNameRegex = /(^|[_\s])end([\s_]|$)/i;
 
+export interface MinecraftTime {
+	serverTime: number;
+	days: number;
+	hours: number;
+	minutes: number;
+	seconds: number;
+	day: boolean;
+	night: boolean;
+}
+
 /**
  * Calculates 24 hour time of day and the current day from the given server time
  * @param {number} serverTime Server time in ticks
  * @returns The equivalent 24 hour time, current day and whether it is currently day or night
  */
-export const getMinecraftTime = (serverTime: number) => {
-	const day = serverTime >= 0 && serverTime < 13700;
+export const getMinecraftTime = (serverTime?: number): MinecraftTime => {
+	const time = typeof serverTime !== 'undefined' ? serverTime : 0;
+	const day = time >= 0 && time < 13700;
 
 	return {
-		serverTime: serverTime,
-		days: Math.floor((serverTime + 8000) / 24000),
+		serverTime: time,
+		days: Math.floor((time + 8000) / 24000),
 
 		// Assuming it is day at 6:00
-		hours: (Math.floor(serverTime / 1000) + 6) % 24,
-		minutes: Math.floor(((serverTime / 1000) % 1) * 60),
-		seconds: Math.floor(((((serverTime / 1000) % 1) * 60) % 1) * 60),
+		hours: (Math.floor(time / 1000) + 6) % 24,
+		minutes: Math.floor(((time / 1000) % 1) * 60),
+		seconds: Math.floor(((((time / 1000) % 1) * 60) % 1) * 60),
 
 		day: day,
 		night: !day

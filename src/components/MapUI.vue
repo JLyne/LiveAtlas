@@ -17,7 +17,7 @@
 <template>
 	<div id="ui">
 		<div id="ui__top-center" class="ui__section">
-			<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
+			<ClockControl v-if="clockControlEnabled"></ClockControl>
 		</div>
 
 		<div id="ui__top-left" class="ui__section">
