@@ -18,7 +18,6 @@
 	<Map v-slot="slotProps">
 		<MapUI v-if="slotProps.leaflet" :leaflet="slotProps.leaflet"></MapUI>
 	</Map>
-	<ChatBox v-if="chatBoxEnabled" v-show="chatBoxEnabled && chatVisible"></ChatBox>
 	<LoginModal v-if="loginEnabled" v-show="loginModalVisible" :required="loginRequired"></LoginModal>
 	<Sidebar></Sidebar>
 	<notifications position="bottom center" :speed="250" :max="3" :ignoreDuplicates="true" classes="notification" />
@@ -33,7 +32,6 @@ import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
-import ChatBox from './components/ChatBox.vue';
 import {parseUrl} from '@/util';
 import {hideSplash, showSplash, showSplashError} from '@/util/splash';
 import LoginModal from "@/components/login/LoginModal.vue";
@@ -46,7 +44,6 @@ export default defineComponent({
 		MapUI,
 		Map,
 		Sidebar,
-		ChatBox,
 		LoginModal
 	},
 
@@ -58,8 +55,6 @@ export default defineComponent({
 			currentUrl = computed(() => store.getters.url),
 			currentServer = computed(() => store.state.currentServer),
 			configurationHash = computed(() => store.state.configurationHash),
-			chatBoxEnabled = computed(() => store.state.components.chatBox),
-			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
 			playerImageUrl = computed(() => store.state.components.players.imageUrl),
 
 			loggedIn = computed(() => store.state.loggedIn), //Whether the user is currently logged in
@@ -229,8 +224,6 @@ export default defineComponent({
 		});
 
 		return {
-			chatBoxEnabled,
-			chatVisible,
 			loginEnabled,
 			loginRequired,
 			loginModalVisible

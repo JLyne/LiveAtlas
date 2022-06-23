@@ -14,26 +14,47 @@
   - limitations under the License.
   -->
 
+<template>
+	<div class="chat">
+		<button class="ui__element ui__button" type="button" :title="buttonTitle" :aria-expanded="chatVisible"
+            @click.prevent.stop="handleClick"
+				@keydown.right.prevent.stop="handleKeydown">
+			<SvgIcon name="chat"></SvgIcon>
+		</button>
+		<ChatBox v-show="chatVisible"></ChatBox>
+	</div>
+</template>
+
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted} from "vue";
-import {ChatControl} from "@/leaflet/control/ChatControl";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
+import {computed, defineComponent} from "vue";
+import {useStore} from "@/store";
+import {MutationTypes} from "@/store/mutation-types";
+import SvgIcon from "@/components/SvgIcon.vue";
+import ChatBox from "@/components/ChatBox.vue";
+import "@/assets/icons/chat.svg";
 
 export default defineComponent({
-	props: {
-		leaflet: {
-			type: Object as () => LiveAtlasLeafletMap,
-			required: true,
-		}
+	components: {
+		ChatBox,
+		SvgIcon,
 	},
 
-	setup(props) {
-		const control = new ChatControl({
-			position: 'topleft',
-		});
+	setup() {
+		const store = useStore(),
+			chatVisible = computed(() => store.state.ui.visibleElements.has('chat')),
+			buttonTitle = computed(() => store.state.messages.chatTitle);
 
-		onMounted(() => props.leaflet.addControl(control));
-		onUnmounted(() => props.leaflet.removeControl(control));
+		const handleClick = () => store.commit(MutationTypes.TOGGLE_UI_ELEMENT_VISIBILITY, 'chat'),
+			handleKeydown = () =>
+				store.commit(MutationTypes.SET_UI_ELEMENT_VISIBILITY, {element: 'chat', state: true});
+
+		return {
+			buttonTitle,
+			chatVisible,
+
+			handleClick,
+			handleKeydown
+		}
 	},
 
 	render() {
@@ -41,3 +62,19 @@ export default defineComponent({
 	}
 })
 </script>
+
+<style lang="scss" scoped>
+	.chat {
+		position: relative;
+
+		.chatbox {
+			pointer-events: auto;
+			position: absolute;
+			bottom: 0;
+			width: 50rem;
+			max-width: calc(100vw - 8rem);
+			max-height: 20rem;
+			left: calc(100% + var(--ui-element-spacing));
+		}
+	}
+</style>

@@ -15,18 +15,18 @@
   -->
 
 <template>
-	<section class="chat">
-		<ul class="chat__messages" role="log" aria-live="polite" aria-relevant="additions">
+	<section class="chatbox">
+		<ul class="chatbox__messages" role="log" aria-live="polite" aria-relevant="additions">
 			<ChatMessage v-for="message in chatMessages" :key="message.timestamp" :message="message"></ChatMessage>
 			<li v-if="!chatMessages.length" class="message message--skeleton" role="none">{{ messageNoMessages }}</li>
 		</ul>
-		<form v-if="sendingEnabled" class="chat__form" @submit.prevent="sendMessage">
-			<div role="alert" v-if="sendingError" class="chat__error">{{ sendingError }}</div>
-			<input ref="chatInput" v-model="enteredMessage" class="chat__input" type="text" :maxlength="maxMessageLength"
+		<form v-if="sendingEnabled" class="chatbox__form" @submit.prevent="sendMessage">
+			<div role="alert" v-if="sendingError" class="chatbox__error">{{ sendingError }}</div>
+			<input ref="chatInput" v-model="enteredMessage" class="chatbox__input" type="text" :maxlength="maxMessageLength"
 					:placeholder="messagePlaceholder"  :disabled="sendingMessage">
-			<button class="chat__send" :disabled="!enteredMessage || sendingMessage">{{ messageSend }}</button>
+			<button type="submit" class="chatbox__send" :disabled="!enteredMessage || sendingMessage">{{ messageSend }}</button>
 		</form>
-		<button type="button" v-if="loginRequired" class="chat__login" @click="login">{{ messageLogin }}</button>
+		<button type="button" v-if="loginRequired" class="chatbox__login" @click="login">{{ messageLogin }}</button>
 	</section>
 </template>
 
@@ -129,18 +129,12 @@
 <style lang="scss">
 	@import '../scss/placeholders';
 
-	.chat {
+	.chatbox {
 		@extend %panel;
-		position: absolute;
-		bottom: calc((var(--ui-element-spacing) * 2) + var(--ui-button-size));
-		left: calc((var(--ui-element-spacing) * 2) + var(--ui-button-size));
-		width: 50rem;
-		max-width: calc(100% - 8rem);
-		max-height: 20rem;
 		display: flex;
 		box-sizing: border-box;
 
-		.chat__messages {
+		.chatbox__messages {
 			display: flex;
 			flex-direction: column-reverse;
 			list-style: none;
@@ -163,24 +157,24 @@
 			}
 		}
 
-		.chat__form {
+		.chatbox__form {
 			display: flex;
 			flex-wrap: wrap;
 			align-items: stretch;
 			margin: 1.5rem -1.5rem -1.5rem;
 
-			.chat__input {
+			.chatbox__input {
 				border-bottom-left-radius: var(--border-radius);
 				flex-grow: 1;
 			}
 
-			.chat__send {
+			.chatbox__send {
 				padding-left: 1rem;
 				padding-right: 1rem;
 				border-radius: 0 0 var(--border-radius) 0;
 			}
 
-			.chat__error {
+			.chatbox__error {
 				background-color: var(--background-error);
 				color: var(--text-emphasis);
 				font-size: 1.6rem;
@@ -190,7 +184,7 @@
 			}
 		}
 
-		.chat__login {
+		.chatbox__login {
 			font-size: 1.6rem;
 			padding: 1.2rem;
 			background-color: var(--background-light);
@@ -206,7 +200,7 @@
 		}
 
 		@media (max-width: 320px) {
-			.chat__messages .message + .message {
+			.chatbox__messages .message + .message {
 				margin-bottom: 0.7rem;
 			}
 		}
