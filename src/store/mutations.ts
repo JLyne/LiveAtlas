@@ -29,7 +29,6 @@ import {
 	LiveAtlasUIElement,
 	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
-	LiveAtlasGlobalConfig,
 	LiveAtlasServerMessageConfig,
 	LiveAtlasPlayer,
 	LiveAtlasMarkerSet,
@@ -38,9 +37,12 @@ import {
 	LiveAtlasPartialComponentConfig,
 	LiveAtlasComponentConfig,
 	LiveAtlasUIModal,
-	LiveAtlasSidebarSectionState, LiveAtlasMarker, LiveAtlasMapViewTarget
+	LiveAtlasSidebarSectionState,
+	LiveAtlasMarker,
+	LiveAtlasMapViewTarget,
+	LiveAtlasGlobalMessageConfig,
+	LiveAtlasUIConfig, LiveAtlasServerDefinition
 } from "@/index";
-import {getGlobalMessages} from "@/util";
 import {getServerMapProvider} from "@/util/config";
 import {getDefaultPlayerImage} from "@/util/images";
 
@@ -50,10 +52,11 @@ export type CurrentMapPayload = {
 }
 
 export type Mutations<S = State> = {
-	[MutationTypes.INIT](state: S, config: LiveAtlasGlobalConfig): void
+	[MutationTypes.SET_UI_CONFIGURATION](state: S, config: LiveAtlasUIConfig): void
+	[MutationTypes.SET_SERVERS](state: S, config: Map<string, LiveAtlasServerDefinition>): void
 	[MutationTypes.SET_SERVER_CONFIGURATION](state: S, config: LiveAtlasServerConfig): void
 	[MutationTypes.SET_SERVER_CONFIGURATION_HASH](state: S, hash: number): void
-	[MutationTypes.SET_SERVER_MESSAGES](state: S, messages: LiveAtlasServerMessageConfig): void
+	[MutationTypes.SET_MESSAGES](state: S, messages: LiveAtlasGlobalMessageConfig|LiveAtlasServerMessageConfig): void
 	[MutationTypes.SET_WORLDS](state: S, worlds: Array<LiveAtlasWorldDefinition>): void
 	[MutationTypes.SET_COMPONENTS](state: S, components: LiveAtlasPartialComponentConfig | LiveAtlasComponentConfig): void
 	[MutationTypes.SET_MARKER_SETS](state: S, markerSets: Map<string, LiveAtlasMarkerSet>): void
@@ -96,10 +99,7 @@ export type Mutations<S = State> = {
 }
 
 export const mutations: MutationTree<State> & Mutations = {
-	[MutationTypes.INIT](state: State, config: LiveAtlasGlobalConfig) {
-		const messageConfig = config?.messages || {},
-			uiConfig = config?.ui || {};
-
+	[MutationTypes.SET_UI_CONFIGURATION](state: State, config: LiveAtlasUIConfig) {
 		try {
 			const uiSettings = JSON.parse(localStorage.getItem('uiSettings') || '{}');
 
@@ -120,33 +120,38 @@ export const mutations: MutationTree<State> & Mutations = {
 			console.warn('Failed to load saved UI settings', e);
 		}
 
-		state.messages = Object.assign(state.messages, getGlobalMessages(messageConfig));
-
-		if(typeof uiConfig.playersAboveMarkers === 'boolean') {
-			state.ui.playersAboveMarkers = uiConfig.playersAboveMarkers;
+		if(typeof config.playersAboveMarkers === 'boolean') {
+			state.ui.playersAboveMarkers = config.playersAboveMarkers;
 		}
 
-		if(typeof uiConfig.compactPlayerMarkers === 'boolean') {
-			state.ui.compactPlayerMarkers = uiConfig.compactPlayerMarkers;
+		if(typeof config.compactPlayerMarkers === 'boolean') {
+			state.ui.compactPlayerMarkers = config.compactPlayerMarkers;
 		}
 
-		if(typeof uiConfig.disableContextMenu === 'boolean') {
-			state.ui.disableContextMenu = uiConfig.disableContextMenu;
+		if(typeof config.disableContextMenu === 'boolean') {
+			state.ui.disableContextMenu = config.disableContextMenu;
 		}
 
-		if(typeof uiConfig.disableMarkerUI === 'boolean') {
-			state.ui.disableMarkerUI = uiConfig.disableMarkerUI;
+		if(typeof config.disableMarkerUI === 'boolean') {
+			state.ui.disableMarkerUI = config.disableMarkerUI;
 		}
 
-		if(typeof uiConfig.playersSearch === 'boolean') {
-			state.ui.playersSearch = uiConfig.playersSearch;
+		if(typeof config.playersSearch === 'boolean') {
+			state.ui.playersSearch = config.playersSearch;
 		}
 
-		if(typeof uiConfig.customLoginUrl === 'string') {
-			state.ui.customLoginUrl = uiConfig.customLoginUrl;
+		if(typeof config.customLoginUrl === 'string') {
+			state.ui.customLoginUrl = config.customLoginUrl;
 		}
+	},
 
-		state.servers = config.servers;
+	// Sets messages from the initial config fetch
+	[MutationTypes.SET_MESSAGES](state: State, messages: LiveAtlasServerMessageConfig|LiveAtlasGlobalMessageConfig) {
+		state.messages = Object.assign(state.messages, messages);
+	},
+
+	[MutationTypes.SET_SERVERS](state: State, servers: Map<string, LiveAtlasServerDefinition>) {
+		state.servers = servers;
 
 		if(state.currentServer && !state.servers.has(state.currentServer.id)) {
 			state.currentServer = undefined;
@@ -161,11 +166,6 @@ export const mutations: MutationTree<State> & Mutations = {
 	// Sets configuration hash
 	[MutationTypes.SET_SERVER_CONFIGURATION_HASH](state: State, hash: number) {
 		state.configurationHash = hash;
-	},
-
-	// Sets messages from the initial config fetch
-	[MutationTypes.SET_SERVER_MESSAGES](state: State, messages: LiveAtlasServerMessageConfig) {
-		state.messages = Object.assign(state.messages, messages);
 	},
 
 	//Sets the list of worlds, and their settings, from the initial config fetch

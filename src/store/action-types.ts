@@ -15,6 +15,7 @@
  */
 
 export enum ActionTypes {
+	INIT = "init",
 	LOAD_CONFIGURATION = "loadConfiguration",
 	START_UPDATES = "startUpdates",
 	STOP_UPDATES = "stopUpdates",

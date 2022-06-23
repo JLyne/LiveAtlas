@@ -467,7 +467,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			Pl3xmapMapProvider.getJSON(`${baseUrl}tiles/${name}/settings.json`, this.configurationAbort!.signal)));
 
 		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
-		this.store.commit(MutationTypes.SET_SERVER_MESSAGES, Pl3xmapMapProvider.buildMessagesConfig(response));
+		this.store.commit(MutationTypes.SET_MESSAGES, Pl3xmapMapProvider.buildMessagesConfig(response));
 		this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(response, worldResponses));
 		this.store.commit(MutationTypes.SET_COMPONENTS, Pl3xmapMapProvider.buildComponents(response));
 	}

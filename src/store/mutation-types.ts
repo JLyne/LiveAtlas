@@ -15,11 +15,12 @@
  */
 
 export enum MutationTypes {
-	INIT ='init',
+	SET_UI_CONFIGURATION ='setUIConfiguration',
+	SET_MESSAGES ='setMessages',
+	SET_SERVERS = 'setServers',
 
 	SET_SERVER_CONFIGURATION = 'setServerConfiguration',
 	SET_SERVER_CONFIGURATION_HASH = 'setServerConfigurationHash',
-	SET_SERVER_MESSAGES = 'setServerMessages',
 	SET_WORLDS = 'setWorlds',
 	SET_COMPONENTS = 'setComponents',
 	SET_MARKER_SETS = 'setMarkerSets',

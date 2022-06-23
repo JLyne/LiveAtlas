@@ -31,6 +31,7 @@ import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
 import {showSplashError} from "@/util/splash";
 import ConfigurationError from "@/errors/ConfigurationError";
 import OverviewerMapProvider from "@/providers/OverviewerMapProvider";
+import {ActionTypes} from "@/store/action-types";
 
 const splash = document.getElementById('splash'),
 	svgs = import.meta.globEager('/assets/icons/*.svg');
@@ -61,37 +62,39 @@ registerMapProvider('overviewer', OverviewerMapProvider);
 const config = window.liveAtlasConfig;
 window.liveAtlasLoaded = true;
 
-try {
-	config.servers = loadConfig(config);
-	store.commit(MutationTypes.INIT, config);
+(async() => {
+	try {
+		config.servers = loadConfig(config);
+		await store.dispatch(ActionTypes.INIT, config);
 
-	if(store.state.servers.size > 1) {
-		const lastSegment = window.location.pathname.split('/').pop(),
-			serverName = lastSegment && store.state.servers.has(lastSegment) ? lastSegment : store.state.servers.keys().next().value;
+		if (store.state.servers.size > 1) {
+			const lastSegment = window.location.pathname.split('/').pop(),
+				serverName = lastSegment && store.state.servers.has(lastSegment) ? lastSegment : store.state.servers.keys().next().value;
 
-		//Update url if server doesn't exist
-		if(serverName !== lastSegment) {
-			window.history.replaceState({}, '', serverName + window.location.hash);
+			//Update url if server doesn't exist
+			if (serverName !== lastSegment) {
+				window.history.replaceState({}, '', serverName + window.location.hash);
+			}
+
+			store.commit(MutationTypes.SET_CURRENT_SERVER, serverName);
+		} else {
+			store.commit(MutationTypes.SET_CURRENT_SERVER, store.state.servers.keys().next().value);
 		}
 
-		store.commit(MutationTypes.SET_CURRENT_SERVER, serverName);
-	} else {
-		store.commit(MutationTypes.SET_CURRENT_SERVER, store.state.servers.keys().next().value);
-	}
+		const app = createApp(App)
+			.use(store)
+			.use(Notifications)
+			.use(VueClipboard);
 
-	const app = createApp(App)
-		.use(store)
-		.use(Notifications)
-		.use(VueClipboard);
-
-	// app.config.performance = true;
-	app.mount('#app');
-} catch (e) {
-	if(e instanceof ConfigurationError) {
-		console.error('LiveAtlas configuration is invalid:', e);
-		showSplashError('LiveAtlas configuration is invalid:\n' + e, true);
-	} else {
-		console.error('LiveAtlas failed to load:', e);
-		showSplashError('LiveAtlas failed to load:\n' + e, true);
+		// app.config.performance = true;
+		app.mount('#app');
+	} catch (e) {
+		if (e instanceof ConfigurationError) {
+			console.error('LiveAtlas configuration is invalid:', e);
+			showSplashError('LiveAtlas configuration is invalid:\n' + e, true);
+		} else {
+			console.error('LiveAtlas failed to load:', e);
+			showSplashError('LiveAtlas failed to load:\n' + e, true);
+		}
 	}
-}
+})();

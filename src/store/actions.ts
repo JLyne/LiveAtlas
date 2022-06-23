@@ -20,7 +20,7 @@ import {State} from "@/store/state";
 import {ActionTypes} from "@/store/action-types";
 import {Mutations} from "@/store/mutations";
 import {DynmapMarkerUpdate, DynmapTileUpdate} from "@/dynmap";
-import {LiveAtlasMarkerSet, LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
+import {LiveAtlasGlobalConfig, LiveAtlasMarkerSet, LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
 import {nextTick} from "vue";
 import {startUpdateHandling, stopUpdateHandling} from "@/util/markers";
 
@@ -32,6 +32,10 @@ type AugmentedActionContext = {
 } & Omit<ActionContext<State, State>, "commit">
 
 export interface Actions {
+	[ActionTypes.INIT](
+		{commit}: AugmentedActionContext,
+		payload: LiveAtlasGlobalConfig,
+	):Promise<void>
 	[ActionTypes.LOAD_CONFIGURATION](
 		{commit}: AugmentedActionContext,
 	):Promise<void>
@@ -71,6 +75,12 @@ export interface Actions {
 }
 
 export const actions: ActionTree<State, State> & Actions = {
+	async [ActionTypes.INIT]({commit, state, dispatch}, config: LiveAtlasGlobalConfig): Promise<void> {
+		commit(MutationTypes.SET_UI_CONFIGURATION, config?.ui || {})
+		commit(MutationTypes.SET_MESSAGES, config?.messages || {})
+		commit(MutationTypes.SET_SERVERS, config.servers)
+	},
+
 	async [ActionTypes.LOAD_CONFIGURATION]({commit, state, dispatch}): Promise<void> {
 		await dispatch(ActionTypes.STOP_UPDATES, undefined);
 		commit(MutationTypes.RESET, undefined);

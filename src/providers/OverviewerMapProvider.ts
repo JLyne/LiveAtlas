@@ -377,7 +377,7 @@ export default class OverviewerMapProvider extends MapProvider {
 			const result = await runSandboxed(response + ' return overviewerConfig;');
 
 			this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, OverviewerMapProvider.buildServerConfig(result));
-			this.store.commit(MutationTypes.SET_SERVER_MESSAGES, OverviewerMapProvider.buildMessagesConfig(result));
+			this.store.commit(MutationTypes.SET_MESSAGES, OverviewerMapProvider.buildMessagesConfig(result));
 			this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(result));
 			this.store.commit(MutationTypes.SET_COMPONENTS, OverviewerMapProvider.buildComponents(result));
 
