@@ -15,7 +15,9 @@
   -->
 
 <template>
-	<Map></Map>
+	<Map v-slot="slotProps">
+		<MapUI v-if="slotProps.leaflet" :leaflet="slotProps.leaflet"></MapUI>
+	</Map>
 	<ChatBox v-if="chatBoxEnabled" v-show="chatBoxEnabled && chatVisible"></ChatBox>
 	<LoginModal v-if="loginEnabled" v-show="loginModalVisible" :required="loginRequired"></LoginModal>
 	<Sidebar></Sidebar>
@@ -36,10 +38,12 @@ import {parseUrl} from '@/util';
 import {hideSplash, showSplash, showSplashError} from '@/util/splash';
 import LoginModal from "@/components/login/LoginModal.vue";
 import {clearPlayerImageCache} from "@/util/images";
+import MapUI from "@/components/MapUI.vue";
 
 export default defineComponent({
 	name: 'App',
 	components: {
+		MapUI,
 		Map,
 		Sidebar,
 		ChatBox,

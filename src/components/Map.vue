@@ -22,18 +22,10 @@
 			<TileLayerOverlay v-for="[name, overlay] in overlays" :key="name" :options="overlay" :leaflet="leaflet"></TileLayerOverlay>
 			<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
 			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>
-
-			<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo" :leaflet="leaflet"></LogoControl>
-			<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
-			<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
-			<ClockControl v-if="clockControlEnabled" :leaflet="leaflet"></ClockControl>
-
-			<LoginControl v-if="loginEnabled" :leaflet="leaflet"></LoginControl>
-			<ChatControl v-if="chatBoxEnabled" :leaflet="leaflet"></ChatControl>
 		</template>
 	</div>
 
-	<MapContextMenu v-if="contextMenuEnabled && leaflet" :leaflet="leaflet"></MapContextMenu>
+	<slot :leaflet="leaflet"></slot>
 </template>
 
 <script lang="ts">
@@ -45,30 +37,15 @@ import {MutationTypes} from "@/store/mutation-types";
 import TileLayer from "@/components/map/layer/TileLayer.vue";
 import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
 import MarkerSetLayer from "@/components/map/layer/MarkerSetLayer.vue";
-import CoordinatesControl from "@/components/map/control/CoordinatesControl.vue";
-import ClockControl from "@/components/map/control/ClockControl.vue";
-import LinkControl from "@/components/map/control/LinkControl.vue";
-import ChatControl from "@/components/map/control/ChatControl.vue";
-import LogoControl from "@/components/map/control/LogoControl.vue";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
-import {LoadingControl} from "@/leaflet/control/LoadingControl";
-import MapContextMenu from "@/components/map/MapContextMenu.vue";
-import LoginControl from "@/components/map/control/LoginControl.vue";
 import TileLayerOverlay from "@/components/map/layer/TileLayerOverlay.vue";
 
 export default defineComponent({
 	components: {
 		TileLayerOverlay,
-		MapContextMenu,
 		TileLayer,
 		PlayersLayer,
-		MarkerSetLayer,
-		CoordinatesControl,
-		ClockControl,
-		LinkControl,
-		ChatControl,
-		LogoControl,
-		LoginControl
+		MarkerSetLayer
 	},
 
 	setup() {
@@ -81,13 +58,6 @@ export default defineComponent({
 			configuration = computed(() => store.state.configuration),
 
 			playerMarkersEnabled = computed(() => store.getters.playerMarkersEnabled),
-			coordinatesControlEnabled = computed(() => store.getters.coordinatesControlEnabled),
-			clockControlEnabled = computed(() => store.getters.clockControlEnabled),
-			linkControlEnabled = computed(() => store.state.components.linkControl),
-			chatBoxEnabled = computed(() => store.state.components.chatBox),
-			loginEnabled = computed(() => store.state.components.login),
-			contextMenuEnabled = computed(() => !store.state.ui.disableContextMenu),
-			logoControls = computed(() => store.state.components.logoControls),
 
 			currentWorld = computed(() => store.state.currentWorld),
 			currentMap = computed(() => store.state.currentMap),
@@ -110,14 +80,7 @@ export default defineComponent({
 			configuration,
 
 			playerMarkersEnabled,
-			coordinatesControlEnabled,
-			clockControlEnabled,
-			linkControlEnabled,
-			chatBoxEnabled,
-			loginEnabled,
-			contextMenuEnabled,
 
-			logoControls,
 			followTarget,
 			viewTarget,
 			parsedUrl,
@@ -264,11 +227,6 @@ export default defineComponent({
 		window.addEventListener('keydown', this.handleKeydown);
 
 		this.leaflet.createPane('vectors');
-
-		this.leaflet.addControl(new LoadingControl({
-			position: 'topleft',
-			delayIndicator: 500,
-		}));
 
 		this.leaflet.on('moveend', () => {
 			if(this.currentMap) {

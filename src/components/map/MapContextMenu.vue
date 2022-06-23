@@ -239,7 +239,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 	#map-context-menu {
 		position: fixed;
-		z-index: 150;
+		z-index: 1004;
 		min-width: 15rem;
 		max-width: 22.5rem;
 		top: 0;
