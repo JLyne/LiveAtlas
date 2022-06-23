@@ -14,30 +14,65 @@
   - limitations under the License.
   -->
 
+<template>
+	<button ref="button" class="ui__element ui__button" type="button" :title="buttonTitle" :aria-expanded="modalVisible"
+          @click.prevent.stop="handleClick"
+			@keydown.right.prevent.stop="handleClick">
+		<SvgIcon :name="loggedIn ? 'logout' : 'login'"></SvgIcon>
+	</button>
+</template>
+
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted} from "vue";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
-import {LoginControl} from "@/leaflet/control/LoginControl";
+import {computed, defineComponent, watch, nextTick, ref} from "vue";
+import {notify} from "@kyvg/vue3-notification";
+import {useStore} from "@/store";
+import {ActionTypes} from "@/store/action-types";
+import SvgIcon from "@/components/SvgIcon.vue";
+import "@/assets/icons/login.svg";
+import "@/assets/icons/logout.svg";
 
 export default defineComponent({
-	props: {
-		leaflet: {
-			type: Object as () => LiveAtlasLeafletMap,
-			required: true,
-		}
-	},
+	components: {SvgIcon},
 
-	setup(props) {
-		const control = new LoginControl({
-			position: 'topleft',
+	setup() {
+		const store = useStore(),
+			button = ref<HTMLElement|null>(null),
+			loggedIn = computed(() => store.state.loggedIn),
+			buttonTitle = computed(() => loggedIn.value ? store.state.messages.logoutTitle : store.state.messages.loginTitle),
+			modalVisible = computed(() => store.state.ui.visibleModal === 'login'),
+			loginRequired = computed(() => store.state.loginRequired),
+			loginModalVisible = computed(() => store.state.ui.visibleModal === 'login');
+
+		watch(loginModalVisible, visible => {
+			if(!visible && !loginRequired.value) {
+				nextTick(() => (button.value as HTMLElement).focus());
+			}
 		});
 
-		onMounted(() => props.leaflet.addControl(control));
-		onUnmounted(() => props.leaflet.removeControl(control));
-	},
+		const handleClick = async () => {
+			const logoutSuccess = computed(() => store.state.messages.logoutSuccess),
+				logoutError = computed(() => store.state.messages.logoutErrorUnknown);
 
-	render() {
-		return null;
-	}
+			if (loggedIn.value) {
+				try {
+					await store.dispatch(ActionTypes.LOGOUT, undefined);
+					notify(logoutSuccess.value);
+				} catch(e) {
+					notify(logoutError.value);
+				}
+			} else {
+				await store.dispatch(ActionTypes.LOGIN, null)
+			}
+		};
+
+		return {
+			button,
+			modalVisible,
+			loggedIn,
+			buttonTitle,
+
+			handleClick
+		}
+	},
 })
 </script>

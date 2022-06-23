@@ -26,7 +26,7 @@
 
 		<div id="ui__bottom-left" class="ui__section section--bottom">
 			<div class="ui__toolbar toolbar--vertical">
-				<LoginControl v-if="loginEnabled" :leaflet="leaflet"></LoginControl>
+				<LoginControl v-if="loginEnabled"></LoginControl>
 				<ChatControl v-if="chatBoxEnabled"></ChatControl>
 			</div>
 			<div class="ui__toolbar">
