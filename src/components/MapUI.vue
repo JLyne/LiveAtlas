@@ -30,7 +30,7 @@
 				<ChatControl v-if="chatBoxEnabled"></ChatControl>
 			</div>
 			<div class="ui__toolbar">
-				<LinkControl v-if="linkControlEnabled" :leaflet="leaflet"></LinkControl>
+				<LinkControl v-if="linkControlEnabled"></LinkControl>
 				<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
 			</div>
 		</div>

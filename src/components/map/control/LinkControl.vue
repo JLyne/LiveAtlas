@@ -13,31 +13,34 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
+<template>
+	<button class="ui__element ui__button" type="button" :title="linkTitle"
+          v-clipboard:copy="url" v-clipboard:success="copySuccess" v-clipboard:error="copyError">
+		<SvgIcon name="link"></SvgIcon>
+	</button>
+</template>
 
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted} from "vue";
-import {LinkControl} from "@/leaflet/control/LinkControl";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
+import {computed, defineComponent} from "vue";
+import {useStore} from "@/store";
+import {clipboardError, clipboardSuccess} from "@/util";
+import SvgIcon from "@/components/SvgIcon.vue";
+import '@/assets/icons/link.svg';
 
 export default defineComponent({
-	props: {
-		leaflet: {
-			type: Object as () => LiveAtlasLeafletMap,
-			required: true,
+	components: {SvgIcon},
+
+	setup() {
+		const store = useStore(),
+			linkTitle = computed(() => store.state.messages.linkTitle),
+			url = computed(() => window.location.href.split("#")[0] + store.getters.url);
+
+		return {
+			copySuccess: clipboardSuccess(store),
+			copyError: clipboardError(store),
+			linkTitle,
+			url
 		}
 	},
-
-	setup(props) {
-		const control = new LinkControl({
-			position: 'bottomleft',
-		});
-
-		onMounted(() => props.leaflet.addControl(control));
-		onUnmounted(() => props.leaflet.removeControl(control));
-	},
-
-	render() {
-		return null;
-	}
 })
 </script>
