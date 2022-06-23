@@ -277,7 +277,7 @@ const _getMessages = (messageKeys: any, config: any = {}) => {
 	const messages: any = {};
 
 	for(const key of messageKeys) {
-		messages[key] = config[key] || `Missing message: ${key}`;
+		messages[key] = typeof config[key] === 'string' && config[key] ? config[key] : `Missing message: ${key}`;
 	}
 
 	return messages as LiveAtlasGlobalMessageConfig;
