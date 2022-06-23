@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import {parseUrl} from "@/util";
-import {LiveAtlasParsedUrl} from "@/index";
+import {getGlobalMessages, getMessages, getUrlForLocation, guessWorldDimension, parseUrl} from "@/util";
+import {LiveAtlasDimension, LiveAtlasGlobalMessageConfig, LiveAtlasMessageConfig, LiveAtlasParsedUrl} from "@/index";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {globalMessages, serverMessages} from "../messages";
 
 const validURLs: [string, URL, LiveAtlasParsedUrl][] = [
 	[
@@ -391,4 +393,73 @@ describe("parseURL", () => {
 	test.each(invalidURLs)("Invalid or incomplete URL - %s", (name: string, url: URL, expected: LiveAtlasParsedUrl|null) => {
 		expect(parseUrl(url)).toEqual(expected);
 	});
+});
+
+describe("guessWorldDimension", () => {
+	const worlds: [string, LiveAtlasDimension][] = [
+		['world', 'overworld'],
+		['smp2022', 'overworld'],
+		['DIM-1', 'nether'],
+		['world_nether', 'nether'],
+		['smp_nether', 'nether'],
+		['smpnether', 'nether'],
+		['nether_smp', 'nether'],
+		['DIM1', 'end'],
+		['world_the_end', 'end'],
+		['end', 'end'],
+		['smp_end', 'end'],
+		['smpend', 'overworld'], //Would have too many false positives
+		['end_smp', 'end'],
+	];
+
+	test.each(worlds)('%s -> %s', (input: string, expected: LiveAtlasDimension) =>
+		expect(guessWorldDimension(input)).toBe(expected))
+})
+
+
+test("getUrlForLocation", () => {
+	const map = new LiveAtlasMapDefinition({
+		name: 'test_map',
+		world: {
+			name: 'test_world',
+			displayName: 'Test World',
+			dimension: 'overworld',
+			seaLevel: 64,
+			maps: new Set()
+		},
+		baseUrl: 'test/',
+		tileSize: 128,
+		imageFormat: 'png',
+		nativeZoomLevels: 1
+	});
+
+	expect(getUrlForLocation(map, {x: 100, y: 68.5, z: -2300.3}, 3))
+		.toEqual('#test_world;test_map;100,69,-2300;3')
+});
+
+test("getMessages", () => {
+	const expectedGlobal: LiveAtlasGlobalMessageConfig = globalMessages.reduce((result: any, key) => {
+		result[key] = `Missing message: ${key}`;
+		return result;
+	}, {});
+	const expectedMessages: LiveAtlasMessageConfig = Object.assign({}, expectedGlobal, serverMessages.reduce((result: any, key) => {
+		result[key] = `Missing message: ${key}`;
+		return result;
+	}, {}));
+
+	const input: any = {
+		extraProperty: true, //Invalid message key
+		serversHeading: undefined, // Valid message key but undefined
+		mapTitle: null, // Valid message key but null
+		loginTitle: '', // Valid message key but empty string
+		registerConfirmPasswordLabel: {invalid: true}, //Valid message key but not a string,
+		chatErrorDisabled: 'test defined global message', // Valid global message
+		chatPlayerQuit: 'test defined server message' // Valid server message
+	};
+
+	expectedGlobal.chatErrorDisabled = expectedMessages.chatErrorDisabled = input.chatErrorDisabled;
+	expectedMessages.chatPlayerQuit = input.chatPlayerQuit;
+
+	expect(getMessages(input)).toEqual(expectedMessages);
+	expect(getGlobalMessages(input)).toEqual(expectedGlobal);
 });

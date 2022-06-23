@@ -17,21 +17,21 @@
 <template>
 	<section class="sidebar" role="none" ref="sidebar">
 		<header class="sidebar__buttons">
-			<button v-if="mapCount > 1 || serverCount > 1" class="button--maps" data-section="maps"
+			<button ref="maps-button" v-if="mapCount > 1 || serverCount > 1" class="button--maps" data-section="maps"
 			        :title="mapCount > 1 ? messageWorlds : messageServers"
 			        :aria-label="mapCount > 1 ? messageWorlds : messageServers"
 			        :aria-expanded="mapsVisible"
 			        @click="handleSectionClick" @keydown="handleSectionKeydown">
-				<SvgIcon :name="mapCount > 1 ? 'maps' : 'servers'"></SvgIcon>
+				<SvgIcon ref="maps-icon" :name="mapCount > 1 ? 'maps' : 'servers'"></SvgIcon>
 			</button>
-			<button v-if="markerUIEnabled" class="button--markers" data-section="markers"
+			<button ref="markers-button" v-if="markerUIEnabled" class="button--markers" data-section="markers"
 			        :title="messageMarkers"
 			        :aria-label="messageMarkers"
 			        :aria-expanded="markersVisible"
 			        @click="handleSectionClick" @keydown="handleSectionKeydown">
 				<SvgIcon name="marker_point"></SvgIcon>
 			</button>
-			<button v-if="playerMakersEnabled" class="button--players" data-section="players"
+			<button ref="players-button" v-if="playerMakersEnabled" class="button--players" data-section="players"
 			        :title="messagePlayers" :aria-label="messagePlayers" :aria-expanded="playersVisible"
 			        @click="handleSectionClick" @keydown="handleSectionKeydown">
 				<SvgIcon name="players"></SvgIcon>
