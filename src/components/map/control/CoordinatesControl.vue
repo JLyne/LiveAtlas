@@ -27,7 +27,7 @@
 <script lang="ts">
 import {computed, defineComponent, onUnmounted, watch, onMounted, ref} from "vue";
 import {LeafletMouseEvent} from "leaflet";
-import {Coordinate} from "@/index";
+import {Coordinate, CoordinatesControlOptions} from "@/index";
 import {useStore} from "@/store";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
@@ -41,7 +41,7 @@ export default defineComponent({
 
 	setup(props) {
 		const store = useStore(),
-			componentSettings = computed(() => store.state.components.coordinatesControl),
+			componentSettings = computed(() => store.state.components.coordinatesControl as CoordinatesControlOptions),
 			currentMap = computed(() => store.state.currentMap),
 
 			chunkLabel = computed(() => store.state.messages.locationChunk),

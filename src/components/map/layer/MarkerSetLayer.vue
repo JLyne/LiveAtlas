@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, computed, onMounted, onUnmounted, watch} from "vue";
+import {markRaw, watch, defineComponent, computed, onMounted, onUnmounted} from "vue";
 import {LiveAtlasMarkerSet} from "@/index";
 import {useStore} from "@/store";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
+import {MutationTypes} from "@/store/mutation-types";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import MapMarkers from "@/components/map/marker/MapMarkers.vue";
 
@@ -32,11 +32,6 @@ export default defineComponent({
 	},
 
 	props: {
-		leaflet: {
-			type: Object as () => LiveAtlasLeafletMap,
-			required: true,
-		},
-
 		markerSet: {
 			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
@@ -64,27 +59,25 @@ export default defineComponent({
 					priority: props.markerSet.priority,
 				});
 
-				if(newValue.hidden) {
-					props.leaflet.getLayerManager()
-						.addHiddenLayer(layerGroup, newValue.label, props.markerSet.priority);
-				} else {
-					props.leaflet.getLayerManager()
-						.addLayer(layerGroup, true, newValue.label, props.markerSet.priority);
-				}
+				// store.commit(MutationTypes.UPDATE_LAYER, {
+				// 	layer: layerGroup,
+				// 	options: {enabled: newValue.hidden}
+				// });
 			}
 		}, {deep: true});
 
 		onMounted(() => {
-			if(props.markerSet.hidden) {
-				props.leaflet.getLayerManager()
-					.addHiddenLayer(layerGroup, props.markerSet.label, props.markerSet.priority);
-			} else {
-				props.leaflet.getLayerManager()
-					.addLayer(layerGroup, true, props.markerSet.label, props.markerSet.priority);
-			}
+			store.commit(MutationTypes.ADD_LAYER, {
+				layer: markRaw(layerGroup),
+				name: props.markerSet.label,
+				overlay: true,
+				position: props.markerSet.priority || 0,
+				enabled: !props.markerSet.hidden,
+				showInControl: true
+			});
 		});
 
-		onUnmounted(() => props.leaflet.getLayerManager().removeLayer(layerGroup));
+		onUnmounted(() => store.commit(MutationTypes.REMOVE_LAYER, layerGroup));
 
 		return {
 			markerSettings,

@@ -23,6 +23,7 @@ import {State} from "@/store/state";
 import {ActionTypes} from "@/store/action-types";
 import {Mutations} from "@/store/mutations";
 import {startUpdateHandling, stopUpdateHandling} from "@/util/markers";
+import {Layer} from "leaflet";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(
@@ -49,6 +50,9 @@ export interface Actions {
 		{commit}: AugmentedActionContext,
 		payload: Set<LiveAtlasPlayer>
 	):Promise<Map<string, LiveAtlasMarkerSet>>
+	[ActionTypes.POP_LAYER_UPDATES](
+		{commit}: AugmentedActionContext,
+	):Promise<[Layer, boolean][]>
 	[ActionTypes.POP_MARKER_UPDATES](
 		{commit}: AugmentedActionContext,
 		amount: number
@@ -189,6 +193,14 @@ export const actions: ActionTree<State, State> & Actions = {
 		return new Promise((resolve) => {
 			requestAnimationFrame(() => processQueue(players, resolve));
 		});
+	},
+
+	async [ActionTypes.POP_LAYER_UPDATES]({commit, state}): Promise<[Layer, boolean][]> {
+		const updates = Array.from(state.pendingLayerUpdates.entries());
+
+		commit(MutationTypes.POP_LAYER_UPDATES, undefined);
+
+		return updates;
 	},
 
 	async [ActionTypes.POP_MARKER_UPDATES]({commit, state}, amount: number): Promise<DynmapMarkerUpdate[]> {

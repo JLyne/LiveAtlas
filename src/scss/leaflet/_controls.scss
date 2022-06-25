@@ -99,45 +99,6 @@
 	}
 }
 
-.leaflet-control-layers {
-	width: auto;
-	border: none;
-	color: var(--text-base);
-	position: relative;
-
-	.leaflet-control-layers-list {
-		@extend %panel;
-		display: block;
-		position: absolute;
-		top: 0;
-		left: calc(var(--ui-element-spacing) + var(--ui-button-size));
-		overflow: auto;
-		max-width: calc(100vw - 14rem);
-		box-sizing: border-box;
-
-		@media screen and (max-width: 400px) {
-			max-width: calc(100vw - 13rem);
-		}
-
-		.leaflet-control-layers-overlays {
-			width: 100%;
-			max-width: 30rem;
-		}
-
-		.layer {
-			cursor: pointer;
-			padding: 0.8rem 0 0.7rem;
-
-			&:first-child {
-				margin-top: -0.4rem;
-			}
-
-			&:last-child {
-				margin-bottom: -0.4rem;
-			}
-		}
-	}
-}
 
 .leaflet-top, .leaflet-bottom,
 .leaflet-left, .leaflet-right {

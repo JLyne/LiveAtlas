@@ -24,6 +24,7 @@
 			<div class="ui__toolbar toolbar--vertical">
 				<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo"></LogoControl>
 				<ZoomControl :leaflet="leaflet"></ZoomControl>
+				<LayerControl></LayerControl>
 				<LoadingControl :leaflet="leaflet" :delay="500"></LoadingControl>
 			</div>
 		</div>
@@ -60,6 +61,7 @@ import LoginControl from "@/components/map/control/LoginControl.vue";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import LoadingControl from "@/components/map/control/LoadingControl.vue";
 import ZoomControl from "@/components/map/control/ZoomControl.vue";
+import LayerControl from "@/components/map/control/LayerControl.vue";
 
 export default defineComponent({
 	props: {
@@ -70,6 +72,7 @@ export default defineComponent({
 	},
 
 	components: {
+		LayerControl,
 		ZoomControl,
 		LoadingControl,
 		LogoControl,

@@ -32,7 +32,7 @@ import {
 	LiveAtlasChat,
 	LiveAtlasUIModal,
 	LiveAtlasSidebarSectionState,
-	LiveAtlasMarker, LiveAtlasMapViewTarget
+	LiveAtlasMarker, LiveAtlasMapViewTarget, LiveAtlasLayerDefinition
 } from "@/index";
 import {
 	DynmapMarkerUpdate,
@@ -41,6 +41,7 @@ import {
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {getMessages} from "@/util";
 import {getDefaultPlayerImage} from "@/util/images";
+import {Layer} from "leaflet";
 
 export type State = {
 	version: string;
@@ -58,6 +59,10 @@ export type State = {
 
 	worlds: Map<string, LiveAtlasWorldDefinition>;
 	maps: Map<string, LiveAtlasMapDefinition>;
+
+	layers: Map<Layer, LiveAtlasLayerDefinition>;
+	sortedLayers: LiveAtlasLayerDefinition[];
+
 	players: Map<string, LiveAtlasPlayer>;
 	sortedPlayers: LiveAtlasSortedPlayers;
 	maxPlayers: number;
@@ -68,6 +73,7 @@ export type State = {
 		messages: LiveAtlasChat[];
 	};
 
+	pendingLayerUpdates: Map<Layer, boolean>; //Pending changes to map layer visibility
 	pendingMarkerUpdates: DynmapMarkerUpdate[];
 	pendingTileUpdates: Array<DynmapTileUpdate>;
 
@@ -131,6 +137,10 @@ export const state: State = {
 
 	worlds: new Map(), //Defined (loaded) worlds with maps from configuration.json
 	maps: new Map(), //Defined maps from configuration.json
+
+	layers: new Map(), //Leaflet map layers
+	sortedLayers: [], //Layers sorted by position for layer control
+
 	players: new Map(), //Online players from world.json
 	sortedPlayers: [] as LiveAtlasSortedPlayers, //Online players from world.json, sorted by their sort property then alphabetically
 	maxPlayers: 0,
@@ -142,7 +152,8 @@ export const state: State = {
 
 	markerSets: new Map(), //Marker sets from world_markers.json, doesn't include the markers themselves for performance reasons
 
-	pendingMarkerUpdates: [],  //Pending updates to markers/areas/etc
+	pendingLayerUpdates: new Map(), //Pending updates to map layer visibility
+	pendingMarkerUpdates: [], //Pending updates to markers/areas/etc
 	pendingTileUpdates: [], //Pending updates to map tiles
 
 	// Map plugin provided settings for various parts of LiveAtlas

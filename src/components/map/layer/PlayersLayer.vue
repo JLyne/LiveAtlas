@@ -24,6 +24,8 @@ import {LayerGroup} from 'leaflet';
 import {useStore} from "@/store";
 import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
+import {MutationTypes} from "@/store/mutation-types";
+import {markRaw} from "vue";
 
 export default defineComponent({
 	components: {
@@ -51,21 +53,17 @@ export default defineComponent({
 		watch(playerCount, (newValue) => playerPane.classList.toggle('no-animations', newValue > 150));
 
 		onMounted(() => {
-			if(!componentSettings.value!.hideByDefault) {
-				props.leaflet.getLayerManager().addLayer(
-					layerGroup,
-					true,
-					store.state.components.players.markers!.layerName,
-					componentSettings.value!.layerPriority);
-			} else {
-				props.leaflet.getLayerManager().addHiddenLayer(
-					layerGroup,
-					store.state.components.players.markers!.layerName,
-					componentSettings.value!.layerPriority);
-			}
+			store.commit(MutationTypes.ADD_LAYER, {
+				layer: markRaw(layerGroup),
+				name: store.state.components.players.markers!.layerName,
+				overlay: true,
+				position: componentSettings.value!.layerPriority,
+				enabled: !componentSettings.value!.hideByDefault,
+				showInControl: true
+			});
 		});
 
-		onUnmounted(() => props.leaflet.getLayerManager().removeLayer(layerGroup));
+		onUnmounted(() => store.commit(MutationTypes.REMOVE_LAYER, layerGroup));
 
 		if(playersAboveMarkers.value) {
 			playerPane.style.zIndex = '600';

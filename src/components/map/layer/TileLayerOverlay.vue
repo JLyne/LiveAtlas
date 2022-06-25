@@ -15,9 +15,10 @@
   -->
 
 <script lang="ts">
-import {defineComponent, onUnmounted} from "vue";
+import {markRaw, defineComponent, onUnmounted} from "vue";
 import {LiveAtlasTileLayerOverlay} from "@/index";
 import {useStore} from "@/store";
+import {MutationTypes} from "@/store/mutation-types";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 export default defineComponent({
@@ -37,10 +38,17 @@ export default defineComponent({
 
 		let layer = store.state.currentMapProvider!.createTileLayer(Object.freeze(JSON.parse(JSON.stringify(props.options.tileLayerOptions))));
 
-		props.leaflet.getLayerManager().addHiddenLayer(layer, props.options.label, props.options.priority);
+		store.commit(MutationTypes.ADD_LAYER, {
+			layer: markRaw(layer),
+			name: props.options.label,
+			overlay: true,
+			position: props.options.priority || 0,
+			enabled: false,
+			showInControl: true
+		});
 
 		onUnmounted(() => {
-			props.leaflet.getLayerManager().removeLayer(layer);
+			store.commit(MutationTypes.REMOVE_LAYER, layer)
 			layer.remove();
 		});
 	},

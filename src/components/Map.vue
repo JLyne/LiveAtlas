@@ -39,6 +39,7 @@ import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
 import MarkerSetLayer from "@/components/map/layer/MarkerSetLayer.vue";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import TileLayerOverlay from "@/components/map/layer/TileLayerOverlay.vue";
+import {ActionTypes} from "@/store/action-types";
 
 export default defineComponent({
 	components: {
@@ -69,6 +70,7 @@ export default defineComponent({
 
 			//Location and zoom to pan to upon next projection change
 			scheduledView = ref<LiveAtlasMapViewTarget|null>(null),
+			pendingLayerUpdates = computed(() => !!store.state.pendingLayerUpdates.size),
 
 			mapTitle = computed(() => store.state.messages.mapTitle);
 
@@ -90,6 +92,7 @@ export default defineComponent({
 			currentMap,
 
 			scheduledView,
+			pendingLayerUpdates,
 
 			mapTitle
 		}
@@ -188,6 +191,21 @@ export default defineComponent({
 
 				//Set pan location for when the projection changes
 				this.scheduledView = viewTarget;
+			}
+		},
+		async pendingLayerUpdates(size) {
+			const store = useStore();
+
+			if(size) {
+				const updates = await store.dispatch(ActionTypes.POP_LAYER_UPDATES, undefined);
+
+				for (const update of updates) {
+					if(update[1]) {
+						this.leaflet.addLayer(update[0]);
+					} else {
+						this.leaflet.removeLayer(update[0]);
+					}
+				}
 			}
 		},
 		parsedUrl: {

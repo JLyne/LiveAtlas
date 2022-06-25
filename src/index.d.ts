@@ -18,7 +18,7 @@ import {
 	ControlOptions,
 	Coords,
 	DoneCallback, FitBoundsOptions,
-	InternalTiles, LatLng,
+	InternalTiles, LatLng, Layer,
 	PathOptions,
 	PointTuple,
 	PolylineOptions
@@ -168,6 +168,23 @@ interface LiveAtlasWorldState {
 	raining: boolean;
 	thundering: boolean;
 	timeOfDay?: number;
+}
+
+interface LiveAtlasLayerDefinition {
+	layer: Layer;
+	overlay: boolean;
+	name: string;
+	position: number;
+	enabled: boolean;
+	showInControl: boolean;
+}
+
+interface LiveAtlasPartialLayerDefinition {
+	overlay?: boolean;
+	name?: string;
+	position?: number;
+	enabled?: boolean;
+	showInControl?: boolean;
 }
 
 interface LiveAtlasParsedUrl {

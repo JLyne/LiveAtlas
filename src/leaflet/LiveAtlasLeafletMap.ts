@@ -15,23 +15,14 @@
  */
 
 import {Map, DomUtil, MapOptions} from 'leaflet';
-import LayerManager from "@/leaflet/layer/LayerManager";
 
 export default class LiveAtlasLeafletMap extends Map {
 	declare _controlCorners: any;
 	declare	_controlContainer?: HTMLElement;
 	declare	_container?: HTMLElement;
 
-	private readonly _layerManager: LayerManager;
-
 	constructor(element: string | HTMLElement, options?: MapOptions) {
 		super(element, options);
-
-		this._layerManager = Object.seal(new LayerManager(this));
-	}
-
-	getLayerManager(): LayerManager {
-		return this._layerManager;
 	}
 
 	// noinspection JSUnusedGlobalSymbols

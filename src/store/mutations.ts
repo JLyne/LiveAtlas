@@ -35,7 +35,7 @@ import {
 	LiveAtlasMarker,
 	LiveAtlasMapViewTarget,
 	LiveAtlasGlobalMessageConfig,
-	LiveAtlasUIConfig, LiveAtlasServerDefinition
+	LiveAtlasUIConfig, LiveAtlasServerDefinition, LiveAtlasLayerDefinition, LiveAtlasPartialLayerDefinition
 } from "@/index";
 import {
 	DynmapMarkerSetUpdate, DynmapMarkerUpdate,
@@ -45,6 +45,8 @@ import {MutationTypes} from "@/store/mutation-types";
 import {nonReactiveState, State} from "@/store/state";
 import {getServerMapProvider} from "@/util/config";
 import {getDefaultPlayerImage} from "@/util/images";
+import {Layer} from "leaflet";
+import {sortLayers} from "@/util/layers";
 
 export type CurrentMapPayload = {
 	worldName: string;
@@ -67,12 +69,16 @@ export type Mutations<S = State> = {
 	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<LiveAtlasChat>): void
 
+	[MutationTypes.POP_LAYER_UPDATES](state: State): void
 	[MutationTypes.POP_MARKER_UPDATES](state: S, amount: number): void
 	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): void
 
 	[MutationTypes.SET_MAX_PLAYERS](state: S, maxPlayers: number): void
 	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer>
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
+	[MutationTypes.ADD_LAYER](state: State, layer: LiveAtlasLayerDefinition): void
+	[MutationTypes.UPDATE_LAYER](state: State, payload: {layer: Layer, options: LiveAtlasPartialLayerDefinition}): void
+	[MutationTypes.REMOVE_LAYER](state: State, layer: Layer): void
 	[MutationTypes.SET_LOADED](state: S, a?: void): void
 	[MutationTypes.SET_CURRENT_SERVER](state: S, server: string): void
 	[MutationTypes.SET_CURRENT_MAP](state: S, payload: CurrentMapPayload): void
@@ -172,6 +178,14 @@ export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.SET_WORLDS](state: State, worlds: Array<LiveAtlasWorldDefinition>) {
 		state.worlds.clear();
 		state.maps.clear();
+
+		//Mark all layers for removal
+		for (const layer of state.layers.keys()) {
+			state.pendingLayerUpdates.set(layer, false);
+		}
+
+		state.layers.clear();
+		state.sortedLayers.splice(0);
 
 		state.followTarget = undefined;
 		state.viewTarget = undefined;
@@ -300,6 +314,11 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Pops the specified number of marker updates from the pending updates list
+	[MutationTypes.POP_LAYER_UPDATES](state: State) {
+		state.pendingLayerUpdates.clear();
+	},
+
+	//Pops the specified number of marker updates from the pending updates list
 	[MutationTypes.POP_MARKER_UPDATES](state: State, amount: number) {
 		state.pendingMarkerUpdates.splice(0, amount);
 	},
@@ -376,6 +395,38 @@ export const mutations: MutationTree<State> & Mutations = {
 				state.sortedPlayers.splice(state.sortedPlayers.indexOf(player), 1);
 				state.players.delete(key);
 			}
+		}
+	},
+
+	[MutationTypes.ADD_LAYER](state: State, layer: LiveAtlasLayerDefinition) {
+		state.layers.set(layer.layer, layer);
+		state.sortedLayers = sortLayers(state.layers);
+		state.pendingLayerUpdates.set(layer.layer, layer.enabled);
+	},
+
+	[MutationTypes.UPDATE_LAYER](state: State, {layer, options}) {
+		if(state.layers.has(layer)) {
+			const existing = state.layers.get(layer) as LiveAtlasLayerDefinition,
+				existingEnabled = existing.enabled;
+
+			state.layers.set(layer, Object.assign(existing, options));
+			state.sortedLayers = sortLayers(state.layers);
+
+			// Sort layers if position has changed
+			if((typeof options.enabled === 'boolean' && existingEnabled !== options.enabled)) {
+				state.pendingLayerUpdates.set(layer, options.enabled);
+			}
+		}
+	},
+
+	[MutationTypes.REMOVE_LAYER](state: State, layer: Layer) {
+		const existing = state.layers.get(layer);
+
+		if (existing) {
+			console.log('removing???');
+			state.layers.delete(layer);
+			state.pendingLayerUpdates.set(layer, false); // Remove from map
+			state.sortedLayers.splice(state.sortedLayers.indexOf(existing, 1));
 		}
 	},
 
@@ -556,6 +607,15 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		state.worlds.clear();
 		state.maps.clear();
+
+		//Mark all layers for removal
+		for (const layer of state.layers.keys()) {
+			state.pendingLayerUpdates.set(layer, false);
+		}
+
+		state.layers.clear();
+		state.sortedLayers.splice(0);
+
 		state.currentZoom = 0;
 		state.currentLocation = {x: 0, y: 0, z: 0};
 
