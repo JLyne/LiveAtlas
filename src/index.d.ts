@@ -25,7 +25,6 @@ import {
 } from "leaflet";
 import {DynmapUrlConfig} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {CoordinatesControlOptions} from "@/leaflet/control/CoordinatesControl";
 import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {globalMessages, serverMessages} from "../messages";
 import {LiveAtlasMarkerType} from "@/util/markers";
@@ -295,6 +294,13 @@ export interface ClockControlOptions extends ControlOptions {
 	showTimeOfDay: boolean;
 	showDigitalClock: boolean;
 	showWeather: boolean;
+}
+
+export interface CoordinatesControlOptions extends ControlOptions {
+	showY: boolean;
+	showRegion: boolean;
+	showChunk: boolean;
+	label: string;
 }
 
 interface LiveAtlasPartialComponentConfig {

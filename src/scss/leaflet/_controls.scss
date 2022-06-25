@@ -99,50 +99,6 @@
 	}
 }
 
-.leaflet-control-coordinates {
-	display: flex;
-	align-items: center;
-	padding: 0.5rem 1.5rem;
-
-	.value {
-		line-height: 1;
-		font-family: monospace;
-		white-space: pre;
-		font-size: 2rem;
-
-		&[data-label]:before {
-			content: attr(data-label);
-			display: block;
-			line-height: 1;
-			margin-bottom: 0.5rem;
-			font-size: 1.25rem;
-			font-family: Raleway, sans-serif;;
-		}
-
-		& + .value {
-			margin-left: 2rem;
-		}
-	}
-
-	@media (max-width: 600px) {
-		.region {
-			display: none;
-		}
-	}
-
-	@media (max-width: 480px), (max-height: 480px) {
-		.value {
-			font-size: 1.6rem;
-		}
-	}
-
-	@media (max-width: 384px) {
-		.chunk {
-			display: none;
-		}
-	}
-}
-
 .leaflet-control-layers {
 	width: auto;
 	border: none;
