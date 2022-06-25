@@ -22,6 +22,7 @@
 
 		<div id="ui__top-left" class="ui__section">
 			<div class="ui__toolbar toolbar--vertical">
+				<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo"></LogoControl>
 				<LoadingControl :leaflet="leaflet" :delay="500"></LoadingControl>
 			</div>
 		</div>

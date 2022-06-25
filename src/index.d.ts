@@ -25,7 +25,6 @@ import {
 } from "leaflet";
 import {DynmapUrlConfig} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {LogoControlOptions} from "@/leaflet/control/LogoControl";
 import {globalMessages, serverMessages} from "../messages";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
@@ -301,6 +300,12 @@ export interface CoordinatesControlOptions extends ControlOptions {
 	showRegion: boolean;
 	showChunk: boolean;
 	label: string;
+}
+
+export interface LogoControlOptions extends ControlOptions {
+	url?: string;
+	image?: string;
+	text: string;
 }
 
 interface LiveAtlasPartialComponentConfig {

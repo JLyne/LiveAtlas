@@ -139,18 +139,6 @@
 	}
 }
 
-.leaflet-control-logo {
-	flex-shrink: 0;
-
-	a {
-		height: 100%;
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-}
-
 .leaflet-top, .leaflet-bottom,
 .leaflet-left, .leaflet-right {
 	display: flex;

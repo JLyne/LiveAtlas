@@ -14,45 +14,47 @@
   - limitations under the License.
   -->
 
+<template>
+	<div class="ui__element ui__button logo">
+		<a v-if="options.url" :href="options.url" :aria-label="options.text">
+			<img v-if="options.image" :src="options.image" :alt="options.text" />
+			<template v-else>{{ options.text }}</template>
+		</a>
+		<template v-else>
+			<img v-if="options.image" :src="options.image" :alt="options.text" />
+			<template v-else>{{ options.text }}</template>
+		</template>
+	</div>
+</template>
+
 <script lang="ts">
 import {defineComponent} from "vue";
-import {LogoControl, LogoControlOptions} from "@/leaflet/control/LogoControl";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
+import {LogoControlOptions} from "@/index";
 
 export default defineComponent({
 	props: {
 		options: {
 			type: Object as () => LogoControlOptions,
 			required: true,
-		},
-		leaflet: {
-			type: Object as () => LiveAtlasLeafletMap,
-			required: true,
 		}
-	},
-
-	setup(props) {
-		const control = new LogoControl(props.options);
-
-		return {
-			control,
-		}
-	},
-
-	mounted() {
-		this.leaflet.addControl(this.control);
-	},
-
-	unmounted() {
-		this.leaflet.removeControl(this.control);
-	},
-
-	render() {
-		return null;
 	}
-})
+});
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+	.logo {
+		flex-shrink: 0;
+		width: auto;
+		min-width: var(--ui-button-size);
+		padding: 0;
 
+		a {
+			box-sizing: border-box;
+			height: 100%;
+			padding: 0.8rem 0.8rem 0.7rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
 </style>
