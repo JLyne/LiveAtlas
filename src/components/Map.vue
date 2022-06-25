@@ -216,7 +216,7 @@ export default defineComponent({
 			center: new LatLng(0, 0),
 			fadeAnimation: false,
 			zoomAnimation: true,
-			zoomControl: true,
+			zoomControl: false,
 			preferCanvas: true,
 			attributionControl: false,
 			crs: CRS.Simple,

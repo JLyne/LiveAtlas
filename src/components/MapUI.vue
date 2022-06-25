@@ -23,6 +23,7 @@
 		<div id="ui__top-left" class="ui__section">
 			<div class="ui__toolbar toolbar--vertical">
 				<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo"></LogoControl>
+				<ZoomControl :leaflet="leaflet"></ZoomControl>
 				<LoadingControl :leaflet="leaflet" :delay="500"></LoadingControl>
 			</div>
 		</div>
@@ -58,6 +59,7 @@ import MapContextMenu from "@/components/map/MapContextMenu.vue";
 import LoginControl from "@/components/map/control/LoginControl.vue";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import LoadingControl from "@/components/map/control/LoadingControl.vue";
+import ZoomControl from "@/components/map/control/ZoomControl.vue";
 
 export default defineComponent({
 	props: {
@@ -68,6 +70,7 @@ export default defineComponent({
 	},
 
 	components: {
+		ZoomControl,
 		LoadingControl,
 		LogoControl,
 		CoordinatesControl,
