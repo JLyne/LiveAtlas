@@ -261,17 +261,3 @@
 		margin: 0;
 	}
 }
-
-.leaflet-control-loading {
-	cursor: wait;
-	animation: fade 0.3s linear;
-	animation-fill-mode: forwards;
-
-	&:hover, &:active, &:focus {
-		background-color: var(--background-base);
-	}
-
-	&[hidden] {
-		display: none;
-	}
-}
