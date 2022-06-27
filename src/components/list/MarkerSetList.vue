@@ -27,7 +27,7 @@
 
 	<template v-else>
 		<div ref="subHeader" class="markers__header">
-			<button ref="backButton" class="markers__back" @click.prevent="currentSet = undefined">
+			<button type="button" ref="backButton" class="markers__back" @click.prevent="currentSet = undefined">
 				<SvgIcon name="arrow"></SvgIcon>
 			</button>
 			<h3 class="markers__set">{{ currentSet.label }}</h3>
