@@ -50,7 +50,7 @@
     "vite": "2.9.12",
     "vite-plugin-svg-sprite-component": "^1.0",
     "vitest": "^0.15.2",
-    "vue-tsc": "0.37.9"
+    "vue-tsc": "0.38.2"
   },
   "eslintConfig": {
     "root": true,
