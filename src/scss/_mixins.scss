@@ -83,7 +83,7 @@
 }
 
 @mixin button-focused {
-	outline: var(--outline-focus) auto thick !important;
+	outline: var(--outline-focus) solid thick !important;
 	z-index: 1;
 	border-color: var(--background-dark);
 }
