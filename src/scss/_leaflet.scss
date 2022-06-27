@@ -24,15 +24,4 @@
 	font-size: 1.5rem;
 	font-weight: inherit;
 	line-height: 1;
-
-	/* Workaround for focus outlines until https://github.com/Leaflet/Leaflet/pull/7259 gets released */
-	* {
-		&:focus {
-			outline-style: auto !important;
-		}
-
-		@include focus-reset {
-			outline-style: none !important;
-		}
-	}
 }
