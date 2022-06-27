@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<RadioList ref="list" v-if="!currentSet" :aria-labelledby="ariaLabelledby">
+	<RadioList ref="list" v-if="!currentSet" name="marker-set" :aria-labelledby="ariaLabelledby">
 		<template v-for="[id, markerSet] in markerSets" :key="id">
 			<input :id="`marker-set-${id}`" type="radio" name="marker-set" v-model="currentSet" v-bind:value="markerSet">
 			<label :for="`marker-set-${id}`">

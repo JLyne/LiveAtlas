@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<RadioList aria-labelledby="servers-heading">
+	<RadioList name="server" aria-labelledby="servers-heading">
 		<ServerListItem :server="server" v-for="[name, server] in servers" :key="name"></ServerListItem>
 	</RadioList>
 </template>

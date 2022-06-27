@@ -15,6 +15,8 @@
   -->
 <template>
 	<fieldset class="menu" role="radiogroup" @keydown="onKeydown">
+		<!-- Always have a checked item to fix https://bugzilla.mozilla.org/show_bug.cgi?id=1413213 -->
+		<input type="radio" :name="name" checked data-ignore @focus="moveFocus">
 		<slot></slot>
 	</fieldset>
 </template>
@@ -26,13 +28,25 @@ import {handleKeyboardEvent} from "@/util/events";
 export default defineComponent({
 	name: 'RadioList',
 
+	props: {
+		name: {
+			type: String,
+			required: true
+		}
+	},
+
 	setup() {
 		const onKeydown = (e: KeyboardEvent) => {
 			handleKeyboardEvent(e, Array.from((e.currentTarget as HTMLFieldSetElement).elements) as HTMLElement[])
-		}
+		};
+
+		const moveFocus = (e: FocusEvent) => {
+			((e.target as HTMLElement).nextElementSibling as HTMLElement).focus();
+		};
 
 		return {
-			onKeydown
+			onKeydown,
+			moveFocus
 		}
 	},
 });

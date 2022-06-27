@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<RadioList v-if="worlds.size" aria-labelledby="maps-heading">
+	<RadioList v-if="worlds.size" name="map" aria-labelledby="maps-heading">
 		<WorldListItem :world="world" v-for="[name, world] in worlds" :key="`${prefix}_${currentServer}_${name}`"></WorldListItem>
 	</RadioList>
 </template>

@@ -76,6 +76,11 @@ export const handleKeyboardEvent = (e: KeyboardEvent, elements: HTMLElement[]) =
 			newPosition = 0;
 		}
 
+		// Skip over firefox bugfix radio button in RadioList
+		if(typeof elements[newPosition].dataset.ignore !== 'undefined') {
+			newPosition = e.key == 'ArrowUp' || e.key == 'ArrowLeft' ? elements.length - 1 : newPosition + 1;
+		}
+
 		(elements[newPosition] as HTMLElement).focus();
 		e.preventDefault();
 	} else if(e.key === 'Enter' && e.target) {

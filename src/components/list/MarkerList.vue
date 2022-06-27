@@ -18,7 +18,7 @@
 	<input ref="searchInput" v-if="search && unfilteredTotal" id="markers__search" class="section__search" type="text"
 	       name="search" :value="searchQuery" :placeholder="messageMarkersSearchPlaceholder"
 	       @keydown="e => e.stopImmediatePropagation()" @input="onSearchInput">
-	<RadioList v-if="markers.size" v-bind="$attrs" @keydown="onListKeydown">
+	<RadioList v-if="markers.size" name="marker" v-bind="$attrs" @keydown="onListKeydown">
 		<MarkerListItem v-for="[id, marker] in markers" :key="id" :marker="marker" :id="id"></MarkerListItem>
 		<button type="button" ref="showMoreButton" v-if="viewLimit < total" @click.prevent="showMore">{{ messageShowMore }}</button>
 	</RadioList>
