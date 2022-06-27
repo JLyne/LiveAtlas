@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Map, DomUtil, MapOptions} from 'leaflet';
+import {Map, MapOptions} from 'leaflet';
 
 export default class LiveAtlasLeafletMap extends Map {
 	declare _controlCorners: any;
@@ -23,26 +23,5 @@ export default class LiveAtlasLeafletMap extends Map {
 
 	constructor(element: string | HTMLElement, options?: MapOptions) {
 		super(element, options);
-	}
-
-	// noinspection JSUnusedGlobalSymbols
-	_initControlPos() {
-		const corners: any = this._controlCorners = {},
-			l = 'leaflet-',
-			container = this._controlContainer =
-				DomUtil.create('div', l + 'control-container', this._container);
-
-		function createCorner(vSide: string, hSide: string) {
-			const className = l + vSide + ' ' + l + hSide;
-
-			corners[`${vSide}${hSide}`] = DomUtil.create('div', className, container);
-		}
-
-		createCorner('top', 'left');
-		createCorner('top', 'right');
-		createCorner('top', 'center');
-		createCorner('bottom', 'center');
-		createCorner('bottom', 'left');
-		createCorner('bottom', 'right');
 	}
 }
