@@ -15,7 +15,7 @@
  */
 
 import { mount } from '@vue/test-utils';
-import SVGIcon from '@/Components/SVGIcon.vue';
+import SVGIcon from '../../src/Components/SVGIcon.vue';
 
 describe('SVGIcon', async () => {
 	it('exists', () => {
