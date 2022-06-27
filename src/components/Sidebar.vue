@@ -200,6 +200,7 @@ export default defineComponent({
 	.sidebar__buttons {
 		display: flex;
 		flex-direction: row;
+		flex-shrink: 0;
 		align-items: center;
 		justify-content: flex-end;
 		margin-bottom: var(--ui-element-spacing);
