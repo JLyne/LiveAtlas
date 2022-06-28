@@ -423,7 +423,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		const existing = state.layers.get(layer);
 
 		if (existing) {
-			console.log('removing???');
 			state.layers.delete(layer);
 			state.pendingLayerUpdates.set(layer, false); // Remove from map
 			state.sortedLayers.splice(state.sortedLayers.indexOf(existing, 1));
