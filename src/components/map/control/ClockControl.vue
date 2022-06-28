@@ -149,7 +149,6 @@ export default defineComponent({
 		position: relative;
 		width: 15rem;
 		height: 6rem;
-		z-index: 50;
 		font-family: monospace;
 		display: flex;
 		flex-direction: column;

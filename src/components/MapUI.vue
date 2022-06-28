@@ -128,7 +128,7 @@ export default defineComponent({
 		display: grid;
 		grid-template-columns: 1fr min-content 1fr;
 		grid-template-rows: 1fr 1fr;
-		z-index: 1003;
+		z-index: 103;
 		padding: var(--ui-element-spacing);
 	}
 
