@@ -138,6 +138,7 @@ export default defineComponent({
 			position: relative;
 			padding: 2rem 3rem 0;
 			text-align: center;
+			box-shadow: none;
 		}
 
 		.modal__close {
