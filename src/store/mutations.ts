@@ -418,6 +418,9 @@ export const mutations: MutationTree<State> & Mutations = {
 			state.markerSets.clear();
 			state.pendingMarkerUpdates.splice(0);
 			state.pendingTileUpdates.splice(0);
+			state.currentWorldState.timeOfDay = undefined;
+			state.currentWorldState.raining = false;
+			state.currentWorldState.thundering = false;
 
 			// Cancel follow when switching to a different world
 			if(state.followTarget && state.followTarget.location.world !== newWorld!.name) {
