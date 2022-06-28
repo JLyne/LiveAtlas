@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, computed, nextTick, ref, watchEffect} from "vue";
+import {defineComponent, watch, onMounted, computed, nextTick, ref} from "vue";
 import {notify} from "@kyvg/vue3-notification";
 import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
@@ -67,18 +67,22 @@ export default defineComponent({
 			invalid = ref(false),
 			error = ref(null);
 
-		onMounted(() => {
-			watchEffect(async () => {
-				await nextTick();
+		const focusUsername = () => usernameField.value!.focus();
 
-				if(loginModalVisible.value) {
-					usernameField.value!.focus();
-				} else {
-					loginUsername.value = '';
-					loginPassword.value = '';
-				}
-			});
+		watch(loginModalVisible, visible => {
+			if(visible) {
+				nextTick(focusUsername);
+			} else {
+				loginUsername.value = '';
+				loginPassword.value = '';
+			}
 		});
+
+		onMounted(() => {
+			if(loginModalVisible.value) {
+				nextTick(focusUsername);
+			}
+		})
 
 		const login = async () => {
 			error.value = null;
