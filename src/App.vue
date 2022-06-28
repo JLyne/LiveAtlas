@@ -19,7 +19,6 @@
 		<MapUI v-if="slotProps.leaflet" :leaflet="slotProps.leaflet"></MapUI>
 	</Map>
 	<LoginModal v-if="loginEnabled" v-show="loginModalVisible" :required="loginRequired"></LoginModal>
-	<Sidebar></Sidebar>
 	<notifications position="bottom center" :speed="250" :max="3" :ignoreDuplicates="true" classes="notification" />
 </template>
 
@@ -30,10 +29,9 @@ import {LiveAtlasServerDefinition, LiveAtlasUIElement} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
-import Map from './components/Map.vue';
-import Sidebar from './components/Sidebar.vue';
 import {parseUrl} from '@/util';
 import {hideSplash, showSplash, showSplashError} from '@/util/splash';
+import Map from './components/Map.vue';
 import LoginModal from "@/components/login/LoginModal.vue";
 import {clearPlayerImageCache} from "@/util/images";
 import MapUI from "@/components/MapUI.vue";
@@ -43,7 +41,6 @@ export default defineComponent({
 	components: {
 		MapUI,
 		Map,
-		Sidebar,
 		LoginModal
 	},
 

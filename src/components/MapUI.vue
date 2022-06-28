@@ -40,7 +40,11 @@
 			</div>
 		</div>
 
-		<div id="ui__top-right" class="ui__section section--right"></div>
+		<div id="ui__top-right" class="ui__section section--right">
+			<div class="ui__toolbar">
+				<Sidebar></Sidebar>
+			</div>
+		</div>
 		<div id="ui__bottom-right" class="ui__section section--right section--bottom"></div>
 	</div>
 
@@ -62,6 +66,7 @@ import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import LoadingControl from "@/components/map/control/LoadingControl.vue";
 import ZoomControl from "@/components/map/control/ZoomControl.vue";
 import LayerControl from "@/components/map/control/LayerControl.vue";
+import Sidebar from "@/components/Sidebar.vue";
 
 export default defineComponent({
 	props: {
@@ -72,6 +77,7 @@ export default defineComponent({
 	},
 
 	components: {
+		Sidebar,
 		LayerControl,
 		ZoomControl,
 		LoadingControl,

@@ -16,31 +16,30 @@
 
 <template>
 	<section class="sidebar" role="none" ref="sidebar">
-		<header class="sidebar__buttons">
-			<button ref="maps-button" v-if="mapCount > 1 || serverCount > 1" type="button"
-              class="button--maps" data-section="maps"
-              :title="mapCount > 1 ? messageWorlds : messageServers"
-              :aria-label="mapCount > 1 ? messageWorlds : messageServers"
-              :aria-expanded="mapsVisible"
-              @click="handleSectionClick" @keydown="handleSectionKeydown">
-				<SvgIcon ref="maps-icon" :name="mapCount > 1 ? 'maps' : 'servers'"></SvgIcon>
-			</button>
-			<button ref="markers-button" v-if="markerUIEnabled" type="button"
-              class="button--markers" data-section="markers"
-              :title="messageMarkers"
-              :aria-label="messageMarkers"
-              :aria-expanded="markersVisible"
-              @click="handleSectionClick" @keydown="handleSectionKeydown">
-				<SvgIcon name="marker_point"></SvgIcon>
-			</button>
-			<button ref="players-button" v-if="playerMakersEnabled" type="button"
-              class="button--players" data-section="players"
-              :title="messagePlayers" :aria-label="messagePlayers" :aria-expanded="playersVisible"
-              @click="handleSectionClick" @keydown="handleSectionKeydown">
-				<SvgIcon name="players"></SvgIcon>
-			</button>
-		</header>
-		<div class="sidebar__content" @keydown="handleSidebarKeydown">
+		<button ref="maps-button" v-if="mapCount > 1 || serverCount > 1" type="button"
+            class="ui__element ui__button button--maps" data-section="maps"
+            :title="mapCount > 1 ? messageWorlds : messageServers"
+            :aria-label="mapCount > 1 ? messageWorlds : messageServers"
+            :aria-expanded="mapsVisible"
+            @click="handleSectionClick" @keydown="handleSectionKeydown">
+			<SvgIcon ref="maps-icon" :name="mapCount > 1 ? 'maps' : 'servers'"></SvgIcon>
+		</button>
+		<button ref="markers-button" v-if="markerUIEnabled" type="button"
+            class="ui__element ui__button button--markers" data-section="markers"
+            :title="messageMarkers"
+            :aria-label="messageMarkers"
+            :aria-expanded="markersVisible"
+            @click="handleSectionClick" @keydown="handleSectionKeydown">
+			<SvgIcon name="marker_point"></SvgIcon>
+		</button>
+		<button ref="players-button" v-if="playerMakersEnabled" type="button"
+            class="ui__element ui__button button--players" data-section="players"
+            :title="messagePlayers" :aria-label="messagePlayers" :aria-expanded="playersVisible"
+            @click="handleSectionClick" @keydown="handleSectionKeydown">
+			<SvgIcon name="players"></SvgIcon>
+		</button>
+
+		<div class="sidebar__content" ref="sidebar" @keydown="handleSidebarKeydown">
 			<ServersSection v-if="serverCount > 1" :hidden="!mapsVisible"></ServersSection>
 			<WorldsSection v-if="mapCount > 1" :hidden="!mapsVisible"></WorldsSection>
 			<MarkersSection v-if="previouslyVisible.has('markers')" :hidden="!markersVisible"></MarkersSection>
@@ -181,14 +180,9 @@ export default defineComponent({
 
 <style lang="scss">
 .sidebar {
-	position: fixed;
-	z-index: 110;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	display: flex;
-	flex-direction: column;
-	padding: var(--ui-element-spacing);
+	display: grid;
+	grid-gap: var(--ui-element-spacing);
+	grid-auto-flow: inherit;
 	font-size: 1.5rem;
 	will-change: transform;
 	pointer-events: none;
@@ -199,50 +193,18 @@ export default defineComponent({
 		margin: 0;
 	}
 
-	.sidebar__buttons {
-		display: flex;
-		flex-direction: row;
-		flex-shrink: 0;
-		align-items: center;
-		justify-content: flex-end;
-		margin-bottom: var(--ui-element-spacing);
-		pointer-events: auto;
-		align-self: flex-end;
-
-		button {
-			width: var(--ui-button-size);
-			height: var(--ui-button-size);
-			box-shadow: var(--box-shadow);
-
-			& + button {
-				margin-left: var(--ui-element-spacing);
-			}
-		}
-
-		@media (max-width: 480px) {
-			flex-direction: column;
-			align-items: flex-end;
-			margin: 0;
-			position: absolute;
-			right: var(--ui-element-spacing);
-			top: var(--ui-element-spacing);
-
-			button + button {
-				margin-left: 0;
-				margin-top: var(--ui-element-spacing);
-			}
-		}
-	}
-
 	.sidebar__content {
-		position: relative;
+		position: fixed;
+		top: 100%;
+		right: 0;
+		max-height: calc(100vh - var(--ui-button-size) - (var(--ui-element-spacing) * 3)); /* Viewport height - top buttons and bottom padding */
 		display: flex;
 		flex-direction: column;
-		flex-shrink: 1;
 		min-height: 0;
 		overflow: auto;
 		pointer-events: auto;
 		margin-right: -0.5rem;
+		margin-top: var(--ui-element-spacing);
 		padding: 0.3rem 0.5rem 0 0.3rem;
 		width: 26rem;
         align-items: flex-end;
@@ -256,21 +218,6 @@ export default defineComponent({
 		&:not(:hover):not(:focus-within)::-webkit-scrollbar-thumb {
 			background-color: var(--background-base);
 		}
-	}
-
-	@media (max-width: 480px) {
-		padding-right: 7rem;
-		padding-top: 0.8rem;
-	}
-
-	@media (max-width: 400px) {
-		padding-right: 6.5rem;
-		padding-top: 0.3rem;
-		padding-bottom: 0.3rem;
-	}
-
-	@media print {
-		display: none;
 	}
 }
 </style>
