@@ -110,9 +110,6 @@ export default defineComponent({
 			z-index: 3;
 			border-radius: inherit;
 			margin: -1.5rem -1.5rem 0;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
 
 			&, button {
 				padding: 1.5rem;
@@ -120,6 +117,7 @@ export default defineComponent({
 
 			button {
 				text-overflow: ellipsis;
+				white-space: nowrap;
 				overflow: hidden;
 				display: flex;
 				font-size: 2rem;
@@ -129,6 +127,8 @@ export default defineComponent({
 				width: calc(100% + 3rem);
 				align-items: center;
 				text-shadow: var(--text-shadow);
+				padding: 1rem 1.5rem;
+				line-height: 1.5;
 				margin: -1.5rem;
 
 				.svg-icon {

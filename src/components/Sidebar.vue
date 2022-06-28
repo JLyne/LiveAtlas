@@ -244,7 +244,7 @@ export default defineComponent({
 		overflow: auto;
 		pointer-events: auto;
 		margin-right: -0.5rem;
-		padding: 0.2rem 0.5rem 0 0.2rem;
+		padding: 0.3rem 0.5rem 0 0.3rem;
 		width: 26rem;
         align-items: flex-end;
 		overscroll-behavior: contain;
