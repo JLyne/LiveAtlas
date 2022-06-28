@@ -114,11 +114,11 @@ input {
 }
 
 :focus {
-	outline: var(--outline-focus) solid thick !important;
+	outline: var(--outline-focus) solid 0.3rem !important;
 }
 
 :focus-visible {
-	outline: var(--outline-focus) solid thick !important;
+	outline: var(--outline-focus) solid 0.3rem !important;
 }
 
 .checkbox {
@@ -165,7 +165,7 @@ input {
 
 		&:focus ~ span:after {
 			content: '';
-			outline: var(--outline-focus) solid thick;
+			outline: var(--outline-focus) solid 0.3rem;
 			position: absolute;
 			top: 0;
 			right: -0.5rem;
