@@ -7,11 +7,10 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "clean": "rimraf dist java/target/resources",
-    "copy": "cpy plugin.yml dist java/target/resources --parents && rimraf java/target/resources/assets/*.svg",
-    "build": "yarn run clean && vue-tsc --noEmit && vite build --out-dir dist && yarn run copy && yarn run mvn",
+    "build": "yarn run clean && vue-tsc --noEmit && vite build --out-dir dist && rimraf dist/live-atlas/assets/*.svg && yarn run mvn",
     "lint": "eslint --ext .ts,.vue src",
     "lint:fix": "eslint -ext .ts,.vue src --fix",
-    "mvn": "cd java && mvn package && cd ..",
+    "mvn": "cpy plugin.yml dist java/target/resources --parents && cd java && mvn package && cd ..",
     "postinstall": "patch-package"
   },
   "dependencies": {
