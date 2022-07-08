@@ -1,9 +1,9 @@
-diff --git a/node_modules/@kyvg/vue3-notification/dist/index.d.ts b/node_modules/@kyvg/vue3-notification/dist/index.d.ts
+diff --git a/dist/index.d.ts b/dist/index.d.ts
 index bbf3c54..6e02345 100644
---- a/node_modules/@kyvg/vue3-notification/dist/index.d.ts
-+++ b/node_modules/@kyvg/vue3-notification/dist/index.d.ts
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
 @@ -29,4 +29,3 @@ export declare const notify: {
  };
- 
+
  export { }
 -}

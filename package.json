@@ -1,7 +1,6 @@
 {
   "name": "live-atlas",
   "version": "3.1.0",
-  "private": false,
   "scripts": {
     "serve": "vite",
     "preview": "vite preview --port 8082",
@@ -9,18 +8,18 @@
     "coverage": "vitest run --coverage",
     "clean": "rimraf dist java/target/resources",
     "copy": "cpy plugin.yml dist java/target/resources --parents && rimraf java/target/resources/assets/*.svg",
-    "build": "npm run clean && vue-tsc --noEmit && vite build --out-dir dist && npm-run-all copy mvn",
+    "build": "yarn run clean && vue-tsc --noEmit && vite build --out-dir dist && yarn run copy && yarn run mvn",
     "lint": "eslint --ext .ts,.vue src",
     "lint:fix": "eslint -ext .ts,.vue src --fix",
     "mvn": "cd java && mvn package && cd ..",
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@kyvg/vue3-notification": "2.3.0",
+    "@kyvg/vue3-notification": "patch:@kyvg/vue3-notification@2.3.0#patches/@kyvg+vue3-notification+2.3.0.patch",
     "@soerenmartius/vue3-clipboard": "^0.1",
     "leaflet": "git+https://github.com/JLyne/Leaflet.git#843eb3124492dc48245cd187c6dc94c2f33b65c1",
     "lodash.debounce": "^4.0.8",
-    "modern-normalize": "^1.1.0",
+    "modern-normalize": "patch:modern-normalize@1.1.0#patches/modern-normalize+1.1.0.patch",
     "vue": "^3.2.37",
     "vuex": "^4.0"
   },
@@ -34,14 +33,13 @@
     "@vitejs/plugin-vue": "^2.3",
     "@vue/compiler-sfc": "^3.2.37",
     "@vue/eslint-config-typescript": "^10.0",
+    "@vue/reactivity": "^3.2.37",
+    "@vue/runtime-core": "^3.2.37",
     "@vue/test-utils": "^2.0.0",
-    "@vue/vue3-jest": "^27.0.0",
     "c8": "^7.11.3",
     "cpy-cli": "^4.1.0",
     "eslint": "^8.17",
     "eslint-plugin-vue": "^8.7",
-    "npm-run-all": "^4.1.5",
-    "patch-package": "^6.4",
     "rimraf": "^3.0.2",
     "rollup-plugin-analyzer": "^4.0",
     "sass": "^1.52",
@@ -66,5 +64,6 @@
       "parser": "@typescript-eslint/parser"
     },
     "rules": {}
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }

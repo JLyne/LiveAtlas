@@ -1,11 +1,11 @@
-diff --git a/node_modules/modern-normalize/modern-normalize.css b/node_modules/modern-normalize/modern-normalize.css
+diff --git a/modern-normalize.css b/modern-normalize.css
 index ad3b58c..aeb06e6 100644
---- a/node_modules/modern-normalize/modern-normalize.css
-+++ b/node_modules/modern-normalize/modern-normalize.css
+--- a/modern-normalize.css
++++ b/modern-normalize.css
 @@ -5,16 +5,6 @@ Document
  ========
  */
- 
+
 -/**
 -Use a better box model (opinionated).
 -*/
@@ -22,7 +22,7 @@ index ad3b58c..aeb06e6 100644
 @@ -47,23 +37,6 @@ body {
  	margin: 0;
  }
- 
+
 -/**
 -Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
 -*/

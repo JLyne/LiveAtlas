@@ -20,9 +20,8 @@ jobs:
       - run: cat .env
       - uses: actions/setup-node@v2
         with:
-          node-version: '16'
-      - run: npm install
-      - run: npm run build
+          node-version: '18'
+      - run: yarn run build
       - run: find dist/live-atlas/assets -type f -iname \*.svg -delete
       - run: cp LICENSE.md dist
       - name: Upload a Build Artifact
