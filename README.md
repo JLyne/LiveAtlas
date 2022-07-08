@@ -36,7 +36,7 @@ The index.html file can be edited to add custom favicons, styles or analytics, j
 You are also free to build LiveAtlas yourself to make further changes.
 
 ## Building
-First run `npm install` to install LiveAtlas dependencies. You can then either run `npm run serve` to start a local dev server, or `npm run build` to build.
+This repository uses [yarn zero-installs](https://yarnpkg.com/features/zero-installs), so all dependencies are provided without installing. You can run `yarn run serve` to start a local dev server, or `yarn run build` to build LiveAtlas.
 
 ## Support
 If you find a bug, please create an issue with as must detail as possible. I'm working on this in my spare time, so fixes are on a best effort basis, but I'll eventually find time for them.
