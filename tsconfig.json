@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "types": [
       "vite/client",
-      "vue"
+      "vue",
+      "vitest/globals"
     ],
     "paths": {
       "@/*": [

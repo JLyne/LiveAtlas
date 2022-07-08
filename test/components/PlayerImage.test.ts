@@ -15,7 +15,7 @@
  */
 
 import { mount } from '@vue/test-utils';
-import PlayerImage from '../../src/Components/PlayerImage.vue';
+import PlayerImage from '../../src/components/PlayerImage.vue';
 import {getDefaultPlayerImage, getPlayerImage} from "@/util/images";
 import {useTestImageProvider} from "../helpers";
 

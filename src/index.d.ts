@@ -170,7 +170,7 @@ interface LiveAtlasProjection {
 interface LiveAtlasWorldState {
 	raining: boolean;
 	thundering: boolean;
-	timeOfDay: number;
+	timeOfDay?: number;
 }
 
 interface LiveAtlasParsedUrl {

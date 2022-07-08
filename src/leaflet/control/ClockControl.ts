@@ -98,6 +98,10 @@ export class ClockControl extends Control {
 		const timeOfDay = worldState.timeOfDay;
 		let sunAngle;
 
+		if(typeof timeOfDay === 'undefined') {
+			return;
+		}
+
 		if (timeOfDay > 23100 || timeOfDay < 12900) {
 			//day mode
 			let movedTime = timeOfDay + 900;

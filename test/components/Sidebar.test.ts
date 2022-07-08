@@ -16,7 +16,7 @@
 // @vitest-environment jsdom
 
 import {mount, VueWrapper} from '@vue/test-utils';
-import Sidebar from '../../src/Components/Sidebar.vue';
+import Sidebar from '../../src/components/Sidebar.vue';
 import {addDynmapServer, addWorld, clearServers, clearWorlds, enablePlayerMarkers} from "../helpers";
 import {nextTick} from "vue";
 import {useStore} from "@/store";

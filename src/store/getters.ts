@@ -53,7 +53,7 @@ export const getters: GetterTree<State, State> & Getters = {
 	},
 
 	night(state: State): boolean {
-		return getMinecraftTime(state.currentWorldState.timeOfDay).night;
+		return getMinecraftTime(state.currentWorldState.timeOfDay || 0).night;
 	},
 
 	mapBackground(state: State): string {
@@ -62,7 +62,7 @@ export const getters: GetterTree<State, State> & Getters = {
 		}
 
 		if(state.currentMap.nightAndDay) {
-			if(getMinecraftTime(state.currentWorldState.timeOfDay).night) {
+			if(getMinecraftTime(state.currentWorldState.timeOfDay || 0).night) {
 				return state.currentMap.backgroundNight || state.currentMap.background || 'transparent';
 			}
 
