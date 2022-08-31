@@ -21,8 +21,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '18'
-      - run: chmod +x .yarn/unplugged/esbuild-npm-0.14.47-f23a823d41/node_modules/esbuild/lib/pnpapi-esbuild-linux-64-esbuild
-      - run: yarn run build
+      #- run: chmod +x .yarn/unplugged/esbuild-npm-0.14.47-f23a823d41/node_modules/esbuild/lib/pnpapi-esbuild-linux-64-esbuild
+      - run: yarn set version stable
+      - run: yarn build
       - run: find dist/live-atlas/assets -type f -iname \*.svg -delete
       - run: cp LICENSE.md dist
       - name: Upload a Build Artifact
