@@ -244,7 +244,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@soerenmartius/vue3-clipboard@npm:^0.1":
+"@soerenmartius/vue3-clipboard@npm:0.1.2":
   version: 0.1.2
   resolution: "@soerenmartius/vue3-clipboard@npm:0.1.2"
   dependencies:
@@ -304,7 +304,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/dynmap@npm:^3.1.1":
+"@types/dynmap@npm:3.1.2":
   version: 3.1.2
   resolution: "@types/dynmap@npm:3.1.2"
   dependencies:
@@ -363,7 +363,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.debounce@npm:^4.0.7":
+"@types/lodash.debounce@npm:4.0.7":
   version: 4.0.7
   resolution: "@types/lodash.debounce@npm:4.0.7"
   dependencies:
@@ -386,7 +386,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^18.0.0":
+"@types/node@npm:*, @types/node@npm:18.7.14":
   version: 18.7.14
   resolution: "@types/node@npm:18.7.14"
   checksum: 99cf28ff854100158de875cca23c7acc3cc01dfee526a52b90b7f36767c821bcbaf2be0a98a70f06f3b78f3c60639168ff949d725b61e2e124f9f71f1fb8043d
@@ -407,7 +407,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.0.0, @typescript-eslint/eslint-plugin@npm:^5.28":
+"@typescript-eslint/eslint-plugin@npm:5.36.1, @typescript-eslint/eslint-plugin@npm:^5.0.0":
   version: 5.36.1
   resolution: "@typescript-eslint/eslint-plugin@npm:5.36.1"
   dependencies:
@@ -430,7 +430,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.0.0, @typescript-eslint/parser@npm:^5.28":
+"@typescript-eslint/parser@npm:5.36.1, @typescript-eslint/parser@npm:^5.0.0":
   version: 5.36.1
   resolution: "@typescript-eslint/parser@npm:5.36.1"
   dependencies:
@@ -525,7 +525,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-vue@npm:^2.3":
+"@vitejs/plugin-vue@npm:2.3.4":
   version: 2.3.4
   resolution: "@vitejs/plugin-vue@npm:2.3.4"
   peerDependencies:
@@ -634,7 +634,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/eslint-config-typescript@npm:^10.0":
+"@vue/eslint-config-typescript@npm:10.0.0":
   version: 10.0.0
   resolution: "@vue/eslint-config-typescript@npm:10.0.0"
   dependencies:
@@ -670,7 +670,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/runtime-core@npm:3.2.38, @vue/runtime-core@npm:^3.2.37":
+"@vue/runtime-core@npm:3.2.38":
   version: 3.2.38
   resolution: "@vue/runtime-core@npm:3.2.38"
   dependencies:
@@ -710,7 +710,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/test-utils@npm:^2.0.0":
+"@vue/test-utils@npm:2.0.2":
   version: 2.0.2
   resolution: "@vue/test-utils@npm:2.0.2"
   peerDependencies:
@@ -946,7 +946,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"c8@npm:^7.11.3":
+"c8@npm:7.12.0":
   version: 7.12.0
   resolution: "c8@npm:7.12.0"
   dependencies:
@@ -1203,7 +1203,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cpy-cli@npm:^4.1.0":
+"cpy-cli@npm:4.2.0":
   version: 4.2.0
   resolution: "cpy-cli@npm:4.2.0"
   dependencies:
@@ -1725,7 +1725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-vue@npm:^8.7":
+"eslint-plugin-vue@npm:8.7.1":
   version: 8.7.1
   resolution: "eslint-plugin-vue@npm:8.7.1"
   dependencies:
@@ -1786,7 +1786,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.23":
+"eslint@npm:8.23.0":
   version: 8.23.0
   resolution: "eslint@npm:8.23.0"
   dependencies:
@@ -2546,37 +2546,37 @@ __metadata:
   resolution: "live-atlas@workspace:."
   dependencies:
     "@kyvg/vue3-notification": "*"
-    "@soerenmartius/vue3-clipboard": ^0.1
-    "@types/dynmap": ^3.1.1
+    "@soerenmartius/vue3-clipboard": 0.1.2
+    "@types/dynmap": 3.1.2
     "@types/leaflet": 1.7.11
-    "@types/lodash.debounce": ^4.0.7
-    "@types/node": ^18.0.0
-    "@typescript-eslint/eslint-plugin": ^5.28
-    "@typescript-eslint/parser": ^5.28
-    "@vitejs/plugin-vue": ^2.3
-    "@vue/compiler-sfc": ^3.2.37
-    "@vue/eslint-config-typescript": ^10.0
-    "@vue/reactivity": ^3.2.37
-    "@vue/runtime-core": ^3.2.37
-    "@vue/test-utils": ^2.0.0
-    c8: ^7.11.3
-    cpy-cli: ^4.1.0
-    eslint: ^8.23
-    eslint-plugin-vue: ^8.7
+    "@types/lodash.debounce": 4.0.7
+    "@types/node": 18.7.14
+    "@typescript-eslint/eslint-plugin": 5.36.1
+    "@typescript-eslint/parser": 5.36.1
+    "@vitejs/plugin-vue": 2.3.4
+    "@vue/compiler-sfc": 3.2.38
+    "@vue/eslint-config-typescript": 10.0.0
+    "@vue/reactivity": 3.2.38
+    "@vue/runtime-core": 3.2.38
+    "@vue/test-utils": 2.0.2
+    c8: 7.12.0
+    cpy-cli: 4.2.0
+    eslint: 8.23.0
+    eslint-plugin-vue: 8.7.1
     leaflet: "git+https://github.com/JLyne/Leaflet.git#843eb3124492dc48245cd187c6dc94c2f33b65c1"
-    lodash.debounce: ^4.0.8
+    lodash.debounce: 4.0.8
     modern-normalize: "*"
-    rimraf: ^3.0.2
-    rollup-plugin-analyzer: ^4.0
-    sass: ^1.52
-    ts-node: ^10.8.1
-    typescript: ^4.7
+    rimraf: 3.0.2
+    rollup-plugin-analyzer: 4.0.0
+    sass: 1.54.7
+    ts-node: 10.9.1
+    typescript: 4.8.2
     vite: 2.9.13
-    vite-plugin-svg-sprite-component: ^1.0
-    vitest: ^0.15.2
-    vue: ^3.2.37
+    vite-plugin-svg-sprite-component: 1.0.10
+    vitest: 0.15.2
+    vue: 3.2.38
     vue-tsc: 0.37.9
-    vuex: ^4.0
+    vuex: 4.0.2
   languageName: unknown
   linkType: soft
 
@@ -2596,7 +2596,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.debounce@npm:^4.0.8":
+"lodash.debounce@npm:4.0.8":
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: a3f527d22c548f43ae31c861ada88b2637eb48ac6aa3eb56e82d44917971b8aa96fbb37aa60efea674dc4ee8c42074f90f7b1f772e9db375435f6c83a19b3bc6
@@ -3336,7 +3336,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:^3.0.2":
+"rimraf@npm:3.0.2, rimraf@npm:^3.0.2":
   version: 3.0.2
   resolution: "rimraf@npm:3.0.2"
   dependencies:
@@ -3347,7 +3347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-analyzer@npm:^4.0":
+"rollup-plugin-analyzer@npm:4.0.0":
   version: 4.0.0
   resolution: "rollup-plugin-analyzer@npm:4.0.0"
   checksum: 72f794f79efe4f620674a48949be9f64dc3cbf601c52ff90ae7cbeaacb604b86bb34321695d0f8f320e5c0b47880022849d92c51d231e1b32c6757a2c627be5e
@@ -3412,7 +3412,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.52":
+"sass@npm:1.54.7":
   version: 1.54.7
   resolution: "sass@npm:1.54.7"
   dependencies:
@@ -3734,7 +3734,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.8.1":
+"ts-node@npm:10.9.1":
   version: 10.9.1
   resolution: "ts-node@npm:10.9.1"
   dependencies:
@@ -3820,7 +3820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.7":
+"typescript@npm:4.8.2":
   version: 4.8.2
   resolution: "typescript@npm:4.8.2"
   bin:
@@ -3830,7 +3830,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.7#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.8.2#~builtin<compat/typescript>":
   version: 4.8.2
   resolution: "typescript@patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=a1c5e5"
   bin:
@@ -3902,7 +3902,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-svg-sprite-component@npm:^1.0":
+"vite-plugin-svg-sprite-component@npm:1.0.10":
   version: 1.0.10
   resolution: "vite-plugin-svg-sprite-component@npm:1.0.10"
   dependencies:
@@ -3970,7 +3970,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^0.15.2":
+"vitest@npm:0.15.2":
   version: 0.15.2
   resolution: "vitest@npm:0.15.2"
   dependencies:
@@ -4033,7 +4033,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:^3.2.37":
+"vue@npm:3.2.38":
   version: 3.2.38
   resolution: "vue@npm:3.2.38"
   dependencies:
@@ -4046,7 +4046,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vuex@npm:^4.0":
+"vuex@npm:4.0.2":
   version: 4.0.2
   resolution: "vuex@npm:4.0.2"
   dependencies:
