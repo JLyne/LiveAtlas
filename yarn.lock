@@ -2501,7 +2501,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "live-atlas@workspace:."
   dependencies:
-    "@kyvg/vue3-notification": "patch:@kyvg/vue3-notification@2.3.0#patches/@kyvg+vue3-notification+2.3.0.patch"
+    "@kyvg/vue3-notification": "*"
     "@soerenmartius/vue3-clipboard": ^0.1
     "@types/dynmap": ^3.1.1
     "@types/leaflet": 1.7.11
@@ -2521,7 +2521,7 @@ __metadata:
     eslint-plugin-vue: ^8.7
     leaflet: "git+https://github.com/JLyne/Leaflet.git#843eb3124492dc48245cd187c6dc94c2f33b65c1"
     lodash.debounce: ^4.0.8
-    modern-normalize: "patch:modern-normalize@1.1.0#patches/modern-normalize+1.1.0.patch"
+    modern-normalize: "*"
     rimraf: ^3.0.2
     rollup-plugin-analyzer: ^4.0
     sass: ^1.52
