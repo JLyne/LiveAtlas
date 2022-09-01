@@ -27,7 +27,7 @@ jobs:
       - run: find dist/live-atlas/assets -type f -iname \*.svg -delete
       - run: cp LICENSE.md dist
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v3.1.0
         with:
           name: 'live-atlas'
           path: 'dist/'
