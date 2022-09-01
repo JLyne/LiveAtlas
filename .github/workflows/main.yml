@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: echo VITE_APP_VERSION=git-${GITHUB_SHA::6} > .env
       - run: cat .env
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '18'
       - run: chmod +x .yarn/unplugged/esbuild-npm-0.14.54-b3dcd8a41e/node_modules/esbuild/lib/pnpapi-esbuild-linux-64-esbuild
