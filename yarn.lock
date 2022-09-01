@@ -2571,7 +2571,7 @@ __metadata:
     sass: 1.54.8
     ts-node: 10.9.1
     typescript: 4.8.2
-    vite: 2.9.13
+    vite: 2.9.15
     vite-plugin-svg-sprite-component: 1.0.10
     vitest: 0.22.1
     vue: 3.2.38
@@ -3354,7 +3354,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:>=2.75.6 <2.77.0 || ~2.77.0":
+"rollup@npm:>=2.59.0 <2.78.0, rollup@npm:>=2.75.6 <2.77.0 || ~2.77.0":
   version: 2.77.3
   resolution: "rollup@npm:2.77.3"
   dependencies:
@@ -3365,20 +3365,6 @@ __metadata:
   bin:
     rollup: dist/bin/rollup
   checksum: b179c68249584565ddb5664a241e8e48c293b2207718d885b08ee25797d98857a383f06b544bb89819407da5a71557f4713309a278f61c4778bb32b1d3321a1c
-  languageName: node
-  linkType: hard
-
-"rollup@npm:^2.59.0":
-  version: 2.79.0
-  resolution: "rollup@npm:2.79.0"
-  dependencies:
-    fsevents: ~2.3.2
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  bin:
-    rollup: dist/bin/rollup
-  checksum: 166f1ffea1898e157003920065b3a328e7012ea6808860ee8fe5d1ce94804fcce9985c95a3c0f7fe9c611aff0d09a70f073f1d6f715c8faba28e4e40f71ee3bb
   languageName: node
   linkType: hard
 
@@ -3912,15 +3898,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:2.9.13":
-  version: 2.9.13
-  resolution: "vite@npm:2.9.13"
+"vite@npm:2.9.15":
+  version: 2.9.15
+  resolution: "vite@npm:2.9.15"
   dependencies:
     esbuild: ^0.14.27
     fsevents: ~2.3.2
     postcss: ^8.4.13
     resolve: ^1.22.0
-    rollup: ^2.59.0
+    rollup: ">=2.59.0 <2.78.0"
   peerDependencies:
     less: "*"
     sass: "*"
@@ -3937,7 +3923,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: a5e501b920a448c352e9b3836019dea56c523535f8e8540160708c2e164d84da6655ae39abbba1e2888092f5c6cd03dd06279852422359b51be601914645f49f
+  checksum: 5edf8afc132a598f82a1339aa503514a0e86f6264babe94531b9000d801f157c9a32ae022542404678acca43ee260ade04c4763c4b7b8d381a6b50511b4a1447
   languageName: node
   linkType: hard
 
