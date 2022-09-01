@@ -297,7 +297,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chai@npm:*, @types/chai@npm:^4.3.1":
+"@types/chai@npm:*, @types/chai@npm:^4.3.3":
   version: 4.3.3
   resolution: "@types/chai@npm:4.3.3"
   checksum: 20cd094753e137cfc35939cae7f0ed78ecda7861e5c94704efab6979b9121a63807e9b631bdcf3a2792d6c6dba44050b13387262f9e63ebb040741c01c345f0a
@@ -1623,7 +1623,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.14.27":
+"esbuild@npm:^0.14.27, esbuild@npm:^0.14.47":
   version: 0.14.54
   resolution: "esbuild@npm:0.14.54"
   dependencies:
@@ -2573,14 +2573,14 @@ __metadata:
     typescript: 4.8.2
     vite: 2.9.13
     vite-plugin-svg-sprite-component: 1.0.10
-    vitest: 0.15.2
+    vitest: 0.22.1
     vue: 3.2.38
     vue-tsc: 0.37.9
     vuex: 4.0.2
   languageName: unknown
   linkType: soft
 
-"local-pkg@npm:^0.4.1":
+"local-pkg@npm:^0.4.2":
   version: 0.4.2
   resolution: "local-pkg@npm:0.4.2"
   checksum: 22be451353c25c4411b552bf01880ebc9e995b93574b2facc7757968d888356df59199cacada14162ab53bbc9da055bb692c907b4171f008dbce45a2afc777c1
@@ -3166,7 +3166,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.1.10, postcss@npm:^8.4.13":
+"postcss@npm:^8.1.10, postcss@npm:^8.4.13, postcss@npm:^8.4.16":
   version: 8.4.16
   resolution: "postcss@npm:8.4.16"
   dependencies:
@@ -3296,7 +3296,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.22.0":
+"resolve@npm:^1.22.0, resolve@npm:^1.22.1":
   version: 1.22.1
   resolution: "resolve@npm:1.22.1"
   dependencies:
@@ -3309,7 +3309,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@^1.22.0#~builtin<compat/resolve>":
+"resolve@patch:resolve@^1.22.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.1#~builtin<compat/resolve>":
   version: 1.22.1
   resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=07638b"
   dependencies:
@@ -3354,7 +3354,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:>=2.59.0 <2.78.0":
+"rollup@npm:>=2.75.6 <2.77.0 || ~2.77.0":
   version: 2.77.3
   resolution: "rollup@npm:2.77.3"
   dependencies:
@@ -3697,17 +3697,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tinypool@npm:^0.1.3":
-  version: 0.1.3
-  resolution: "tinypool@npm:0.1.3"
-  checksum: 13ac687a23c03b02c2bf0b9711a3bb191d2c37941775a001b9617aac541c11ba144fb08de74f3f9723ec2649410f5d4fa7f0398fedd462b39fe3b30d19615ad8
+"tinypool@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "tinypool@npm:0.2.4"
+  checksum: f050bd36c89529a2a0d3f9c1fdbba3f317114e3ee6eb5d5ba72c51e887d45ef3ef8d8533fb2ca2eba7189d19d2231712b81b3a75e099248532f5563369929c33
   languageName: node
   linkType: hard
 
-"tinyspy@npm:^0.3.3":
-  version: 0.3.3
-  resolution: "tinyspy@npm:0.3.3"
-  checksum: 1beb8f04c100d9ac769ff85266594f07d6f08f41cfb95c4bef9da3e59988b42e8d4e66c2ec455d3ecad80027347920e87d7a7098c5a2a28637f9fee25e11a8f1
+"tinyspy@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "tinyspy@npm:1.0.2"
+  checksum: 32096121aa8d52bb625ad62c9314b3e4daba4ab9ac428217b12b1e1dfe9860e3c94d54a7affa279cc70dc6f10d88c6ba46b51de68896b318a06d02f05e87dcc3
   languageName: node
   linkType: hard
 
@@ -3941,19 +3941,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.9.12":
-  version: 2.9.15
-  resolution: "vite@npm:2.9.15"
+"vite@npm:^2.9.12 || ^3.0.0-0":
+  version: 3.0.9
+  resolution: "vite@npm:3.0.9"
   dependencies:
-    esbuild: ^0.14.27
+    esbuild: ^0.14.47
     fsevents: ~2.3.2
-    postcss: ^8.4.13
-    resolve: ^1.22.0
-    rollup: ">=2.59.0 <2.78.0"
+    postcss: ^8.4.16
+    resolve: ^1.22.1
+    rollup: ">=2.75.6 <2.77.0 || ~2.77.0"
   peerDependencies:
     less: "*"
     sass: "*"
     stylus: "*"
+    terser: ^5.4.0
   dependenciesMeta:
     fsevents:
       optional: true
@@ -3964,34 +3965,39 @@ __metadata:
       optional: true
     stylus:
       optional: true
+    terser:
+      optional: true
   bin:
     vite: bin/vite.js
-  checksum: 5edf8afc132a598f82a1339aa503514a0e86f6264babe94531b9000d801f157c9a32ae022542404678acca43ee260ade04c4763c4b7b8d381a6b50511b4a1447
+  checksum: 6341aa43579ae45f8a383bdc0c5041dea3dff98f14e0a546d6d884a864134b00082246a28d1de8adff0ce0dd92b468c7ade8f972ffe1ed97258671d63e0f16f7
   languageName: node
   linkType: hard
 
-"vitest@npm:0.15.2":
-  version: 0.15.2
-  resolution: "vitest@npm:0.15.2"
+"vitest@npm:0.22.1":
+  version: 0.22.1
+  resolution: "vitest@npm:0.22.1"
   dependencies:
-    "@types/chai": ^4.3.1
+    "@types/chai": ^4.3.3
     "@types/chai-subset": ^1.3.3
     "@types/node": "*"
     chai: ^4.3.6
     debug: ^4.3.4
-    local-pkg: ^0.4.1
-    tinypool: ^0.1.3
-    tinyspy: ^0.3.3
-    vite: ^2.9.12
+    local-pkg: ^0.4.2
+    tinypool: ^0.2.4
+    tinyspy: ^1.0.2
+    vite: ^2.9.12 || ^3.0.0-0
   peerDependencies:
+    "@edge-runtime/vm": "*"
+    "@vitest/browser": "*"
     "@vitest/ui": "*"
-    c8: "*"
     happy-dom: "*"
     jsdom: "*"
   peerDependenciesMeta:
-    "@vitest/ui":
+    "@edge-runtime/vm":
       optional: true
-    c8:
+    "@vitest/browser":
+      optional: true
+    "@vitest/ui":
       optional: true
     happy-dom:
       optional: true
@@ -3999,7 +4005,7 @@ __metadata:
       optional: true
   bin:
     vitest: vitest.mjs
-  checksum: 48b6f98ece8019c3ac7742e7a5324ada514c98025c34cef6c01ccd6d83c4f0a62af6d98f13c158313e9595d131506139211f924b71dd18b03036296e30974f6e
+  checksum: 7abe50ceb51181e77cd62eb3a07c2da17f13078f09be34cc2e98f1f94a77eba33a56c644d48ae16bb474945ffc1cfc8664b1f4976c3de495c5e474057420c4ca
   languageName: node
   linkType: hard
 
