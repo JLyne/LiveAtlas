@@ -525,13 +525,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-vue@npm:3.0.3":
-  version: 3.0.3
-  resolution: "@vitejs/plugin-vue@npm:3.0.3"
+"@vitejs/plugin-vue@npm:3.1.0":
+  version: 3.1.0
+  resolution: "@vitejs/plugin-vue@npm:3.1.0"
   peerDependencies:
     vite: ^3.0.0
     vue: ^3.2.25
-  checksum: f9678a1dac192ebd55adec1daaefab7b0e12dd8859073273e098c4cf99ff31656473cfc9a14de2ea2064685bbf749e86205d5a119aa354ae3385c21e5593ad4c
+  checksum: 351436306090dee709314f71bb52f0b502c284c8f556d4aecbbdfea840b1d35a8af32e78e962df28d3a6034a75c78886448e3371cee320f711dab833f6ada274
   languageName: node
   linkType: hard
 
@@ -2585,7 +2585,7 @@ __metadata:
     "@types/node": 18.7.14
     "@typescript-eslint/eslint-plugin": 5.36.1
     "@typescript-eslint/parser": 5.36.1
-    "@vitejs/plugin-vue": 3.0.3
+    "@vitejs/plugin-vue": 3.1.0
     "@vue/compiler-sfc": 3.2.38
     "@vue/eslint-config-typescript": 11.0.0
     "@vue/reactivity": 3.2.38
