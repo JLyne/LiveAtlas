@@ -645,9 +645,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/eslint-config-typescript@npm:11.0.0":
-  version: 11.0.0
-  resolution: "@vue/eslint-config-typescript@npm:11.0.0"
+"@vue/eslint-config-typescript@npm:11.0.1":
+  version: 11.0.1
+  resolution: "@vue/eslint-config-typescript@npm:11.0.1"
   dependencies:
     "@typescript-eslint/eslint-plugin": ^5.0.0
     "@typescript-eslint/parser": ^5.0.0
@@ -659,7 +659,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 996ab9ae23474868b51323cb1f409496bcef79e59f716f7afefac22f09706a08691a8d085d9f4abbac6bb63253dbecccb3cc6568ecbebfab91176b401749d6d0
+  checksum: 2ac65448b8411cb2dd2e8dda5bdcffd0e5a82e7fc4842322b4b0ffd5877d1c1cc7bdba4378a6f1a7a7e9dd97d0378a3797e80f5c4d97713cfab2f35b9d15fb8e
   languageName: node
   linkType: hard
 
@@ -2571,7 +2571,7 @@ __metadata:
     "@typescript-eslint/parser": 5.36.1
     "@vitejs/plugin-vue": 3.1.0
     "@vue/compiler-sfc": 3.2.38
-    "@vue/eslint-config-typescript": 11.0.0
+    "@vue/eslint-config-typescript": 11.0.1
     "@vue/reactivity": 3.2.38
     "@vue/runtime-core": 3.2.38
     "@vue/test-utils": 2.0.2
