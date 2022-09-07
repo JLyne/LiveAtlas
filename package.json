@@ -29,7 +29,7 @@
     "@types/dynmap": "3.1.2",
     "@types/leaflet": "1.7.11",
     "@types/lodash.debounce": "4.0.7",
-    "@types/node": "18.7.14",
+    "@types/node": "18.7.15",
     "@typescript-eslint/eslint-plugin": "5.36.2",
     "@typescript-eslint/parser": "5.36.2",
     "@vitejs/plugin-vue": "3.1.0",
