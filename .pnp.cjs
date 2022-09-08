@@ -56,7 +56,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["modern-normalize", "patch:modern-normalize@npm%3A1.1.0#patches/modern-normalize+1.1.0.patch::version=1.1.0&hash=0cce26&locator=live-atlas%40workspace%3A."],\
             ["rimraf", "npm:3.0.2"],\
             ["rollup-plugin-analyzer", "npm:4.0.0"],\
-            ["sass", "npm:1.54.8"],\
+            ["sass", "npm:1.54.9"],\
             ["ts-node", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=a1c5e5"],\
             ["vite", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:3.0.9"],\
@@ -3383,7 +3383,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["modern-normalize", "patch:modern-normalize@npm%3A1.1.0#patches/modern-normalize+1.1.0.patch::version=1.1.0&hash=0cce26&locator=live-atlas%40workspace%3A."],\
             ["rimraf", "npm:3.0.2"],\
             ["rollup-plugin-analyzer", "npm:4.0.0"],\
-            ["sass", "npm:1.54.8"],\
+            ["sass", "npm:1.54.9"],\
             ["ts-node", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=a1c5e5"],\
             ["vite", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:3.0.9"],\
@@ -4306,10 +4306,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["sass", [\
-        ["npm:1.54.8", {\
-          "packageLocation": "./.yarn/cache/sass-npm-1.54.8-6582d65f5d-72893b2dc6.zip/node_modules/sass/",\
+        ["npm:1.54.9", {\
+          "packageLocation": "./.yarn/cache/sass-npm-1.54.9-bbfad219c0-90182b5660.zip/node_modules/sass/",\
           "packageDependencies": [\
-            ["sass", "npm:1.54.8"],\
+            ["sass", "npm:1.54.9"],\
             ["chokidar", "npm:3.5.3"],\
             ["immutable", "npm:4.1.0"],\
             ["source-map-js", "npm:1.0.2"]\
@@ -4921,7 +4921,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["postcss", "npm:8.4.16"],\
             ["resolve", "patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=07638b"],\
             ["rollup", "npm:2.77.3"],\
-            ["sass", "npm:1.54.8"],\
+            ["sass", "npm:1.54.9"],\
             ["stylus", null],\
             ["terser", null]\
           ],\
