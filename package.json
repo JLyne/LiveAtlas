@@ -18,7 +18,7 @@
     "leaflet": "git+https://github.com/JLyne/Leaflet.git#843eb3124492dc48245cd187c6dc94c2f33b65c1",
     "lodash.debounce": "4.0.8",
     "modern-normalize": "*",
-    "vue": "3.2.38",
+    "vue": "3.2.39",
     "vuex": "4.0.2"
   },
   "resolutions": {
@@ -33,10 +33,10 @@
     "@typescript-eslint/eslint-plugin": "5.36.2",
     "@typescript-eslint/parser": "5.36.2",
     "@vitejs/plugin-vue": "3.1.0",
-    "@vue/compiler-sfc": "3.2.38",
+    "@vue/compiler-sfc": "3.2.39",
     "@vue/eslint-config-typescript": "11.0.1",
-    "@vue/reactivity": "3.2.38",
-    "@vue/runtime-core": "3.2.38",
+    "@vue/reactivity": "3.2.39",
+    "@vue/runtime-core": "3.2.39",
     "@vue/test-utils": "2.0.2",
     "c8": "7.12.0",
     "cpy-cli": "4.2.0",
