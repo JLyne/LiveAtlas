@@ -2786,7 +2786,7 @@ __metadata:
     typescript: 4.8.2
     vite: 3.0.9
     vite-plugin-svg-sprite-component: 1.0.10
-    vitest: 0.23.1
+    vitest: 0.23.2
     vue: 3.2.39
     vue-tsc: 0.40.13
     vuex: 4.0.2
@@ -3905,17 +3905,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tinybench@npm:^2.1.3":
-  version: 2.1.4
-  resolution: "tinybench@npm:2.1.4"
-  checksum: 36b32b494afb379e4cd3fa1c040ca429ac8c1c064770801c9c4c6313053a1314946eb02028d62ab7d2c8f5dd743f9447c739b56516cdb9914d12c5f1021e8d41
+"tinybench@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "tinybench@npm:2.1.5"
+  checksum: 5a6d378271a00ace6fa6970404eb1efd539d3e9b9908a9cb6d66ad78acfd873762734f3fc69fe10d86217318871367997d2a8b9566039fd224c518493466aa96
   languageName: node
   linkType: hard
 
-"tinypool@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "tinypool@npm:0.2.4"
-  checksum: f050bd36c89529a2a0d3f9c1fdbba3f317114e3ee6eb5d5ba72c51e887d45ef3ef8d8533fb2ca2eba7189d19d2231712b81b3a75e099248532f5563369929c33
+"tinypool@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "tinypool@npm:0.3.0"
+  checksum: 92291c309ed8d004c1ee1ef7f610cd90352383f12c52b0ec16abd9ebc665c03626e7afbc9993df97f63e67fea002b5cc18ba5e8f90260643867cbcac278a183c
   languageName: node
   linkType: hard
 
@@ -4159,9 +4159,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:0.23.1":
-  version: 0.23.1
-  resolution: "vitest@npm:0.23.1"
+"vitest@npm:0.23.2":
+  version: 0.23.2
+  resolution: "vitest@npm:0.23.2"
   dependencies:
     "@types/chai": ^4.3.3
     "@types/chai-subset": ^1.3.3
@@ -4170,8 +4170,8 @@ __metadata:
     debug: ^4.3.4
     local-pkg: ^0.4.2
     strip-literal: ^0.4.0
-    tinybench: ^2.1.3
-    tinypool: ^0.2.4
+    tinybench: ^2.1.5
+    tinypool: ^0.3.0
     tinyspy: ^1.0.2
     vite: ^2.9.12 || ^3.0.0-0
   peerDependencies:
@@ -4193,7 +4193,7 @@ __metadata:
       optional: true
   bin:
     vitest: vitest.mjs
-  checksum: 26ca78dc0979c435f2b2f265fc94d13d4e2da5e72680812471cd0b802e5727784c1c05b7dff945bb6638da0ae50ada06dfea5c28cec318575cad95d8a769c131
+  checksum: b3a9a297fa37930a5e236d8e0a8a64f6acbcd676274148684a48588bd21dc63ac6aec5598430bce53225ae4ddfdb4e792602f68a62579785cf288f610a8684e5
   languageName: node
   linkType: hard
 
