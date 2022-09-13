@@ -40,7 +40,7 @@
     "@vue/test-utils": "2.0.2",
     "c8": "7.12.0",
     "cpy-cli": "4.2.0",
-    "eslint": "8.23.0",
+    "eslint": "8.23.1",
     "eslint-plugin-vue": "9.4.0",
     "rimraf": "3.0.2",
     "rollup-plugin-analyzer": "4.0.0",
