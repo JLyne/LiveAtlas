@@ -36,7 +36,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@kyvg/vue3-notification", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#patch:@kyvg/vue3-notification@npm%3A2.3.0#patches/@kyvg+vue3-notification+2.3.0.patch::version=2.3.0&hash=c98249&locator=live-atlas%40workspace%3A."],\
             ["@soerenmartius/vue3-clipboard", "npm:0.1.2"],\
             ["@types/dynmap", "npm:3.1.2"],\
-            ["@types/leaflet", "npm:1.7.11"],\
+            ["@types/leaflet", "npm:1.9.0"],\
             ["@types/lodash.debounce", "npm:4.0.7"],\
             ["@types/node", "npm:18.7.14"],\
             ["@typescript-eslint/eslint-plugin", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:5.37.0"],\
@@ -485,6 +485,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-leaflet-npm-1.7.11-cd0facb4a2-6613dbc91f.zip/node_modules/@types/leaflet/",\
           "packageDependencies": [\
             ["@types/leaflet", "npm:1.7.11"],\
+            ["@types/geojson", "npm:7946.0.10"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:1.9.0", {\
+          "packageLocation": "./.yarn/cache/@types-leaflet-npm-1.9.0-a9d4329daa-f3ee2e2fc8.zip/node_modules/@types/leaflet/",\
+          "packageDependencies": [\
+            ["@types/leaflet", "npm:1.9.0"],\
             ["@types/geojson", "npm:7946.0.10"]\
           ],\
           "linkType": "HARD"\
@@ -3372,7 +3380,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@kyvg/vue3-notification", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#patch:@kyvg/vue3-notification@npm%3A2.3.0#patches/@kyvg+vue3-notification+2.3.0.patch::version=2.3.0&hash=c98249&locator=live-atlas%40workspace%3A."],\
             ["@soerenmartius/vue3-clipboard", "npm:0.1.2"],\
             ["@types/dynmap", "npm:3.1.2"],\
-            ["@types/leaflet", "npm:1.7.11"],\
+            ["@types/leaflet", "npm:1.9.0"],\
             ["@types/lodash.debounce", "npm:4.0.7"],\
             ["@types/node", "npm:18.7.14"],\
             ["@typescript-eslint/eslint-plugin", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:5.37.0"],\
