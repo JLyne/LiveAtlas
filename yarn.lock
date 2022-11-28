@@ -354,12 +354,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/leaflet@npm:*, @types/leaflet@npm:1.7.11":
+"@types/leaflet@npm:*":
   version: 1.7.11
   resolution: "@types/leaflet@npm:1.7.11"
   dependencies:
     "@types/geojson": "*"
   checksum: 6613dbc91f174545ed39183a8564a344152f1884f02ab4dbc002b6bd4816d8525b5247e62217694763daf727ca5e589f40144dc809edb7194064e6bdc2f4369a
+  languageName: node
+  linkType: hard
+
+"@types/leaflet@npm:1.9.0":
+  version: 1.9.0
+  resolution: "@types/leaflet@npm:1.9.0"
+  dependencies:
+    "@types/geojson": "*"
+  checksum: f3ee2e2fc8bd3480d77667471c8f774a3726ff7694a7d08d2423c05b40e28f00379c7d469b4cbd3b53a1bc96c75970c92f9da7908fc477cbac0eda2a9d17b6ad
   languageName: node
   linkType: hard
 
@@ -2768,7 +2777,7 @@ __metadata:
     "@kyvg/vue3-notification": "*"
     "@soerenmartius/vue3-clipboard": 0.1.2
     "@types/dynmap": 3.1.2
-    "@types/leaflet": 1.7.11
+    "@types/leaflet": 1.9.0
     "@types/lodash.debounce": 4.0.7
     "@types/node": 18.7.14
     "@typescript-eslint/eslint-plugin": 5.37.0
