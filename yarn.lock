@@ -190,7 +190,7 @@ __metadata:
 
 "@kyvg/vue3-notification@patch:@kyvg/vue3-notification@2.3.0#patches/@kyvg+vue3-notification+2.3.0.patch::locator=live-atlas%40workspace%3A.":
   version: 2.3.0
-  resolution: "@kyvg/vue3-notification@patch:@kyvg/vue3-notification@npm%3A2.3.0#patches/@kyvg+vue3-notification+2.3.0.patch::version=2.3.0&hash=c98249&locator=live-atlas%40workspace%3A."
+  resolution: "@kyvg/vue3-notification@patch:@kyvg/vue3-notification@npm%3A2.3.0#patches/@kyvg+vue3-notification+2.3.0.patch::version=2.3.0&hash=0d68e4&locator=live-atlas%40workspace%3A."
   peerDependencies:
     vue: ^3.0.11
   checksum: 1c2889cb03944ee590355de928ca3949528d3e24538a37d38e55188377d7690e139b181876dba7876427b80133ce35c0ff83fd78de6a7a8e9e7fba1ff42dd99f
@@ -2231,7 +2231,7 @@ __metadata:
 
 "fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
   dependencies:
     node-gyp: latest
   conditions: os=darwin
@@ -3086,7 +3086,7 @@ __metadata:
 
 "modern-normalize@patch:modern-normalize@1.1.0#patches/modern-normalize+1.1.0.patch::locator=live-atlas%40workspace%3A.":
   version: 1.1.0
-  resolution: "modern-normalize@patch:modern-normalize@npm%3A1.1.0#patches/modern-normalize+1.1.0.patch::version=1.1.0&hash=0cce26&locator=live-atlas%40workspace%3A."
+  resolution: "modern-normalize@patch:modern-normalize@npm%3A1.1.0#patches/modern-normalize+1.1.0.patch::version=1.1.0&hash=139f38&locator=live-atlas%40workspace%3A."
   checksum: d9eeec17535da120cab98db233de8e5d29cef9aae7b9b86d8f712af3d8b471bef0986b7ffe0396532a7c109c24614dcfd22350df69b2d6bccc5d3b528b33218a
   languageName: node
   linkType: hard
@@ -3531,7 +3531,7 @@ __metadata:
 
 "resolve@patch:resolve@^1.22.1#~builtin<compat/resolve>":
   version: 1.22.1
-  resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=07638b"
+  resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=c3c19d"
   dependencies:
     is-core-module: ^2.9.0
     path-parse: ^1.0.7
@@ -4054,7 +4054,7 @@ __metadata:
 
 "typescript@patch:typescript@4.8.2#~builtin<compat/typescript>":
   version: 4.8.2
-  resolution: "typescript@patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=a1c5e5"
+  resolution: "typescript@patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=aae4e6"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
