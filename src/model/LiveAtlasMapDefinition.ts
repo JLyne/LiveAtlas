@@ -141,22 +141,29 @@ export default class LiveAtlasMapDefinition implements LiveAtlasTileLayerOptions
 
 		let mapName = this.name.split(/[^a-zA-Z\d]/, 1)[0];
 
-		switch(this.world.dimension) {
-			case 'nether':
-				worldType = 'nether';
-				mapType = ['surface', 'nether'].includes(mapName) ? 'surface' : 'flat';
-				break;
+		// list of map types, which have the same icon in every dimension
+		let fixMapTypes = ['biome'];
+		if (fixMapTypes.includes(mapName)) {
+			worldType = 'world';
+			mapType   = mapName;
+		} else {
+			switch (this.world.dimension) {
+				case 'nether':
+					worldType = 'nether';
+					mapType   = ['surface', 'nether'].includes(mapName) ? 'surface' : 'flat';
+					break;
 
-			case 'end':
-				worldType = 'the_end';
-				mapType = ['surface', 'the_end'].includes(mapName) ? 'surface' : 'flat';
-				break;
+				case 'end':
+					worldType = 'the_end';
+					mapType   = ['surface', 'the_end'].includes(mapName) ? 'surface' : 'flat';
+					break;
 
-			case 'overworld':
-			default:
-				worldType = 'world';
-				mapType = ['surface', 'flat', 'biome', 'cave'].includes(mapName) ? mapName : 'flat';
-				break;
+				case 'overworld':
+				default:
+					worldType = 'world';
+					mapType   = ['surface', 'flat', 'cave'].includes(mapName) ? mapName : 'flat';
+					break;
+			}
 		}
 
 		return `block_${worldType}_${mapType}`;
