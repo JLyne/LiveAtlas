@@ -40,6 +40,7 @@
     "cpy-cli": "4.2.0",
     "eslint": "8.33.0",
     "eslint-plugin-vue": "9.9.0",
+    "jsdom": "^21.1.0",
     "rimraf": "4.1.2",
     "rollup-plugin-analyzer": "4.0.0",
     "sass": "1.58.0",

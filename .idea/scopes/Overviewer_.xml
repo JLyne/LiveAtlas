@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Overviewer." pattern="file:src/providers/OverviewerMapProvider.ts||file:src/leaflet/projection/OverviewerProjection.ts||file:src/leaflet/tileLayer/OverviewerTileLayer.ts" />
+</component>
