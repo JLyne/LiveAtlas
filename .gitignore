@@ -16,4 +16,5 @@ pnpm-debug.log*
 # Editor directories and files
 /.cache/
 /coverage/
-
+/.yarn/unplugged
+/.yarn/build-state.yml
