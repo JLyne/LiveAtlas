@@ -15,7 +15,7 @@
   "dependencies": {
     "@kyvg/vue3-notification": "2.8.0",
     "@soerenmartius/vue3-clipboard": "0.1.2",
-    "leaflet": "git+https://github.com/JLyne/Leaflet.git#843eb3124492dc48245cd187c6dc94c2f33b65c1",
+    "leaflet": "git+https://github.com/JLyne/Leaflet.git#0bf4e3f70c2559771592c077401027a6c4913376",
     "lodash.debounce": "4.0.8",
     "modern-normalize": "1.1.0",
     "vue": "3.2.45",
