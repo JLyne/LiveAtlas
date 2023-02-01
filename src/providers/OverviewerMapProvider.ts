@@ -63,6 +63,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		}
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private static buildServerConfig(ignore: any): LiveAtlasServerConfig {
 		return {
 			title: useStore().state.initialTitle,
@@ -77,6 +78,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		};
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private static buildMessagesConfig(ignore: any): LiveAtlasServerMessageConfig {
 		return {
 			worldsHeading: 'Worlds',

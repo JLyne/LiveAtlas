@@ -22,8 +22,8 @@
 	}" :data-section="name">
 		<h2 class="section__heading">
 			<button :id="`${name}-heading`" type="button"
-			        @click.prevent="toggle" :title="title"
-			        :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
+              @click.prevent="toggle" :title="title"
+              :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
 				<span>
 					<slot name="heading"></slot>
 				</span>

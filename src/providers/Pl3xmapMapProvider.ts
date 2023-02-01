@@ -439,7 +439,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 	private static addY(points: any) {
 		for (const point of points) {
-			points.y = 0;
+			point.y = 0;
 		}
 
 		return points;

@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<Markers :layer-group="layerGroup" :set="markerSet"></Markers>
+	<MapMarkers :layer-group="layerGroup" :set="markerSet"></MapMarkers>
 </template>
 
 <script lang="ts">
@@ -24,11 +24,11 @@ import {LiveAtlasMarkerSet} from "@/index";
 import {useStore} from "@/store";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
-import Markers from "@/components/map/marker/Markers.vue";
+import MapMarkers from "@/components/map/marker/MapMarkers.vue";
 
 export default defineComponent({
 	components: {
-		Markers,
+		MapMarkers,
 	},
 
 	props: {

@@ -19,12 +19,12 @@
 		<span class="world__name" aria-hidden="true">{{ world.displayName }}</span>
 		<div class="world__maps menu">
 			<template v-for="map in maps" :key="`${map.world.name}_${map.name}`">
-				<input :id="`${name}-${map.world.name}-${map.name}`" type="radio" :name="name"
-				       v-bind:value="[map.world.name,map.name]" v-model="currentMap"
-				       :aria-labelledby="`${name}-${map.world.name}-${map.name}-label`">
-				<label :id="`${name}-${map.world.name}-${map.name}-label`" class="map"
-				       :for="`${name}-${map.world.name}-${map.name}`"
-				       :title="`${map.world.displayName} - ${map.displayName}`">
+        <input :id="`${name}-${map.world.name}-${map.name}`" type="radio" :name="name"
+               v-bind:value="[map.world.name,map.name]" v-model="currentMap"
+               :aria-labelledby="`${name}-${map.world.name}-${map.name}-label`">
+        <label :id="`${name}-${map.world.name}-${map.name}-label`" class="map"
+               :for="`${name}-${map.world.name}-${map.name}`"
+               :title="`${map.world.displayName} - ${map.displayName}`">
 					<img v-if="map.hasCustomIcon()" :src="map.getIcon()" alt="" />
 					<SvgIcon v-else :name="map.getIcon()"></SvgIcon>
 				</label>

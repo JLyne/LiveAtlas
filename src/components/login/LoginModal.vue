@@ -15,13 +15,13 @@
   -->
 
 <template>
-	<Modal id="login" :closeable="!required" :backdrop="!required">
+	<BaseModal id="login" :closeable="!required" :backdrop="!required">
 		<template v-slot:header>
 			<h2 id="login__heading">{{ heading }}</h2>
 		</template>
 		<LoginForm></LoginForm>
 		<RegisterForm></RegisterForm>
-	</Modal>
+	</BaseModal>
 </template>
 
 <script lang="ts">
@@ -29,10 +29,10 @@ import {computed, defineComponent} from "vue";
 import {useStore} from "@/store";
 import LoginForm from "@/components/login/LoginForm.vue";
 import RegisterForm from "@/components/login/RegisterForm.vue";
-import Modal from "@/components/Modal.vue";
+import BaseModal from "@/components/BaseModal.vue";
 
 export default defineComponent({
-	components: {Modal, RegisterForm, LoginForm},
+	components: {BaseModal, RegisterForm, LoginForm},
 	props: {
 		required: {
 			default: false,

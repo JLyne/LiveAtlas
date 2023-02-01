@@ -16,7 +16,7 @@
 
 <template>
 	<input ref="searchInput" v-if="filteredPlayers && search" class="section__search" type="text" name="search"
-			       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
+         v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
 	<RadioList v-if="filteredPlayers.length" name="player" :aria-labelledby="ariaLabelledby">
 		<PlayerListItem v-for="player in filteredPlayers" :key="player.name" :player="player"></PlayerListItem>
 	</RadioList>

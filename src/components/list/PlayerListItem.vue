@@ -16,10 +16,10 @@
 
 <template>
 	<input :id="`player-${player.name}`" type="radio" name="player" v-bind:value="player.name" v-model="followTarget"
-	       @click.prevent="onInputClick" />
-	<label :for="`player-${player.name}`"
-	       :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}" :title="title"
-	       @click.prevent="onLabelClick">
+         @click.prevent="onInputClick"/>
+  <label :for="`player-${player.name}`"
+         :class="{'player': true, 'player--hidden' : !!player.hidden, 'player--other-world': otherWorld}" :title="title"
+         @click.prevent="onLabelClick">
 		<PlayerImage v-if="imagesEnabled" :player="player" width="16" height="16" class="player__icon" aria-hidden="true"></PlayerImage>
 		<span class="player__name" v-html="player.displayName"></span>
 	</label>

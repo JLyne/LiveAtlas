@@ -22,9 +22,9 @@
 			<PlayerImage v-if="imagesEnabled" :player="target" class="target__icon" width="48" height="48"></PlayerImage>
 			<span class="target__name" v-html="target.displayName"></span>
 			<span class="target__status">{{ status }}</span>
-			<span class="target__location" v-clipboard:copy="location"
-			      v-clipboard:success="copySuccess"
-			      v-clipboard:error="copyError">{{ location }}&#8288;</span>
+      <span class="target__location" v-clipboard:copy="location"
+            v-clipboard:success="copySuccess"
+            v-clipboard:error="copyError">{{ location }}&#8288;</span>
 			<button class="target__unfollow" type="button" :title="messageUnfollowTitle"
 				@click.prevent="unfollow" :aria-label="messageUnfollow">
 				<SvgIcon name="cross"></SvgIcon>

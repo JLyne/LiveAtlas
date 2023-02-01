@@ -20,16 +20,16 @@
 			<li role="none">
 				<!--suppress HtmlUnknownAttribute -->
 				<button type="button" role="menuitem" v-clipboard:copy="locationCopy"
-				        v-clipboard:success="copySuccess"
-				        v-clipboard:error="copyError">{{ locationLabel }}
+                v-clipboard:success="copySuccess"
+                v-clipboard:error="copyError">{{ locationLabel }}
 				</button>
 			</li>
 			<li role="none">
 				<!--suppress HtmlUnknownAttribute -->
 				<button type="button" role="menuitem"
-				        v-clipboard:copy="url"
-				        v-clipboard:success="copySuccess"
-				        v-clipboard:error="copyError">{{ messageCopyLink }}
+                v-clipboard:copy="url"
+                v-clipboard:success="copySuccess"
+                v-clipboard:error="copyError">{{ messageCopyLink }}
 				</button>
 			</li>
 			<li role="none">

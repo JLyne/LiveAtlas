@@ -16,8 +16,8 @@
 
 <template>
 	<div :class="{'modal': true, 'modal--visible': visible, 'modal--backdrop': backdrop}"
-	     role="dialog" :id="`modal--${id}`" :aria-labelledby="`${id}__heading`" aria-modal="true"
-	     @click="onBackdropClick" ref="modal">
+       role="dialog" :id="`modal--${id}`" :aria-labelledby="`${id}__heading`" aria-modal="true"
+       @click="onBackdropClick" ref="modal">
 		<div class="modal__header">
 			<slot name="header"></slot>
 			<button v-if="closeable" class="modal__close" type="button" @click="close" :aria-label="messageClose">

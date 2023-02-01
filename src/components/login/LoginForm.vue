@@ -21,13 +21,13 @@
 		<div class="form__group">
 			<label for="login-username" class="form__label" >{{ usernameLabel }}</label>
 			<input id="login-username" type="text" name="username" autocomplete="username"
-			       v-model="loginUsername" required ref="usernameField" />
+             v-model="loginUsername" required ref="usernameField"/>
 		</div>
 
 		<div class="form__group">
 			<label for="login-password" class="form__label" >{{ passwordLabel }}</label>
 			<input id="login-password" type="password" name="password" autocomplete="current-password"
-			       v-model="loginPassword" required />
+             v-model="loginPassword" required/>
 		</div>
 
 		<div v-if="error" role="alert" aria-live="assertive" class="form__group alert">{{ error }}</div>
