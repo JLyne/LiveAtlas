@@ -18,9 +18,9 @@
  */
 
 import {LatLngExpression} from "leaflet";
+import {Coordinate, LiveAtlasAreaMarker} from "@/index";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
-import {Coordinate, LiveAtlasAreaMarker} from "@/index";
 import {arePointsEqual, createPopup, isStyleEqual, tooltipOptions} from "@/util/paths";
 
 /**

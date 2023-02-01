@@ -25,9 +25,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import {computed, defineComponent} from "vue";
 import {useStore} from "@/store";
-import {computed} from "vue";
 import LoginForm from "@/components/login/LoginForm.vue";
 import RegisterForm from "@/components/login/RegisterForm.vue";
 import Modal from "@/components/Modal.vue";

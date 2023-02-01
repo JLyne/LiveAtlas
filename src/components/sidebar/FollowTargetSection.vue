@@ -34,11 +34,11 @@
 </template>
 
 <script lang="ts">
+import {computed, defineComponent} from "vue";
+import {LiveAtlasPlayer} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {computed, defineComponent} from "@vue/runtime-core";
 import {clipboardError, clipboardSuccess} from '@/util';
-import {LiveAtlasPlayer} from "@/index";
 import SvgIcon from "@/components/SvgIcon.vue";
 import "@/assets/icons/cross.svg";
 import PlayerImage from "@/components/PlayerImage.vue";

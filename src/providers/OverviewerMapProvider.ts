@@ -26,6 +26,7 @@ import {
 	LiveAtlasServerMessageConfig, LiveAtlasTileLayerOverlay,
 	LiveAtlasWorldDefinition
 } from "@/index";
+import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {
@@ -41,7 +42,6 @@ import {OverviewerTileLayer} from "@/leaflet/tileLayer/OverviewerTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/util/markers";
-import {useStore} from "@/store";
 import {getDefaultPlayerImage} from "@/util/images";
 
 export default class OverviewerMapProvider extends MapProvider {

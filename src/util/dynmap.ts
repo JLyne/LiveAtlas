@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-import {DynmapMarkerSetUpdate, DynmapMarkerUpdate, DynmapTileUpdate, DynmapUrlConfig} from "@/dynmap";
+import {PointTuple} from "leaflet";
 import {
 	LiveAtlasAreaMarker,
 	LiveAtlasChat,
@@ -30,6 +30,7 @@ import {
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
 } from "@/index";
+import {DynmapMarkerSetUpdate, DynmapMarkerUpdate, DynmapTileUpdate, DynmapUrlConfig} from "@/dynmap";
 import {getPoints} from "@/util/areas";
 import {
 	decodeHTMLEntities, getBounds, getMiddle, guessWorldDimension,
@@ -49,7 +50,6 @@ import {
 	WorldConfiguration,
 	WorldMapConfiguration
 } from "dynmap";
-import {PointTuple} from "leaflet";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {getImagePixelSize} from "@/util/images";

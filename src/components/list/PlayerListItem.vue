@@ -27,9 +27,9 @@
 
 <script lang="ts">
 import {defineComponent, computed} from 'vue';
+import {LiveAtlasPlayer} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {LiveAtlasPlayer} from "@/index";
 import PlayerImage from "@/components/PlayerImage.vue";
 
 export default defineComponent({

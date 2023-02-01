@@ -15,26 +15,26 @@
  */
 
 import { createApp } from 'vue'
-import App from './App.vue';
-import {store} from "@/store";
-
+import Notifications from '@kyvg/vue3-notification'
+import { VueClipboard } from '@soerenmartius/vue3-clipboard';
 import 'modern-normalize/modern-normalize.css';
 import 'leaflet/dist/leaflet.css';
 import '@/scss/style.scss';
 
+import {store} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import { VueClipboard } from '@soerenmartius/vue3-clipboard';
-import Notifications from '@kyvg/vue3-notification'
+import {ActionTypes} from "@/store/action-types";
+
+import App from './App.vue';
 import {loadConfig, registerMapProvider} from "@/util/config";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
 import {showSplashError} from "@/util/splash";
 import ConfigurationError from "@/errors/ConfigurationError";
 import OverviewerMapProvider from "@/providers/OverviewerMapProvider";
-import {ActionTypes} from "@/store/action-types";
+import.meta.globEager('/assets/icons/*.svg');
 
-const splash = document.getElementById('splash'),
-	svgs = import.meta.globEager('/assets/icons/*.svg');
+const splash = document.getElementById('splash');
 
 if(splash) {
 	splash.addEventListener('transitionend', e => {

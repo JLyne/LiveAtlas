@@ -39,12 +39,11 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted} from "@vue/runtime-core";
+import {defineComponent, onMounted, computed, nextTick, ref, watchEffect} from "vue";
+import {notify} from "@kyvg/vue3-notification";
 import {useStore} from "@/store";
-import {computed, nextTick, ref, watchEffect} from "vue";
 import {ActionTypes} from "@/store/action-types";
 import {MutationTypes} from "@/store/mutation-types";
-import {notify} from "@kyvg/vue3-notification";
 
 export default defineComponent({
 	setup() {

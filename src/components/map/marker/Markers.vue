@@ -15,17 +15,17 @@
   -->
 
 <script lang="ts">
-import {defineComponent, computed, onMounted, watch, onUnmounted} from "@vue/runtime-core";
-import {useStore} from "@/store";
-import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
+import {defineComponent, computed, onMounted, watch, onUnmounted} from "vue";
+import {Layer} from "leaflet";
 import {LiveAtlasAreaMarker, LiveAtlasMarker, LiveAtlasMarkerSet} from "@/index";
-import {nonReactiveState} from "@/store/state";
 import {DynmapMarkerUpdate} from "@/dynmap";
+import {useStore} from "@/store";
+import {nonReactiveState} from "@/store/state";
+import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import {
 	createMarkerLayer,
 	registerSetUpdateHandler, unregisterSetUpdateHandler, updateMarkerLayer
 } from "@/util/markers";
-import {Layer} from "leaflet";
 
 export default defineComponent({
 	props: {

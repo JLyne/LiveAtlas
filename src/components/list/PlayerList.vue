@@ -25,12 +25,11 @@
 </template>
 
 <script lang="ts">
-import PlayerListItem from "./PlayerListItem.vue";
-import {computed, defineComponent, watch} from "@vue/runtime-core";
-import RadioList from "@/components/util/RadioList.vue";
+import {ref, computed, defineComponent, watch} from "vue";
 import {LiveAtlasPlayer} from "@/index";
 import {useStore} from "@/store";
-import {ref} from "vue";
+import PlayerListItem from "./PlayerListItem.vue";
+import RadioList from "@/components/util/RadioList.vue";
 
 export default defineComponent({
 	components: {

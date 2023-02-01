@@ -37,15 +37,14 @@
 </template>
 
 <script lang="ts">
-import {ComponentPublicInstance, defineComponent, nextTick, onMounted, ref} from 'vue';
-import RadioList from "@/components/util/RadioList.vue";
+import {ComponentPublicInstance, defineComponent, nextTick, onMounted, ref, onUnmounted, watch} from 'vue';
 import {LiveAtlasMarkerSet} from "@/index";
+import {DynmapMarkerUpdate} from "@/dynmap";
 import {nonReactiveState} from "@/store/state";
-import {onUnmounted, watch} from "@vue/runtime-core";
+import RadioList from "@/components/util/RadioList.vue";
 import MarkerList from "@/components/list/MarkerList.vue";
 import SvgIcon from "@/components/SvgIcon.vue";
 import {registerUpdateHandler, unregisterUpdateHandler} from "@/util/markers";
-import {DynmapMarkerUpdate} from "@/dynmap";
 
 export default defineComponent({
 	name: 'MarkerSetList',

@@ -18,9 +18,9 @@
  */
 
 import {BaseIconOptions, Icon, Layer, LayerOptions, Util} from 'leaflet';
-import defaultImage from '@/assets/images/player_face.png';
 import {LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
 import {getImagePixelSize, getPlayerImage} from "@/util/images";
+import defaultImage from '@/assets/images/player_face.png';
 
 const playerImage: HTMLImageElement = document.createElement('img');
 playerImage.src = defaultImage;

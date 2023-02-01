@@ -34,8 +34,10 @@
 </template>
 
 <script lang="ts">
-import {useStore} from "@/store";
 import {computed, defineComponent} from 'vue';
+import {LiveAtlasWorldDefinition} from "@/index";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import SvgIcon from "@/components/SvgIcon.vue";
 import "@/assets/icons/block_world_surface.svg";
@@ -49,8 +51,6 @@ import "@/assets/icons/block_the_end_surface.svg";
 import "@/assets/icons/block_other.svg";
 import "@/assets/icons/block_other_flat.svg";
 import "@/assets/icons/block_skylands.svg";
-import {LiveAtlasWorldDefinition} from "@/index";
-import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default defineComponent({
 	name: 'WorldListItem',

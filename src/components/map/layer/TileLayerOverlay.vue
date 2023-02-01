@@ -15,10 +15,10 @@
   -->
 
 <script lang="ts">
-import {defineComponent, onUnmounted} from "@vue/runtime-core";
+import {defineComponent, onUnmounted} from "vue";
+import {LiveAtlasTileLayerOverlay} from "@/index";
 import {useStore} from "@/store";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
-import {LiveAtlasTileLayerOverlay} from "@/index";
 
 export default defineComponent({
 	props: {

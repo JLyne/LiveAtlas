@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import {MutationTypes} from "@/store/mutation-types";
+import {nextTick} from "vue";
 import {ActionContext, ActionTree} from "vuex";
+import {LiveAtlasGlobalConfig, LiveAtlasMarkerSet, LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
+import {DynmapMarkerUpdate, DynmapTileUpdate} from "@/dynmap";
+import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
 import {ActionTypes} from "@/store/action-types";
 import {Mutations} from "@/store/mutations";
-import {DynmapMarkerUpdate, DynmapTileUpdate} from "@/dynmap";
-import {LiveAtlasGlobalConfig, LiveAtlasMarkerSet, LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
-import {nextTick} from "vue";
 import {startUpdateHandling, stopUpdateHandling} from "@/util/markers";
 
 type AugmentedActionContext = {
@@ -75,7 +75,7 @@ export interface Actions {
 }
 
 export const actions: ActionTree<State, State> & Actions = {
-	async [ActionTypes.INIT]({commit, state, dispatch}, config: LiveAtlasGlobalConfig): Promise<void> {
+	async [ActionTypes.INIT]({commit}, config: LiveAtlasGlobalConfig): Promise<void> {
 		commit(MutationTypes.SET_UI_CONFIGURATION, config?.ui || {})
 		commit(MutationTypes.SET_MESSAGES, config?.messages || {})
 		commit(MutationTypes.SET_SERVERS, config.servers)
@@ -165,7 +165,7 @@ export const actions: ActionTree<State, State> & Actions = {
 		stopUpdateHandling();
 	},
 
-	[ActionTypes.SET_PLAYERS]({commit, state}, players: Set<LiveAtlasPlayer>) {
+	[ActionTypes.SET_PLAYERS]({commit}, players: Set<LiveAtlasPlayer>) {
 		const keep: Set<string> = new Set();
 
 		for(const player of players) {
@@ -207,7 +207,7 @@ export const actions: ActionTree<State, State> & Actions = {
 		return updates;
 	},
 
-	async [ActionTypes.SEND_CHAT_MESSAGE]({commit, state}, message: string): Promise<void> {
+	async [ActionTypes.SEND_CHAT_MESSAGE]({state}, message: string): Promise<void> {
 		await state.currentMapProvider!.sendChatMessage(message);
 	},
 

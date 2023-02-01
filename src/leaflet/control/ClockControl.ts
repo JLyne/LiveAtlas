@@ -17,19 +17,18 @@
  * limitations under the License.
  */
 
+import {watch} from "vue";
 import {ControlOptions, DomUtil, Util, Control} from 'leaflet';
-import {getMinecraftTime} from '@/util';
 
-import {watch} from "@vue/runtime-core";
+import {LiveAtlasWorldState} from "@/index";
 import {useStore} from "@/store";
-
+import {getMinecraftTime} from '@/util';
 import "@/assets/icons/clock_moon.svg";
 import "@/assets/icons/clock_moon_rain.svg";
 import "@/assets/icons/clock_moon_storm.svg";
 import "@/assets/icons/clock_sun.svg";
 import "@/assets/icons/clock_sun_rain.svg";
 import "@/assets/icons/clock_sun_storm.svg";
-import {LiveAtlasWorldState} from "@/index";
 
 export interface ClockControlOptions extends ControlOptions {
 	showTimeOfDay: boolean;

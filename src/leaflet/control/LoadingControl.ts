@@ -30,8 +30,8 @@ import {
 	LeafletEvent,
 	Map, TileLayer,
 } from 'leaflet';
-import '@/assets/icons/loading.svg';
 import {useStore} from "@/store";
+import '@/assets/icons/loading.svg';
 
 export interface LoadingControlOptions extends ControlOptions {
 	delayIndicator?: number;

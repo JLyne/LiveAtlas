@@ -27,16 +27,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive, ref} from 'vue';
+import {defineComponent, onMounted, reactive, ref, computed, onUnmounted, watch} from 'vue';
 import debounce from 'lodash.debounce';
-import RadioList from "@/components/util/RadioList.vue";
 import {LiveAtlasMarkerSet, LiveAtlasMarker} from "@/index";
-import {nonReactiveState} from "@/store/state";
-import {computed, onUnmounted, watch} from "@vue/runtime-core";
-import {useStore} from "@/store";
-import MarkerListItem from "@/components/list/MarkerListItem.vue";
-import {registerSetUpdateHandler, unregisterSetUpdateHandler} from "@/util/markers";
 import {DynmapMarkerUpdate} from "@/dynmap";
+import {useStore} from "@/store";
+import {nonReactiveState} from "@/store/state";
+import {registerSetUpdateHandler, unregisterSetUpdateHandler} from "@/util/markers";
+import RadioList from "@/components/util/RadioList.vue";
+import MarkerListItem from "@/components/list/MarkerListItem.vue";
 
 export default defineComponent({
 	name: 'MarkerList',

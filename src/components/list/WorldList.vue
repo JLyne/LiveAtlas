@@ -21,12 +21,11 @@
 </template>
 
 <script lang="ts">
-import WorldListItem from './WorldListItem.vue';
-import {defineComponent} from 'vue';
-import RadioList from "@/components/util/RadioList.vue";
+import {defineComponent, computed} from 'vue';
 import {LiveAtlasWorldDefinition} from "@/index";
 import {useStore} from "@/store";
-import {computed} from "@vue/runtime-core";
+import WorldListItem from './WorldListItem.vue';
+import RadioList from "@/components/util/RadioList.vue";
 
 export default defineComponent({
 	name: 'WorldList',

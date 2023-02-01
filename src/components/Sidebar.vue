@@ -51,23 +51,22 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent} from "@vue/runtime-core";
+import {computed, defineComponent, nextTick, ref, watch} from "vue";
+import {LiveAtlasSidebarSection} from "@/index";
+import {useStore} from "@/store";
+import {MutationTypes} from "@/store/mutation-types";
 import FollowTargetSection from './sidebar/FollowTargetSection.vue';
 import PlayersSection from "@/components/sidebar/PlayersSection.vue";
 import ServersSection from "@/components/sidebar/ServersSection.vue";
 import WorldsSection from "@/components/sidebar/WorldsSection.vue";
 import MarkersSection from "@/components/sidebar/MarkersSection.vue";
-import {useStore} from "@/store";
 import SvgIcon from "@/components/SvgIcon.vue";
-import {MutationTypes} from "@/store/mutation-types";
+import {handleKeyboardEvent} from "@/util/events";
+import {focus} from "@/util";
 import "@/assets/icons/players.svg";
 import "@/assets/icons/maps.svg";
 import "@/assets/icons/servers.svg";
 import "@/assets/icons/marker_point.svg";
-import {nextTick, ref, watch} from "vue";
-import {handleKeyboardEvent} from "@/util/events";
-import {focus} from "@/util";
-import {LiveAtlasSidebarSection} from "@/index";
 
 export default defineComponent({
 	components: {

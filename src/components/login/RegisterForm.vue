@@ -52,9 +52,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, watch} from "@vue/runtime-core";
+import {defineComponent, watch, computed, ref} from "vue";
 import {useStore} from "@/store";
-import {computed, ref} from "vue";
 import {ActionTypes} from "@/store/action-types";
 import {MutationTypes} from "@/store/mutation-types";
 

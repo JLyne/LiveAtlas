@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
-import {defineComponent, computed, watch, onMounted, onUnmounted} from "@vue/runtime-core";
-import {useStore} from "@/store";
+import {defineComponent, computed, watch, onMounted, onUnmounted} from "vue";
 import {LayerGroup} from 'leaflet';
+import {useStore} from "@/store";
+import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 export default defineComponent({

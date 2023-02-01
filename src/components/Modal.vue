@@ -31,11 +31,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted} from "@vue/runtime-core";
+import {defineComponent, onMounted, onUnmounted, computed, ref} from "vue";
+import {LiveAtlasUIModal} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {LiveAtlasUIModal} from "@/index";
-import {computed, ref} from "vue";
 import SvgIcon from "@/components/SvgIcon.vue";
 
 export default defineComponent({

@@ -24,17 +24,17 @@
 
 <script lang="ts">
 import {computed, defineComponent, onBeforeUnmount, onMounted, ref, watch} from 'vue';
+import {notify} from "@kyvg/vue3-notification";
+import {LiveAtlasServerDefinition, LiveAtlasUIElement} from "@/index";
+import {useStore} from "@/store";
+import {MutationTypes} from "@/store/mutation-types";
+import {ActionTypes} from "@/store/action-types";
 import Map from './components/Map.vue';
 import Sidebar from './components/Sidebar.vue';
 import ChatBox from './components/ChatBox.vue';
-import {useStore} from "@/store";
-import {ActionTypes} from "@/store/action-types";
 import {parseUrl} from '@/util';
 import {hideSplash, showSplash, showSplashError} from '@/util/splash';
-import {MutationTypes} from "@/store/mutation-types";
-import {LiveAtlasServerDefinition, LiveAtlasUIElement} from "@/index";
 import LoginModal from "@/components/login/LoginModal.vue";
-import {notify} from "@kyvg/vue3-notification";
 import {clearPlayerImageCache} from "@/util/images";
 
 export default defineComponent({

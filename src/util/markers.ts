@@ -17,11 +17,8 @@
  * limitations under the License.
  */
 
-import {useStore} from "@/store";
-import {ActionTypes} from "@/store/action-types";
-import {DynmapMarkerUpdate} from "@/dynmap";
-import {computed, watch} from "@vue/runtime-core";
-import {ComputedRef} from "@vue/reactivity";
+import {ComputedRef, computed, watch} from "vue";
+import {Layer} from "leaflet";
 import {
 	LiveAtlasAreaMarker,
 	LiveAtlasCircleMarker,
@@ -29,7 +26,9 @@ import {
 	LiveAtlasMarker,
 	LiveAtlasPointMarker
 } from "@/index";
-import {Layer} from "leaflet";
+import {DynmapMarkerUpdate} from "@/dynmap";
+import {useStore} from "@/store";
+import {ActionTypes} from "@/store/action-types";
 import {createCircleLayer, updateCircleLayer} from "@/util/circles";
 import {createPointLayer, updatePointLayer} from "@/util/points";
 import {createAreaLayer, updateAreaLayer} from "@/util/areas";

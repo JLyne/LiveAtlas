@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
+import {watch, computed} from "vue";
 import {Map, Layer} from 'leaflet';
-import {LiveAtlasLayerControl} from "@/leaflet/control/LiveAtlasLayerControl";
-import {watch} from "vue";
 import {useStore} from "@/store";
-import {computed} from "@vue/runtime-core";
+import {LiveAtlasLayerControl} from "@/leaflet/control/LiveAtlasLayerControl";
 
 export default class LayerManager {
 	private readonly layerControl: LiveAtlasLayerControl;

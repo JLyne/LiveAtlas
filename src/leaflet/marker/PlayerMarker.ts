@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
+import {computed, watch, nextTick, WatchStopHandle} from "vue";
 import {LatLng, MarkerOptions, Marker, Map, Util} from 'leaflet';
-import {PlayerIcon} from "@/leaflet/icon/PlayerIcon";
 import {LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
-import {computed, watch} from "@vue/runtime-core";
-import {nextTick, WatchStopHandle} from "vue";
 import {useStore} from "@/store";
+import {PlayerIcon} from "@/leaflet/icon/PlayerIcon";
 
 export interface PlayerMarkerOptions extends MarkerOptions {
 	imageSize: LiveAtlasPlayerImageSize,

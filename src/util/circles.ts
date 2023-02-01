@@ -18,9 +18,9 @@
  */
 
 import {LatLngExpression} from "leaflet";
+import {LiveAtlasCircleMarker} from "@/index";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
-import {LiveAtlasCircleMarker} from "@/index";
 import {createPopup, tooltipOptions} from "@/util/paths";
 
 /**
