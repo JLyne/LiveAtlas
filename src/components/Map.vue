@@ -37,9 +37,11 @@
 </template>
 
 <script lang="ts">
-import {computed, ref, defineComponent} from "@vue/runtime-core";
+import {computed, ref, defineComponent} from "vue";
 import {CRS, LatLng, LatLngBounds, PanOptions, ZoomPanOptions} from 'leaflet';
+import {LiveAtlasLocation, LiveAtlasPlayer, LiveAtlasMapViewTarget} from "@/index";
 import {useStore} from '@/store';
+import {MutationTypes} from "@/store/mutation-types";
 import TileLayer from "@/components/map/layer/TileLayer.vue";
 import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
 import MarkerSetLayer from "@/components/map/layer/MarkerSetLayer.vue";
@@ -48,11 +50,9 @@ import ClockControl from "@/components/map/control/ClockControl.vue";
 import LinkControl from "@/components/map/control/LinkControl.vue";
 import ChatControl from "@/components/map/control/ChatControl.vue";
 import LogoControl from "@/components/map/control/LogoControl.vue";
-import {MutationTypes} from "@/store/mutation-types";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {LoadingControl} from "@/leaflet/control/LoadingControl";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
-import {LiveAtlasLocation, LiveAtlasPlayer, LiveAtlasMapViewTarget} from "@/index";
 import LoginControl from "@/components/map/control/LoginControl.vue";
 import TileLayerOverlay from "@/components/map/layer/TileLayerOverlay.vue";
 

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {Coordinate, LiveAtlasProjection, LiveAtlasTileLayerOverlay, LiveAtlasWorldDefinition} from "@/index";
 import {LatLng} from "leaflet";
 import {ImageFormat} from "dynmap";
+import {Coordinate, LiveAtlasProjection, LiveAtlasTileLayerOverlay, LiveAtlasWorldDefinition} from "@/index";
 import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 
 export interface LiveAtlasMapDefinitionOptions extends LiveAtlasTileLayerOptions {
@@ -139,7 +139,7 @@ export default class LiveAtlasMapDefinition implements LiveAtlasTileLayerOptions
 			return this.icon;
 		}
 
-		let mapName = this.name.split(/[^a-zA-Z\d]/, 1)[0];
+		const mapName = this.name.split(/[^a-zA-Z\d]/, 1)[0];
 
 		// list of map types, which have the same icon in every dimension
 		let fixMapTypes = ['biome'];

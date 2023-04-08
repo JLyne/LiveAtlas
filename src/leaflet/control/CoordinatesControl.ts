@@ -18,8 +18,8 @@
  */
 
 import {ControlOptions, LeafletMouseEvent, Control, Map, DomUtil, Util} from 'leaflet';
-import {useStore} from "@/store";
 import {Coordinate} from "@/index";
+import {useStore} from "@/store";
 
 const store = useStore();
 

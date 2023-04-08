@@ -17,8 +17,8 @@
  * limitations under the License.
  */
 
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 import {Coords, Util} from "leaflet";
+import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 
 // noinspection JSUnusedGlobalSymbols
 export class OverviewerTileLayer extends LiveAtlasTileLayer {

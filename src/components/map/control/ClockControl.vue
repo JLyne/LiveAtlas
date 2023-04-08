@@ -15,11 +15,10 @@
   -->
 
 <script lang="ts">
-import {computed, defineComponent, onMounted, onUnmounted} from "@vue/runtime-core";
+import {computed, defineComponent, onMounted, onUnmounted, watch} from "vue";
 import {useStore} from "@/store";
 import {ClockControl, ClockControlOptions} from "@/leaflet/control/ClockControl";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
-import {watch} from "vue";
 
 export default defineComponent({
 	props: {

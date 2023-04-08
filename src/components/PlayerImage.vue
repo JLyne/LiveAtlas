@@ -19,12 +19,11 @@
 </template>
 
 <script lang="ts">
-import defaultImage from '@/assets/images/player_face.png';
-import {computed, defineComponent, watch} from "@vue/runtime-core";
+import {onMounted, ref, computed, defineComponent, watch} from "vue";
 import {LiveAtlasPlayer} from "@/index";
-import {onMounted, ref} from "vue";
 import {useStore} from "@/store";
 import {getPlayerImage} from "@/util/images";
+import defaultImage from '@/assets/images/player_face.png';
 
 export default defineComponent({
 	name: 'PlayerImage',

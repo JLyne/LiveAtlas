@@ -21,10 +21,10 @@
 </template>
 
 <script lang="ts">
-import ServerListItem from './ServerListItem.vue';
 import {defineComponent} from 'vue';
-import RadioList from "@/components/util/RadioList.vue";
 import {LiveAtlasServerDefinition} from "@/index";
+import ServerListItem from './ServerListItem.vue';
+import RadioList from "@/components/util/RadioList.vue";
 
 export default defineComponent({
 	name: 'ServerList',

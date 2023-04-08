@@ -15,9 +15,9 @@
  */
 
 import {LiveAtlasGlobalConfig, LiveAtlasServerDefinition} from "@/index";
-import ConfigurationError from "@/errors/ConfigurationError";
 import {DynmapUrlConfig} from "@/dynmap";
 import {useStore} from "@/store";
+import ConfigurationError from "@/errors/ConfigurationError";
 import MapProvider from "@/providers/MapProvider";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 

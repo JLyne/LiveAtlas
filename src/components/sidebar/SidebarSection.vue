@@ -22,8 +22,8 @@
 	}" :data-section="name">
 		<h2 class="section__heading">
 			<button :id="`${name}-heading`" type="button"
-			        @click.prevent="toggle" :title="title"
-			        :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
+              @click.prevent="toggle" :title="title"
+              :aria-expanded="!collapsed" :aria-controls="`${name}-content`">
 				<span>
 					<slot name="heading"></slot>
 				</span>
@@ -37,13 +37,12 @@
 </template>
 
 <script lang="ts">
-import {useStore} from "@/store";
+import {defineComponent, computed} from "vue";
 import {LiveAtlasSidebarSection} from "@/index";
-import {defineComponent} from "@vue/runtime-core";
+import {useStore} from "@/store";
 import SvgIcon from "@/components/SvgIcon.vue";
 import '@/assets/icons/arrow.svg';
 import {MutationTypes} from "@/store/mutation-types";
-import {computed} from "vue";
 
 export default defineComponent({
 	name: 'SidebarSection',

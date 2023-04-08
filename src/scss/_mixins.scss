@@ -78,7 +78,7 @@
 @mixin button-pressed {
 	background-color: var(--background-selected);
 	color: var(--text-selected);
-	font-weight: bold;
+	font-weight: 700;
 	text-shadow: none;
 }
 

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {PointTuple} from "leaflet";
 import {
 	LiveAtlasAreaMarker,
 	LiveAtlasCircleMarker,
@@ -28,13 +29,12 @@ import {
 	LiveAtlasServerMessageConfig,
 	LiveAtlasWorldDefinition
 } from "@/index";
-import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {MutationTypes} from "@/store/mutation-types";
-import MapProvider from "@/providers/MapProvider";
 import {ActionTypes} from "@/store/action-types";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import MapProvider from "@/providers/MapProvider";
 import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
-import {PointTuple} from "leaflet";
 import ConfigurationError from "@/errors/ConfigurationError";
 import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
@@ -439,7 +439,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 
 	private static addY(points: any) {
 		for (const point of points) {
-			points.y = 0;
+			point.y = 0;
 		}
 
 		return points;

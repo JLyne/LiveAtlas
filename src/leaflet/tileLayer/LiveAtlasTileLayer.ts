@@ -15,9 +15,9 @@
  */
 
 import {Map as LeafletMap, Coords, DomUtil, DoneCallback, TileLayer, TileLayerOptions, Util} from "leaflet";
+import {ImageFormat} from "dynmap";
 import {LiveAtlasInternalTiles, LiveAtlasTileElement} from "@/index";
 import falseFn = Util.falseFn;
-import {ImageFormat} from "dynmap";
 
 export interface LiveAtlasTileLayerOptions {
 	baseUrl: string;

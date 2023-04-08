@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent} from "@vue/runtime-core";
+import {computed, defineComponent} from "vue";
 import {useStore} from "@/store";
 import SidebarSection from "@/components/sidebar/SidebarSection.vue";
 import PlayerList from "@/components/list/PlayerList.vue";

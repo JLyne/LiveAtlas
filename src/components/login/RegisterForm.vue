@@ -22,20 +22,20 @@
 		<div class="form__group">
 			<label for="register-username" class="form__label" >{{ messageUsernameLabel }}</label>
 			<input id="register-username" type="text" name="username" autocomplete="username"
-			       v-model="valueUsername" required />
+             v-model="valueUsername" required/>
 		</div>
 
 		<div class="form__group">
 			<label for="register-password" class="form__label" >{{ messagePasswordLabel }}</label>
 			<input id="register-password" type="password" name="password" autocomplete="new-password"
-			       v-model="valuePassword" required />
+             v-model="valuePassword" required/>
 		</div>
 
 		<div class="form__group">
 			<label for="register-confirm-password" class="form__label">{{ messageConfirmPasswordLabel }}</label>
 			<input id="register-confirm-password" type="password" name="confirm_password"
-			       autocomplete="new-password" v-model="valuePassword2" required ref="confirmPasswordField"
-			       />
+             autocomplete="new-password" v-model="valuePassword2" required ref="confirmPasswordField"
+      />
 		</div>
 
 		<div class="form__group">
@@ -52,9 +52,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, watch} from "@vue/runtime-core";
+import {defineComponent, watch, computed, ref} from "vue";
 import {useStore} from "@/store";
-import {computed, ref} from "vue";
 import {ActionTypes} from "@/store/action-types";
 import {MutationTypes} from "@/store/mutation-types";
 

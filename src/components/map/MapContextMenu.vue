@@ -20,16 +20,16 @@
 			<li role="none">
 				<!--suppress HtmlUnknownAttribute -->
 				<button type="button" role="menuitem" v-clipboard:copy="locationCopy"
-				        v-clipboard:success="copySuccess"
-				        v-clipboard:error="copyError">{{ locationLabel }}
+                v-clipboard:success="copySuccess"
+                v-clipboard:error="copyError">{{ locationLabel }}
 				</button>
 			</li>
 			<li role="none">
 				<!--suppress HtmlUnknownAttribute -->
 				<button type="button" role="menuitem"
-				        v-clipboard:copy="url"
-				        v-clipboard:success="copySuccess"
-				        v-clipboard:error="copyError">{{ messageCopyLink }}
+                v-clipboard:copy="url"
+                v-clipboard:success="copySuccess"
+                v-clipboard:error="copyError">{{ messageCopyLink }}
 				</button>
 			</li>
 			<li role="none">
@@ -41,14 +41,12 @@
 </template>
 
 <script lang="ts">
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
-import {computed, defineComponent, onMounted, onUnmounted, watch} from "@vue/runtime-core";
+import {computed, defineComponent, onMounted, onUnmounted, watch, CSSProperties, ref, nextTick} from "vue";
 import {LeafletMouseEvent} from "leaflet";
 import {useStore} from "@/store";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import WorldListItem from "@/components/list/WorldListItem.vue";
-import {CSSProperties, ref} from "vue";
 import {clipboardError, clipboardSuccess, getUrlForLocation} from "@/util";
-import {nextTick} from 'vue';
 import {handleKeyboardEvent} from "@/util/events";
 
 export default defineComponent({

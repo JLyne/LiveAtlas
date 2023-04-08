@@ -15,12 +15,6 @@
  */
 
 import {MutationTree} from "vuex";
-import {MutationTypes} from "@/store/mutation-types";
-import {nonReactiveState, State} from "@/store/state";
-import {
-	DynmapMarkerSetUpdate, DynmapMarkerUpdate,
-	DynmapTileUpdate
-} from "@/dynmap";
 import {
 	Coordinate,
 	LiveAtlasWorldState,
@@ -43,6 +37,12 @@ import {
 	LiveAtlasGlobalMessageConfig,
 	LiveAtlasUIConfig, LiveAtlasServerDefinition
 } from "@/index";
+import {
+	DynmapMarkerSetUpdate, DynmapMarkerUpdate,
+	DynmapTileUpdate
+} from "@/dynmap";
+import {MutationTypes} from "@/store/mutation-types";
+import {nonReactiveState, State} from "@/store/state";
 import {getServerMapProvider} from "@/util/config";
 import {getDefaultPlayerImage} from "@/util/images";
 

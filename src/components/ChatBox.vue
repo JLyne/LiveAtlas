@@ -31,10 +31,10 @@
 </template>
 
 <script lang="ts">
-	import {defineComponent, ref, computed, watch} from "@vue/runtime-core";
+	import {defineComponent, ref, computed, watch} from "vue";
 	import {useStore} from "@/store";
-	import ChatMessage from "@/components/chat/ChatMessage.vue";
-	import {ActionTypes} from "@/store/action-types";
+  import {ActionTypes} from "@/store/action-types";
+  import ChatMessage from "@/components/chat/ChatMessage.vue";
 	import ChatError from "@/errors/ChatError";
 
 	export default defineComponent({

@@ -13,6 +13,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "isolatedModules": true,
+    "useDefineForClassFields": true,
     "baseUrl": ".",
     "types": [
       "vite/client",
@@ -27,8 +28,7 @@
     "lib": [
       "esnext",
       "dom",
-      "dom.iterable",
-      "scripthost"
+      "dom.iterable"
     ]
   },
   "include": [

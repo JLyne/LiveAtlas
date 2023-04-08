@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
+import {watch, computed} from "vue";
 import {Control, ControlOptions, DomEvent, DomUtil} from 'leaflet';
+import {notify} from "@kyvg/vue3-notification";
 import {useStore} from "@/store";
-import {watch} from "@vue/runtime-core";
-
+import {ActionTypes} from "@/store/action-types";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import "@/assets/icons/login.svg";
 import "@/assets/icons/logout.svg";
-import {computed} from "vue";
-import {ActionTypes} from "@/store/action-types";
-import {notify} from "@kyvg/vue3-notification";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 /**
  * Leaflet map control providing a login/logout button which opens the login modal/logs out on click

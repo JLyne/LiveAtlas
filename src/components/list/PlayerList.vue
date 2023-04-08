@@ -16,7 +16,7 @@
 
 <template>
 	<input ref="searchInput" v-if="filteredPlayers && search" class="section__search" type="text" name="search"
-			       v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
+         v-model="searchQuery" :placeholder="messagePlayersSearchPlaceholder" @keydown="onKeydown">
 	<RadioList v-if="filteredPlayers.length" name="player" :aria-labelledby="ariaLabelledby">
 		<PlayerListItem v-for="player in filteredPlayers" :key="player.name" :player="player"></PlayerListItem>
 	</RadioList>
@@ -25,12 +25,11 @@
 </template>
 
 <script lang="ts">
-import PlayerListItem from "./PlayerListItem.vue";
-import {computed, defineComponent, watch} from "@vue/runtime-core";
-import RadioList from "@/components/util/RadioList.vue";
+import {ref, computed, defineComponent, watch} from "vue";
 import {LiveAtlasPlayer} from "@/index";
 import {useStore} from "@/store";
-import {ref} from "vue";
+import PlayerListItem from "./PlayerListItem.vue";
+import RadioList from "@/components/util/RadioList.vue";
 
 export default defineComponent({
 	components: {

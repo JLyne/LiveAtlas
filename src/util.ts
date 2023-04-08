@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {notify} from "@kyvg/vue3-notification";
 import {
 	Coordinate,
 	LiveAtlasBounds,
@@ -23,9 +23,9 @@ import {
 	LiveAtlasLocation,
 	LiveAtlasMessageConfig, LiveAtlasParsedUrl,
 } from "@/index";
-import {notify} from "@kyvg/vue3-notification";
-import {globalMessages, serverMessages} from "../messages";
 import {Store} from "@/store";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {globalMessages, serverMessages} from "../messages";
 
 const documentRange = document.createRange(),
 	brToSpaceRegex = /<br \/>/g;

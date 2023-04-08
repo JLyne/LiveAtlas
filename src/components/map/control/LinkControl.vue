@@ -15,7 +15,7 @@
   -->
 
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted} from "@vue/runtime-core";
+import {defineComponent, onMounted, onUnmounted} from "vue";
 import {LinkControl} from "@/leaflet/control/LinkControl";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 

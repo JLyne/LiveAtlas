@@ -15,9 +15,9 @@
  */
 
 import {LeafletMouseEvent} from "leaflet";
+import {LiveAtlasPointMarker} from "@/index";
 import {GenericIcon} from "@/leaflet/icon/GenericIcon";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
-import {LiveAtlasPointMarker} from "@/index";
 
 /**
  * Creates a {@link GenericMarker} with the given options

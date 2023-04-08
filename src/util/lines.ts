@@ -17,9 +17,9 @@
  * limitations under the License.
  */
 
-import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
-import {Coordinate, LiveAtlasLineMarker} from "@/index";
 import {LatLngExpression} from "leaflet";
+import {Coordinate, LiveAtlasLineMarker} from "@/index";
+import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import {createPopup, tooltipOptions} from "@/util/paths";
 
 /**

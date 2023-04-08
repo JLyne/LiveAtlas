@@ -15,9 +15,9 @@
  */
 
 import {Control, ControlOptions, DomEvent, DomUtil} from 'leaflet';
+import {watch} from "vue";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {watch} from "@vue/runtime-core";
 
 import "@/assets/icons/chat.svg";
 

@@ -17,3 +17,11 @@ pnpm-debug.log*
 /.cache/
 /coverage/
 
+# yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

@@ -15,7 +15,7 @@
   -->
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import {defineComponent} from "vue";
 import {LogoControl, LogoControlOptions} from "@/leaflet/control/LogoControl";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 

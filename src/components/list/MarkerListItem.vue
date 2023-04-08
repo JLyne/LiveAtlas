@@ -25,17 +25,16 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent, computed} from 'vue';
+import {useStore} from "vuex";
 import {LiveAtlasMarker, LiveAtlasPathMarker, LiveAtlasPointMarker} from "@/index";
-import {computed} from "@vue/runtime-core";
+import {MutationTypes} from "@/store/mutation-types";
 import SvgIcon from "@/components/SvgIcon.vue";
+import {LiveAtlasMarkerType} from "@/util/markers";
 import "@/assets/icons/marker_point.svg";
 import "@/assets/icons/marker_line.svg";
 import "@/assets/icons/marker_area.svg";
 import "@/assets/icons/marker_circle.svg";
-import {useStore} from "vuex";
-import {LiveAtlasMarkerType} from "@/util/markers";
-import {MutationTypes} from "@/store/mutation-types";
 
 export default defineComponent({
 	name: 'MarkerListItem',
@@ -68,6 +67,7 @@ export default defineComponent({
 			defaultIcon = computed(() => {
 				switch(props.marker.type) {
 					case LiveAtlasMarkerType.POINT:
+          default:
 						return 'marker_point';
 					case LiveAtlasMarkerType.AREA:
 						return 'marker_area';

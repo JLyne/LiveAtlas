@@ -17,16 +17,16 @@
  * limitations under the License.
  */
 
+import {nextTick, watch} from "vue";
 import {Control, DomEvent, DomUtil, Layer, LeafletEvent, Map as LeafletMap, Util} from 'leaflet';
 
-import '@/assets/icons/layers.svg';
-import '@/assets/icons/checkbox.svg';
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {nextTick, watch} from "vue";
 import {handleKeyboardEvent} from "@/util/events";
 import LayersObject = Control.LayersObject;
 import LayersOptions = Control.LayersOptions;
+import '@/assets/icons/layers.svg';
+import '@/assets/icons/checkbox.svg';
 
 const store = useStore();
 

@@ -16,8 +16,8 @@
 
 <template>
 	<input ref="searchInput" v-if="search && unfilteredTotal" id="markers__search" class="section__search" type="text"
-	       name="search" :value="searchQuery" :placeholder="messageMarkersSearchPlaceholder"
-	       @keydown="(e: KeyboardEvent) => e.stopImmediatePropagation()" @input="onSearchInput">
+         name="search" :value="searchQuery" :placeholder="messageMarkersSearchPlaceholder"
+         @keydown="(e: KeyboardEvent) => e.stopImmediatePropagation()" @input="onSearchInput">
 	<RadioList v-if="markers.size" name="marker" v-bind="$attrs" @keydown="onListKeydown">
 		<MarkerListItem v-for="[id, marker] in markers" :key="id" :marker="marker" :id="id"></MarkerListItem>
 		<button type="button" ref="showMoreButton" v-if="viewLimit < total" @click.prevent="showMore">{{ messageShowMore }}</button>
@@ -27,16 +27,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive, ref} from 'vue';
+import {defineComponent, onMounted, reactive, ref, computed, onUnmounted, watch} from 'vue';
 import debounce from 'lodash.debounce';
-import RadioList from "@/components/util/RadioList.vue";
 import {LiveAtlasMarkerSet, LiveAtlasMarker} from "@/index";
-import {nonReactiveState} from "@/store/state";
-import {computed, onUnmounted, watch} from "@vue/runtime-core";
-import {useStore} from "@/store";
-import MarkerListItem from "@/components/list/MarkerListItem.vue";
-import {registerSetUpdateHandler, unregisterSetUpdateHandler} from "@/util/markers";
 import {DynmapMarkerUpdate} from "@/dynmap";
+import {useStore} from "@/store";
+import {nonReactiveState} from "@/store/state";
+import {registerSetUpdateHandler, unregisterSetUpdateHandler} from "@/util/markers";
+import RadioList from "@/components/util/RadioList.vue";
+import MarkerListItem from "@/components/list/MarkerListItem.vue";
 
 export default defineComponent({
 	name: 'MarkerList',

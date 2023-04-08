@@ -26,6 +26,7 @@ import {
 	LiveAtlasServerMessageConfig, LiveAtlasTileLayerOverlay,
 	LiveAtlasWorldDefinition
 } from "@/index";
+import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import MapProvider from "@/providers/MapProvider";
 import {
@@ -41,7 +42,6 @@ import {OverviewerTileLayer} from "@/leaflet/tileLayer/OverviewerTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/util/markers";
-import {useStore} from "@/store";
 import {getDefaultPlayerImage} from "@/util/images";
 
 export default class OverviewerMapProvider extends MapProvider {
@@ -63,6 +63,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		}
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private static buildServerConfig(ignore: any): LiveAtlasServerConfig {
 		return {
 			title: useStore().state.initialTitle,
@@ -77,6 +78,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		};
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private static buildMessagesConfig(ignore: any): LiveAtlasServerMessageConfig {
 		return {
 			worldsHeading: 'Worlds',

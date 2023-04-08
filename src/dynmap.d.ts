@@ -15,11 +15,7 @@
  */
 
 import {
-	LiveAtlasAreaMarker,
-	LiveAtlasCircleMarker,
-	LiveAtlasLineMarker,
 	LiveAtlasMarker, LiveAtlasMarkerType,
-	LiveAtlasPointMarker
 } from "@/index";
 
 declare global {

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import defaultImage from "@/assets/images/player_face.png";
 import {PlayerImageQueueEntry, LiveAtlasPlayer, LiveAtlasPlayerImageSize} from "@/index";
 import {useStore} from "@/store";
+import defaultImage from "@/assets/images/player_face.png";
 
 const playerImageCache = new Map<string, HTMLImageElement>(),
 	playerImageUnresolvedCache = new Map<string, Promise<HTMLImageElement>>(),

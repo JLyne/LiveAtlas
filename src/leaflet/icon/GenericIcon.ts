@@ -68,7 +68,7 @@ export class GenericIcon extends Layer implements Icon<GenericIconOptions> {
 
 	createIcon(oldIcon: HTMLElement) {
 		if (oldIcon) {
-			DomUtil.remove(oldIcon);
+			oldIcon.remove();
 		}
 
 		const div = markerContainer.cloneNode(false) as HTMLDivElement;

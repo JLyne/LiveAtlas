@@ -22,9 +22,9 @@
 			<PlayerImage v-if="imagesEnabled" :player="target" class="target__icon" width="48" height="48"></PlayerImage>
 			<span class="target__name" v-html="target.displayName"></span>
 			<span class="target__status">{{ status }}</span>
-			<span class="target__location" v-clipboard:copy="location"
-			      v-clipboard:success="copySuccess"
-			      v-clipboard:error="copyError">{{ location }}&#8288;</span>
+      <span class="target__location" v-clipboard:copy="location"
+            v-clipboard:success="copySuccess"
+            v-clipboard:error="copyError">{{ location }}&#8288;</span>
 			<button class="target__unfollow" type="button" :title="messageUnfollowTitle"
 				@click.prevent="unfollow" :aria-label="messageUnfollow">
 				<SvgIcon name="cross"></SvgIcon>
@@ -34,11 +34,11 @@
 </template>
 
 <script lang="ts">
+import {computed, defineComponent} from "vue";
+import {LiveAtlasPlayer} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import {computed, defineComponent} from "@vue/runtime-core";
 import {clipboardError, clipboardSuccess} from '@/util';
-import {LiveAtlasPlayer} from "@/index";
 import SvgIcon from "@/components/SvgIcon.vue";
 import "@/assets/icons/cross.svg";
 import PlayerImage from "@/components/PlayerImage.vue";

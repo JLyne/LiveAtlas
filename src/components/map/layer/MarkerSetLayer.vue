@@ -15,21 +15,20 @@
   -->
 
 <template>
-	<Markers :layer-group="layerGroup" :set="markerSet"></Markers>
+	<MapMarkers :layer-group="layerGroup" :set="markerSet"></MapMarkers>
 </template>
 
 <script lang="ts">
-import {defineComponent, computed, onMounted, onUnmounted} from "@vue/runtime-core";
+import {defineComponent, computed, onMounted, onUnmounted, watch} from "vue";
+import {LiveAtlasMarkerSet} from "@/index";
 import {useStore} from "@/store";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
-import {LiveAtlasMarkerSet} from "@/index";
-import {watch} from "vue";
-import Markers from "@/components/map/marker/Markers.vue";
+import MapMarkers from "@/components/map/marker/MapMarkers.vue";
 
 export default defineComponent({
 	components: {
-		Markers,
+		MapMarkers,
 	},
 
 	props: {

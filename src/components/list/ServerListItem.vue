@@ -20,10 +20,10 @@
 </template>
 
 <script lang="ts">
-import {useStore} from "@/store";
 import {computed, defineComponent} from 'vue';
-import {MutationTypes} from "@/store/mutation-types";
 import {LiveAtlasServerDefinition} from "@/index";
+import {useStore} from "@/store";
+import {MutationTypes} from "@/store/mutation-types";
 
 export default defineComponent({
 	name: 'ServerListItem',

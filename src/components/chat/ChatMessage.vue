@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-	import {defineComponent, computed} from "@vue/runtime-core";
+	import {defineComponent, computed} from "vue";
 	import {useStore} from "@/store";
 	import {LiveAtlasChat} from "@/index";
 	import PlayerImage from "@/components/PlayerImage.vue";
