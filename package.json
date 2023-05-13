@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/dynmap": "3.1.2",
-    "@types/leaflet": "1.9.0",
+    "@types/leaflet": "1.9.3",
     "@types/lodash.debounce": "4.0.7",
     "@types/node": "18.11.18",
     "@typescript-eslint/eslint-plugin": "5.50.0",
