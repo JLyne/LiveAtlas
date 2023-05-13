@@ -392,7 +392,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint-community/eslint-utils@npm:^4.2.0":
+"@eslint-community/eslint-utils@npm:^4.2.0, @eslint-community/eslint-utils@npm:^4.3.0":
   version: 4.4.0
   resolution: "@eslint-community/eslint-utils@npm:4.4.0"
   dependencies:
@@ -2514,11 +2514,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-vue@npm:9.9.0":
-  version: 9.9.0
-  resolution: "eslint-plugin-vue@npm:9.9.0"
+"eslint-plugin-vue@npm:9.12.0":
+  version: 9.12.0
+  resolution: "eslint-plugin-vue@npm:9.12.0"
   dependencies:
-    eslint-utils: ^3.0.0
+    "@eslint-community/eslint-utils": ^4.3.0
     natural-compare: ^1.4.0
     nth-check: ^2.0.1
     postcss-selector-parser: ^6.0.9
@@ -2527,7 +2527,7 @@ __metadata:
     xml-name-validator: ^4.0.0
   peerDependencies:
     eslint: ^6.2.0 || ^7.0.0 || ^8.0.0
-  checksum: 059f9c1915504d074adf64bc3371d1e174f8844088d0e08800c958cbef09d7fdf2a0a949634187231645435a1ef31595c8c81f441000ec43589bb58a1282fe3c
+  checksum: 77727261d0137f88869f978c6ea2bafe002b6275e90e95849d0ed668bb87c295e21a562aa2ef8d5b884c67c142e245163fb3fca09a3a90ec49e7b3d4b416fa99
   languageName: node
   linkType: hard
 
@@ -3516,7 +3516,7 @@ __metadata:
     c8: 7.12.0
     cpy-cli: 4.2.0
     eslint: 8.33.0
-    eslint-plugin-vue: 9.9.0
+    eslint-plugin-vue: 9.12.0
     jsdom: ^21.1.0
     leaflet: "git+https://github.com/JLyne/Leaflet.git#36369c6ea69540c43e1b211e891c425c45f14a2e"
     lodash.debounce: 4.0.8
