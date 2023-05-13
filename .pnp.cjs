@@ -43,7 +43,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["c8", "npm:7.12.0"],\
             ["cpy-cli", "npm:4.2.0"],\
             ["eslint", "npm:8.33.0"],\
-            ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.9.0"],\
+            ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.12.0"],\
             ["jsdom", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:21.1.0"],\
             ["leaflet", "https://github.com/JLyne/Leaflet.git#commit=36369c6ea69540c43e1b211e891c425c45f14a2e"],\
             ["lodash.debounce", "npm:4.0.8"],\
@@ -1626,7 +1626,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/eslint-plugin", "virtual:eb8a53820f35302f9b38d9db7791344a5a03bfcb930f7977df61afa29746e303d3cedf4e84f27dd2e5c07df7bea6e29fc053d3f12fe15b210688fd27739f05f5#npm:5.36.1"],\
             ["@typescript-eslint/parser", "virtual:eb8a53820f35302f9b38d9db7791344a5a03bfcb930f7977df61afa29746e303d3cedf4e84f27dd2e5c07df7bea6e29fc053d3f12fe15b210688fd27739f05f5#npm:5.36.1"],\
             ["eslint", "npm:8.33.0"],\
-            ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.9.0"],\
+            ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.12.0"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"],\
             ["vue-eslint-parser", "virtual:eb8a53820f35302f9b38d9db7791344a5a03bfcb930f7977df61afa29746e303d3cedf4e84f27dd2e5c07df7bea6e29fc053d3f12fe15b210688fd27739f05f5#npm:9.0.3"]\
           ],\
@@ -3025,20 +3025,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["eslint-plugin-vue", [\
-        ["npm:9.9.0", {\
-          "packageLocation": "./.yarn/cache/eslint-plugin-vue-npm-9.9.0-2bc6a9fe58-059f9c1915.zip/node_modules/eslint-plugin-vue/",\
+        ["npm:9.12.0", {\
+          "packageLocation": "./.yarn/cache/eslint-plugin-vue-npm-9.12.0-b38aa8c1a6-77727261d0.zip/node_modules/eslint-plugin-vue/",\
           "packageDependencies": [\
-            ["eslint-plugin-vue", "npm:9.9.0"]\
+            ["eslint-plugin-vue", "npm:9.12.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.9.0", {\
-          "packageLocation": "./.yarn/__virtual__/eslint-plugin-vue-virtual-4c716d1359/0/cache/eslint-plugin-vue-npm-9.9.0-2bc6a9fe58-059f9c1915.zip/node_modules/eslint-plugin-vue/",\
+        ["virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.12.0", {\
+          "packageLocation": "./.yarn/__virtual__/eslint-plugin-vue-virtual-4c1f52dcd9/0/cache/eslint-plugin-vue-npm-9.12.0-b38aa8c1a6-77727261d0.zip/node_modules/eslint-plugin-vue/",\
           "packageDependencies": [\
-            ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.9.0"],\
+            ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.12.0"],\
+            ["@eslint-community/eslint-utils", "virtual:07865adc926c64717d588c71830d8f0b339a13f6eeeebf8b81bf4f247d7c3d80ca0681940873d41e4640009de4ff5dd124309635f14268ac32399f555fd36982#npm:4.4.0"],\
             ["@types/eslint", null],\
             ["eslint", "npm:8.33.0"],\
-            ["eslint-utils", "virtual:88a30ca58ae1dd283ee28a3984413c2813f8b87a6b09530b7593000a82051e4425c1ef44a17f1075a3579cf5405344f5322a0a040ab7a9482eb3a9280f7de570#npm:3.0.0"],\
             ["natural-compare", "npm:1.4.0"],\
             ["nth-check", "npm:2.1.1"],\
             ["postcss-selector-parser", "npm:6.0.10"],\
@@ -4126,7 +4126,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["c8", "npm:7.12.0"],\
             ["cpy-cli", "npm:4.2.0"],\
             ["eslint", "npm:8.33.0"],\
-            ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.9.0"],\
+            ["eslint-plugin-vue", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:9.12.0"],\
             ["jsdom", "virtual:6ef8ef7ca60c7401da286b58a80b5534fb43f151218d408f0670cd5c460fd9b3d979dd0bd893bd4a34bedd44bc2c3e08bddd1c15169ad152f800a088b793e74b#npm:21.1.0"],\
             ["leaflet", "https://github.com/JLyne/Leaflet.git#commit=36369c6ea69540c43e1b211e891c425c45f14a2e"],\
             ["lodash.debounce", "npm:4.0.8"],\
