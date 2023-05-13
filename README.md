@@ -1,4 +1,4 @@
-# LiveAtlas [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Discord](https://img.shields.io/discord/390942438061113344?color=8C9CFE&label=discord&logo=discord&logoColor=white)](https://discord.gg/DBduB9qyv3) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/JLyne/LiveAtlas/Build)](https://github.com/JLyne/LiveAtlas/actions)
+# LiveAtlas [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Discord](https://img.shields.io/discord/390942438061113344?color=8C9CFE&label=discord&logo=discord&logoColor=white)](https://discord.gg/DBduB9qyv3) [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/JLyne/LiveAtlas/main.yml?branch=master)](https://github.com/JLyne/LiveAtlas/actions)
 
 
 A map frontend built with [Vue.js](https://github.com/vuejs/vue) and Typescript. Supports [Dynmap](https://github.com/webbukkit/dynmap), [Squaremap](https://github.com/jpenilla/squaremap), [Pl3xmap](https://github.com/NeumimTo/Pl3xMap) and [Overviewer](https://github.com/overviewer/Minecraft-Overviewer).
