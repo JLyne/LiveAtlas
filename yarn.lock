@@ -3523,7 +3523,7 @@ __metadata:
     modern-normalize: 1.1.0
     rimraf: 4.1.2
     rollup-plugin-analyzer: 4.0.0
-    sass: 1.58.0
+    sass: 1.62.1
     ts-node: 10.9.1
     typescript: 4.9.5
     vite: 4.3.5
@@ -4630,16 +4630,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:1.58.0":
-  version: 1.58.0
-  resolution: "sass@npm:1.58.0"
+"sass@npm:1.62.1":
+  version: 1.62.1
+  resolution: "sass@npm:1.62.1"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: a7219634881d2de6441fb619787fb1a02e3fa0333fb715be26aa335ba49d6bdb4f1105d9df70a80a67200893022b08346745783dc49046095d94fc6e044492d6
+  checksum: 1b1b3584b38a63dd94156b65f13b90e3f84b170a38c3d5e3fa578b7a32a37aeb349b4926b0eaf9448d48e955e86b1ee01b13993f19611dad8068af07a607c13b
   languageName: node
   linkType: hard
 
