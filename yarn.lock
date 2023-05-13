@@ -3117,10 +3117,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leaflet@git+https://github.com/JLyne/Leaflet.git#5d1e0cc9b510d8384204602d6fa07f1e8686b902":
-  version: 1.9.2-LiveAtlas
-  resolution: "leaflet@https://github.com/JLyne/Leaflet.git#commit=5d1e0cc9b510d8384204602d6fa07f1e8686b902"
-  checksum: 252c2b656fea65934d25911a52138f370efe2796a30383e15f059ebb8b92b6bc40dd5dc8c18b4db5922e5a0bcb74000bee23ac300d37afe16687828eeb081e90
+"leaflet@git+https://github.com/JLyne/Leaflet.git#36369c6ea69540c43e1b211e891c425c45f14a2e":
+  version: 1.9.3
+  resolution: "leaflet@https://github.com/JLyne/Leaflet.git#commit=36369c6ea69540c43e1b211e891c425c45f14a2e"
+  checksum: b16b6c4657db3404b850d0778d98fdf6a293943a0f4fa2a26bdcd4d814900a8eae79f769263c9a51ff8cbc05f20947db8fac1668da15742ffa07403d33afb95c
   languageName: node
   linkType: hard
 
@@ -3172,7 +3172,7 @@ __metadata:
     eslint: 8.33.0
     eslint-plugin-vue: 9.9.0
     jsdom: ^21.1.0
-    leaflet: "git+https://github.com/JLyne/Leaflet.git#5d1e0cc9b510d8384204602d6fa07f1e8686b902"
+    leaflet: "git+https://github.com/JLyne/Leaflet.git#36369c6ea69540c43e1b211e891c425c45f14a2e"
     lodash.debounce: 4.0.8
     modern-normalize: 1.1.0
     rimraf: 4.1.2
@@ -4787,11 +4787,11 @@ __metadata:
 
 "typescript@patch:typescript@4.9.5#~builtin<compat/typescript>":
   version: 4.9.5
-  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ab417a2f398380c90a6cf5a5f74badd17866adf57f1165617d6a551f059c3ba0a3e4da0d147b3ac5681db9ac76a303c5876394b13b3de75fdd5b1eaa06181c9d
+  checksum: 1f8f3b6aaea19f0f67cba79057674ba580438a7db55057eb89cc06950483c5d632115c14077f6663ea76fd09fce3c190e6414bb98582ec80aa5a4eaf345d5b68
   languageName: node
   linkType: hard
 
