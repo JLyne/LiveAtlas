@@ -3588,7 +3588,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "live-atlas@workspace:."
   dependencies:
-    "@kyvg/vue3-notification": 2.8.0
+    "@kyvg/vue3-notification": 2.9.0
     "@soerenmartius/vue3-clipboard": 0.1.2
     "@types/dynmap": 3.1.2
     "@types/leaflet": 1.9.3
