@@ -27,104 +27,70 @@
         	// By default LiveAtlas looks for a dynmap standalone/config.js file
             // This configuration can be used instead to support Pl3xmap and Squaremap installations as well as multiple servers (external webserver required)
             // To configure multiple servers, see https://github.com/JLyne/LiveAtlas/wiki/Configuring-Multiple-Servers.
-            servers: {
-                earthmc: {
-                    label: 'EarthMC',
-                    dynmap: {
-                        configuration: 'http://dynmap.localhost/earthmc/up/configuration',
-                        update: 'http://dynmap.localhost/earthmc/up/world/{world}/{timestamp}',
-                        sendmessage: 'http://dynmap.localhost/earthmc/up/sendmessage',
-                        login: 'http://dynmap.localhost/earthmc/up/login',
-                        register: 'http://dynmap.localhost/earthmc/up/register',
-                        tiles: 'http://dynmap.localhost/earthmc/tiles/',
-                        markers: 'http://dynmap.localhost/earthmc/tiles/'
-                    }
-                },
-                pl3xmap: {
-                    label: 'Pl3xmap',
-                    pl3xmap: 'http://pl3xmap.localhost'
-                },
-                squaremap: {
-                    label: 'Squaremap',
-                    squaremap: 'http://squaremap.localhost'
-                },
-                overviewer: {
-					label: 'Overviewer',
-                    overviewer: 'http://dynmap.localhost/overviewer'
-                },
-                overviewer2: {
-					label: 'Overviewer 2',
-                    overviewer: 'http://dynmap.localhost/overviewer2'
-                },
-                overviewer3: {
-					label: 'Overviewer 3',
-                    overviewer: '/',
-                },
-                pl3x: {
-                    label: 'Pl3x',
-                    pl3xmap: 'http://dynmap.localhost/pl3x'
-                },
-                creative: {
-                    label: 'Creative',
-                    dynmap: {
-                        configuration: 'http://dynmap.localhost/rtgame/creative/MySQL_configuration.php',
-                        update: 'http://dynmap.localhost/rtgame/creative/MySQL_update.php?world={world}&ts={timestamp}',
-                        sendmessage: 'http://dynmap.localhost/rtgame/creative/MySQL_sendmessage.php',
-                        login: 'http://dynmap.localhost/rtgame/creative/MySQL_login.php',
-                        register: 'http://dynmap.localhost/rtgame/creative/MySQL_register.php',
-                        tiles: 'http://dynmap.localhost/rtgame/creative/MySQL_tiles.php?tile=',
-                        markers: 'http://dynmap.localhost/rtgame/creative/MySQL_markers.php?marker='
-                    }
-                },
-                survival: {
-                    label: 'Survival',
-                    dynmap: {
-                        configuration: 'http://dynmap.localhost/rtgame/survival/MySQL_configuration.php',
-                        update: 'http://dynmap.localhost/rtgame/survival/MySQL_update.php?world={world}&ts={timestamp}',
-                        sendmessage: 'http://dynmap.localhost/rtgame/survival/MySQL_sendmessage.php',
-                        login: 'http://dynmap.localhost/rtgame/survival/MySQL_login.php',
-                        register: 'http://dynmap.localhost/rtgame/survival/MySQL_register.php',
-                        tiles: 'http://dynmap.localhost/rtgame/survival/MySQL_tiles.php?tile=',
-                        markers: 'http://dynmap.localhost/rtgame/survival/MySQL_markers.php?marker='
-                    }
-                },
-                build: {
-                    label: 'Build',
-                    dynmap: {
-                        configuration: 'http://dynmap.localhost/rtgame/build/MySQL_configuration.php',
-                        update: 'http://dynmap.localhost/rtgame/build/MySQL_update.php?world={world}&ts={timestamp}',
-                        sendmessage: 'http://dynmap.localhost/rtgame/build/MySQL_sendmessage.php',
-                        login: 'http://dynmap.localhost/rtgame/build/MySQL_login.php',
-                        register: 'http://dynmap.localhost/rtgame/build/MySQL_register.php',
-                        tiles: 'http://dynmap.localhost/rtgame/build/MySQL_tiles.php?tile=',
-                        markers: 'http://dynmap.localhost/rtgame/build/MySQL_markers.php?marker='
-                    }
-                },
-                piratemc: {
-                    label: 'PirateMC',
-                    dynmap: {
-                        configuration: 'http://dynmap.localhost/piratemc/standalone/dynmap_config.json?_={timestamp}',
-                        update: 'http://dynmap.localhost/piratemc/standalone/dynmap_{world}.json?_={timestamp}',
-                        sendmessage: 'http://dynmap.localhost/piratemc/standalone/sendmessage.php',
-                        login: 'http://dynmap.localhost/piratemc/standalone/login.php',
-                        register: 'http://dynmap.localhost/piratemc/standalone/register.php',
-                        tiles: 'http://dynmap.localhost/piratemc/tiles/',
-                        markers: 'http://dynmap.localhost/piratemc/tiles/'
-                    }
-                },
-                test: {
-                    label: 'Local Test',
-                    dynmap: {
-                        configuration: 'http://dynmap.localhost/local/up/configuration',
-                        update: 'http://dynmap.localhost/local/up/world/{world}/{timestamp}',
-                        sendmessage: 'http://dynmap.localhost/local/up/sendmessage',
-                        login: 'http://dynmap.localhost/local/up/login',
-                        register: 'http://dynmap.localhost/local/up/register',
-                        tiles: 'http://dynmap.localhost/local/tiles/',
-                        markers: 'http://dynmap.localhost/local/tiles/'
-                    }
-                }
-            },
+
+            // Example Squaremap internal webserver configuration
+            // servers: {
+            //   squaremap: {
+            // 	   squaremap: window.location.pathname
+            //   },
+            // },
+
+            // Example Pl3xmap internal webserver configuration
+            // servers: {
+            //   pl3xmap: {
+            // 	   pl3xmap: window.location.pathname
+            //   },
+            // },
+
+            // Example Overviewer configuration
+            // servers: {
+            //   overviewer: {
+            // 	   overviewer: window.location.pathname
+            //   },
+            // },
+
+            // Example Dynmap internal webserver configuration without using standalone/config.js
+            // servers: {
+            //   dynmap: {
+            //     dynmap: {
+            //       configuration: 'standalone/dynmap_config.json?_={timestamp}',
+            //       update: 'standalone/dynmap_{world}.json?_={timestamp}',
+            //       sendmessage: 'standalone/sendmessage.php',
+            //       login: 'standalone/login.php',
+            //       register: 'standalone/register.php',
+            //       tiles: 'tiles/',
+            //       markers: 'tiles/'
+            //     }
+            //   },
+            // },
+
+            // Example multiple Dynmap servers on external webserver configuration
+            // servers: {
+            //   creative: {
+            //     label: 'Creative',
+            //     dynmap: {
+            //         configuration: 'http://dynmap.local/standalone/creative/MySQL_configuration.php',
+            //         update: 'http://dynmap.local/standalone/creative/MySQL_update.php?world={world}&ts={timestamp}',
+            //         sendmessage: 'http://dynmap.local/standalone/creative/MySQL_sendmessage.php',
+            //         login: 'http://dynmap.local/standalone/creative/MySQL_login.php',
+            //         register: 'http://dynmap.local/standalone/creative/MySQL_register.php',
+            //         tiles: 'http://dynmap.local/standalone/creative/MySQL_tiles.php?tile=',
+            //         markers: 'http://dynmap.local/standalone/creative/MySQL_markers.php?marker='
+            //     }
+            //   },
+            //   survival: {
+            //     label: 'Survival',
+            //     dynmap: {
+            //         configuration: 'http://dynmap.local/standalone/survival/MySQL_configuration.php',
+            //         update: 'http://dynmap.local/standalone/survival/MySQL_update.php?world={world}&ts={timestamp}',
+            //         sendmessage: 'http://dynmap.local/standalone/survival/MySQL_sendmessage.php',
+            //         login: 'http://dynmap.local/standalone/survival/MySQL_login.php',
+            //         register: 'http://dynmap.local/standalone/survival/MySQL_register.php',
+            //         tiles: 'http://dynmap.local/standalone/survival/MySQL_tiles.php?tile=',
+            //         markers: 'http://dynmap.local/standalone/survival/MySQL_markers.php?marker='
+			//     }
+            //   },
+            // },
 
             // These messages are used throughout LiveAtlas and can be translated here
             // If a message you want to translate isn't here, it is likely controlled by dynmap itself
