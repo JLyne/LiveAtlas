@@ -141,7 +141,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				if(worldResponse.player_tracker?.nameplates?.heads_url) {
 					worldConfig.components.players!.imageUrl = entry =>
 						worldResponse.player_tracker.nameplates.heads_url
-							.replace('{uuid}', entry.uuid).replace('{name}', entry.name);
+							.replace('{uuid}', entry.uuid).replace('{name}', encodeURIComponent(entry.name));
 				}
 
 				worldConfig.components.players!.markers = {
@@ -254,7 +254,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	}
 
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
-		const url = `${this.config}tiles/${world.name}/markers.json`;
+		const url = `${this.config}tiles/${encodeURIComponent(world.name)}/markers.json`;
 
 		if(this.markersAbort) {
 			this.markersAbort.abort();

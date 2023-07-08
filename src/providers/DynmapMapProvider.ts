@@ -89,7 +89,7 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
-		const url = `${this.config.markers}_markers_/marker_${world.name}.json`;
+		const url = `${this.config.markers}_markers_/marker_${encodeURIComponent(world.name)}.json`;
 
 		if(this.markersAbort) {
 			this.markersAbort.abort();

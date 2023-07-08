@@ -163,7 +163,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 			y = scale * coords.y;
 
 		return {
-			prefix: this.options.prefix || '',
+			prefix: encodeURIComponent(this.options.prefix || ''),
 			nightday: (this.options.nightAndDay && !this._night.value) ? '_day' : '',
 			scaledx: x >> 5,
 			scaledy: y >> 5,
