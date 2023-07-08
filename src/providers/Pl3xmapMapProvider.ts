@@ -66,7 +66,9 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	constructor(config: string) {
 		super(config);
 
-		if(!this.config) {
+		if(this.config === true) {
+			this.config = window.location.pathname;
+		} else if(!this.config) {
 			throw new ConfigurationError("URL missing");
 		}
 
