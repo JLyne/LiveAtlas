@@ -162,7 +162,7 @@ export default class DynmapMapProvider extends MapProvider {
 
 	private async getUpdate(): Promise<void> {
 		let url = this.config.update;
-		url = url.replace('{world}', this.store.state.currentWorld!.name);
+		url = url.replace('{world}', encodeURIComponent(this.store.state.currentWorld!.name));
 		url = url.replace('{timestamp}', this.updateTimestamp.getTime().toString());
 
 		if(this.updateAbort) {
