@@ -33,9 +33,8 @@ import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import MapProvider from "@/providers/MapProvider";
-import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex} from "@/util";
+import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex, validateConfigURL} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
-import ConfigurationError from "@/errors/ConfigurationError";
 import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
 import {getDefaultPlayerImage} from "@/util/images";
@@ -63,14 +62,14 @@ export default class Pl3xmapMapProvider extends MapProvider {
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 
-	constructor(config: string) {
-		super(config);
+	constructor(name: string, config: string) {
+		super(name, config);
 
 		if(this.config === true) {
 			this.config = window.location.pathname;
-		} else if(!this.config) {
-			throw new ConfigurationError("URL missing");
 		}
+
+		validateConfigURL(config, name, 'map');
 
 		if(this.config.slice(-1) !== '/') {
 			this.config = `${config}/`;

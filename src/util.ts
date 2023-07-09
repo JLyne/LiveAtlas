@@ -26,6 +26,7 @@ import {
 import {Store} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {globalMessages, serverMessages} from "../messages";
+import ConfigurationError from "@/errors/ConfigurationError";
 
 const documentRange = document.createRange(),
 	brToSpaceRegex = /<br \/>/g;
@@ -189,6 +190,25 @@ export const getUrlForLocation = (map: LiveAtlasMapDefinition, location: Coordin
 		}
 
 		return `#${map.world.name};${map.name};${locationString};${zoom}`;
+}
+
+/**
+ * Validates a configured map URL, warning on cross-origin and erroring if the URL is invalid.
+ * @param input
+ * @param server
+ * @param key
+ */
+export const validateConfigURL = (input: any, server: string, key: string): void => {
+	try {
+		const url = new URL(input, window.location.href);
+
+		if(url.origin !== window.location.origin) {
+			console.warn(`[${server}]: ${key} URL is on a different origin to LiveAtlas (${url.origin} vs ${window.location.origin}).\nEnsure you have configured appropriate CORS headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)`);
+		}
+	} catch(e) {
+		console.error(`[${server}]: ${key} URL (${input}) is missing or invalid.`);
+		throw new ConfigurationError(`${key} URL is missing or invalid`);
+	}
 }
 
 /**

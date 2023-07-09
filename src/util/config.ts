@@ -74,7 +74,7 @@ const loadLiveAtlasConfig = (config: any): Map<string, LiveAtlasServerDefinition
 		for (const mapProvider of registeredProviders) {
 			if(serverConfig && Object.hasOwnProperty.call(serverConfig, mapProvider[0])) {
 				try {
-					serverProviders.set(server, new mapProvider[1](serverConfig[mapProvider[0]]));
+					serverProviders.set(server, new mapProvider[1](server, serverConfig[mapProvider[0]]));
 				} catch(e: any) {
 					e.message = `Server "${server}": ${e.message}. ${check}`;
 					throw e;
@@ -111,7 +111,7 @@ const loadDefaultConfig = (config: DynmapUrlConfig): Map<string, LiveAtlasServer
 	});
 
 	try {
-		serverProviders.set('dynmap', new DynmapMapProvider(config));
+		serverProviders.set('dynmap', new DynmapMapProvider('dynmap', config));
 	} catch (e: any) {
 		e.message = `${e.message}. ${check}`;
 		throw e;

@@ -24,9 +24,11 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default abstract class MapProvider implements LiveAtlasMapProvider {
 	protected readonly store = useStore();
+	protected name: string;
 	protected config: any;
 
-	protected constructor(config: any) {
+	protected constructor(name: string, config: any) {
+		this.name = name;
 		this.config = config;
 	}
 

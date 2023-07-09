@@ -41,6 +41,7 @@ import {
 import ConfigurationError from "@/errors/ConfigurationError";
 import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {validateConfigURL} from "@/util";
 
 export default class DynmapMapProvider extends MapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -55,8 +56,8 @@ export default class DynmapMapProvider extends MapProvider {
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 
-	constructor(config: DynmapUrlConfig) {
-		super(config);
+	constructor(name: string, config: DynmapUrlConfig) {
+		super(name, config);
 		this.validateConfig();
 	}
 
@@ -66,25 +67,11 @@ export default class DynmapMapProvider extends MapProvider {
 				throw new ConfigurationError(`Dynmap configuration object missing`);
 			}
 
-			if (!this.config.configuration) {
-				throw new ConfigurationError(`Dynmap configuration URL missing`);
-			}
-
-			if (!this.config.update) {
-				throw new ConfigurationError(`Dynmap update URL missing`);
-			}
-
-			if (!this.config.markers) {
-				throw new ConfigurationError(`Dynmap markers URL missing`);
-			}
-
-			if (!this.config.tiles) {
-				throw new ConfigurationError(`Dynmap tiles URL missing`);
-			}
-
-			if (!this.config.sendmessage) {
-				throw new ConfigurationError(`Dynmap sendmessage URL missing`);
-			}
+			validateConfigURL(this.config.configuration, this.name, 'configuration');
+			validateConfigURL(this.config.update, this.name,'update');
+			validateConfigURL(this.config.markers, this.name,'markers');
+			validateConfigURL(this.config.tiles, this.name,'tiles');
+			validateConfigURL(this.config.sendmessage, this.name,'sendmessage');
 		}
 	}
 
