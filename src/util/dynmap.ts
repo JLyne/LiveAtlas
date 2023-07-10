@@ -70,6 +70,7 @@ export function buildServerConfig(response: Options): LiveAtlasServerConfig {
 		followMap: response.followmap || undefined,
 		followZoom: isNaN(followZoom) ? undefined : followZoom,
 		title: title,
+		singleMapWorlds: false,
 		expandUI: !!response.sidebaropened && response.sidebaropened !== 'false', //Sent as a string for some reason
 	};
 }

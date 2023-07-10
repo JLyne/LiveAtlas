@@ -64,6 +64,7 @@ export default class OverviewerMapProvider extends MapProvider {
 	private static buildServerConfig(ignore: any): LiveAtlasServerConfig {
 		return {
 			title: useStore().state.initialTitle,
+			singleMapWorlds: false,
 
 			//Not used by overviewer
 			expandUI: false,

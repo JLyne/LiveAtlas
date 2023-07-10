@@ -80,6 +80,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		return {
 			title: (response.ui?.title || 'Pl3xmap').replace(titleColoursRegex, ''),
 			expandUI: response.ui?.sidebar?.pinned === 'pinned',
+			singleMapWorlds: true,
 
 			//Not used by pl3xmap
 			defaultZoom: 1,

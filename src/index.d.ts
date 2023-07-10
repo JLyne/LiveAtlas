@@ -267,6 +267,7 @@ interface LiveAtlasServerConfig {
 	followZoom?: number;
 	title: string;
 	expandUI: boolean;
+	singleMapWorlds: boolean;
 }
 
 interface LiveAtlasComponentConfig {

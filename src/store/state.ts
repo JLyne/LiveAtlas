@@ -120,6 +120,7 @@ export const state: State = {
 		followZoom: 0,
 		title: '',
 		expandUI: false,
+		singleMapWorlds: false,
 	},
 	configurationHash: undefined,
 
