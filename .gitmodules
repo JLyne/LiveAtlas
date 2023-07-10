@@ -1,0 +1,4 @@
+[submodule "bluemap"]
+	path = bluemap
+	url = https://github.com/BlueMap-Minecraft/BlueMap
+    branch = master
