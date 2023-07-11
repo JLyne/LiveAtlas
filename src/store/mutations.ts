@@ -16,7 +16,6 @@
 
 import {MutationTree} from "vuex";
 import {
-	Coordinate,
 	LiveAtlasWorldState,
 	LiveAtlasSidebarSection,
 	LiveAtlasSortedPlayers,
@@ -35,7 +34,11 @@ import {
 	LiveAtlasMarker,
 	LiveAtlasMapViewTarget,
 	LiveAtlasGlobalMessageConfig,
-	LiveAtlasUIConfig, LiveAtlasServerDefinition, LiveAtlasLayerDefinition, LiveAtlasPartialLayerDefinition
+	LiveAtlasUIConfig,
+	LiveAtlasServerDefinition,
+	LiveAtlasLayerDefinition,
+	LiveAtlasPartialLayerDefinition,
+	LiveAtlasPartialMapState
 } from "@/index";
 import {
 	DynmapMarkerSetUpdate, DynmapMarkerUpdate,
@@ -81,8 +84,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_LOADED](state: S, a?: void): void
 	[MutationTypes.SET_CURRENT_SERVER](state: S, server: string): void
 	[MutationTypes.SET_CURRENT_MAP](state: S, payload: CurrentMapPayload): void
-	[MutationTypes.SET_CURRENT_LOCATION](state: S, payload: Coordinate): void
-	[MutationTypes.SET_CURRENT_ZOOM](state: S, payload: number): void
+	[MutationTypes.SET_MAP_STATE](state: S, payload: LiveAtlasPartialMapState): void
 	[MutationTypes.SET_PARSED_URL](state: S, payload: LiveAtlasParsedUrl): void
 	[MutationTypes.CLEAR_PARSED_URL](state: S): void
 	[MutationTypes.SET_FOLLOW_TARGET](state: S, payload: LiveAtlasPlayer): void
@@ -478,14 +480,9 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentMap = state.maps.get(mapName);
 	},
 
-	//Sets the current location the map is showing. This is called by the map itself, and calling elsewhere will not update the map.
-	[MutationTypes.SET_CURRENT_LOCATION](state: State, payload: Coordinate) {
-		state.currentLocation = payload;
-	},
-
-	//Sets the current zoom level of the map. This is called by the map itself, and calling elsewhere will not update the map.
-	[MutationTypes.SET_CURRENT_ZOOM](state: State, payload: number) {
-		state.currentZoom = payload;
+	//Sets the current state of the map. This is called by the map itself, and calling elsewhere will not update the map.
+	[MutationTypes.SET_MAP_STATE](state: State, payload: LiveAtlasPartialMapState) {
+		state.currentMapState = Object.assign(state.currentMapState, payload);
 	},
 
 	//Sets the result of parsing the current map url, if present and valid
@@ -612,8 +609,8 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.layers.clear();
 		state.sortedLayers.splice(0);
 
-		state.currentZoom = 0;
-		state.currentLocation = {x: 0, y: 0, z: 0};
+		state.currentMapState.zoom = 0;
+		state.currentMapState.location = {x: 0, y: 0, z: 0};
 
 		state.currentWorldState.timeOfDay = undefined;
 		state.currentWorldState.raining = false;

@@ -167,6 +167,16 @@ interface LiveAtlasWorldState {
 	timeOfDay?: number;
 }
 
+interface LiveAtlasMapState {
+	zoom: number;
+	location: Coordinate;
+}
+
+interface LiveAtlasPartialMapState {
+	zoom?: number;
+	location?: Coordinate;
+}
+
 interface LiveAtlasLayerDefinition {
 	layer: Layer;
 	overlay: boolean;

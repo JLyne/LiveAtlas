@@ -79,7 +79,7 @@ export const getters: GetterTree<State, State> & Getters = {
 			return '';
 		}
 
-		return getUrlForLocation(state.currentMap, state.currentLocation, state.currentZoom);
+		return getUrlForLocation(state.currentMap, state.currentMapState.location, state.currentMapState.zoom);
 	},
 
 	pageTitle(state: State): string {

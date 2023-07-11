@@ -246,13 +246,13 @@ export default defineComponent({
 
 		this.leaflet.on('moveend', () => {
 			if(this.currentMap) {
-				useStore().commit(MutationTypes.SET_CURRENT_LOCATION, this.currentMap
-					.latLngToLocation(this.leaflet!.getCenter(), 64));
+				useStore().commit(MutationTypes.SET_MAP_STATE, {location: this.currentMap
+					.latLngToLocation(this.leaflet!.getCenter(), 64)});
 			}
 		});
 
 		this.leaflet.on('zoomend', () => {
-			useStore().commit(MutationTypes.SET_CURRENT_ZOOM, this.leaflet!.getZoom());
+			useStore().commit(MutationTypes.SET_MAP_STATE, {zoom: this.leaflet!.getZoom()});
 		});
 	},
 

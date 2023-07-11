@@ -15,7 +15,6 @@
  */
 
 import {
-	Coordinate,
 	LiveAtlasWorldState,
 	LiveAtlasServerDefinition,
 	LiveAtlasSidebarSection,
@@ -31,7 +30,7 @@ import {
 	LiveAtlasChat,
 	LiveAtlasUIModal,
 	LiveAtlasSidebarSectionState,
-	LiveAtlasMarker, LiveAtlasMapViewTarget, LiveAtlasLayerDefinition
+	LiveAtlasMarker, LiveAtlasMapViewTarget, LiveAtlasLayerDefinition, LiveAtlasMapState
 } from "@/index";
 import {
 	DynmapMarkerUpdate,
@@ -83,8 +82,7 @@ export type State = {
 	currentWorldState: LiveAtlasWorldState;
 	currentWorld?: LiveAtlasWorldDefinition;
 	currentMap?: LiveAtlasMapDefinition;
-	currentLocation: Coordinate;
-	currentZoom: number;
+	currentMapState: LiveAtlasMapState;
 
 	ui: {
 		playersAboveMarkers: boolean;
@@ -222,12 +220,14 @@ export const state: State = {
 	currentServer: undefined,
 	currentWorld: undefined,
 	currentMap: undefined,
-	currentLocation: {
-		x: 0,
-		y: 0,
-		z: 0,
+	currentMapState: {
+		location: {
+			x: 0,
+			y: 0,
+			z: 0,
+		},
+		zoom: 0,
 	},
-	currentZoom: 0,
 	currentWorldState: {
 		raining: false,
 		thundering: false,

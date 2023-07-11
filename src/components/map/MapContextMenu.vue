@@ -71,7 +71,7 @@ export default defineComponent({
 			menuVisible = computed(() => !!event.value),
 
 			currentMap = computed(() => store.state.currentMap),
-			currentZoom = computed(() => store.state.currentZoom),
+			currentZoom = computed(() => store.state.currentMapState.zoom),
 			mapCount = computed(() => {
 				if(!currentMap.value) {
 					return 0;
