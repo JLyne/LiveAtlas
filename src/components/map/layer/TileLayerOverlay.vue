@@ -36,7 +36,7 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore();
 
-		let layer = store.state.currentMapProvider!.createTileLayer(Object.freeze(JSON.parse(JSON.stringify(props.options.tileLayerOptions))));
+		let layer = store.getters.currentMapProvider!.createTileLayer(Object.freeze(JSON.parse(JSON.stringify(props.options.tileLayerOptions))));
 
 		store.commit(MutationTypes.ADD_LAYER, {
 			layer: markRaw(layer),

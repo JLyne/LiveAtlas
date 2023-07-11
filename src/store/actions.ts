@@ -85,7 +85,7 @@ export const actions: ActionTree<State, State> & Actions = {
 		commit(MutationTypes.SET_SERVERS, config.servers)
 	},
 
-	async [ActionTypes.LOAD_CONFIGURATION]({commit, state, dispatch}): Promise<void> {
+	async [ActionTypes.LOAD_CONFIGURATION]({commit, state, getters, dispatch}): Promise<void> {
 		await dispatch(ActionTypes.STOP_UPDATES, undefined);
 		commit(MutationTypes.RESET, undefined);
 
@@ -94,7 +94,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			return;
 		}
 
-		await state.currentMapProvider!.loadServerConfiguration();
+		await getters.currentMapProvider!.loadServerConfiguration();
 
 		//Skip default map/ui visibility logic if we already have a map selected (i.e config reload after hash change)
 		if(state.currentMap) {
@@ -155,17 +155,17 @@ export const actions: ActionTree<State, State> & Actions = {
 		await nextTick(() => commit(MutationTypes.SET_LOADED, undefined));
 	},
 
-	async [ActionTypes.START_UPDATES]({state}) {
+	async [ActionTypes.START_UPDATES]({state, getters}) {
 		if(!state.currentWorld) {
 			return Promise.reject("No current world");
 		}
 
-		state.currentMapProvider!.startUpdates();
+		getters.currentMapProvider!.startUpdates();
 		startUpdateHandling();
 	},
 
-	async [ActionTypes.STOP_UPDATES]({state}) {
-		state.currentMapProvider!.stopUpdates();
+	async [ActionTypes.STOP_UPDATES]({getters}) {
+		getters.currentMapProvider!.stopUpdates();
 		stopUpdateHandling();
 	},
 
@@ -219,13 +219,13 @@ export const actions: ActionTree<State, State> & Actions = {
 		return updates;
 	},
 
-	async [ActionTypes.SEND_CHAT_MESSAGE]({state}, message: string): Promise<void> {
-		await state.currentMapProvider!.sendChatMessage(message);
+	async [ActionTypes.SEND_CHAT_MESSAGE]({state, getters}, message: string): Promise<void> {
+		await getters.currentMapProvider!.sendChatMessage(message);
 	},
 
-	async [ActionTypes.LOGIN]({state, commit}, data: any): Promise<void> {
+	async [ActionTypes.LOGIN]({state, getters, commit}, data: any): Promise<void> {
 		if(data) {
-			await state.currentMapProvider!.login(data);
+			await getters.currentMapProvider!.login(data);
 		} else {
 			if(state.ui.customLoginUrl) {
 				window.location.href = state.ui.customLoginUrl;
@@ -235,11 +235,11 @@ export const actions: ActionTree<State, State> & Actions = {
 		}
 	},
 
-	async [ActionTypes.LOGOUT]({state}): Promise<void> {
-		await state.currentMapProvider!.logout();
+	async [ActionTypes.LOGOUT]({getters}): Promise<void> {
+		await getters.currentMapProvider!.logout();
 	},
 
-	async [ActionTypes.REGISTER]({state}, data: any): Promise<void> {
-		await state.currentMapProvider!.register(data);
+	async [ActionTypes.REGISTER]({getters}, data: any): Promise<void> {
+		await getters.currentMapProvider!.register(data);
 	},
 }

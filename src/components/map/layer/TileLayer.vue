@@ -37,7 +37,7 @@ export default defineComponent({
 		const store = useStore(),
 			active = computed(() => props.options instanceof LiveAtlasMapDefinition && props.options === store.state.currentMap);
 
-		let layer = store.state.currentMapProvider!.createTileLayer(Object.freeze(JSON.parse(JSON.stringify(props.options))));
+		let layer = store.getters.currentMapProvider!.createTileLayer(Object.freeze(JSON.parse(JSON.stringify(props.options))));
 
 		const enableLayer = () => props.leaflet.addLayer(layer),
 			disableLayer = () => layer.remove();
