@@ -28,7 +28,7 @@ import {
 } from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import MapProvider from "@/providers/MapProvider";
+import AbstractMapProvider from "@/providers/AbstractMapProvider";
 import {
 	getBoundsFromPoints,
 	getMiddle,
@@ -36,14 +36,15 @@ import {
 	runSandboxed,
 	stripHTML, validateConfigURL,
 } from "@/util";
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {OverviewerTileLayer} from "@/leaflet/tileLayer/OverviewerTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {getDefaultPlayerImage} from "@/util/images";
+import {TileLayer} from "leaflet";
 
-export default class OverviewerMapProvider extends MapProvider {
+export default class OverviewerMapProvider extends AbstractMapProvider {
 	private configurationAbort?: AbortController = undefined;
 	private markersAbort?: AbortController = undefined;
 	private readonly markersRegex: RegExp = /^overviewer.util.injectMarkerScript\('([\w.]+)'\);?$/mgi;
@@ -393,7 +394,7 @@ export default class OverviewerMapProvider extends MapProvider {
 		this.store.commit(MutationTypes.SET_MARKERS, this.mapMarkers.get(map.name) || new Map());
 	}
 
-	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer {
+	createTileLayer(options: LiveAtlasTileLayerOptions): TileLayer {
 		return new OverviewerTileLayer(options);
 	}
 }

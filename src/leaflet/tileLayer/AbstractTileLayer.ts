@@ -42,7 +42,7 @@ export interface LiveAtlasTileLayerInternalOptions extends TileLayerOptions {
 }
 
 // noinspection JSUnusedGlobalSymbols
-export abstract class LiveAtlasTileLayer extends TileLayer {
+export abstract class AbstractTileLayer extends TileLayer {
 	declare options: LiveAtlasTileLayerInternalOptions;
 	declare _tiles: LiveAtlasInternalTiles;
 	declare _url: string;
@@ -105,7 +105,7 @@ export abstract class LiveAtlasTileLayer extends TileLayer {
 		};
 
 		tile.onerror = () => {
-			this._tileOnError(done, tile, LiveAtlasTileLayer.genericLoadError);
+			this._tileOnError(done, tile, AbstractTileLayer.genericLoadError);
 			this.loadingTiles.delete(tile);
 			this.tickLoadQueue();
 		};

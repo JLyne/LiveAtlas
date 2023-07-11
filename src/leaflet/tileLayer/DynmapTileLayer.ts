@@ -23,11 +23,11 @@ import {TileInformation} from "dynmap";
 import {Coordinate, Coordinate2D} from "@/index";
 import {Store, useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {AbstractTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 
 
 // noinspection JSUnusedGlobalSymbols
-export class DynmapTileLayer extends LiveAtlasTileLayer {
+export class DynmapTileLayer extends AbstractTileLayer {
 	private readonly _namedTiles: Map<any, any>;
 	private readonly _store: Store = useStore();
 

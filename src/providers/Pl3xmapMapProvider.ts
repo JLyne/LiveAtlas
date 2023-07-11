@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {PointTuple} from "leaflet";
+import {PointTuple, TileLayer} from "leaflet";
 import {
 	LiveAtlasAreaMarker,
 	LiveAtlasCircleMarker,
@@ -32,14 +32,14 @@ import {
 import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import MapProvider from "@/providers/MapProvider";
+import AbstractMapProvider from "@/providers/AbstractMapProvider";
 import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex, validateConfigURL} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {getDefaultPlayerImage} from "@/util/images";
 
-export default class Pl3xmapMapProvider extends MapProvider {
+export default class Pl3xmapMapProvider extends AbstractMapProvider {
 	private configurationAbort?: AbortController = undefined;
 	private	markersAbort?: AbortController = undefined;
 	private	playersAbort?: AbortController = undefined;
@@ -489,7 +489,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 		this.markers.clear();
 	}
 
-	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer {
+	createTileLayer(options: LiveAtlasTileLayerOptions): TileLayer {
 		return new Pl3xmapTileLayer(options);
 	}
 

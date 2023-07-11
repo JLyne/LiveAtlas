@@ -28,7 +28,7 @@ import {DynmapUrlConfig} from "@/dynmap";
 import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import ChatError from "@/errors/ChatError";
-import MapProvider from "@/providers/MapProvider";
+import AbstractMapProvider from "@/providers/AbstractMapProvider";
 import {
 	buildAreas,
 	buildCircles, buildComponents,
@@ -40,10 +40,11 @@ import {
 } from "@/util/dynmap";
 import ConfigurationError from "@/errors/ConfigurationError";
 import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {validateConfigURL} from "@/util";
+import {TileLayer} from "leaflet";
 
-export default class DynmapMapProvider extends MapProvider {
+export default class DynmapMapProvider extends AbstractMapProvider {
 	private configurationAbort?: AbortController = undefined;
 	private	markersAbort?: AbortController = undefined;
 	private	updateAbort?: AbortController = undefined;
@@ -143,7 +144,7 @@ export default class DynmapMapProvider extends MapProvider {
 		this.markers.clear();
 	}
 
-	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer {
+	createTileLayer(options: LiveAtlasTileLayerOptions): TileLayer {
 		return new DynmapTileLayer(options);
 	}
 
@@ -393,7 +394,7 @@ export default class DynmapMapProvider extends MapProvider {
 	}
 
 	protected async getJSON(url: string, signal: AbortSignal) {
-		return MapProvider.fetchJSON(url, {signal, credentials: 'include'}).then(response => {
+		return AbstractMapProvider.fetchJSON(url, {signal, credentials: 'include'}).then(response => {
 			if(response.error === 'login-required') {
 				this.store.commit(MutationTypes.SET_LOGIN_REQUIRED, true);
 				throw new Error("Login required");

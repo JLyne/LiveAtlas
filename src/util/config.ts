@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-import {LiveAtlasGlobalConfig, LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasGlobalConfig, LiveAtlasMapProvider, LiveAtlasServerDefinition} from "@/index";
 import {DynmapUrlConfig} from "@/dynmap";
 import {useStore} from "@/store";
 import ConfigurationError from "@/errors/ConfigurationError";
-import MapProvider from "@/providers/MapProvider";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
 const expectedConfigVersion = 1,
-	registeredProviders: Map<string, new (name: string, config: any) => MapProvider> = new Map();
+	registeredProviders: Map<string, new (name: string, config: any) => LiveAtlasMapProvider> = new Map();
 
 /**
- * Registers the given {@link MapProvider} with the given id
- * Server entries in {@link LiveAtlasGlobalConfig} with the given id will use the given MapProvider
+ * Registers the given {@link LiveAtlasMapProvider} with the given id
+ * Server entries in {@link LiveAtlasGlobalConfig} with the given id will use the given provider
  * @param {string} id The id
- * @param {new (name: string, config: any) => MapProvider} provider The MapProvider
+ * @param {new (name: string, config: any) => LiveAtlasMapProvider} provider The provider
  */
-export const registerMapProvider = (id: string, provider: new (name: string, config: any) => MapProvider) => {
+export const registerMapProvider = (id: string, provider: new (name: string, config: any) => LiveAtlasMapProvider) => {
 	if(registeredProviders.has(id)) {
 		throw new TypeError(`${id} is already registered`);
 	}

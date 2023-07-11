@@ -18,10 +18,10 @@
  */
 
 import {Coords, Util} from "leaflet";
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {AbstractTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 
 // noinspection JSUnusedGlobalSymbols
-export class OverviewerTileLayer extends LiveAtlasTileLayer {
+export class OverviewerTileLayer extends AbstractTileLayer {
 	constructor(options: LiveAtlasTileLayerOptions) {
 		super(options);
 

@@ -15,10 +15,10 @@
  */
 
 import {Util} from "leaflet";
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {AbstractTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 
 // noinspection JSUnusedGlobalSymbols
-export class Pl3xmapTileLayer extends LiveAtlasTileLayer {
+export class Pl3xmapTileLayer extends AbstractTileLayer {
 	constructor(map: LiveAtlasTileLayerOptions) {
 		super(map);
 		this._url = `${map.baseUrl}{z}/{x}_{y}.png`;

@@ -19,10 +19,11 @@ import {
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {useStore} from "@/store";
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {TileLayer} from "leaflet";
 
-export default abstract class MapProvider implements LiveAtlasMapProvider {
+export default abstract class AbstractMapProvider implements LiveAtlasMapProvider {
 	protected readonly store = useStore();
 	protected name: string;
 	protected config: any;
@@ -33,7 +34,7 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 	}
 
 	abstract loadServerConfiguration(): Promise<void>;
-	abstract createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer;
+	abstract createTileLayer(options: LiveAtlasTileLayerOptions): TileLayer;
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {}
@@ -121,10 +122,10 @@ export default abstract class MapProvider implements LiveAtlasMapProvider {
 	}
 
 	protected static async getText(url: string, signal: AbortSignal) {
-		return MapProvider.fetchText(url, {signal, credentials: 'include'});
+		return AbstractMapProvider.fetchText(url, {signal, credentials: 'include'});
 	}
 
 	protected static async getJSON(url: string, signal: AbortSignal) {
-		return MapProvider.fetchJSON(url, {signal, credentials: 'include'});
+		return AbstractMapProvider.fetchJSON(url, {signal, credentials: 'include'});
 	}
 }

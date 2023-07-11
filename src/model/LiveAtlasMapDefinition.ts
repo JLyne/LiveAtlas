@@ -17,7 +17,7 @@
 import {LatLng} from "leaflet";
 import {ImageFormat} from "dynmap";
 import {Coordinate, LiveAtlasProjection, LiveAtlasTileLayerOverlay, LiveAtlasWorldDefinition} from "@/index";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 
 export interface LiveAtlasMapDefinitionOptions extends LiveAtlasTileLayerOptions {
 	world: LiveAtlasWorldDefinition;
