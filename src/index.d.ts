@@ -99,10 +99,7 @@ interface LiveAtlasGlobalConfig {
 interface LiveAtlasServerDefinition {
 	id: string;
 	label?: string;
-	dynmap?: DynmapUrlConfig;
-	pl3xmap?: string;
-	squaremap?: string;
-	overviewer?: string;
+	mapProvider: LiveAtlasMapProvider;
 }
 
 // Messages defined directly in LiveAtlas and used for all servers

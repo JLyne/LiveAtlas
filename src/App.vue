@@ -172,7 +172,7 @@ export default defineComponent({
 			loadingAttempts.value = 0;
 			window.history.replaceState({}, '', newServer.id);
 			loadConfiguration();
-		}, {deep: true});
+		});
 		watch(configurationHash, async (newHash, oldHash) => {
 			if(newHash && oldHash) {
 				await loadConfiguration();

@@ -95,6 +95,6 @@ export const getters: GetterTree<State, State> & Getters = {
 	},
 
 	currentMapProvider(state: State): LiveAtlasMapProvider | undefined {
-		return state.currentMapProvider;
+		return state.currentServer?.mapProvider;
 	}
 }

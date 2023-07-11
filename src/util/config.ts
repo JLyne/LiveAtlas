@@ -22,8 +22,7 @@ import MapProvider from "@/providers/MapProvider";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
 const expectedConfigVersion = 1,
-	registeredProviders: Map<string, new (name: string, config: any) => MapProvider> = new Map(),
-	serverProviders: Map<string, MapProvider> = new Map();
+	registeredProviders: Map<string, new (name: string, config: any) => MapProvider> = new Map();
 
 /**
  * Registers the given {@link MapProvider} with the given id
@@ -37,15 +36,6 @@ export const registerMapProvider = (id: string, provider: new (name: string, con
 	}
 
 	registeredProviders.set(id, provider);
-}
-
-/**
- * Gets the MapProvider for the given server
- * @param {string} server Name of the server
- * @returns The MapProvider, if one exists
- */
-export const getServerMapProvider = (server: string): MapProvider | undefined => {
-	return serverProviders.get(server);
 }
 
 /**
@@ -74,22 +64,22 @@ const loadLiveAtlasConfig = (config: any): Map<string, LiveAtlasServerDefinition
 		for (const mapProvider of registeredProviders) {
 			if(serverConfig && Object.hasOwnProperty.call(serverConfig, mapProvider[0])) {
 				try {
-					serverProviders.set(server, new mapProvider[1](server, serverConfig[mapProvider[0]]));
+					result.set(server, Object.freeze({
+						id: server,
+						label: serverConfig.label,
+						mapProvider: new mapProvider[1](server, serverConfig[mapProvider[0]])
+					}));
+					foundProvider = true;
 				} catch(e: any) {
 					e.message = `Server "${server}": ${e.message}. ${check}`;
 					throw e;
 				}
-
-				result.set(server, serverConfig);
-				foundProvider = true;
 			}
 		}
 
 		if(!foundProvider) {
 			throw new ConfigurationError(`Server "${server}": No configuration found for any supported map type. ${check}`);
 		}
-
-		serverConfig.id = server;
 	}
 
 	return result;
@@ -104,14 +94,13 @@ const loadLiveAtlasConfig = (config: any): Map<string, LiveAtlasServerDefinition
 const loadDefaultConfig = (config: DynmapUrlConfig): Map<string, LiveAtlasServerDefinition> => {
 	const check = '\nCheck your standalone/config.js file exists and is being loaded correctly.';
 	const result = new Map<string, LiveAtlasServerDefinition>();
-	result.set('dynmap', {
-		id: 'dynmap',
-		label: 'dynmap',
-		dynmap: config
-	});
 
 	try {
-		serverProviders.set('dynmap', new DynmapMapProvider('dynmap', config));
+		result.set('dynmap', Object.freeze({
+			id: 'dynmap',
+			label: 'dynmap',
+			mapProvider: new DynmapMapProvider('dynmap', config),
+		}));
 	} catch (e: any) {
 		e.message = `${e.message}. ${check}`;
 		throw e;

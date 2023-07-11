@@ -43,7 +43,6 @@ import {
 } from "@/dynmap";
 import {MutationTypes} from "@/store/mutation-types";
 import {nonReactiveState, State} from "@/store/state";
-import {getServerMapProvider} from "@/util/config";
 import {getDefaultPlayerImage} from "@/util/images";
 import {Layer} from "leaflet";
 import {sortLayers} from "@/util/layers";
@@ -440,13 +439,11 @@ export const mutations: MutationTree<State> & Mutations = {
 			throw new RangeError(`Unknown server ${serverName}`);
 		}
 
-		state.currentServer = state.servers.get(serverName);
-
-		if(state.currentMapProvider) {
-			state.currentMapProvider.stopUpdates();
+		if(state.currentServer) {
+			state.currentServer.mapProvider.stopUpdates();
 		}
 
-		state.currentMapProvider = getServerMapProvider(serverName);
+		state.currentServer = state.servers.get(serverName);
 	},
 
 	//Sets the currently active map/world

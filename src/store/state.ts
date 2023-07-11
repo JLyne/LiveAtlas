@@ -24,7 +24,6 @@ import {
 	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
 	LiveAtlasMessageConfig,
-	LiveAtlasMapProvider,
 	LiveAtlasPlayer,
 	LiveAtlasMarkerSet,
 	LiveAtlasComponentConfig,
@@ -80,7 +79,6 @@ export type State = {
 	followTarget?: LiveAtlasPlayer;
 	viewTarget?: LiveAtlasMapViewTarget;
 
-	currentMapProvider?: Readonly<LiveAtlasMapProvider>;
 	currentServer?: LiveAtlasServerDefinition;
 	currentWorldState: LiveAtlasWorldState;
 	currentWorld?: LiveAtlasWorldDefinition;
@@ -221,7 +219,6 @@ export const state: State = {
 	followTarget: undefined,
 	viewTarget: undefined,
 
-	currentMapProvider: undefined,
 	currentServer: undefined,
 	currentWorld: undefined,
 	currentMap: undefined,
