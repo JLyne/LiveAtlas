@@ -48,8 +48,6 @@ import {MutationTypes} from "@/store/mutation-types";
 import {nonReactiveState, State} from "@/store/state";
 import {getDefaultPlayerImage} from "@/util/images";
 import {Layer} from "leaflet";
-import {sortLayers} from "@/util/layers";
-
 export type CurrentMapPayload = {
 	worldName: string;
 	mapName: string;
@@ -180,7 +178,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.maps.clear();
 
 		state.layers.clear();
-		state.sortedLayers.splice(0);
 
 		state.followTarget = undefined;
 		state.viewTarget = undefined;
@@ -390,7 +387,6 @@ export const mutations: MutationTree<State> & Mutations = {
 
 	[MutationTypes.ADD_LAYER](state: State, layer: LiveAtlasLayerDefinition) {
 		state.layers.set(layer.layer, layer);
-		state.sortedLayers = sortLayers(state.layers);
 	},
 
 	[MutationTypes.UPDATE_LAYER](state: State, {layer, options}) {
@@ -398,8 +394,6 @@ export const mutations: MutationTree<State> & Mutations = {
 			const existing = state.layers.get(layer) as LiveAtlasLayerDefinition;
 
 			state.layers.set(layer, Object.assign(existing, options));
-			// Sort layers if position has changed
-			state.sortedLayers = sortLayers(state.layers);
 		}
 	},
 
@@ -408,7 +402,6 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		if (existing) {
 			state.layers.delete(layer);
-			state.sortedLayers.splice(state.sortedLayers.indexOf(existing, 1));
 		}
 	},
 
@@ -584,7 +577,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.maps.clear();
 
 		state.layers.clear();
-		state.sortedLayers.splice(0);
 
 		state.currentMapState.zoom = 0;
 		state.currentMapState.minZoom = 0;

@@ -59,7 +59,6 @@ export type State = {
 	maps: Map<string, LiveAtlasMapDefinition>;
 
 	layers: Map<Layer, LiveAtlasLayerDefinition>;
-	sortedLayers: LiveAtlasLayerDefinition[];
 
 	players: Map<string, LiveAtlasPlayer>;
 	sortedPlayers: LiveAtlasSortedPlayers;
@@ -134,7 +133,6 @@ export const state: State = {
 	maps: new Map(), //Defined maps from configuration.json
 
 	layers: new Map(), //Leaflet map layers
-	sortedLayers: [], //Layers sorted by position for layer control
 
 	players: new Map(), //Online players from world.json
 	sortedPlayers: [] as LiveAtlasSortedPlayers, //Online players from world.json, sorted by their sort property then alphabetically

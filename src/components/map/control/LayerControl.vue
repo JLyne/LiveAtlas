@@ -26,9 +26,9 @@
              :style="listStyle" @keydown="handleListKeydown">
 			<div class="layers__base"></div>
 			<div class="layers__overlays">
-				<label v-for="layer in overlayLayers" :key="stamp(layer.layer)" class="layer checkbox">
-					<input type="checkbox" :checked="layer.enabled" @keydown.space.prevent="toggleLayer(layer.layer)"
-                 @input.prevent="toggleLayer(layer.layer)">
+				<label v-for="layer in overlayLayers" :key="layer.layer" class="layer checkbox">
+					<input type="checkbox" :checked="layer.enabled" @keydown.space.prevent="toggleLayer(layer)"
+                 @input.prevent="toggleLayer(layer)">
 					<SvgIcon name="checkbox"></SvgIcon>
 					<span>{{ layer.name }}</span>
 				</label>
@@ -39,28 +39,50 @@
 
 <script lang="ts">
 import {computed, defineComponent, onUnmounted, watch, nextTick, onMounted, ref} from "vue";
-import {stamp} from "leaflet";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import SvgIcon from "@/components/SvgIcon.vue";
 
-import {toggleLayer} from "@/util/layers";
 import {handleKeyboardEvent} from "@/util/events";
 import '@/assets/icons/layers.svg';
 import '@/assets/icons/checkbox.svg';
+import {LiveAtlasLayerDefinition} from "@/index";
 
 export default defineComponent({
 	components: {SvgIcon},
 
 	setup() {
 		const store = useStore(),
-			overlayLayers = computed(() => store.state.sortedLayers.filter(layer => layer.overlay)),
-			baseLayers = computed(() => store.state.sortedLayers.filter(layer => !layer.overlay)),
+      sortedLayers = computed(() => sortLayers()),
+			overlayLayers = computed(() => sortedLayers.value.filter(layer => layer.overlay)),
+			baseLayers = computed(() => sortedLayers.value.filter(layer => !layer.overlay)),
 			listVisible = computed(() => store.state.ui.visibleElements.has('layers')),
 			listStyle = ref({'max-height': 'auto'}),
 
 			button = ref<HTMLButtonElement|null>(null),
 			list = ref<HTMLElement|null>(null);
+
+    const sortLayers = () => {
+      return Array.from(store.state.layers.values()).sort((entry1, entry2) => {
+        if (entry1.position != entry2.position) {
+          return entry1.position - entry2.position;
+        }
+
+        return ((entry1.name < entry2.name) ? -1 : ((entry1.name > entry2.name) ? 1 : 0));
+      });
+    };
+
+    const toggleLayer = (layer: LiveAtlasLayerDefinition) => {
+      if(!store.state.layers.has(layer.layer)) {
+        return;
+      }
+      const enabled = !store.state.layers.get(layer.layer)!.enabled;
+
+      store.commit(MutationTypes.UPDATE_LAYER, {
+        layer: layer.layer,
+        options: {enabled}
+      });
+    }
 
 		const toggleList = () => listVisible.value ? closeList() : openList();
 
@@ -120,8 +142,7 @@ export default defineComponent({
 			openList,
 			closeList,
 			handleListKeydown,
-			toggleLayer,
-			stamp
+			toggleLayer
 		}
 	}
 })
