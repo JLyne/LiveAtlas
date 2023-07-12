@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+import {useStore} from "@/store";
 import {
 	LiveAtlasMapRenderer,
 	LiveAtlasMapViewTarget,
 } from "@/index";
 
 export default abstract class AbstractMapRenderer implements LiveAtlasMapRenderer {
+    protected readonly store = useStore();
+
 	init(element: HTMLElement): void {
 	}
 
