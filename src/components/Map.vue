@@ -16,30 +16,27 @@
 
 <template>
 	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs" :aria-label="mapTitle">
-		<template v-if="leaflet">
-			<TileLayer v-for="[name, map] in maps" :key="name" :options="map" :leaflet="leaflet"></TileLayer>
+		<template v-if="currentRenderer">
+<!--			<TileLayer v-for="[name, map] in maps" :key="name" :options="map" :leaflet="leaflet"></TileLayer>-->
 
-			<TileLayerOverlay v-for="[name, overlay] in overlays" :key="name" :options="overlay" :leaflet="leaflet"></TileLayerOverlay>
-			<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>
-			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>
+<!--			<TileLayerOverlay v-for="[name, overlay] in overlays" :key="name" :options="overlay" :leaflet="leaflet"></TileLayerOverlay>-->
+<!--			<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>-->
+<!--			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>-->
 		</template>
 	</div>
 
-	<slot :leaflet="leaflet"></slot>
+<!--	<slot :leaflet="leaflet"></slot>-->
 </template>
 
 <script lang="ts">
 import {computed, ref, defineComponent} from "vue";
-import {CRS, LatLng, LatLngBounds, PanOptions, ZoomPanOptions} from 'leaflet';
 import {LiveAtlasLocation, LiveAtlasPlayer, LiveAtlasMapViewTarget} from "@/index";
 import {useStore} from '@/store';
 import {MutationTypes} from "@/store/mutation-types";
 import TileLayer from "@/components/map/layer/TileLayer.vue";
 import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
 import MarkerSetLayer from "@/components/map/layer/MarkerSetLayer.vue";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import TileLayerOverlay from "@/components/map/layer/TileLayerOverlay.vue";
-import {ActionTypes} from "@/store/action-types";
 
 export default defineComponent({
 	components: {
@@ -51,8 +48,6 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
-			leaflet = undefined as any,
-
 			maps = computed(() => store.state.maps),
 			overlays = computed(() => store.state.currentMap?.overlays),
 			markerSets = computed(() => store.state.markerSets),
@@ -62,6 +57,7 @@ export default defineComponent({
 
 			currentWorld = computed(() => store.state.currentWorld),
 			currentMap = computed(() => store.state.currentMap),
+      currentRenderer = computed(() => store.getters.currentMapRenderer),
 			mapBackground = computed(() => store.getters.mapBackground),
 
 			followTarget = computed(() => store.state.followTarget),
@@ -70,12 +66,10 @@ export default defineComponent({
 
 			//Location and zoom to pan to upon next projection change
 			scheduledView = ref<LiveAtlasMapViewTarget|null>(null),
-			pendingLayerUpdates = computed(() => !!store.state.pendingLayerUpdates.size),
 
 			mapTitle = computed(() => store.state.messages.mapTitle);
 
 		return {
-			leaflet,
 			maps,
 			overlays,
 			markerSets,
@@ -90,9 +84,9 @@ export default defineComponent({
 
 			currentWorld,
 			currentMap,
+      currentRenderer,
 
 			scheduledView,
-			pendingLayerUpdates,
 
 			mapTitle
 		}
@@ -126,11 +120,11 @@ export default defineComponent({
 			if(newValue) {
 				store.getters.currentMapProvider!.populateMap(newValue);
 
-				if(this.leaflet) {
+				if(this.currentRenderer) {
 					let viewTarget = this.scheduledView;
 
 					if(!viewTarget && oldValue) {
-						viewTarget = {location: oldValue.latLngToLocation(this.leaflet.getCenter(), 64) as LiveAtlasLocation};
+						viewTarget = {location: store.state.currentMapState.location};
 					} else if(!viewTarget) {
 						viewTarget = {location: {x: 0, y: 0, z: 0} as LiveAtlasLocation};
 					}
@@ -193,24 +187,16 @@ export default defineComponent({
 				this.scheduledView = viewTarget;
 			}
 		},
-		async pendingLayerUpdates(size) {
-			const store = useStore();
+    currentRenderer(newValue, oldValue) {
+      if(oldValue) {
+        oldValue.destroy();
+      }
 
-			if(size) {
-				const updates = await store.dispatch(ActionTypes.POP_LAYER_UPDATES, undefined);
-
-				for (const update of updates) {
-					if(update[1]) {
-						this.leaflet.addLayer(update[0]);
-					} else {
-						this.leaflet.removeLayer(update[0]);
-					}
-				}
-			}
-		},
+      newValue.init(this.$el.nextElementSibling);
+    },
 		parsedUrl: {
 			handler(newValue) {
-				if(!newValue || !this.currentMap || !this.leaflet) {
+				if(!newValue || !this.currentMap || !this.currentRenderer) {
 					return;
 				}
 
@@ -229,43 +215,29 @@ export default defineComponent({
 	},
 
 	mounted() {
-		this.leaflet = new LiveAtlasLeafletMap(this.$el.nextElementSibling, Object.freeze({
-			zoom: this.configuration.defaultZoom,
-			center: new LatLng(0, 0),
-			fadeAnimation: false,
-			zoomAnimation: true,
-			preferCanvas: true,
-			crs: CRS.Simple,
-			worldCopyJump: false,
-			// markerZoomAnimation: false,
-		})) as LiveAtlasLeafletMap;
-
 		window.addEventListener('keydown', this.handleKeydown);
 
-		this.leaflet.createPane('vectors');
-
-		this.leaflet.on('moveend', () => {
-			if(this.currentMap) {
-				useStore().commit(MutationTypes.SET_MAP_STATE, {location: this.currentMap
-					.latLngToLocation(this.leaflet!.getCenter(), 64)});
-			}
-		});
-
-		this.leaflet.on('zoomend', () => {
-			useStore().commit(MutationTypes.SET_MAP_STATE, {zoom: this.leaflet!.getZoom()});
-		});
+		if(this.currentRenderer) {
+      this.currentRenderer.init(this.$el.nextElementSibling);
+    }
 	},
 
 	unmounted() {
 		window.removeEventListener('keydown', this.handleKeydown);
-		this.leaflet.remove();
+
+    if(this.currentRenderer) {
+      this.currentRenderer.destroy();
+    }
 	},
 
 	methods: {
 		handleKeydown(e: KeyboardEvent) {
 			if(e.key === 'Escape') {
 				e.preventDefault();
-				this.leaflet.getContainer().focus();
+
+        if(this.currentRenderer) {
+          this.currentRenderer.focus();
+        }
 			}
 		},
 		setView(target: LiveAtlasMapViewTarget) {
@@ -274,8 +246,8 @@ export default defineComponent({
 				currentMap = store.state.currentMap?.name,
 				targetWorld = target.location.world ? store.state.worlds.get(target.location.world) : currentWorld;
 
-			if(!this.leaflet) {
-				console.warn('Ignoring setView as leaflet not initialised');
+			if(!this.currentRenderer) {
+				console.warn('Ignoring setView as renderer not initialised');
 				return;
 			}
 
@@ -299,19 +271,7 @@ export default defineComponent({
 				}
 			} else {
 				console.debug('Moving to', JSON.stringify(target));
-				if(typeof target.zoom !== 'undefined') {
-					this.leaflet!.setZoom(target.zoom, target.options as ZoomPanOptions);
-				}
-
-				if('min' in target.location) { // Bounds
-					this.leaflet!.fitBounds(new LatLngBounds(
-						store.state.currentMap?.locationToLatLng(target.location.min) as LatLng,
-						store.state.currentMap?.locationToLatLng(target.location.max) as LatLng,
-					), target.options);
-				} else { // Location
-					const location = store.state.currentMap?.locationToLatLng(target.location) as LatLng;
-					this.leaflet!.panTo(location, target.options as PanOptions);
-				}
+        this.currentRenderer.setView(target);
 			}
 		},
 		updateFollow(player: LiveAtlasPlayer, newFollow: boolean) {
