@@ -24,8 +24,6 @@
 <!--			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>-->
 		</template>
 	</div>
-
-<!--	<slot :leaflet="leaflet"></slot>-->
 </template>
 
 <script lang="ts">
@@ -192,7 +190,7 @@ export default defineComponent({
         oldValue.destroy();
       }
 
-      newValue.init(this.$el.nextElementSibling);
+      newValue.init(this.$el);
     },
 		parsedUrl: {
 			handler(newValue) {
@@ -218,7 +216,7 @@ export default defineComponent({
 		window.addEventListener('keydown', this.handleKeydown);
 
 		if(this.currentRenderer) {
-      this.currentRenderer.init(this.$el.nextElementSibling);
+      this.currentRenderer.init(this.$el);
     }
 	},
 

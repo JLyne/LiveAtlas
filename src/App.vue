@@ -15,9 +15,8 @@
   -->
 
 <template>
-	<Map v-slot="slotProps">
-		<MapUI v-if="slotProps.leaflet" :leaflet="slotProps.leaflet"></MapUI>
-	</Map>
+	<Map></Map>
+	<MapUI></MapUI>
 	<LoginModal v-if="loginEnabled" v-show="loginModalVisible" :required="loginRequired"></LoginModal>
 	<notifications position="bottom center" :speed="250" :max="3" :ignoreDuplicates="true" classes="notification" />
 </template>

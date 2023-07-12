@@ -23,9 +23,11 @@
 		<div id="ui__top-left" class="ui__section">
 			<div class="ui__toolbar toolbar--vertical">
 				<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo"></LogoControl>
-				<ZoomControl :leaflet="leaflet"></ZoomControl>
+        <!-- FIXME -->
+        <!-- <ZoomControl :leaflet="leaflet"></ZoomControl>-->
 				<LayerControl></LayerControl>
-				<LoadingControl :leaflet="leaflet" :delay="500"></LoadingControl>
+        <!-- FIXME -->
+        <!--	<LoadingControl :leaflet="leaflet" :delay="500"></LoadingControl>-->
 			</div>
 		</div>
 
@@ -36,7 +38,8 @@
 			</div>
 			<div class="ui__toolbar">
 				<LinkControl v-if="linkControlEnabled"></LinkControl>
-				<CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>
+        <!-- FIXME -->
+        <!-- <CoordinatesControl v-if="coordinatesControlEnabled" :leaflet="leaflet"></CoordinatesControl>-->
 			</div>
 		</div>
 
@@ -49,7 +52,8 @@
 	</div>
 
 	<!--		<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo" :leaflet="leaflet"></LogoControl>-->
-	<MapContextMenu v-if="contextMenuEnabled && leaflet" :leaflet="leaflet"></MapContextMenu>
+  <!-- FIXME: Context menu seems leaflet specific? -->
+  <!--	<MapContextMenu v-if="contextMenuEnabled && leaflet" :leaflet="leaflet"></MapContextMenu>-->
 </template>
 
 <script lang="ts">
@@ -62,20 +66,12 @@ import ChatControl from "@/components/map/control/ChatControl.vue";
 import LogoControl from "@/components/map/control/LogoControl.vue";
 import MapContextMenu from "@/components/map/MapContextMenu.vue";
 import LoginControl from "@/components/map/control/LoginControl.vue";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import LoadingControl from "@/components/map/control/LoadingControl.vue";
 import ZoomControl from "@/components/map/control/ZoomControl.vue";
 import LayerControl from "@/components/map/control/LayerControl.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
 export default defineComponent({
-	props: {
-		leaflet: {
-			type: Object as () => LiveAtlasLeafletMap,
-			required: true,
-		}
-	},
-
 	components: {
 		Sidebar,
 		LayerControl,
