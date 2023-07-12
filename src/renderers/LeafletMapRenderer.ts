@@ -29,7 +29,8 @@ import {
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {MutationTypes} from "@/store/mutation-types";
 import {computed} from "vue";
-import {LiveAtlasMapViewTarget} from "@/index";
+import {LiveAtlasMapViewTarget, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer} from "@/index";
+import LeafletMarkerSetLayer from "@/layers/LeafletMarkerSetLayer";
 
 export default class LeafletMapRenderer extends AbstractMapRenderer {
     private leaflet: LiveAtlasLeafletMap | undefined;
@@ -238,5 +239,9 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
             return e.layer._leaflet_id;
         }
         return e.target._leaflet_id;
+    }
+
+    createMarkerSetLayer(options: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer {
+        return new LeafletMarkerSetLayer(this.leaflet!, options);
     }
 }

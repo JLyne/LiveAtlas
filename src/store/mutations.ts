@@ -38,7 +38,7 @@ import {
 	LiveAtlasServerDefinition,
 	LiveAtlasLayerDefinition,
 	LiveAtlasPartialLayerDefinition,
-	LiveAtlasPartialMapState
+	LiveAtlasPartialMapState, LiveAtlasLayer
 } from "@/index";
 import {
 	DynmapMarkerSetUpdate, DynmapMarkerUpdate,
@@ -47,7 +47,6 @@ import {
 import {MutationTypes} from "@/store/mutation-types";
 import {nonReactiveState, State} from "@/store/state";
 import {getDefaultPlayerImage} from "@/util/images";
-import {Layer} from "leaflet";
 export type CurrentMapPayload = {
 	worldName: string;
 	mapName: string;
@@ -76,8 +75,8 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer>
 	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
 	[MutationTypes.ADD_LAYER](state: State, layer: LiveAtlasLayerDefinition): void
-	[MutationTypes.UPDATE_LAYER](state: State, payload: {layer: Layer, options: LiveAtlasPartialLayerDefinition}): void
-	[MutationTypes.REMOVE_LAYER](state: State, layer: Layer): void
+	[MutationTypes.UPDATE_LAYER](state: State, payload: {layer: LiveAtlasLayer, options: LiveAtlasPartialLayerDefinition}): void
+	[MutationTypes.REMOVE_LAYER](state: State, layer: LiveAtlasLayer): void
 	[MutationTypes.SET_LOADED](state: S, a?: void): void
 	[MutationTypes.SET_CURRENT_SERVER](state: S, server: string): void
 	[MutationTypes.SET_CURRENT_MAP](state: S, payload: CurrentMapPayload): void
@@ -397,7 +396,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 	},
 
-	[MutationTypes.REMOVE_LAYER](state: State, layer: Layer) {
+	[MutationTypes.REMOVE_LAYER](state: State, layer: LiveAtlasLayer) {
 		const existing = state.layers.get(layer);
 
 		if (existing) {

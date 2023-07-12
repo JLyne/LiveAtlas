@@ -14,31 +14,20 @@
   - limitations under the License.
   -->
 
-<template>
-	<MapMarkers :layer-group="layer" :set="markerSet"></MapMarkers>
-</template>
-
 <script lang="ts">
 import {markRaw, watch, defineComponent, computed, onMounted, onUnmounted, reactive} from "vue";
-import {LiveAtlasMarkerSet} from "@/index";
+import {LiveAtlasMapRenderer, LiveAtlasMarkerSet} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
-import MapMarkers from "@/components/map/marker/MapMarkers.vue";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 export default defineComponent({
-	components: {
-		MapMarkers,
-	},
-
 	props: {
 		markerSet: {
 			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
 		},
-    leaflet: {
-      type: Object as () => LiveAtlasLeafletMap,
+    renderer: {
+      type: Object as () => LiveAtlasMapRenderer,
       required: true,
     }
 	},
@@ -46,13 +35,7 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore(),
 			markerSettings = computed(() => store.state.components.markers),
-			layer = new LiveAtlasLayerGroup({
-				id: props.markerSet.id,
-				minZoom: props.markerSet.minZoom,
-				maxZoom: props.markerSet.maxZoom,
-				showLabels: props.markerSet.showLabels || store.state.components.markers.showLabels,
-				priority: props.markerSet.priority,
-			}),
+			layer = props.renderer.createMarkerSetLayer(props.markerSet),
       layerDefinition = reactive({
 				layer: markRaw(layer),
 				name: props.markerSet.label,
@@ -63,31 +46,19 @@ export default defineComponent({
 			}),
         enabled = computed(() => layerDefinition.enabled);
 
-		watch(props.markerSet, newValue => {
-			if(newValue && layer) {
-				layer.update({
-					id: props.markerSet.id,
-					minZoom: props.markerSet.minZoom,
-					maxZoom: props.markerSet.maxZoom,
-					showLabels: props.markerSet.showLabels || store.state.components.markers.showLabels,
-					priority: props.markerSet.priority,
-				});
-			}
-		}, {deep: true});
-
-    watch(enabled, (newValue) => newValue ? props.leaflet.addLayer(layer) : props.leaflet.removeLayer(layer));
+    watch(enabled, (newValue) => newValue ? layer.add() : layer.remove());
 
 		onMounted(() => {
 			store.commit(MutationTypes.ADD_LAYER, layerDefinition);
 
       if(layerDefinition.enabled) {
-        props.leaflet.addLayer(layer);
+        layer.add();
       }
 		});
 
 		onUnmounted(() => {
       store.commit(MutationTypes.REMOVE_LAYER, layer);
-      props.leaflet.removeLayer(layer);
+      layer.remove();
     });
 
 		return {

@@ -30,7 +30,7 @@ import {
 	LiveAtlasChat,
 	LiveAtlasUIModal,
 	LiveAtlasSidebarSectionState,
-	LiveAtlasMarker, LiveAtlasMapViewTarget, LiveAtlasLayerDefinition, LiveAtlasMapState
+	LiveAtlasMarker, LiveAtlasMapViewTarget, LiveAtlasLayerDefinition, LiveAtlasMapState, LiveAtlasLayer
 } from "@/index";
 import {
 	DynmapMarkerUpdate,
@@ -39,7 +39,6 @@ import {
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {getMessages} from "@/util";
 import {getDefaultPlayerImage} from "@/util/images";
-import {Layer} from "leaflet";
 
 export type State = {
 	version: string;
@@ -58,7 +57,7 @@ export type State = {
 	worlds: Map<string, LiveAtlasWorldDefinition>;
 	maps: Map<string, LiveAtlasMapDefinition>;
 
-	layers: Map<Layer, LiveAtlasLayerDefinition>;
+	layers: Map<LiveAtlasLayer, LiveAtlasLayerDefinition>;
 
 	players: Map<string, LiveAtlasPlayer>;
 	sortedPlayers: LiveAtlasSortedPlayers;
@@ -132,7 +131,7 @@ export const state: State = {
 	worlds: new Map(), //Defined (loaded) worlds with maps from configuration.json
 	maps: new Map(), //Defined maps from configuration.json
 
-	layers: new Map(), //Leaflet map layers
+	layers: new Map(), //Map layers
 
 	players: new Map(), //Online players from world.json
 	sortedPlayers: [] as LiveAtlasSortedPlayers, //Online players from world.json, sorted by their sort property then alphabetically

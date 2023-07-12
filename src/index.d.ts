@@ -18,12 +18,12 @@ import {
 	ControlOptions,
 	Coords,
 	DoneCallback, FitBoundsOptions,
-	InternalTiles, LatLng, Layer,
+	InternalTiles, LatLng,
 	PathOptions,
 	PointTuple,
 	PolylineOptions
 } from "leaflet";
-import {DynmapUrlConfig} from "@/dynmap";
+import {DynmapMarkerUpdate} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {globalMessages, serverMessages} from "../messages";
 import {LiveAtlasMarkerType} from "@/util/markers";
@@ -185,7 +185,7 @@ interface LiveAtlasPartialMapState {
 }
 
 interface LiveAtlasLayerDefinition {
-	layer: Layer;
+	layer: LiveAtlasLayer;
 	overlay: boolean;
 	name: string;
 	position: number;
@@ -230,6 +230,21 @@ interface LiveAtlasMapRenderer {
 	zoomOut(): void;
 	setView(target: LiveAtlasMapViewTarget): void;
 	focus(): void;
+
+	createMarkerSetLayer(options: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
+}
+
+interface LiveAtlasLayer {
+	add(): void;
+	remove(): void;
+	toggle(): void;
+}
+
+interface LiveAtlasMarkerSetLayer extends LiveAtlasLayer {
+	addMarker(marker: LiveAtlasMarker): void;
+	removeMarker(id: string): void;
+	updateMarker(update: DynmapMarkerUpdate): void;
+	update(update: LiveAtlasMarkerSet): void;
 }
 
 interface LiveAtlasOverlay {

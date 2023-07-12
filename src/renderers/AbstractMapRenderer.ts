@@ -17,7 +17,7 @@
 import {useStore} from "@/store";
 import {
 	LiveAtlasMapRenderer,
-	LiveAtlasMapViewTarget,
+	LiveAtlasMapViewTarget, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer,
 } from "@/index";
 
 export default abstract class AbstractMapRenderer implements LiveAtlasMapRenderer {
@@ -35,4 +35,6 @@ export default abstract class AbstractMapRenderer implements LiveAtlasMapRendere
 
 	abstract setView(target: LiveAtlasMapViewTarget): void;
 	abstract focus(): void;
+
+	abstract createMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
 }

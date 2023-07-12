@@ -21,7 +21,7 @@
 
 <!--			<TileLayerOverlay v-for="[name, overlay] in overlays" :key="name" :options="overlay" :leaflet="leaflet"></TileLayerOverlay>-->
 <!--			<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>-->
-<!--			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :leaflet="leaflet"></MarkerSetLayer>-->
+			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :renderer="currentRenderer"></MarkerSetLayer>
 		</template>
 	</div>
 </template>
