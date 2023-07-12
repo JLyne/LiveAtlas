@@ -43,21 +43,15 @@
 </template>
 
 <script lang="ts">
-  import {computed, defineComponent, onUnmounted, watch, onMounted, ref} from "vue";
-  import {Layer, LayerEvent, LeafletEvent, TileLayer} from "leaflet";
+  import {computed, defineComponent, watch, ref} from "vue";
 	import {useStore} from "@/store";
 	import SvgIcon from "@/components/SvgIcon.vue";
-	import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 	import '@/assets/icons/loading.svg';
 
 	export default defineComponent({
 		components: {SvgIcon},
 
 		props: {
-			leaflet: {
-				type: Object as () => LiveAtlasLeafletMap,
-				required: true,
-			},
 			delay: {
 				type: Number,
 				default: 0
@@ -67,102 +61,14 @@
 		setup(props) {
 			const store = useStore(),
 				loadingTitle = computed(() => store.state.messages.loadingTitle),
-				dataLoaders = ref<Set<number>>(new Set()),
+        loading = computed(() => store.state.currentMapState.loading),
 				showIndicator = ref<boolean>(false);
 
 			let delayIndicatorTimeout: ReturnType<typeof setTimeout> | null = null;
 
-			const addLayerListeners = () => {
-				// Add listeners for begin and end of load to any layers already
-				// on the map
-				props.leaflet.eachLayer((layer: Layer) => {
-					if(!(layer instanceof TileLayer)) {
-						return;
-					}
-
-					if(layer.isLoading()) {
-						dataLoaders.value.add((layer as any)._leaflet_id);
-					}
-
-					layer.on('loading', handleLoading);
-					layer.on('load', handleLoad);
-				});
-
-				// When a layer is added to the map, add listeners for begin and
-				// end of load
-				props.leaflet.on('layeradd', layerAdd);
-				props.leaflet.on('layerremove', layerRemove);
-			};
-
-			const removeLayerListeners = () => {
-				// Remove listeners for begin and end of load from all layers
-				props.leaflet.eachLayer((layer: Layer) => {
-					if(!(layer instanceof TileLayer)) {
-						return;
-					}
-
-					dataLoaders.value.delete((layer as any)._leaflet_id);
-
-					layer.off('loading', handleLoading);
-					layer.off('load', handleLoad);
-				});
-
-				// Remove layeradd/layerremove listener from map
-				props.leaflet.off('layeradd', layerAdd);
-				props.leaflet.off('layerremove', layerRemove);
-			};
-
-			const layerAdd = (e: LayerEvent) => {
-				if(!(e.layer instanceof TileLayer)) {
-					return;
-				}
-
-				try {
-					if(e.layer.isLoading()) {
-						handleLoading(e);
-					}
-
-					e.layer.on('loading', handleLoading);
-					e.layer.on('load', handleLoad);
-				} catch (exception) {
-					console.warn('L.Control.Loading: Tried and failed to add ' +
-						' event handlers to layer', e.layer);
-					console.warn('L.Control.Loading: Full details', exception);
-				}
-			};
-
-			const layerRemove = (e: LayerEvent) => {
-				if(!(e.layer instanceof TileLayer)) {
-					return;
-				}
-
-				handleLoad(e);
-
-				try {
-					e.layer.off('loading', handleLoading);
-					e.layer.off('load', handleLoad);
-				} catch (exception) {
-					console.warn('L.Control.Loading: Tried and failed to remove ' +
-						'event handlers from layer', e.layer);
-					console.warn('L.Control.Loading: Full details', exception);
-				}
-			};
-
-			const handleLoading = (e: LeafletEvent) => dataLoaders.value.add(getEventId(e))
-			const handleLoad = (e: LeafletEvent) => dataLoaders.value.delete(getEventId(e));
-
-			const getEventId = (e: any) => {
-				if (e.id) {
-					return e.id;
-				} else if (e.layer) {
-					return e.layer._leaflet_id;
-				}
-				return e.target._leaflet_id;
-			};
-
-			watch(dataLoaders, (newValue) => {
+			watch(loading, (newValue) => {
 				if(props.delay) { // If we are delaying showing the indicator
-					if(newValue.size > 0) {
+					if(newValue) {
 						// If we're not already waiting for that delay, set up a timeout.
 						if(!delayIndicatorTimeout) {
 							setTimeout(() => showIndicator.value = true)
@@ -178,30 +84,12 @@
 					return;
 				} else {
 					// Otherwise update the indicator immediately
-					showIndicator.value = !!newValue.size;
+					showIndicator.value = newValue;
 				}
 			}, {deep: true});
 
-			onMounted(() => {
-				// Add listeners to the map for (custom) dataloading and dataload
-				// events, eg, for AJAX calls that affect the map but will not be
-				// reflected in the above layer events.
-				props.leaflet.on('dataloading', handleLoading);
-				props.leaflet.on('dataload', handleLoad);
-
-				addLayerListeners();
-			});
-
-			onUnmounted(() => {
-				props.leaflet.off('dataloading', handleLoading);
-				props.leaflet.off('dataload', handleLoad);
-
-				removeLayerListeners();
-			});
-
 			return {
 				loadingTitle,
-				dataLoaders,
 				showIndicator
 			}
 		}

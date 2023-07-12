@@ -173,6 +173,7 @@ interface LiveAtlasMapState {
 	maxZoom: number;
 	minZoom: number;
 	location: Coordinate;
+	loading?: boolean;
 }
 
 interface LiveAtlasPartialMapState {
@@ -180,6 +181,7 @@ interface LiveAtlasPartialMapState {
 	minZoom?: number;
 	maxZoom?: number;
 	location?: Coordinate;
+	loading?: boolean;
 }
 
 interface LiveAtlasLayerDefinition {

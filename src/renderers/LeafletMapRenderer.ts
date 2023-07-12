@@ -19,7 +19,11 @@ import {
     CRS,
     LatLng,
     LatLngBounds,
+    Layer,
+    LeafletEvent,
+    LeafletEventHandlerFn,
     PanOptions,
+    TileLayer,
     ZoomPanOptions
 } from "leaflet";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
@@ -30,10 +34,53 @@ import {LiveAtlasMapViewTarget} from "@/index";
 export default class LeafletMapRenderer extends AbstractMapRenderer {
     private leaflet: LiveAtlasLeafletMap | undefined;
 
+    private readonly handleLoading : LeafletEventHandlerFn = (e: LeafletEvent) =>
+        this.addLoadingLayer(LeafletMapRenderer.getEventId(e));
+    private readonly handleLoaded : LeafletEventHandlerFn = (e: LeafletEvent) =>
+        this.removeLoadingLayer(LeafletMapRenderer.getEventId(e));
+    private readonly handleLayerAdd : LeafletEventHandlerFn;
+    private readonly handleLayerRemove : LeafletEventHandlerFn;
+
+    private readonly loadingLayers : Set<string> = new Set();
+
     constructor() {
         super();
-    }
 
+        this.handleLayerAdd = (e: LeafletEvent) => {
+            if (!(e.layer instanceof TileLayer)) {
+                return;
+            }
+
+            this.updateZoom();
+
+            try {
+                if (e.layer.isLoading()) {
+                    this.handleLoading(e);
+                }
+
+                e.layer.on('loading', this.handleLoading);
+                e.layer.on('load', this.handleLoaded);
+            } catch (exception) {
+                console.warn('Failed to add event handlers to layer', e.layer, exception);
+            }
+        }
+
+        this.handleLayerRemove = (e: LeafletEvent) => {
+            if(!(e.layer instanceof TileLayer)) {
+				return;
+			}
+
+            this.updateZoom();
+			this.handleLoaded(e);
+
+			try {
+				e.layer.off('loading', this.handleLoading);
+				e.layer.off('load', this.handleLoaded);
+			} catch (exception) {
+				console.warn('Failed to remove event handlers from layer', e.layer, exception);
+			}
+        }
+    }
     init(element: HTMLElement): void {
         const currentMap = computed(() => this.store.state.currentMap);
 
@@ -59,9 +106,8 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
 		});
 
 		this.leaflet.on('zoomend', () => this.updateZoom());
-        this.leaflet.on('layeradd', () => this.updateZoom());
-        this.leaflet.on('layerremove', () => this.updateZoom());
 
+        this.addLoadingListeners();
         this.updateZoom();
     }
 
@@ -70,6 +116,7 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
 
         if(this.leaflet) {
             this.leaflet.remove();
+            this.removeLoadingListeners();
 
             //FIXME: Remove event handler properly
         }
@@ -115,5 +162,81 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
             maxZoom: this.leaflet?.getMaxZoom(),
             zoom: this.leaflet!.getZoom()
         });
+    }
+
+    // Loading state stuff
+    private addLoadingListeners() {
+        // Add listeners for begin and end of load to any layers already
+        // on the map
+        this.leaflet!.eachLayer((layer: Layer) => {
+            if (!(layer instanceof TileLayer)) {
+                return;
+            }
+
+            if (layer.isLoading()) {
+                this.addLoadingLayer((layer as any)._leaflet_id);
+            }
+
+            layer.on('loading', this.handleLoading);
+            layer.on('load', this.handleLoaded);
+        });
+
+        // When a layer is added to the map, add listeners for begin and
+        // end of load
+        this.leaflet!.on('layeradd', this.handleLayerAdd);
+        this.leaflet!.on('layerremove', this.handleLayerRemove);
+
+        // Add listeners to the map for (custom) dataloading and dataload
+        // events, eg, for AJAX calls that affect the map but will not be
+        // reflected in the above layer events.
+        this.leaflet!.on('dataloading', this.handleLoading);
+        this.leaflet!.on('dataload', this.handleLoaded);
+    }
+
+	private removeLoadingListeners () {
+		// Remove listeners for begin and end of load from all layers
+		this.leaflet!.eachLayer((layer: Layer) => {
+			if(!(layer instanceof TileLayer)) {
+				return;
+			}
+
+            this.removeLoadingLayer((layer as any)._leaflet_id);
+
+			layer.off('loading', this.handleLoading);
+			layer.off('load', this.handleLoaded);
+		});
+
+        this.leaflet!.off('layeradd', this.handleLayerAdd);
+        this.leaflet!.off('layerremove', this.handleLayerRemove);
+
+        this.leaflet!.off('dataloading', this.handleLoading);
+        this.leaflet!.off('dataload', this.handleLoaded);
+	}
+
+    private addLoadingLayer(id: string): void {
+        this.loadingLayers.add(id);
+
+        if(this.loadingLayers.size == 1) {
+            this.store.commit(MutationTypes.SET_MAP_STATE, {loading: true});
+        }
+    }
+
+    private removeLoadingLayer(id: string): void {
+        if(!this.loadingLayers.delete(id)) {
+            return;
+        }
+
+        if(!this.loadingLayers.size) {
+            this.store.commit(MutationTypes.SET_MAP_STATE, {loading: false});
+        }
+    }
+
+    private static getEventId(e: any): string {
+        if (e.id) {
+            return e.id;
+        } else if (e.layer) {
+            return e.layer._leaflet_id;
+        }
+        return e.target._leaflet_id;
     }
 }

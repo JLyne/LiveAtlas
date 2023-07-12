@@ -25,8 +25,7 @@
 				<LogoControl v-for="logo in logoControls" :key="JSON.stringify(logo)" :options="logo"></LogoControl>
         <ZoomControl></ZoomControl>
 				<LayerControl></LayerControl>
-        <!-- FIXME -->
-        <!--	<LoadingControl :leaflet="leaflet" :delay="500"></LoadingControl>-->
+        <LoadingControl :delay="500"></LoadingControl>
 			</div>
 		</div>
 
