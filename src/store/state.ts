@@ -227,6 +227,8 @@ export const state: State = {
 			z: 0,
 		},
 		zoom: 0,
+		minZoom: 0,
+		maxZoom: 0,
 	},
 	currentWorldState: {
 		raining: false,

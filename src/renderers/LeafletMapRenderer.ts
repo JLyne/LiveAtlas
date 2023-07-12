@@ -33,6 +33,7 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
     constructor() {
         super();
     }
+
     init(element: HTMLElement): void {
         const currentMap = computed(() => this.store.state.currentMap);
 
@@ -57,11 +58,11 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
 			}
 		});
 
-		this.leaflet.on('zoomend', () => {
-			this.store.commit(MutationTypes.SET_MAP_STATE, {
-                zoom: this.leaflet!.getZoom()
-            });
-		});
+		this.leaflet.on('zoomend', () => this.updateZoom());
+        this.leaflet.on('layeradd', () => this.updateZoom());
+        this.leaflet.on('layerremove', () => this.updateZoom());
+
+        this.updateZoom();
     }
 
     destroy(): void {
@@ -106,5 +107,13 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
         if(this.leaflet) {
             this.leaflet.zoomOut();
         }
+    }
+
+    private updateZoom(): void {
+        this.store.commit(MutationTypes.SET_MAP_STATE, {
+            minZoom: this.leaflet?.getMinZoom(),
+            maxZoom: this.leaflet?.getMaxZoom(),
+            zoom: this.leaflet!.getZoom()
+        });
     }
 }

@@ -28,35 +28,17 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent, onUnmounted, onMounted, ref} from "vue";
-	import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
+import {defineComponent, computed} from "vue";
+import {useStore} from "@/store";
 
 	export default defineComponent({
-		props: {
-			leaflet: {
-				type: Object as () => LiveAtlasLeafletMap,
-				required: true,
-			}
-		},
+		setup() {
+			const store = useStore(),
+          canZoomIn = computed(() => store.getters.canZoomIn),
+          canZoomOut = computed(() => store.getters.canZoomOut);
 
-		setup(props) {
-			const canZoomIn = ref<boolean>(false),
-				canZoomOut = ref<boolean>(false);
-
-			const zoomIn = () => props.leaflet.zoomIn();
-			const zoomOut = () => props.leaflet.zoomOut();
-
-			const updateZoom = () => {
-				canZoomIn.value = props.leaflet.getZoom() < props.leaflet.getMaxZoom();
-				canZoomOut.value = props.leaflet.getZoom() > props.leaflet.getMinZoom();
-			}
-
-			onMounted(() => {
-				updateZoom();
-				props.leaflet.on('zoom', updateZoom);
-			});
-
-			onUnmounted(() => props.leaflet.off('zoom', updateZoom));
+			const zoomIn = () => store.getters.currentMapRenderer!.zoomIn();
+			const zoomOut = () => store.getters.currentMapRenderer!.zoomOut();
 
 			return {
 				canZoomIn,

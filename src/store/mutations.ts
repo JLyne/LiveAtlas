@@ -610,6 +610,8 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.sortedLayers.splice(0);
 
 		state.currentMapState.zoom = 0;
+		state.currentMapState.minZoom = 0;
+		state.currentMapState.maxZoom = 0;
 		state.currentMapState.location = {x: 0, y: 0, z: 0};
 
 		state.currentWorldState.timeOfDay = undefined;

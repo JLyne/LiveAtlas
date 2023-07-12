@@ -170,11 +170,15 @@ interface LiveAtlasWorldState {
 
 interface LiveAtlasMapState {
 	zoom: number;
+	maxZoom: number;
+	minZoom: number;
 	location: Coordinate;
 }
 
 interface LiveAtlasPartialMapState {
 	zoom?: number;
+	minZoom?: number;
+	maxZoom?: number;
 	location?: Coordinate;
 }
 

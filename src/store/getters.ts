@@ -32,6 +32,9 @@ export type Getters = {
 	playersHeading(state: State, getters: GetterTree<State, State> & Getters): string;
 	currentMapProvider(state: State): LiveAtlasMapProvider | undefined;
 	currentMapRenderer(state: State): LiveAtlasMapRenderer | undefined;
+	currentZoom(state: State, getters: GetterTree<State, State> & Getters): number;
+	canZoomIn(state: State, getters: GetterTree<State, State> & Getters): boolean;
+	canZoomOut(state: State, getters: GetterTree<State, State> & Getters): boolean;
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -101,5 +104,17 @@ export const getters: GetterTree<State, State> & Getters = {
 
 	currentMapRenderer(state: State): LiveAtlasMapRenderer | undefined {
 		return state.currentServer?.mapRenderer;
+	},
+
+	currentZoom(state: State): number {
+		return state.currentMapState.zoom;
+	},
+
+	canZoomIn(state: State): boolean {
+		return state.currentMapState.zoom < state.currentMapState.maxZoom;
+	},
+
+	canZoomOut(state: State): boolean {
+		return state.currentMapState.zoom > state.currentMapState.minZoom;
 	}
 }
