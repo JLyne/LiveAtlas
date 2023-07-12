@@ -19,7 +19,7 @@
 
 import {
 	LiveAtlasAreaMarker,
-	LiveAtlasComponentConfig,
+	LiveAtlasComponentConfig, LiveAtlasMapRenderer,
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet, LiveAtlasPointMarker,
 	LiveAtlasServerConfig,
@@ -43,8 +43,10 @@ import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {getDefaultPlayerImage} from "@/util/images";
 import {TileLayer} from "leaflet";
+import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 
 export default class OverviewerMapProvider extends AbstractMapProvider {
+	public static readonly renderer: new () => LiveAtlasMapRenderer = LeafletMapRenderer;
 	private configurationAbort?: AbortController = undefined;
 	private markersAbort?: AbortController = undefined;
 	private readonly markersRegex: RegExp = /^overviewer.util.injectMarkerScript\('([\w.]+)'\);?$/mgi;
@@ -396,5 +398,9 @@ export default class OverviewerMapProvider extends AbstractMapProvider {
 
 	createTileLayer(options: LiveAtlasTileLayerOptions): TileLayer {
 		return new OverviewerTileLayer(options);
+	}
+
+	getRendererClass(): new () => LiveAtlasMapRenderer {
+		return LeafletMapRenderer;
 	}
 }

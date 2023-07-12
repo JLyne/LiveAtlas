@@ -15,7 +15,7 @@
  */
 
 import {
-	LiveAtlasMapProvider,
+	LiveAtlasMapProvider, LiveAtlasMapRenderer,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {useStore} from "@/store";
@@ -128,4 +128,6 @@ export default abstract class AbstractMapProvider implements LiveAtlasMapProvide
 	protected static async getJSON(url: string, signal: AbortSignal) {
 		return AbstractMapProvider.fetchJSON(url, {signal, credentials: 'include'});
 	}
+
+	public abstract getRendererClass(): new () => LiveAtlasMapRenderer;
 }

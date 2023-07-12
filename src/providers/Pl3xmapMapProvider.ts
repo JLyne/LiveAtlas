@@ -20,7 +20,7 @@ import {
 	LiveAtlasCircleMarker,
 	LiveAtlasComponentConfig,
 	LiveAtlasDimension,
-	LiveAtlasLineMarker, LiveAtlasMarker,
+	LiveAtlasLineMarker, LiveAtlasMapRenderer, LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasPartialComponentConfig,
 	LiveAtlasPlayer,
@@ -38,6 +38,7 @@ import {LiveAtlasMarkerType} from "@/util/markers";
 import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {getDefaultPlayerImage} from "@/util/images";
+import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 
 export default class Pl3xmapMapProvider extends AbstractMapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -603,5 +604,9 @@ export default class Pl3xmapMapProvider extends AbstractMapProvider {
 		if(this.markersAbort) {
 			this.markersAbort.abort();
 		}
+	}
+
+	getRendererClass(): new () => LiveAtlasMapRenderer {
+		return LeafletMapRenderer;
 	}
 }

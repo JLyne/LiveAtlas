@@ -100,6 +100,7 @@ interface LiveAtlasServerDefinition {
 	id: string;
 	label?: string;
 	mapProvider: LiveAtlasMapProvider;
+	mapRenderer: LiveAtlasMapRenderer;
 }
 
 // Messages defined directly in LiveAtlas and used for all servers
@@ -213,6 +214,16 @@ interface LiveAtlasMapProvider {
 	login(formData: FormData): void;
 	logout(): void;
 	register(formData: FormData): void;
+	getRendererClass(): new () => LiveAtlasMapRenderer;
+}
+
+interface LiveAtlasMapRenderer {
+	init(element: HTMLElement): void;
+	destroy(): void;
+	zoomIn(): void;
+	zoomOut(): void;
+	setView(target: LiveAtlasMapViewTarget): void;
+	focus(): void;
 }
 
 interface LiveAtlasOverlay {

@@ -17,7 +17,7 @@
 import {GetterTree} from "vuex";
 import {State} from "@/store/state";
 import {getMinecraftTime, getUrlForLocation} from "@/util";
-import {LiveAtlasMapProvider} from "@/index";
+import {LiveAtlasMapProvider, LiveAtlasMapRenderer} from "@/index";
 
 export type Getters = {
 	playerMarkersEnabled(state: State): boolean;
@@ -31,6 +31,7 @@ export type Getters = {
 	pageTitle(state: State, getters: GetterTree<State, State> & Getters): string;
 	playersHeading(state: State, getters: GetterTree<State, State> & Getters): string;
 	currentMapProvider(state: State): LiveAtlasMapProvider | undefined;
+	currentMapRenderer(state: State): LiveAtlasMapRenderer | undefined;
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -96,5 +97,9 @@ export const getters: GetterTree<State, State> & Getters = {
 
 	currentMapProvider(state: State): LiveAtlasMapProvider | undefined {
 		return state.currentServer?.mapProvider;
+	},
+
+	currentMapRenderer(state: State): LiveAtlasMapRenderer | undefined {
+		return state.currentServer?.mapRenderer;
 	}
 }

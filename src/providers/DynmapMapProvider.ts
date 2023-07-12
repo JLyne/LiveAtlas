@@ -19,6 +19,7 @@
 
 import {MarkerSet} from "dynmap";
 import {
+	LiveAtlasMapRenderer,
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasPlayer,
@@ -43,6 +44,7 @@ import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
 import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {validateConfigURL} from "@/util";
 import {TileLayer} from "leaflet";
+import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 
 export default class DynmapMapProvider extends AbstractMapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -402,5 +404,9 @@ export default class DynmapMapProvider extends AbstractMapProvider {
 
 			return response;
 		});
+	}
+
+	getRendererClass(): new () => LiveAtlasMapRenderer {
+		return LeafletMapRenderer;
 	}
 }

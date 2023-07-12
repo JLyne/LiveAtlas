@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import {LiveAtlasGlobalConfig, LiveAtlasMapProvider, LiveAtlasServerDefinition} from "@/index";
+import {LiveAtlasGlobalConfig, LiveAtlasMapProvider, LiveAtlasMapRenderer, LiveAtlasServerDefinition} from "@/index";
 import {DynmapUrlConfig} from "@/dynmap";
 import {useStore} from "@/store";
 import ConfigurationError from "@/errors/ConfigurationError";
 import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
 const expectedConfigVersion = 1,
-	registeredProviders: Map<string, new (name: string, config: any) => LiveAtlasMapProvider> = new Map();
+	registeredProviders: Map<string, new (name: string, config: any) => LiveAtlasMapProvider> = new Map(),
+	rendererInstances: Map<new () => LiveAtlasMapRenderer, LiveAtlasMapRenderer> = new Map();
 
 /**
  * Registers the given {@link LiveAtlasMapProvider} with the given id
@@ -35,6 +36,16 @@ export const registerMapProvider = (id: string, provider: new (name: string, con
 	}
 
 	registeredProviders.set(id, provider);
+}
+
+const getRendererInstance = (renderer: new () => LiveAtlasMapRenderer): LiveAtlasMapRenderer => {
+	if(rendererInstances.has(renderer)) {
+		return rendererInstances.get(renderer)!;
+	} else {
+		const instance: LiveAtlasMapRenderer = new renderer();
+		rendererInstances.set(renderer, instance);
+		return instance;
+	}
 }
 
 /**
@@ -63,10 +74,12 @@ const loadLiveAtlasConfig = (config: any): Map<string, LiveAtlasServerDefinition
 		for (const mapProvider of registeredProviders) {
 			if(serverConfig && Object.hasOwnProperty.call(serverConfig, mapProvider[0])) {
 				try {
+					const provider = new mapProvider[1](server, serverConfig[mapProvider[0]]);
 					result.set(server, Object.freeze({
 						id: server,
 						label: serverConfig.label,
-						mapProvider: new mapProvider[1](server, serverConfig[mapProvider[0]])
+						mapProvider: provider,
+						mapRenderer: getRendererInstance(provider.getRendererClass())
 					}));
 					foundProvider = true;
 				} catch(e: any) {
@@ -95,10 +108,12 @@ const loadDefaultConfig = (config: DynmapUrlConfig): Map<string, LiveAtlasServer
 	const result = new Map<string, LiveAtlasServerDefinition>();
 
 	try {
+		const provider = new DynmapMapProvider('dynmap', config);
 		result.set('dynmap', Object.freeze({
 			id: 'dynmap',
 			label: 'dynmap',
-			mapProvider: new DynmapMapProvider('dynmap', config),
+			mapProvider: provider,
+			mapRenderer: getRendererInstance(provider.getRendererClass())
 		}));
 	} catch (e: any) {
 		e.message = `${e.message}. ${check}`;
