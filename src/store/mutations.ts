@@ -71,7 +71,6 @@ export type Mutations<S = State> = {
 	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<LiveAtlasChat>): void
 
-	[MutationTypes.POP_LAYER_UPDATES](state: State): void
 	[MutationTypes.POP_MARKER_UPDATES](state: S, amount: number): void
 	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): void
 
@@ -179,11 +178,6 @@ export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.SET_WORLDS](state: State, worlds: Array<LiveAtlasWorldDefinition>) {
 		state.worlds.clear();
 		state.maps.clear();
-
-		//Mark all layers for removal
-		for (const layer of state.layers.keys()) {
-			state.pendingLayerUpdates.set(layer, false);
-		}
 
 		state.layers.clear();
 		state.sortedLayers.splice(0);
@@ -315,11 +309,6 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Pops the specified number of marker updates from the pending updates list
-	[MutationTypes.POP_LAYER_UPDATES](state: State) {
-		state.pendingLayerUpdates.clear();
-	},
-
-	//Pops the specified number of marker updates from the pending updates list
 	[MutationTypes.POP_MARKER_UPDATES](state: State, amount: number) {
 		state.pendingMarkerUpdates.splice(0, amount);
 	},
@@ -402,21 +391,15 @@ export const mutations: MutationTree<State> & Mutations = {
 	[MutationTypes.ADD_LAYER](state: State, layer: LiveAtlasLayerDefinition) {
 		state.layers.set(layer.layer, layer);
 		state.sortedLayers = sortLayers(state.layers);
-		state.pendingLayerUpdates.set(layer.layer, layer.enabled);
 	},
 
 	[MutationTypes.UPDATE_LAYER](state: State, {layer, options}) {
 		if(state.layers.has(layer)) {
-			const existing = state.layers.get(layer) as LiveAtlasLayerDefinition,
-				existingEnabled = existing.enabled;
+			const existing = state.layers.get(layer) as LiveAtlasLayerDefinition;
 
 			state.layers.set(layer, Object.assign(existing, options));
-			state.sortedLayers = sortLayers(state.layers);
-
 			// Sort layers if position has changed
-			if((typeof options.enabled === 'boolean' && existingEnabled !== options.enabled)) {
-				state.pendingLayerUpdates.set(layer, options.enabled);
-			}
+			state.sortedLayers = sortLayers(state.layers);
 		}
 	},
 
@@ -425,7 +408,6 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		if (existing) {
 			state.layers.delete(layer);
-			state.pendingLayerUpdates.set(layer, false); // Remove from map
 			state.sortedLayers.splice(state.sortedLayers.indexOf(existing, 1));
 		}
 	},
@@ -600,11 +582,6 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		state.worlds.clear();
 		state.maps.clear();
-
-		//Mark all layers for removal
-		for (const layer of state.layers.keys()) {
-			state.pendingLayerUpdates.set(layer, false);
-		}
 
 		state.layers.clear();
 		state.sortedLayers.splice(0);

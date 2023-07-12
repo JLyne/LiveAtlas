@@ -20,7 +20,6 @@ export enum ActionTypes {
 	START_UPDATES = "startUpdates",
 	STOP_UPDATES = "stopUpdates",
 	SET_PLAYERS = "setPlayers",
-	POP_LAYER_UPDATES = "popLayerUpdates",
 	POP_MARKER_UPDATES = "popMarkerUpdates",
 	POP_TILE_UPDATES = "popTileUpdates",
 	SEND_CHAT_MESSAGE = "sendChatMessage",

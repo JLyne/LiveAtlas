@@ -30,7 +30,6 @@ export enum MutationTypes {
 	ADD_MARKER_UPDATES = 'addMarkerUpdates',
 	ADD_TILE_UPDATES = 'addTileUpdates',
 	ADD_CHAT = 'addChat',
-	POP_LAYER_UPDATES = 'popLayerUpdates',
 	POP_MARKER_UPDATES = 'popMarkerUpdates',
 	POP_TILE_UPDATES = 'popTileUpdates',
 	SET_MAX_PLAYERS = 'setMaxPlayers',

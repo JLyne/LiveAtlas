@@ -15,11 +15,11 @@
   -->
 
 <template>
-	<PlayerMarker v-for="[account, player] in players" :key="account" :player="player" :layerGroup="layerGroup"></PlayerMarker>
+	<PlayerMarker v-for="[account, player] in players" :key="account" :player="player" :layerGroup="layer"></PlayerMarker>
 </template>
 
 <script lang="ts">
-import {defineComponent, computed, watch, onMounted, onUnmounted} from "vue";
+import {defineComponent, computed, watch, onMounted, onUnmounted, reactive} from "vue";
 import {LayerGroup} from 'leaflet';
 import {useStore} from "@/store";
 import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
@@ -46,24 +46,34 @@ export default defineComponent({
 			playerCount = computed(() => store.state.players.size),
 			playersAboveMarkers = computed(() => store.state.ui.playersAboveMarkers),
 			componentSettings = computed(() => store.state.components.players.markers),
-			layerGroup = new LayerGroup([],{
+			layer = new LayerGroup([],{
 				pane: 'players'
-			});
-
-		watch(playerCount, (newValue) => playerPane.classList.toggle('no-animations', newValue > 150));
-
-		onMounted(() => {
-			store.commit(MutationTypes.ADD_LAYER, {
-				layer: markRaw(layerGroup),
+			}),
+      layerDefinition = reactive({
+				layer: markRaw(layer),
 				name: store.state.components.players.markers!.layerName,
 				overlay: true,
 				position: componentSettings.value!.layerPriority,
 				enabled: !componentSettings.value!.hideByDefault,
 				showInControl: true
-			});
+			}),
+        enabled = computed(() => layerDefinition.enabled);
+
+		watch(playerCount, (newValue) => playerPane.classList.toggle('no-animations', newValue > 150));
+		watch(enabled, (newValue) => newValue ? props.leaflet.addLayer(layer) : props.leaflet.removeLayer(layer));
+
+		onMounted(() => {
+			store.commit(MutationTypes.ADD_LAYER, layerDefinition);
+
+      if(layerDefinition.enabled) {
+        props.leaflet.addLayer(layer);
+      }
 		});
 
-		onUnmounted(() => store.commit(MutationTypes.REMOVE_LAYER, layerGroup));
+		onUnmounted(() => {
+      store.commit(MutationTypes.REMOVE_LAYER, layer);
+      props.leaflet.removeLayer(layer);
+    });
 
 		if(playersAboveMarkers.value) {
 			playerPane.style.zIndex = '600';
@@ -72,7 +82,7 @@ export default defineComponent({
 		return {
 			players,
 			componentSettings,
-			layerGroup,
+			layer,
 		}
 	},
 

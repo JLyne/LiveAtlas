@@ -15,16 +15,17 @@
   -->
 
 <template>
-	<MapMarkers :layer-group="layerGroup" :set="markerSet"></MapMarkers>
+	<MapMarkers :layer-group="layer" :set="markerSet"></MapMarkers>
 </template>
 
 <script lang="ts">
-import {markRaw, watch, defineComponent, computed, onMounted, onUnmounted} from "vue";
+import {markRaw, watch, defineComponent, computed, onMounted, onUnmounted, reactive} from "vue";
 import {LiveAtlasMarkerSet} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 import LiveAtlasLayerGroup from "@/leaflet/layer/LiveAtlasLayerGroup";
 import MapMarkers from "@/components/map/marker/MapMarkers.vue";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 export default defineComponent({
 	components: {
@@ -35,53 +36,63 @@ export default defineComponent({
 		markerSet: {
 			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
-		}
+		},
+    leaflet: {
+      type: Object as () => LiveAtlasLeafletMap,
+      required: true,
+    }
 	},
 
 	setup(props) {
 		const store = useStore(),
 			markerSettings = computed(() => store.state.components.markers),
-			layerGroup = new LiveAtlasLayerGroup({
+			layer = new LiveAtlasLayerGroup({
 				id: props.markerSet.id,
 				minZoom: props.markerSet.minZoom,
 				maxZoom: props.markerSet.maxZoom,
 				showLabels: props.markerSet.showLabels || store.state.components.markers.showLabels,
 				priority: props.markerSet.priority,
-			});
+			}),
+      layerDefinition = reactive({
+				layer: markRaw(layer),
+				name: props.markerSet.label,
+				overlay: true,
+				position: props.markerSet.priority || 0,
+				enabled: !props.markerSet.hidden,
+				showInControl: true
+			}),
+        enabled = computed(() => layerDefinition.enabled);
 
 		watch(props.markerSet, newValue => {
-			if(newValue && layerGroup) {
-				layerGroup.update({
+			if(newValue && layer) {
+				layer.update({
 					id: props.markerSet.id,
 					minZoom: props.markerSet.minZoom,
 					maxZoom: props.markerSet.maxZoom,
 					showLabels: props.markerSet.showLabels || store.state.components.markers.showLabels,
 					priority: props.markerSet.priority,
 				});
-
-				// store.commit(MutationTypes.UPDATE_LAYER, {
-				// 	layer: layerGroup,
-				// 	options: {enabled: newValue.hidden}
-				// });
 			}
 		}, {deep: true});
 
+    watch(enabled, (newValue) => newValue ? props.leaflet.addLayer(layer) : props.leaflet.removeLayer(layer));
+
 		onMounted(() => {
-			store.commit(MutationTypes.ADD_LAYER, {
-				layer: markRaw(layerGroup),
-				name: props.markerSet.label,
-				overlay: true,
-				position: props.markerSet.priority || 0,
-				enabled: !props.markerSet.hidden,
-				showInControl: true
-			});
+			store.commit(MutationTypes.ADD_LAYER, layerDefinition);
+
+      if(layerDefinition.enabled) {
+        props.leaflet.addLayer(layer);
+      }
 		});
 
-		onUnmounted(() => store.commit(MutationTypes.REMOVE_LAYER, layerGroup));
+		onUnmounted(() => {
+      store.commit(MutationTypes.REMOVE_LAYER, layer);
+      props.leaflet.removeLayer(layer);
+    });
 
 		return {
 			markerSettings,
-			layerGroup,
+			layer,
 		}
 	},
 	render() {

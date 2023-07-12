@@ -71,7 +71,6 @@ export type State = {
 		messages: LiveAtlasChat[];
 	};
 
-	pendingLayerUpdates: Map<Layer, boolean>; //Pending changes to map layer visibility
 	pendingMarkerUpdates: DynmapMarkerUpdate[];
 	pendingTileUpdates: Array<DynmapTileUpdate>;
 
@@ -148,7 +147,6 @@ export const state: State = {
 
 	markerSets: new Map(), //Marker sets from world_markers.json, doesn't include the markers themselves for performance reasons
 
-	pendingLayerUpdates: new Map(), //Pending updates to map layer visibility
 	pendingMarkerUpdates: [], //Pending updates to markers/areas/etc
 	pendingTileUpdates: [], //Pending updates to map tiles
 

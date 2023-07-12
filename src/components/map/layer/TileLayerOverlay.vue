@@ -15,7 +15,7 @@
   -->
 
 <script lang="ts">
-import {markRaw, defineComponent, onUnmounted} from "vue";
+import {markRaw, defineComponent, onUnmounted, reactive, onMounted, computed, watch} from "vue";
 import {LiveAtlasTileLayerOverlay} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
@@ -35,17 +35,26 @@ export default defineComponent({
 
 	setup(props) {
 		const store = useStore();
-
 		let layer = store.getters.currentMapProvider!.createTileLayer(Object.freeze(JSON.parse(JSON.stringify(props.options.tileLayerOptions))));
+    const layerDefinition = reactive({
+        layer: markRaw(layer),
+        name: props.options.label,
+        overlay: true,
+        position: props.options.priority || 0,
+        enabled: false,
+        showInControl: true
+		}),
+        enabled = computed(() => layerDefinition.enabled);
 
-		store.commit(MutationTypes.ADD_LAYER, {
-			layer: markRaw(layer),
-			name: props.options.label,
-			overlay: true,
-			position: props.options.priority || 0,
-			enabled: false,
-			showInControl: true
-		});
+    watch(enabled, (newValue) => newValue ? props.leaflet.addLayer(layer) : props.leaflet.removeLayer(layer));
+
+    onMounted(() => {
+      store.commit(MutationTypes.ADD_LAYER, layerDefinition);
+
+      if(layerDefinition.enabled) {
+        props.leaflet.addLayer(layer);
+      }
+    });
 
 		onUnmounted(() => {
 			store.commit(MutationTypes.REMOVE_LAYER, layer)
