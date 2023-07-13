@@ -16,26 +16,26 @@
 
 <script lang="ts">
 import {markRaw, defineComponent, onUnmounted, reactive, onMounted, computed, watch} from "vue";
-import {LiveAtlasTileLayerOverlay} from "@/index";
+import {LiveAtlasOverlay} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 
 export default defineComponent({
 	props: {
-		options: {
-			type: Object as () => LiveAtlasTileLayerOverlay,
+		overlay: {
+			type: Object as () => LiveAtlasOverlay,
 			required: true
 		}
 	},
 
   setup(props) {
 		const store = useStore(),
-      layer = store.getters.currentMapProvider!.getMapLayer(props.options.tileLayerOptions),
+      layer = store.getters.currentMapProvider!.getOverlayMapLayer(props.overlay),
       layerDefinition = reactive({
         layer: markRaw(layer),
-        name: props.options.label,
+        name: props.overlay.label,
         overlay: true,
-        position: props.options.priority || 0,
+        position: props.overlay.priority || 0,
         enabled: false,
         showInControl: true
 		}),

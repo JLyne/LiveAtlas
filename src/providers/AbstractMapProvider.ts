@@ -16,12 +16,11 @@
 
 import {
 	LiveAtlasMapLayer,
-	LiveAtlasMapProvider, LiveAtlasMapRenderer, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer,
+	LiveAtlasMapProvider, LiveAtlasMapRenderer, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer, LiveAtlasOverlay,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 
 export default abstract class AbstractMapProvider implements LiveAtlasMapProvider {
 	protected readonly store = useStore();
@@ -130,7 +129,8 @@ export default abstract class AbstractMapProvider implements LiveAtlasMapProvide
 		return AbstractMapProvider.fetchJSON(url, {signal, credentials: 'include'});
 	}
 
-	abstract getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer;
+	abstract getBaseMapLayer(options: LiveAtlasMapDefinition): LiveAtlasMapLayer;
+	abstract getOverlayMapLayer(options: LiveAtlasOverlay): LiveAtlasMapLayer;
 	abstract getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
 	getRenderer(): LiveAtlasMapRenderer {
 		return this.renderer;

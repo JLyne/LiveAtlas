@@ -17,21 +17,20 @@
 <script lang="ts">
 import {computed, defineComponent, onMounted, onUnmounted, watch} from "vue";
 import {useStore} from "@/store";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default defineComponent({
 	props: {
-		options: {
-			type: Object as () => LiveAtlasTileLayerOptions,
+		map: {
+			type: Object as () => LiveAtlasMapDefinition,
 			required: true
 		},
 	},
 
 	setup(props) {
 		const store = useStore(),
-      layer = store.getters.currentMapProvider!.getMapLayer(props.options),
-			active = computed(() => props.options instanceof LiveAtlasMapDefinition && props.options === store.state.currentMap);
+      layer = store.getters.currentMapProvider!.getBaseMapLayer(props.map),
+			active = computed(() => props.map === store.state.currentMap);
 
 		watch(active, newValue => newValue ? layer.add() : layer.remove());
 

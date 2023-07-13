@@ -18,16 +18,33 @@
  */
 
 import {computed, watch, WatchStopHandle, ComputedRef} from "vue";
-import {Map as LeafletMap, Coords, DoneCallback} from 'leaflet';
-import {TileInformation} from "dynmap";
+import {Map as LeafletMap, Coords, DoneCallback, Util} from 'leaflet';
+import {ImageFormat, TileInformation} from "dynmap";
 import {Coordinate, Coordinate2D} from "@/index";
 import {Store, useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
-import {AbstractTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
+import {
+	AbstractTileLayer,
+	LiveAtlasTileLayerInternalOptions,
+	LiveAtlasTileLayerOptions
+} from "@/leaflet/tileLayer/AbstractTileLayer";
+
+export interface DynmapTileLayerOptions extends LiveAtlasTileLayerOptions {
+	imageFormat: ImageFormat;
+	prefix: string;
+	nightAndDay: boolean;
+}
+
+export interface DynmapTileLayerInternalOptions extends LiveAtlasTileLayerInternalOptions {
+	imageFormat: ImageFormat;
+	prefix: string;
+	nightAndDay: boolean;
+}
 
 
 // noinspection JSUnusedGlobalSymbols
 export class DynmapTileLayer extends AbstractTileLayer {
+	declare options: DynmapTileLayerInternalOptions;
 	private readonly _namedTiles: Map<any, any>;
 	private readonly _store: Store = useStore();
 
@@ -37,8 +54,14 @@ export class DynmapTileLayer extends AbstractTileLayer {
 	private _updateUnwatch: WatchStopHandle | null = null;
 	private _updateFrame: number = 0;
 
-	constructor(options: LiveAtlasTileLayerOptions) {
+	constructor(options: DynmapTileLayerOptions) {
 		super(options);
+
+		Util.setOptions(this, {
+			imageFormat: options.imageFormat,
+			prefix: options.prefix,
+			nightAndDay: options.nightAndDay,
+		});
 
 		this._namedTiles = Object.seal(new Map());
 		this._pendingUpdates = computed(() => !!this._store.state.pendingTileUpdates.length);

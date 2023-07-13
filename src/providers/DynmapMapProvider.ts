@@ -40,11 +40,11 @@ import {
 	buildServerConfig, buildUpdates, buildWorlds
 } from "@/util/dynmap";
 import ConfigurationError from "@/errors/ConfigurationError";
-import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
+import {DynmapTileLayer, DynmapTileLayerOptions} from "@/leaflet/tileLayer/DynmapTileLayer";
 import {validateConfigURL} from "@/util";
 import LeafletMapProvider from "@/providers/LeafletMapProvider";
 import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default class DynmapMapProvider extends LeafletMapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -58,6 +58,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
+	private tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions> = new Map();
 
 	constructor(name: string, config: DynmapUrlConfig, renderer: LeafletMapRenderer) {
 		super(name, config, renderer);
@@ -123,15 +124,17 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 			throw new Error(response.error);
 		}
 
-		const config = buildServerConfig(response);
+		const config = buildServerConfig(response),
+			worlds = buildWorlds(response, this.config);
 
+		this.tileLayerOptions = worlds.tileLayerOptions;
 		this.updateInterval = response.updaterate || 3000;
 
 		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
 		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, response.confighash || 0);
 		this.store.commit(MutationTypes.SET_MAX_PLAYERS, response.maxcount || 0);
 		this.store.commit(MutationTypes.SET_MESSAGES, buildMessagesConfig(response));
-		this.store.commit(MutationTypes.SET_WORLDS, buildWorlds(response, this.config));
+		this.store.commit(MutationTypes.SET_WORLDS, worlds.worlds);
 		this.store.commit(MutationTypes.SET_COMPONENTS, buildComponents(response, this.config));
 		this.store.commit(MutationTypes.SET_LOGGED_IN, response.loggedin || false);
 	}
@@ -146,8 +149,8 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 		this.markers.clear();
 	}
 
-	getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer {
-		return this.renderer.createMapLayer(new DynmapTileLayer(options));
+	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {
+		return this.renderer.createMapLayer(new DynmapTileLayer(this.tileLayerOptions.get(map)!));
 	}
 
 	private async getUpdate(): Promise<void> {

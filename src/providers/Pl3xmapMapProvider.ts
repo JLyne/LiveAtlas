@@ -62,6 +62,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
+	private tileLayerOptions: Map<LiveAtlasMapDefinition, LiveAtlasTileLayerOptions> = new Map();
 
 	constructor(name: string, config: string, renderer: LeafletMapRenderer) {
 		super(name, config, renderer);
@@ -181,31 +182,31 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 				dimension,
 				seaLevel: 0,
 				maps,
-			};
-
-			maps.add(Object.freeze(new LiveAtlasMapDefinition({
+			},
+				map = Object.freeze(new LiveAtlasMapDefinition({
 				world: w,
 
 				name: 'flat',
 				displayName: 'Flat',
 				icon: world.icon ? `${this.config}images/icon/${world.icon}.png` : undefined,
 
-				baseUrl: `${this.config}tiles/${w.name}/`,
-				imageFormat: 'png',
-				tileSize: 512,
-
 				background: 'transparent',
 				backgroundDay: 'transparent',
 				backgroundNight: 'transparent',
 
-				nativeZoomLevels: worldResponse.zoom.max || 1,
-				extraZoomLevels: worldResponse.zoom.extra,
 				defaultZoom: worldResponse.zoom.def || 1,
-				tileUpdateInterval: worldResponse.tiles_update_interval ? worldResponse.tiles_update_interval * 1000 : undefined,
 
 				center: {x: worldResponse.spawn.x, y: 0, z: worldResponse.spawn.z},
-			})));
+			}))
 
+			maps.add(map);
+			this.tileLayerOptions.set(map, {
+				baseUrl: `${this.config}tiles/${w.name}/`,
+				tileSize: 512,
+				nativeZoomLevels: worldResponse.zoom.max || 1,
+				extraZoomLevels: worldResponse.zoom.extra,
+				tileUpdateInterval: worldResponse.tiles_update_interval ? worldResponse.tiles_update_interval * 1000 : undefined,
+			});
 			worlds.push(w);
 		});
 
@@ -490,8 +491,8 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 		this.markers.clear();
 	}
 
-	getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer {
-		return this.renderer.createMapLayer(new Pl3xmapTileLayer(options));
+	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {
+		return this.renderer.createMapLayer(new Pl3xmapTileLayer(this.tileLayerOptions.get(map)!));
 	}
 
 	private async getPlayers(): Promise<Set<LiveAtlasPlayer>> {

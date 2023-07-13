@@ -15,17 +15,21 @@
  */
 
 import AbstractMapProvider from "@/providers/AbstractMapProvider";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 import {LiveAtlasMapLayer, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer} from "@/index";
+import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default abstract class LeafletMapProvider extends AbstractMapProvider {
     declare readonly renderer: LeafletMapRenderer;
 
-    abstract getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer;
-
     protected constructor(name: string, config: any, renderer: LeafletMapRenderer) {
         super(name, config, renderer);
+    }
+
+    abstract getBaseMapLayer(options: LiveAtlasMapDefinition): LiveAtlasMapLayer;
+
+    getOverlayMapLayer(set: LiveAtlasMarkerSet): LiveAtlasMapLayer {
+        throw new TypeError("Provider does not support overlay map layers");
     }
 
     getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer {

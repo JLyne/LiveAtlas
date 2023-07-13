@@ -27,7 +27,6 @@ import {DynmapMarkerUpdate} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {globalMessages, serverMessages} from "../messages";
 import {LiveAtlasMarkerType} from "@/util/markers";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 declare module "*.png" {
@@ -220,7 +219,8 @@ interface LiveAtlasMapProvider {
 	login(formData: FormData): void;
 	logout(): void;
 	register(formData: FormData): void;
-	getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer;
+	getBaseMapLayer(options: LiveAtlasMapDefinition): LiveAtlasMapLayer;
+	getOverlayMapLayer(options: LiveAtlasOverlay): LiveAtlasMapLayer;
 	getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
 	getRenderer(): LiveAtlasMapRenderer;
 }
@@ -261,10 +261,6 @@ interface LiveAtlasOverlay {
 
 interface LiveAtlasMarkerSet extends LiveAtlasOverlay {
 	showLabels?: boolean;
-}
-
-interface LiveAtlasTileLayerOverlay extends LiveAtlasOverlay {
-	tileLayerOptions: LiveAtlasTileLayerOptions;
 }
 
 interface LiveAtlasMarker {

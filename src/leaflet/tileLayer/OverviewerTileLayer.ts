@@ -18,14 +18,35 @@
  */
 
 import {Coords, Util} from "leaflet";
-import {AbstractTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
+import {
+	AbstractTileLayer,
+	LiveAtlasTileLayerInternalOptions,
+	LiveAtlasTileLayerOptions
+} from "@/leaflet/tileLayer/AbstractTileLayer";
+import {ImageFormat} from "dynmap";
+
+export interface OverviewerTileLayerOptions extends LiveAtlasTileLayerOptions {
+	prefix: string; //FIXME: Remove this
+	imageFormat: ImageFormat; //FIXME: Remove this
+}
+
+export interface OverviewerTileLayerInternalOptions extends LiveAtlasTileLayerInternalOptions {
+	prefix: string; //FIXME: Remove this
+	imageFormat: ImageFormat; //FIXME: Remove this //FIXME: Remove this
+}
 
 // noinspection JSUnusedGlobalSymbols
 export class OverviewerTileLayer extends AbstractTileLayer {
-	constructor(options: LiveAtlasTileLayerOptions) {
+	declare options: OverviewerTileLayerInternalOptions;
+
+	constructor(options: OverviewerTileLayerOptions) {
 		super(options);
 
-		Util.setOptions(this, {zoomReverse: false});
+		Util.setOptions(this, {
+			prefix: options.prefix,
+			imageFormat: options.imageFormat,
+			zoomReverse: false
+		});
 	}
 
 	getTileUrl(coords: Coords): string {

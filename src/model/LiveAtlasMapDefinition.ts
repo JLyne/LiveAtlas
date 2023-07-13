@@ -15,11 +15,9 @@
  */
 
 import {LatLng} from "leaflet";
-import {ImageFormat} from "dynmap";
-import {Coordinate, LiveAtlasProjection, LiveAtlasTileLayerOverlay, LiveAtlasWorldDefinition} from "@/index";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
+import {Coordinate, LiveAtlasProjection, LiveAtlasOverlay, LiveAtlasWorldDefinition} from "@/index";
 
-export interface LiveAtlasMapDefinitionOptions extends LiveAtlasTileLayerOptions {
+export interface LiveAtlasMapDefinitionOptions {
 	world: LiveAtlasWorldDefinition;
 	appendedWorld?: LiveAtlasWorldDefinition; // append_to_world
 
@@ -27,29 +25,19 @@ export interface LiveAtlasMapDefinitionOptions extends LiveAtlasTileLayerOptions
 	displayName?: string;
 	icon?: string;
 
-	baseUrl: string;
-	tileSize: number;
-	imageFormat: ImageFormat;
-	projection?: LiveAtlasProjection;
-	prefix?: string;
-
+	//FIXME: Try and remove these
 	background?: string;
 	nightAndDay?: boolean;
 	backgroundDay?: string;
 	backgroundNight?: string;
+	projection?: LiveAtlasProjection;
 
-	nativeZoomLevels: number;
-	extraZoomLevels?: number;
-	minZoom?: number;
-	maxZoom?: number;
 	defaultZoom?: number;
-
-	tileUpdateInterval?: number;
 	center?: Coordinate;
-	overlays?: Map<string, LiveAtlasTileLayerOverlay>;
+	overlays?: Map<string, LiveAtlasOverlay>;
 }
 
-export default class LiveAtlasMapDefinition implements LiveAtlasTileLayerOptions {
+export default class LiveAtlasMapDefinition implements LiveAtlasMapDefinitionOptions {
 	readonly world: LiveAtlasWorldDefinition;
 	readonly appendedWorld?: LiveAtlasWorldDefinition;
 
@@ -57,28 +45,19 @@ export default class LiveAtlasMapDefinition implements LiveAtlasTileLayerOptions
 	readonly displayName: string;
 	readonly icon?: string;
 
-	readonly baseUrl: string;
-	readonly imageFormat: ImageFormat;
-	readonly tileSize: number;
-	readonly projection?: LiveAtlasProjection;
-	readonly prefix: string;
-
+	//FIXME: Try and remove these
 	readonly background: string;
 	readonly nightAndDay: boolean;
 	readonly backgroundDay: string;
 	readonly backgroundNight: string;
 
-	readonly nativeZoomLevels: number;
-	readonly extraZoomLevels: number;
-	readonly minZoom: number;
-	readonly maxZoom?: number;
-	readonly defaultZoom?: number;
-
-	readonly tileUpdateInterval?: number;
-	readonly center?: Coordinate;
-	readonly overlays: Map<string, LiveAtlasTileLayerOverlay>;
-
+	readonly projection?: LiveAtlasProjection;
 	readonly scale: number;
+
+	readonly defaultZoom?: number;
+	readonly center?: Coordinate;
+	readonly overlays: Map<string, LiveAtlasOverlay>;
+
 
 	constructor(options: LiveAtlasMapDefinitionOptions) {
 		this.world = options.world;
@@ -88,36 +67,26 @@ export default class LiveAtlasMapDefinition implements LiveAtlasTileLayerOptions
 		this.displayName = options.displayName || '';
 		this.icon = options.icon || undefined;
 
+		//FIXME: Try and remove these
 		this.background = options.background || '#000000';
 		this.nightAndDay = options.nightAndDay || false;
 		this.backgroundDay = options.backgroundDay || '#000000';
 		this.backgroundNight = options.backgroundNight || '#000000';
-
-		this.baseUrl = options.baseUrl;
-		this.imageFormat = options.imageFormat;
-		this.tileSize = options.tileSize;
 		this.projection = options.projection || undefined;
-		this.prefix = options.prefix || '';
+		this.scale = 1; //FIXME
 
-		this.nativeZoomLevels = options.nativeZoomLevels || 1;
-		this.extraZoomLevels = options.extraZoomLevels || 0;
-		this.minZoom = options.minZoom || 0;
-		this.maxZoom = options.maxZoom || undefined;
 		this.defaultZoom = options.defaultZoom || undefined;
-
-		this.tileUpdateInterval = options.tileUpdateInterval || undefined;
 		this.center = options.center || undefined;
-
 		this.overlays = options.overlays || new Map();
-
-		this.scale = (1 / Math.pow(2, this.nativeZoomLevels));
 	}
 
+	//FIXME: Remove this
 	locationToLatLng(location: Coordinate): LatLng {
 		return this.projection ? this.projection.locationToLatLng(location)
 			: new LatLng(-location.z * this.scale, location.x * this.scale);
 	}
 
+	//FIXME: Remove this
 	latLngToLocation(latLng: LatLng, y: number): Coordinate {
 		return this.projection ? this.projection.latLngToLocation(latLng, y)
 			: {x: latLng.lng / this.scale, y: y, z: -latLng.lat / this.scale};

@@ -17,7 +17,8 @@
 <template>
 	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs" :aria-label="mapTitle">
 		<template v-if="currentRenderer">
-<!--			<TileLayer v-for="[name, map] in maps" :key="name" :options="map" :leaflet="leaflet"></TileLayer>-->
+			<BaseMapLayer v-for="[name, map] in maps" :key="name" :map="map" :renderer="currentRenderer"></BaseMapLayer>
+			<OverlayMapLayer v-for="[name, overlay] in overlays" :key="name" :overlay="overlay" :renderer="currentRenderer"></OverlayMapLayer>
 
 <!--			<TileLayerOverlay v-for="[name, overlay] in overlays" :key="name" :options="overlay" :leaflet="leaflet"></TileLayerOverlay>-->
 <!--			<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>-->
@@ -31,15 +32,15 @@ import {computed, ref, defineComponent} from "vue";
 import {LiveAtlasLocation, LiveAtlasPlayer, LiveAtlasMapViewTarget} from "@/index";
 import {useStore} from '@/store';
 import {MutationTypes} from "@/store/mutation-types";
-import TileLayer from "@/components/map/layer/TileLayer.vue";
+import BaseMapLayer from "@/components/map/layer/BaseMapLayer.vue";
 import PlayersLayer from "@/components/map/layer/PlayersLayer.vue";
 import MarkerSetLayer from "@/components/map/layer/MarkerSetLayer.vue";
-import TileLayerOverlay from "@/components/map/layer/TileLayerOverlay.vue";
+import OverlayMapLayer from "@/components/map/layer/OverlayMapLayer.vue";
 
 export default defineComponent({
 	components: {
-		TileLayerOverlay,
-		TileLayer,
+		BaseMapLayer,
+		OverlayMapLayer,
 		PlayersLayer,
 		MarkerSetLayer
 	},

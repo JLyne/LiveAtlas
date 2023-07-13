@@ -53,6 +53,7 @@ import {
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {getImagePixelSize} from "@/util/images";
+import {DynmapTileLayerOptions} from "@/leaflet/tileLayer/DynmapTileLayer";
 
 export function buildServerConfig(response: Options): LiveAtlasServerConfig {
 	let title = 'Dynmap';
@@ -89,8 +90,9 @@ export function buildMessagesConfig(response: Options): LiveAtlasServerMessageCo
 	}
 }
 
-export function buildWorlds(response: Configuration, config: DynmapUrlConfig): Array<LiveAtlasWorldDefinition> {
-	const worlds: Map<string, LiveAtlasWorldDefinition> = new Map<string, LiveAtlasWorldDefinition>();
+export function buildWorlds(response: Configuration, config: DynmapUrlConfig): {worlds: LiveAtlasWorldDefinition[], tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions>} {
+	const worlds: Map<string, LiveAtlasWorldDefinition> = new Map<string, LiveAtlasWorldDefinition>(),
+		tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions> = new Map();
 
 	//Get all the worlds first so we can handle append_to_world properly
 	(response.worlds || []).forEach((world: WorldConfiguration) => {
@@ -127,17 +129,12 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): A
 				name: map.name || '(Unnamed map)',
 				displayName: map.title,
 				icon: (map.icon || undefined) as string | undefined,
-
-				baseUrl: `${config.tiles}${encodeURIComponent(actualWorld.name)}/`,
-				imageFormat: map['image-format'] || 'png',
-				tileSize,
 				projection: new DynmapProjection({
 					mapToWorld: map.maptoworld || undefined,
 					worldToMap: map.worldtomap || undefined,
 					nativeZoomLevels,
 					tileSize,
 				}),
-				prefix: map.prefix || '',
 
 				background: map.background || '#000000',
 				nightAndDay: map.nightandday,
@@ -148,13 +145,20 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): A
 					x: world.center.x || 0,
 					y: world.center.y || 0,
 					z: world.center.z || 0
-				},
-
-				nativeZoomLevels,
-				extraZoomLevels: map.mapzoomin
+				}
 			})) as LiveAtlasMapDefinition;
 
 			actualWorld.maps.add(mapDef);
+			tileLayerOptions.set(mapDef, {
+				baseUrl: `${config.tiles}${encodeURIComponent(actualWorld.name)}/`,
+				imageFormat: map['image-format'] || 'png',
+				tileSize,
+
+				prefix: map.prefix || '',
+				nativeZoomLevels,
+				extraZoomLevels: map.mapzoomin,
+				nightAndDay: map.nightandday,
+			});
 
 			if(actualWorld !== assignedWorld) {
 				assignedWorld.maps.add(mapDef);
@@ -162,7 +166,10 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): A
 		});
 	});
 
-	return Array.from(worlds.values());
+	return {
+		worlds: Array.from(worlds.values()),
+		tileLayerOptions,
+	};
 }
 
 export function buildComponents(response: Configuration, config: DynmapUrlConfig): LiveAtlasComponentConfig {

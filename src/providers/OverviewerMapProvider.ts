@@ -19,11 +19,11 @@
 
 import {
 	LiveAtlasAreaMarker,
-	LiveAtlasComponentConfig, LiveAtlasMapLayer, LiveAtlasMapRenderer,
+	LiveAtlasComponentConfig, LiveAtlasMapLayer,
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet, LiveAtlasPointMarker,
 	LiveAtlasServerConfig,
-	LiveAtlasServerMessageConfig, LiveAtlasTileLayerOverlay,
+	LiveAtlasServerMessageConfig, LiveAtlasOverlay,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {useStore} from "@/store";
@@ -35,8 +35,7 @@ import {
 	runSandboxed,
 	stripHTML, validateConfigURL,
 } from "@/util";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
-import {OverviewerTileLayer} from "@/leaflet/tileLayer/OverviewerTileLayer";
+import {OverviewerTileLayer, OverviewerTileLayerOptions} from "@/leaflet/tileLayer/OverviewerTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/util/markers";
@@ -45,12 +44,13 @@ import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 import LeafletMapProvider from "@/providers/LeafletMapProvider";
 
 export default class OverviewerMapProvider extends LeafletMapProvider {
-	public static readonly renderer: new () => LiveAtlasMapRenderer = LeafletMapRenderer;
 	private configurationAbort?: AbortController = undefined;
 	private markersAbort?: AbortController = undefined;
 	private readonly markersRegex: RegExp = /^overviewer.util.injectMarkerScript\('([\w.]+)'\);?$/mgi;
 	private readonly mapMarkerSets: Map<string, Map<string, LiveAtlasMarkerSet>> = new Map();
 	private readonly mapMarkers: Map<string, Map<string, Map<string, LiveAtlasMarker>>> = Object.freeze(new Map());
+	private readonly mapLayerOptions: Map<LiveAtlasMapDefinition, OverviewerTileLayerOptions> = new Map();
+	private readonly overlayLayerOptions: Map<LiveAtlasOverlay, OverviewerTileLayerOptions> = new Map();
 
 	constructor(name: string, config: string, renderer: LeafletMapRenderer) {
 		super(name, config, renderer);
@@ -128,14 +128,10 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 				return;
 			}
 
-			world.maps.add(new LiveAtlasMapDefinition({
+			const map = Object.freeze(new LiveAtlasMapDefinition({
 				world,
-
 				name: tileset.path,
 				displayName: tileset.name || tileset.path,
-
-				baseUrl,
-				tileSize,
 				projection: new OverviewerProjection({
 					upperRight: serverResponse.CONST.UPPERRIGHT,
 					lowerLeft: serverResponse.CONST.LOWERLEFT,
@@ -144,29 +140,30 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 					nativeZoomLevels,
 					tileSize,
 				}),
-				prefix,
-
 				background: tileset.bgcolor,
-				imageFormat,
-
-				nativeZoomLevels,
-				minZoom,
-				maxZoom,
 				defaultZoom: tileset.defaultZoom,
-
 				center: {
 					x: tileset?.center[0] || 0,
 					y: tileset?.center[1] || 64,
 					z: tileset?.center[2] || 0,
 				},
-
 				overlays: new Map(),
-			}));
-
-			//Spawn marker
-			const markerSets = new Map<string, LiveAtlasMarkerSet>(),
+			})),
+				markerSets = new Map<string, LiveAtlasMarkerSet>(),
 				markers = new Map<string, Map<string, LiveAtlasMarker>>();
 
+			world.maps.add(map);
+			this.mapLayerOptions.set(map, {
+				baseUrl,
+				tileSize,
+				prefix,
+				imageFormat,
+				nativeZoomLevels,
+				minZoom,
+				maxZoom,
+			});
+
+			//Spawn marker
 			if(Array.isArray(tileset.spawn)) {
 				markerSets.set('spawn', {
 					id: 'spawn',
@@ -205,21 +202,22 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 				return;
 			}
 
-			const overlay: LiveAtlasTileLayerOverlay = {
+			const overlay: LiveAtlasOverlay = {
 				id: tileset.path,
 				label: tileset.name || tileset.path,
 				hidden: true,
 				priority: 0,
-				tileLayerOptions: {
-					baseUrl: tileset.base ? `${this.config}${tileset.base}/${tileset.path}` : this.config + tileset.path,
-					tileSize,
-					prefix: tileset.base,
-					imageFormat: tileset.imgextension,
-					nativeZoomLevels: tileset.zoomLevels,
-					minZoom: tileset.minZoom,
-					maxZoom: tileset.maxZoom,
-				}
 			};
+
+			this.overlayLayerOptions.set(overlay, {
+				baseUrl: tileset.base ? `${this.config}${tileset.base}/${tileset.path}` : this.config + tileset.path,
+				tileSize,
+				prefix: tileset.base,
+				imageFormat: tileset.imgextension,
+				nativeZoomLevels: tileset.zoomLevels,
+				minZoom: tileset.minZoom,
+				maxZoom: tileset.maxZoom,
+			});
 
 			//Add to listed maps, or all maps in defined world if no maps are listed
 			(worlds.get(tileset.world)?.maps || []).forEach(map => {
@@ -395,7 +393,11 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 		this.store.commit(MutationTypes.SET_MARKERS, this.mapMarkers.get(map.name) || new Map());
 	}
 
-	getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer {
-		return this.renderer.createMapLayer(new OverviewerTileLayer(options));
+	getOverlayMapLayer(overlay: LiveAtlasOverlay): LiveAtlasMapLayer {
+        return this.renderer.createMapLayer(new OverviewerTileLayer(this.overlayLayerOptions.get(overlay)!));
+    }
+
+	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {
+		return this.renderer.createMapLayer(new OverviewerTileLayer(this.mapLayerOptions.get(map)!));
 	}
 }

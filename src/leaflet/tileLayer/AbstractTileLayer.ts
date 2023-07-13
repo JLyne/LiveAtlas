@@ -15,16 +15,12 @@
  */
 
 import {Map as LeafletMap, Coords, DomUtil, DoneCallback, TileLayer, TileLayerOptions, Util} from "leaflet";
-import {ImageFormat} from "dynmap";
 import {LiveAtlasInternalTiles, LiveAtlasTileElement} from "@/index";
 import falseFn = Util.falseFn;
 
 export interface LiveAtlasTileLayerOptions {
 	baseUrl: string;
 	tileSize: number;
-	imageFormat: ImageFormat;
-	prefix?: string;
-	nightAndDay?: boolean;
 	nativeZoomLevels: number;
 	extraZoomLevels?: number;
 	minZoom?: number;
@@ -34,8 +30,6 @@ export interface LiveAtlasTileLayerOptions {
 
 export interface LiveAtlasTileLayerInternalOptions extends TileLayerOptions {
 	baseUrl: string;
-	imageFormat: ImageFormat;
-	prefix: string;
 	nightAndDay: boolean;
 	extraZoomLevels: number;
 	tileUpdateInterval?: number;
@@ -65,11 +59,8 @@ export abstract class AbstractTileLayer extends TileLayer {
 		});
 
 		Util.setOptions(this, {
-			imageFormat: options.imageFormat,
 			baseUrl: options.baseUrl,
 			tileUpdateInterval: options.tileUpdateInterval,
-			nightAndDay: !!options.nightAndDay,
-			prefix: options.prefix || '',
 			extraZoomLevels: options.extraZoomLevels || 0,
 			nativeZoomLevels: options.nativeZoomLevels,
 		});
