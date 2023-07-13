@@ -29,8 +29,10 @@ import {
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {MutationTypes} from "@/store/mutation-types";
 import {computed} from "vue";
-import {LiveAtlasMapViewTarget, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer} from "@/index";
+import {LiveAtlasMapLayer, LiveAtlasMapViewTarget, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer} from "@/index";
 import LeafletMarkerSetLayer from "@/layers/LeafletMarkerSetLayer";
+import {AbstractTileLayer} from "@/leaflet/tileLayer/AbstractTileLayer";
+import LeafletMapLayer from "@/layers/LeafletMapLayer";
 
 export default class LeafletMapRenderer extends AbstractMapRenderer {
     private leaflet: LiveAtlasLeafletMap | undefined;
@@ -136,10 +138,12 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
 
         if('min' in target.location) { // Bounds
             this.leaflet!.fitBounds(new LatLngBounds(
+                //FIXME: Find a way to avoid using the map for this
                 this.store.state.currentMap?.locationToLatLng(target.location.min) as LatLng,
                 this.store.state.currentMap?.locationToLatLng(target.location.max) as LatLng,
             ), target.options);
         } else { // Location
+            // FIXME: Find a way to avoid using the map for this
             const location = this.store.state.currentMap?.locationToLatLng(target.location) as LatLng;
             this.leaflet!.panTo(location, target.options as PanOptions);
         }
@@ -239,6 +243,10 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
             return e.layer._leaflet_id;
         }
         return e.target._leaflet_id;
+    }
+
+    createMapLayer(tileLayer: AbstractTileLayer): LiveAtlasMapLayer {
+        return new LeafletMapLayer(this.leaflet!, tileLayer);
     }
 
     createMarkerSetLayer(options: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer {

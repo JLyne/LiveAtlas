@@ -27,7 +27,8 @@ import {DynmapMarkerUpdate} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {globalMessages, serverMessages} from "../messages";
 import {LiveAtlasMarkerType} from "@/util/markers";
-import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
+import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 declare module "*.png" {
    const value: any;
@@ -58,6 +59,7 @@ export interface ProcessEnv {
     [key: string]: string | undefined
 }
 
+//FIXME: Can these 3 be merged?
 interface Coordinate {
 	x: number;
 	y: number;
@@ -100,7 +102,6 @@ interface LiveAtlasServerDefinition {
 	id: string;
 	label?: string;
 	mapProvider: LiveAtlasMapProvider;
-	mapRenderer: LiveAtlasMapRenderer;
 }
 
 // Messages defined directly in LiveAtlas and used for all servers
@@ -215,12 +216,13 @@ interface LiveAtlasMapProvider {
 	populateMap(map: LiveAtlasMapDefinition): Promise<void>;
 	startUpdates(): void;
 	stopUpdates(): void;
-	createTileLayer(options: LiveAtlasTileLayerOptions): LiveAtlasTileLayer;
 	sendChatMessage(message: string): void;
 	login(formData: FormData): void;
 	logout(): void;
 	register(formData: FormData): void;
-	getRendererClass(): new () => LiveAtlasMapRenderer;
+	getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer;
+	getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
+	getRenderer(): LiveAtlasMapRenderer;
 }
 
 interface LiveAtlasMapRenderer {
@@ -230,8 +232,6 @@ interface LiveAtlasMapRenderer {
 	zoomOut(): void;
 	setView(target: LiveAtlasMapViewTarget): void;
 	focus(): void;
-
-	createMarkerSetLayer(options: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
 }
 
 interface LiveAtlasLayer {
@@ -245,6 +245,9 @@ interface LiveAtlasMarkerSetLayer extends LiveAtlasLayer {
 	removeMarker(id: string): void;
 	updateMarker(update: DynmapMarkerUpdate): void;
 	update(update: LiveAtlasMarkerSet): void;
+}
+
+interface LiveAtlasMapLayer extends LiveAtlasLayer {
 }
 
 interface LiveAtlasOverlay {

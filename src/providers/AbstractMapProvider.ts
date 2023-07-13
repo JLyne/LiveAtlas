@@ -15,26 +15,27 @@
  */
 
 import {
-	LiveAtlasMapProvider, LiveAtlasMapRenderer,
+	LiveAtlasMapLayer,
+	LiveAtlasMapProvider, LiveAtlasMapRenderer, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {useStore} from "@/store";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {TileLayer} from "leaflet";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 
 export default abstract class AbstractMapProvider implements LiveAtlasMapProvider {
 	protected readonly store = useStore();
+	protected readonly renderer: LiveAtlasMapRenderer;
 	protected name: string;
 	protected config: any;
 
-	protected constructor(name: string, config: any) {
+	protected constructor(name: string, config: any, renderer: LiveAtlasMapRenderer) {
 		this.name = name;
 		this.config = config;
+		this.renderer = renderer;
 	}
 
 	abstract loadServerConfiguration(): Promise<void>;
-	abstract createTileLayer(options: LiveAtlasTileLayerOptions): TileLayer;
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {}
@@ -129,5 +130,9 @@ export default abstract class AbstractMapProvider implements LiveAtlasMapProvide
 		return AbstractMapProvider.fetchJSON(url, {signal, credentials: 'include'});
 	}
 
-	public abstract getRendererClass(): new () => LiveAtlasMapRenderer;
+	abstract getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer;
+	abstract getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
+	getRenderer(): LiveAtlasMapRenderer {
+		return this.renderer;
+	}
 }

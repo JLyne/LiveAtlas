@@ -19,7 +19,7 @@
 
 import {
 	LiveAtlasAreaMarker,
-	LiveAtlasComponentConfig, LiveAtlasMapRenderer,
+	LiveAtlasComponentConfig, LiveAtlasMapLayer, LiveAtlasMapRenderer,
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet, LiveAtlasPointMarker,
 	LiveAtlasServerConfig,
@@ -28,7 +28,6 @@ import {
 } from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import AbstractMapProvider from "@/providers/AbstractMapProvider";
 import {
 	getBoundsFromPoints,
 	getMiddle,
@@ -42,10 +41,10 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {getDefaultPlayerImage} from "@/util/images";
-import {TileLayer} from "leaflet";
 import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
+import LeafletMapProvider from "@/providers/LeafletMapProvider";
 
-export default class OverviewerMapProvider extends AbstractMapProvider {
+export default class OverviewerMapProvider extends LeafletMapProvider {
 	public static readonly renderer: new () => LiveAtlasMapRenderer = LeafletMapRenderer;
 	private configurationAbort?: AbortController = undefined;
 	private markersAbort?: AbortController = undefined;
@@ -53,8 +52,8 @@ export default class OverviewerMapProvider extends AbstractMapProvider {
 	private readonly mapMarkerSets: Map<string, Map<string, LiveAtlasMarkerSet>> = new Map();
 	private readonly mapMarkers: Map<string, Map<string, Map<string, LiveAtlasMarker>>> = Object.freeze(new Map());
 
-	constructor(name: string, config: string) {
-		super(name, config);
+	constructor(name: string, config: string, renderer: LeafletMapRenderer) {
+		super(name, config, renderer);
 
 		validateConfigURL(config, name, 'map');
 
@@ -396,11 +395,7 @@ export default class OverviewerMapProvider extends AbstractMapProvider {
 		this.store.commit(MutationTypes.SET_MARKERS, this.mapMarkers.get(map.name) || new Map());
 	}
 
-	createTileLayer(options: LiveAtlasTileLayerOptions): TileLayer {
-		return new OverviewerTileLayer(options);
-	}
-
-	getRendererClass(): new () => LiveAtlasMapRenderer {
-		return LeafletMapRenderer;
+	getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer {
+		return this.renderer.createMapLayer(new OverviewerTileLayer(options));
 	}
 }

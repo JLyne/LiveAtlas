@@ -57,7 +57,7 @@ export default class LeafletMarkerSetLayer extends AbstractMarkerSetLayer {
         //FIXME: Could this go somewhere else?
         this._currentMapUnwatch = watch(currentMap, (newValue) => {
             //Prevent error if this marker set has just been removed due to the map change
-            if(nonReactiveState.markers.has(this.markerSet.id)) {
+            if(newValue && nonReactiveState.markers.has(this.markerSet.id)) {
                 this.converter = newValue.locationToLatLng.bind(newValue);
 
                 for (const [id, area] of nonReactiveState.markers.get(this.markerSet.id)!) {

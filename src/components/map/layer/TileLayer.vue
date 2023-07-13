@@ -15,10 +15,9 @@
   -->
 
 <script lang="ts">
-import {computed, defineComponent, onUnmounted, watch} from "vue";
+import {computed, defineComponent, onMounted, onUnmounted, watch} from "vue";
 import {useStore} from "@/store";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
+import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default defineComponent({
@@ -27,28 +26,21 @@ export default defineComponent({
 			type: Object as () => LiveAtlasTileLayerOptions,
 			required: true
 		},
-		leaflet: {
-			type: Object as () => LiveAtlasLeafletMap,
-			required: true,
-		}
 	},
 
 	setup(props) {
 		const store = useStore(),
+      layer = store.getters.currentMapProvider!.getMapLayer(props.options),
 			active = computed(() => props.options instanceof LiveAtlasMapDefinition && props.options === store.state.currentMap);
 
-		let layer = store.getters.currentMapProvider!.createTileLayer(Object.freeze(JSON.parse(JSON.stringify(props.options))));
+		watch(active, newValue => newValue ? layer.add() : layer.remove());
 
-		const enableLayer = () => props.leaflet.addLayer(layer),
-			disableLayer = () => layer.remove();
-
-		watch(active, newValue => newValue ? enableLayer() : disableLayer());
-
-		if(active.value) {
-			enableLayer();
-		}
-
-		onUnmounted(() => disableLayer());
+		onMounted(() => {
+      if(active.value) {
+        layer.add();
+      }
+    });
+		onUnmounted(() => layer.remove());
 	},
 
 	render() {

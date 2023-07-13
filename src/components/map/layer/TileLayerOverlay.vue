@@ -19,24 +19,19 @@ import {markRaw, defineComponent, onUnmounted, reactive, onMounted, computed, wa
 import {LiveAtlasTileLayerOverlay} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 export default defineComponent({
 	props: {
 		options: {
 			type: Object as () => LiveAtlasTileLayerOverlay,
 			required: true
-		},
-		leaflet: {
-			type: Object as () => LiveAtlasLeafletMap,
-			required: true,
 		}
 	},
 
-	setup(props) {
-		const store = useStore();
-		let layer = store.getters.currentMapProvider!.createTileLayer(Object.freeze(JSON.parse(JSON.stringify(props.options.tileLayerOptions))));
-    const layerDefinition = reactive({
+  setup(props) {
+		const store = useStore(),
+      layer = store.getters.currentMapProvider!.getMapLayer(props.options.tileLayerOptions),
+      layerDefinition = reactive({
         layer: markRaw(layer),
         name: props.options.label,
         overlay: true,
@@ -46,20 +41,24 @@ export default defineComponent({
 		}),
         enabled = computed(() => layerDefinition.enabled);
 
-    watch(enabled, (newValue) => newValue ? props.leaflet.addLayer(layer) : props.leaflet.removeLayer(layer));
+    watch(enabled, (newValue) => newValue ? layer.add() : layer.remove());
 
-    onMounted(() => {
-      store.commit(MutationTypes.ADD_LAYER, layerDefinition);
+		onMounted(() => {
+			store.commit(MutationTypes.ADD_LAYER, layerDefinition);
 
       if(layerDefinition.enabled) {
-        props.leaflet.addLayer(layer);
+        layer.add();
       }
-    });
+		});
 
 		onUnmounted(() => {
-			store.commit(MutationTypes.REMOVE_LAYER, layer)
-			layer.remove();
-		});
+      store.commit(MutationTypes.REMOVE_LAYER, layer);
+      layer.remove();
+    });
+
+		return {
+			layer,
+		}
 	},
 
 	render() {

@@ -14,25 +14,11 @@
  * limitations under the License.
  */
 
-import {useStore} from "@/store";
-import {
-	LiveAtlasMapRenderer,
-	LiveAtlasMapViewTarget,
-} from "@/index";
+import {LiveAtlasMapLayer} from "@/index";
 
-export default abstract class AbstractMapRenderer implements LiveAtlasMapRenderer {
-    protected readonly store = useStore();
-
-	init(element: HTMLElement): void {
-	}
-
-    destroy(): void {
-
-	}
-
-	abstract zoomIn(): void;
-	abstract zoomOut(): void;
-
-	abstract setView(target: LiveAtlasMapViewTarget): void;
-	abstract focus(): void;
+//FIXME: Remove and just use interface if nothing gets added here
+export default abstract class AbstractMapLayer implements LiveAtlasMapLayer {
+    abstract add(): void;
+    abstract remove(): void;
+    abstract toggle(): void;
 }

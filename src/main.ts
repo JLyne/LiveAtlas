@@ -32,6 +32,7 @@ import Pl3xmapMapProvider from "@/providers/Pl3xmapMapProvider";
 import {showSplashError} from "@/util/splash";
 import ConfigurationError from "@/errors/ConfigurationError";
 import OverviewerMapProvider from "@/providers/OverviewerMapProvider";
+import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 import.meta.globEager('/assets/icons/*.svg');
 
 const splash = document.getElementById('splash');
@@ -54,10 +55,10 @@ store.subscribe((mutation, state) => {
 	}
 });
 
-registerMapProvider('dynmap', DynmapMapProvider);
-registerMapProvider('pl3xmap', Pl3xmapMapProvider);
-registerMapProvider('squaremap', Pl3xmapMapProvider);
-registerMapProvider('overviewer', OverviewerMapProvider);
+registerMapProvider('dynmap', LeafletMapRenderer, DynmapMapProvider);
+registerMapProvider('pl3xmap', LeafletMapRenderer, Pl3xmapMapProvider);
+registerMapProvider('squaremap', LeafletMapRenderer, Pl3xmapMapProvider);
+registerMapProvider('overviewer', LeafletMapRenderer, OverviewerMapProvider);
 
 const config = window.liveAtlasConfig;
 window.liveAtlasLoaded = true;

@@ -19,7 +19,7 @@
 
 import {MarkerSet} from "dynmap";
 import {
-	LiveAtlasMapRenderer,
+	LiveAtlasMapLayer,
 	LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasPlayer,
@@ -43,10 +43,10 @@ import ConfigurationError from "@/errors/ConfigurationError";
 import {DynmapTileLayer} from "@/leaflet/tileLayer/DynmapTileLayer";
 import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {validateConfigURL} from "@/util";
-import {TileLayer} from "leaflet";
+import LeafletMapProvider from "@/providers/LeafletMapProvider";
 import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 
-export default class DynmapMapProvider extends AbstractMapProvider {
+export default class DynmapMapProvider extends LeafletMapProvider {
 	private configurationAbort?: AbortController = undefined;
 	private	markersAbort?: AbortController = undefined;
 	private	updateAbort?: AbortController = undefined;
@@ -59,8 +59,8 @@ export default class DynmapMapProvider extends AbstractMapProvider {
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 
-	constructor(name: string, config: DynmapUrlConfig) {
-		super(name, config);
+	constructor(name: string, config: DynmapUrlConfig, renderer: LeafletMapRenderer) {
+		super(name, config, renderer);
 		this.validateConfig();
 	}
 
@@ -146,8 +146,8 @@ export default class DynmapMapProvider extends AbstractMapProvider {
 		this.markers.clear();
 	}
 
-	createTileLayer(options: LiveAtlasTileLayerOptions): TileLayer {
-		return new DynmapTileLayer(options);
+	getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer {
+		return this.renderer.createMapLayer(new DynmapTileLayer(options));
 	}
 
 	private async getUpdate(): Promise<void> {
@@ -404,9 +404,5 @@ export default class DynmapMapProvider extends AbstractMapProvider {
 
 			return response;
 		});
-	}
-
-	getRendererClass(): new () => LiveAtlasMapRenderer {
-		return LeafletMapRenderer;
 	}
 }

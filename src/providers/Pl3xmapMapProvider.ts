@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {PointTuple, TileLayer} from "leaflet";
+import {PointTuple} from "leaflet";
 import {
 	LiveAtlasAreaMarker,
 	LiveAtlasCircleMarker,
 	LiveAtlasComponentConfig,
 	LiveAtlasDimension,
-	LiveAtlasLineMarker, LiveAtlasMapRenderer, LiveAtlasMarker,
+	LiveAtlasLineMarker, LiveAtlasMapLayer, LiveAtlasMarker,
 	LiveAtlasMarkerSet,
 	LiveAtlasPartialComponentConfig,
 	LiveAtlasPlayer,
@@ -32,15 +32,15 @@ import {
 import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import AbstractMapProvider from "@/providers/AbstractMapProvider";
 import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex, validateConfigURL} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {getDefaultPlayerImage} from "@/util/images";
 import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
+import LeafletMapProvider from "@/providers/LeafletMapProvider";
 
-export default class Pl3xmapMapProvider extends AbstractMapProvider {
+export default class Pl3xmapMapProvider extends LeafletMapProvider {
 	private configurationAbort?: AbortController = undefined;
 	private	markersAbort?: AbortController = undefined;
 	private	playersAbort?: AbortController = undefined;
@@ -63,8 +63,8 @@ export default class Pl3xmapMapProvider extends AbstractMapProvider {
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 
-	constructor(name: string, config: string) {
-		super(name, config);
+	constructor(name: string, config: string, renderer: LeafletMapRenderer) {
+		super(name, config, renderer);
 
 		if(this.config === true) {
 			this.config = window.location.pathname;
@@ -490,8 +490,8 @@ export default class Pl3xmapMapProvider extends AbstractMapProvider {
 		this.markers.clear();
 	}
 
-	createTileLayer(options: LiveAtlasTileLayerOptions): TileLayer {
-		return new Pl3xmapTileLayer(options);
+	getMapLayer(options: LiveAtlasTileLayerOptions): LiveAtlasMapLayer {
+		return this.renderer.createMapLayer(new Pl3xmapTileLayer(options));
 	}
 
 	private async getPlayers(): Promise<Set<LiveAtlasPlayer>> {
@@ -604,9 +604,5 @@ export default class Pl3xmapMapProvider extends AbstractMapProvider {
 		if(this.markersAbort) {
 			this.markersAbort.abort();
 		}
-	}
-
-	getRendererClass(): new () => LiveAtlasMapRenderer {
-		return LeafletMapRenderer;
 	}
 }

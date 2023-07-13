@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import {markRaw, watch, defineComponent, computed, onMounted, onUnmounted, reactive} from "vue";
-import {LiveAtlasMapRenderer, LiveAtlasMarkerSet} from "@/index";
+import {LiveAtlasMarkerSet} from "@/index";
 import {useStore} from "@/store";
 import {MutationTypes} from "@/store/mutation-types";
 
@@ -26,16 +26,12 @@ export default defineComponent({
 			type: Object as () => LiveAtlasMarkerSet,
 			required: true,
 		},
-    renderer: {
-      type: Object as () => LiveAtlasMapRenderer,
-      required: true,
-    }
 	},
 
 	setup(props) {
 		const store = useStore(),
 			markerSettings = computed(() => store.state.components.markers),
-			layer = props.renderer.createMarkerSetLayer(props.markerSet),
+			layer = store.getters.currentMapProvider!.getMarkerSetLayer(props.markerSet),
       layerDefinition = reactive({
 				layer: markRaw(layer),
 				name: props.markerSet.label,

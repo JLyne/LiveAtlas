@@ -103,7 +103,7 @@ export const getters: GetterTree<State, State> & Getters = {
 	},
 
 	currentMapRenderer(state: State): LiveAtlasMapRenderer | undefined {
-		return state.currentServer?.mapRenderer;
+		return state.currentServer?.mapProvider.getRenderer();
 	},
 
 	currentZoom(state: State): number {

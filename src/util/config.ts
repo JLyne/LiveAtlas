@@ -18,27 +18,36 @@ import {LiveAtlasGlobalConfig, LiveAtlasMapProvider, LiveAtlasMapRenderer, LiveA
 import {DynmapUrlConfig} from "@/dynmap";
 import {useStore} from "@/store";
 import ConfigurationError from "@/errors/ConfigurationError";
-import DynmapMapProvider from "@/providers/DynmapMapProvider";
 
 const expectedConfigVersion = 1,
-	registeredProviders: Map<string, new (name: string, config: any) => LiveAtlasMapProvider> = new Map(),
+	registeredProviders: Map<string, new (...args: any[]) => LiveAtlasMapProvider> = new Map(),
+	providerRenderers: Map<new (...args: any[]) => LiveAtlasMapProvider, new (...args: any[]) => LiveAtlasMapRenderer> = new Map(),
 	rendererInstances: Map<new () => LiveAtlasMapRenderer, LiveAtlasMapRenderer> = new Map();
 
 /**
  * Registers the given {@link LiveAtlasMapProvider} with the given id
  * Server entries in {@link LiveAtlasGlobalConfig} with the given id will use the given provider
  * @param {string} id The id
- * @param {new (name: string, config: any) => LiveAtlasMapProvider} provider The provider
+ * @param {new (...args: any[]) => LiveAtlasMapRenderer} renderer The {@link LiveAtlasMapRenderer} used by the provider
+ * @param {new (...args: any[]) => LiveAtlasMapProvider} provider The provider
  */
-export const registerMapProvider = (id: string, provider: new (name: string, config: any) => LiveAtlasMapProvider) => {
+export const registerMapProvider = (id: string, renderer: new (...args: any[]) => LiveAtlasMapRenderer, provider: new (...args: any[]) => LiveAtlasMapProvider) => {
 	if(registeredProviders.has(id)) {
 		throw new TypeError(`${id} is already registered`);
 	}
 
 	registeredProviders.set(id, provider);
+	providerRenderers.set(provider, renderer);
 }
 
-const getRendererInstance = (renderer: new () => LiveAtlasMapRenderer): LiveAtlasMapRenderer => {
+const createProviderInstance = (id: string, config: any): LiveAtlasMapProvider => {
+	const provider = registeredProviders.get(id)!,
+		renderer = getRendererInstance(providerRenderers.get(provider)!);
+
+	return new provider(id, config, renderer);
+}
+
+const getRendererInstance = (renderer: new (...args: any[]) => LiveAtlasMapRenderer): LiveAtlasMapRenderer => {
 	if(rendererInstances.has(renderer)) {
 		return rendererInstances.get(renderer)!;
 	} else {
@@ -71,15 +80,14 @@ const loadLiveAtlasConfig = (config: any): Map<string, LiveAtlasServerDefinition
 		const serverConfig = config[server];
 		let foundProvider = false;
 
-		for (const mapProvider of registeredProviders) {
-			if(serverConfig && Object.hasOwnProperty.call(serverConfig, mapProvider[0])) {
+		for (const provider of registeredProviders.keys()) {
+			if(serverConfig && Object.hasOwnProperty.call(serverConfig, provider)) {
 				try {
-					const provider = new mapProvider[1](server, serverConfig[mapProvider[0]]);
+					const mapProvider = createProviderInstance(provider, serverConfig[provider]);
 					result.set(server, Object.freeze({
 						id: server,
 						label: serverConfig.label,
-						mapProvider: provider,
-						mapRenderer: getRendererInstance(provider.getRendererClass())
+						mapProvider: mapProvider
 					}));
 					foundProvider = true;
 				} catch(e: any) {
@@ -108,12 +116,10 @@ const loadDefaultConfig = (config: DynmapUrlConfig): Map<string, LiveAtlasServer
 	const result = new Map<string, LiveAtlasServerDefinition>();
 
 	try {
-		const provider = new DynmapMapProvider('dynmap', config);
 		result.set('dynmap', Object.freeze({
 			id: 'dynmap',
 			label: 'dynmap',
-			mapProvider: provider,
-			mapRenderer: getRendererInstance(provider.getRendererClass())
+			mapProvider: createProviderInstance('dynmap', config),
 		}));
 	} catch (e: any) {
 		e.message = `${e.message}. ${check}`;
