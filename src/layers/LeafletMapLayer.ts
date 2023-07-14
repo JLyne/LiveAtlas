@@ -31,11 +31,11 @@ export default class LeafletMapLayer extends AbstractMapLayer {
 		this.layer = tileLayer;
     }
 
-    add(): void {
+    enable(): void {
         this.leaflet.addLayer(this.layer);
     }
 
-    remove(): void {
+    disable(): void {
         this.leaflet.removeLayer(this.layer);
     }
 

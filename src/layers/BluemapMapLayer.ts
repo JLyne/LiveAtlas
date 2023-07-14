@@ -30,16 +30,21 @@ export default class BluemapMapLayer extends AbstractMapLayer {
 		this.map = map;
     }
 
-    add(): void {
+    enable(): void {
         console.log(this.map);
         this.viewer.switchMap(this.map);
     }
 
-    remove(): void {
+    disable(): void {
         this.map.unload();
     }
 
     toggle(): void {
         this.viewer.map === this.map ? this.map.unload() : this.viewer.switchMap(this.map);
+    }
+
+    destroy(): void {
+        this.disable();
+        this.map.dispose();
     }
 }

@@ -235,9 +235,10 @@ interface LiveAtlasMapRenderer {
 }
 
 interface LiveAtlasLayer {
-	add(): void;
-	remove(): void;
+	enable(): void;
+	disable(): void;
 	toggle(): void;
+	destroy(): void;
 }
 
 interface LiveAtlasMarkerSetLayer extends LiveAtlasLayer {

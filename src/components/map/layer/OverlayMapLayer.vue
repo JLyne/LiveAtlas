@@ -41,19 +41,19 @@ export default defineComponent({
 		}),
         enabled = computed(() => layerDefinition.enabled);
 
-    watch(enabled, (newValue) => newValue ? layer.add() : layer.remove());
+    watch(enabled, (newValue) => newValue ? layer.enable() : layer.disable());
 
 		onMounted(() => {
 			store.commit(MutationTypes.ADD_LAYER, layerDefinition);
 
       if(layerDefinition.enabled) {
-        layer.add();
+        layer.enable();
       }
 		});
 
 		onUnmounted(() => {
       store.commit(MutationTypes.REMOVE_LAYER, layer);
-      layer.remove();
+      layer.disable();
     });
 
 		return {

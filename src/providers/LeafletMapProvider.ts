@@ -22,7 +22,7 @@ import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 export default abstract class LeafletMapProvider extends AbstractMapProvider {
     declare readonly renderer: LeafletMapRenderer;
 
-    protected constructor(name: string, url: any, renderer: LeafletMapRenderer) {
+    constructor(name: string, url: any, renderer: LeafletMapRenderer) {
         super(name, url, renderer);
     }
 

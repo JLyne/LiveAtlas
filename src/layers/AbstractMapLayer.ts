@@ -18,7 +18,11 @@ import {LiveAtlasMapLayer} from "@/index";
 
 //FIXME: Remove and just use interface if nothing gets added here
 export default abstract class AbstractMapLayer implements LiveAtlasMapLayer {
-    abstract add(): void;
-    abstract remove(): void;
+    abstract enable(): void;
+    abstract disable(): void;
     abstract toggle(): void;
+
+    destroy(): void {
+        this.disable();
+    }
 }

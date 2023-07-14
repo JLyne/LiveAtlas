@@ -32,14 +32,14 @@ export default defineComponent({
       layer = store.getters.currentMapProvider!.getBaseMapLayer(props.map),
 			active = computed(() => props.map === store.state.currentMap);
 
-		watch(active, newValue => newValue ? layer.add() : layer.remove());
+		watch(active, newValue => newValue ? layer.enable() : layer.disable());
 
 		onMounted(() => {
       if(active.value) {
-        layer.add();
+        layer.enable();
       }
     });
-		onUnmounted(() => layer.remove());
+		onUnmounted(() => layer.destroy());
 	}
 });
 </script>

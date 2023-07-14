@@ -40,13 +40,17 @@ export default abstract class AbstractMarkerSetLayer implements LiveAtlasMarkerS
 		});
     }
 
-    add() {
+    enable() {
         registerSetUpdateHandler(this.setUpdateHandler, this.markerSet.id);
     }
 
-    remove() {
+    disable() {
         unregisterSetUpdateHandler(this.setUpdateHandler, this.markerSet.id);
         this._markerSetUnwatch();
+    }
+
+    destroy() {
+        this.disable();
     }
 
     abstract toggle(): void;

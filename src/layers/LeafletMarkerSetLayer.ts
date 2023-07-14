@@ -67,18 +67,18 @@ export default class LeafletMarkerSetLayer extends AbstractMarkerSetLayer {
         });
     }
 
-    add() {
-        super.add()
+    enable() {
+        super.enable()
         this.leaflet.addLayer(this.layerGroup);
     }
 
     toggle() {
-        this.leaflet.hasLayer(this.layerGroup) ? this.remove() : this.add();
+        this.leaflet.hasLayer(this.layerGroup) ? this.disable() : this.enable();
     }
 
-    remove() {
+    disable() {
         this._currentMapUnwatch();
-        super.remove()
+        super.disable()
         this.leaflet.removeLayer(this.layerGroup);
     }
 
