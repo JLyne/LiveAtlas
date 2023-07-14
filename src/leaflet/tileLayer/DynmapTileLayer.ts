@@ -22,12 +22,12 @@ import {Map as LeafletMap, Coords, DoneCallback, Util} from 'leaflet';
 import {ImageFormat, TileInformation} from "dynmap";
 import {Coordinate, Coordinate2D} from "@/index";
 import {Store, useStore} from "@/store";
-import {ActionTypes} from "@/store/action-types";
 import {
 	AbstractTileLayer,
 	LiveAtlasTileLayerInternalOptions,
 	LiveAtlasTileLayerOptions
 } from "@/leaflet/tileLayer/AbstractTileLayer";
+import {DynmapTileUpdate} from "@/dynmap";
 
 export interface DynmapTileLayerOptions extends LiveAtlasTileLayerOptions {
 	imageFormat: ImageFormat;
@@ -49,7 +49,6 @@ export class DynmapTileLayer extends AbstractTileLayer {
 	private readonly _store: Store = useStore();
 
 	private readonly _night: ComputedRef<boolean>;
-	private readonly _pendingUpdates: ComputedRef<boolean>;
 	private _nightUnwatch: WatchStopHandle | null = null;
 	private _updateUnwatch: WatchStopHandle | null = null;
 	private _updateFrame: number = 0;
@@ -64,19 +63,11 @@ export class DynmapTileLayer extends AbstractTileLayer {
 		});
 
 		this._namedTiles = Object.seal(new Map());
-		this._pendingUpdates = computed(() => !!this._store.state.pendingTileUpdates.length);
 		this._night = computed(() => this._store.getters.night);
 	}
 
 	onAdd(map: LeafletMap) {
 		super.onAdd(map);
-
-		//Only watch updates when active map, to avoid stealing other map's tile updates
-		this._updateUnwatch = watch(this._pendingUpdates, (newValue, oldValue) => {
-			if(newValue && !oldValue && !this._updateFrame) {
-				this.handlePendingUpdates();
-			}
-		});
 
 		this._nightUnwatch = watch(this._night, () =>  {
 			if(this.options.nightAndDay) {
@@ -198,18 +189,9 @@ export class DynmapTileLayer extends AbstractTileLayer {
 		};
 	}
 
-	private async handlePendingUpdates() {
-		const updates = await this._store.dispatch(ActionTypes.POP_TILE_UPDATES, 10);
-
+	updateTiles(updates: DynmapTileUpdate[]) {
 		for(const update of updates) {
 			this.updateNamedTile(update.name, update.timestamp);
-		}
-
-		if(this._pendingUpdates.value) {
-			// eslint-disable-next-line no-unused-vars
-			this._updateFrame = requestAnimationFrame(() => this.handlePendingUpdates());
-		} else {
-			this._updateFrame = 0;
 		}
 	}
 

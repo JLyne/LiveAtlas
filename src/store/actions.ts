@@ -17,13 +17,12 @@
 import {nextTick} from "vue";
 import {ActionContext, ActionTree} from "vuex";
 import {LiveAtlasGlobalConfig, LiveAtlasMarkerSet, LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
-import {DynmapMarkerUpdate, DynmapTileUpdate} from "@/dynmap";
+import {DynmapMarkerUpdate} from "@/dynmap";
 import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
 import {ActionTypes} from "@/store/action-types";
 import {Mutations} from "@/store/mutations";
 import {startUpdateHandling, stopUpdateHandling} from "@/util/markers";
-import {Layer} from "leaflet";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(
@@ -54,10 +53,6 @@ export interface Actions {
 		{commit}: AugmentedActionContext,
 		amount: number
 	): Promise<DynmapMarkerUpdate[]>
-	[ActionTypes.POP_TILE_UPDATES](
-		{commit}: AugmentedActionContext,
-		payload: number
-	): Promise<DynmapTileUpdate[]>
 	[ActionTypes.SEND_CHAT_MESSAGE](
 		{commit}: AugmentedActionContext,
 		payload: string
@@ -196,14 +191,6 @@ export const actions: ActionTree<State, State> & Actions = {
 		const updates = state.pendingMarkerUpdates.slice(0, amount);
 
 		commit(MutationTypes.POP_MARKER_UPDATES, amount);
-
-		return updates;
-	},
-
-	async [ActionTypes.POP_TILE_UPDATES]({commit, state}, amount: number): Promise<Array<DynmapTileUpdate>> {
-		const updates = state.pendingTileUpdates.slice(0, amount);
-
-		commit(MutationTypes.POP_TILE_UPDATES, amount);
 
 		return updates;
 	},

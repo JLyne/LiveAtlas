@@ -42,7 +42,6 @@ import {
 } from "@/index";
 import {
 	DynmapMarkerSetUpdate, DynmapMarkerUpdate,
-	DynmapTileUpdate
 } from "@/dynmap";
 import {MutationTypes} from "@/store/mutation-types";
 import {nonReactiveState, State} from "@/store/state";
@@ -65,11 +64,9 @@ export type Mutations<S = State> = {
 	[MutationTypes.SET_WORLD_STATE](state: S, worldState: LiveAtlasWorldState): void
 	[MutationTypes.ADD_MARKER_SET_UPDATES](state: S, updates: DynmapMarkerSetUpdate[]): void
 	[MutationTypes.ADD_MARKER_UPDATES](state: S, updates: DynmapMarkerUpdate[]): void
-	[MutationTypes.ADD_TILE_UPDATES](state: S, updates: Array<DynmapTileUpdate>): void
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<LiveAtlasChat>): void
 
 	[MutationTypes.POP_MARKER_UPDATES](state: S, amount: number): void
-	[MutationTypes.POP_TILE_UPDATES](state: S, amount: number): void
 
 	[MutationTypes.SET_MAX_PLAYERS](state: S, maxPlayers: number): void
 	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer>
@@ -294,11 +291,6 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.pendingMarkerUpdates = state.pendingMarkerUpdates.concat(markers);
 	},
 
-	//Adds tile updates from an update fetch to the pending updates list
-	[MutationTypes.ADD_TILE_UPDATES](state: State, updates: Array<DynmapTileUpdate>) {
-		state.pendingTileUpdates = state.pendingTileUpdates.concat(updates);
-	},
-
 	//Adds chat messages from an update fetch to the chat history
 	[MutationTypes.ADD_CHAT](state: State, chat: Array<LiveAtlasChat>) {
 		state.chat.messages.unshift(...chat);
@@ -307,11 +299,6 @@ export const mutations: MutationTree<State> & Mutations = {
 	//Pops the specified number of marker updates from the pending updates list
 	[MutationTypes.POP_MARKER_UPDATES](state: State, amount: number) {
 		state.pendingMarkerUpdates.splice(0, amount);
-	},
-
-	//Pops the specified number of tile updates from the pending updates list
-	[MutationTypes.POP_TILE_UPDATES](state: State, amount: number) {
-		state.pendingTileUpdates.splice(0, amount);
 	},
 
 	[MutationTypes.SET_MAX_PLAYERS](state: State, maxPlayers: number) {
@@ -440,7 +427,6 @@ export const mutations: MutationTree<State> & Mutations = {
 			state.currentWorld = newWorld;
 			state.markerSets.clear();
 			state.pendingMarkerUpdates.splice(0);
-			state.pendingTileUpdates.splice(0);
 			state.currentWorldState.timeOfDay = undefined;
 			state.currentWorldState.raining = false;
 			state.currentWorldState.thundering = false;
@@ -570,7 +556,6 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		state.markerSets.clear();
 		state.pendingMarkerUpdates.splice(0);
-		state.pendingTileUpdates.splice(0);
 
 		state.worlds.clear();
 		state.maps.clear();

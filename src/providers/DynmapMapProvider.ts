@@ -58,6 +58,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 	private updateInterval: number = 3000;
 
 	private tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions> = new Map();
+	private tileLayers: Map<LiveAtlasMapDefinition, DynmapTileLayer> = new Map();
 
 	constructor(name: string, config: DynmapUrlConfig, renderer: LeafletMapRenderer) {
 		super(name, config, renderer);
@@ -145,7 +146,11 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 	}
 
 	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {
-		return this.renderer.createMapLayer(new DynmapTileLayer(this.tileLayerOptions.get(map)!));
+		if(!this.tileLayers.has(map)) {
+			this.tileLayers.set(map, new DynmapTileLayer(this.tileLayerOptions.get(map)!));
+		}
+
+		return this.renderer.createMapLayer(this.tileLayers.get(map)!);
 	}
 
 	private async getUpdate(): Promise<void> {
@@ -211,12 +216,13 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 		this.store.commit(MutationTypes.SET_WORLD_STATE, worldState);
 		this.store.commit(MutationTypes.ADD_MARKER_SET_UPDATES, updates.markerSets);
 		this.store.commit(MutationTypes.ADD_MARKER_UPDATES, updates.markers);
-		this.store.commit(MutationTypes.ADD_TILE_UPDATES, updates.tiles);
 		this.store.commit(MutationTypes.ADD_CHAT, updates.chat);
 
 		if(response.confighash) {
 			this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION_HASH, response.confighash);
 		}
+
+		this.tileLayers.get(this.store.state.currentMap!)!.updateTiles(updates.tiles);
 
 		await this.store.dispatch(ActionTypes.SET_PLAYERS, players);
 	}

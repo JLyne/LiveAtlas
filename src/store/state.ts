@@ -33,8 +33,7 @@ import {
 	LiveAtlasMarker, LiveAtlasMapViewTarget, LiveAtlasLayerDefinition, LiveAtlasMapState, LiveAtlasLayer
 } from "@/index";
 import {
-	DynmapMarkerUpdate,
-	DynmapTileUpdate
+	DynmapMarkerUpdate
 } from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {getMessages} from "@/util";
@@ -70,7 +69,6 @@ export type State = {
 	};
 
 	pendingMarkerUpdates: DynmapMarkerUpdate[];
-	pendingTileUpdates: Array<DynmapTileUpdate>;
 
 	followTarget?: LiveAtlasPlayer;
 	viewTarget?: LiveAtlasMapViewTarget;
@@ -145,7 +143,6 @@ export const state: State = {
 	markerSets: new Map(), //Marker sets from world_markers.json, doesn't include the markers themselves for performance reasons
 
 	pendingMarkerUpdates: [], //Pending updates to markers/areas/etc
-	pendingTileUpdates: [], //Pending updates to map tiles
 
 	// Map plugin provided settings for various parts of LiveAtlas
 	components: {
