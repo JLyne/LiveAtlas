@@ -40,10 +40,6 @@ export default defineComponent({
       }
     });
 		onUnmounted(() => layer.remove());
-	},
-
-	render() {
-		return null;
-	},
+	}
 });
 </script>

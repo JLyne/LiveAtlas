@@ -36,6 +36,10 @@ export default defineConfig(({ mode }) => {
         {
           find: '@',
           replacement: resolve(__dirname, 'src')
+        },
+        {
+          find: 'bluemap',
+          replacement: resolve(__dirname, 'bluemap', 'BlueMapCommon', 'webapp', 'src', 'js')
         }
       ]
     },

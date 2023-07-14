@@ -23,6 +23,9 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "bluemap/*": [
+        "bluemap/BlueMapCommon/webapp/src/js/*"
       ]
     },
     "lib": [

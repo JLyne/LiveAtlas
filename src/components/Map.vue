@@ -15,7 +15,7 @@
   -->
 
 <template>
-	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs" :aria-label="mapTitle">
+	<div class="map" ref="mapElement" :style="{backgroundColor: mapBackground }" v-bind="$attrs" :aria-label="mapTitle"></div>
 		<template v-if="currentRenderer">
 			<BaseMapLayer v-for="[name, map] in maps" :key="name" :map="map" :renderer="currentRenderer"></BaseMapLayer>
 			<OverlayMapLayer v-for="[name, overlay] in overlays" :key="name" :overlay="overlay" :renderer="currentRenderer"></OverlayMapLayer>
@@ -24,7 +24,6 @@
 <!--			<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>-->
 			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :renderer="currentRenderer"></MarkerSetLayer>
 		</template>
-	</div>
 </template>
 
 <script lang="ts">
@@ -47,6 +46,7 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore(),
+      mapElement = ref<HTMLElement|null>(null),
 			maps = computed(() => store.state.maps),
 			overlays = computed(() => store.state.currentMap?.overlays),
 			markerSets = computed(() => store.state.markerSets),
@@ -69,6 +69,7 @@ export default defineComponent({
 			mapTitle = computed(() => store.state.messages.mapTitle);
 
 		return {
+      mapElement,
 			maps,
 			overlays,
 			markerSets,
@@ -191,7 +192,7 @@ export default defineComponent({
         oldValue.destroy();
       }
 
-      newValue.init(this.$el);
+      newValue.init(this.mapElement as HTMLElement);
     },
 		parsedUrl: {
 			handler(newValue) {
@@ -217,7 +218,7 @@ export default defineComponent({
 		window.addEventListener('keydown', this.handleKeydown);
 
 		if(this.currentRenderer) {
-      this.currentRenderer.init(this.$el);
+      this.currentRenderer.init(this.mapElement as HTMLElement);
     }
 	},
 

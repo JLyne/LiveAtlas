@@ -33,6 +33,8 @@ import {showSplashError} from "@/util/splash";
 import ConfigurationError from "@/errors/ConfigurationError";
 import OverviewerMapProvider from "@/providers/OverviewerMapProvider";
 import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
+import BluemapMapProvider from "@/providers/BluemapMapProvider";
+import BluemapMapRenderer from "@/renderers/BluemapMapRenderer";
 import.meta.globEager('/assets/icons/*.svg');
 
 const splash = document.getElementById('splash');
@@ -59,6 +61,7 @@ registerMapProvider('dynmap', LeafletMapRenderer, DynmapMapProvider);
 registerMapProvider('pl3xmap', LeafletMapRenderer, Pl3xmapMapProvider);
 registerMapProvider('squaremap', LeafletMapRenderer, Pl3xmapMapProvider);
 registerMapProvider('overviewer', LeafletMapRenderer, OverviewerMapProvider);
+registerMapProvider('bluemap', BluemapMapRenderer, BluemapMapProvider);
 
 const config = window.liveAtlasConfig;
 window.liveAtlasLoaded = true;

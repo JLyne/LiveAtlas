@@ -44,7 +44,7 @@ const createProviderInstance = (id: string, config: any): LiveAtlasMapProvider =
 	const provider = registeredProviders.get(id)!,
 		renderer = getRendererInstance(providerRenderers.get(provider)!);
 
-	return new provider(id, config, renderer);
+	return Object.seal(new provider(id, config, renderer));
 }
 
 const getRendererInstance = (renderer: new (...args: any[]) => LiveAtlasMapRenderer): LiveAtlasMapRenderer => {
