@@ -108,7 +108,12 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 				},
 					map = Object.freeze(new LiveAtlasMapDefinition({
 						name: bluemapMap.data.name,
-						world
+						world,
+						center: {
+							x: bluemapMap.data.startPos.x,
+							y: 0,
+							z: bluemapMap.data.startPos.z
+						}
 					}));
 
 				world.maps.add(map);
