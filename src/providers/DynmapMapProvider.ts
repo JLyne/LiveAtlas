@@ -57,8 +57,6 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 	private updateTimestamp: Date = new Date();
 	private updateInterval: number = 3000;
 
-	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
-	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 	private tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions> = new Map();
 
 	constructor(name: string, config: DynmapUrlConfig, renderer: LeafletMapRenderer) {
@@ -80,34 +78,37 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 	}
 
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
-		const url = `${this.url.markers}_markers_/marker_${encodeURIComponent(world.name)}.json`;
-
-		if(this.markersAbort) {
-			this.markersAbort.abort();
-		}
-
 		this.markersAbort = new AbortController();
 
-		const response = await this.getJSON(url, this.markersAbort.signal);
+		const url = `${this.url.markers}_markers_/marker_${encodeURIComponent(world.name)}.json`,
+			markerSets: Map<string, LiveAtlasMarkerSet> = new Map(),
+			markers = new Map<string, Map<string, LiveAtlasMarker>>(),
+			response = await this.getJSON(url, this.markersAbort.signal);
 
-		response.sets = response.sets || {};
-
-		for (const key in response.sets) {
+		for (const key in response.sets || {}) {
 			if (!Object.prototype.hasOwnProperty.call(response.sets, key)) {
 				continue;
 			}
 
 			const set: MarkerSet = response.sets[key],
 				markerSet = buildMarkerSet(key, set),
-				markers = new Map<string, LiveAtlasMarker>();
+				setMarkers = new Map<string, LiveAtlasMarker>();
 
-			buildMarkers(set.markers || {}, markers, this.url);
-			buildAreas(set.areas || {}, markers);
-			buildLines(set.lines || {}, markers);
-			buildCircles(set.circles || {}, markers);
+			buildMarkers(set.markers || {}, setMarkers, this.url);
+			buildAreas(set.areas || {}, setMarkers);
+			buildLines(set.lines || {}, setMarkers);
+			buildCircles(set.circles || {}, setMarkers);
 
-			this.markerSets.set(key, markerSet);
-			this.markers.set(key, markers);
+			markerSets.set(key, markerSet);
+			markers.set(key, setMarkers);
+		}
+
+		this.store.commit(MutationTypes.SET_MARKER_SETS, markerSets);
+		this.store.commit(MutationTypes.SET_MARKERS, markers);
+
+
+		if(this.markersAbort) {
+			this.markersAbort.abort();
 		}
 	}
 
@@ -141,12 +142,6 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 
 	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {
 		await this.getMarkerSets(world);
-
-		this.store.commit(MutationTypes.SET_MARKER_SETS, this.markerSets);
-		this.store.commit(MutationTypes.SET_MARKERS, this.markers);
-
-		this.markerSets.clear();
-		this.markers.clear();
 	}
 
 	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {

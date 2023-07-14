@@ -59,8 +59,6 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 		components: LiveAtlasPartialComponentConfig,
 	}> = new Map();
 
-	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
-	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 	private tileLayerOptions: Map<LiveAtlasMapDefinition, LiveAtlasTileLayerOptions> = new Map();
 
 	private static buildServerConfig(response: any): LiveAtlasServerConfig {
@@ -243,7 +241,9 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 	}
 
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
-		const url = `${this.url}tiles/${encodeURIComponent(world.name)}/markers.json`;
+		const url = `${this.url}tiles/${encodeURIComponent(world.name)}/markers.json`,
+			markerSets: Map<string, LiveAtlasMarkerSet> = new Map(),
+			markers = new Map<string, Map<string, LiveAtlasMarker>>();
 
 		if(this.markersAbort) {
 			this.markersAbort.abort();
@@ -264,32 +264,32 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 			}
 
 			const id = set.id,
-				markers: Map<string, LiveAtlasMarker> = Object.freeze(new Map());
+				setMarkers: Map<string, LiveAtlasMarker> = Object.freeze(new Map());
 
 			(set.markers || []).forEach((marker: any) => {
 				let markerId;
 
 				switch(marker.type) {
 					case 'icon':
-						markerId = `point_${markers.size}`;
-						markers.set(markerId, this.buildMarker(markerId, marker));
+						markerId = `point_${setMarkers.size}`;
+						setMarkers.set(markerId, this.buildMarker(markerId, marker));
 						break;
 
 					case 'polyline':
-						markerId = `line_${markers.size}`;
-						markers.set(markerId, Pl3xmapMapProvider.buildLine(markerId, marker));
+						markerId = `line_${setMarkers.size}`;
+						setMarkers.set(markerId, Pl3xmapMapProvider.buildLine(markerId, marker));
 						break;
 
 					case 'rectangle':
 					case 'polygon':
-						markerId = `area_${markers.size}`;
-						markers.set(markerId, Pl3xmapMapProvider.buildArea(markerId, marker));
+						markerId = `area_${setMarkers.size}`;
+						setMarkers.set(markerId, Pl3xmapMapProvider.buildArea(markerId, marker));
 						break;
 
 					case 'circle':
 					case 'ellipse':
-						markerId = `circle_${markers.size}`;
-						markers.set(markerId, Pl3xmapMapProvider.buildCircle(markerId, marker));
+						markerId = `circle_${setMarkers.size}`;
+						setMarkers.set(markerId, Pl3xmapMapProvider.buildCircle(markerId, marker));
 						break;
 
 					default:
@@ -297,15 +297,18 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 				}
 			});
 
-			this.markerSets.set(id, {
+			markerSets.set(id, {
 				id,
 				label: set.name || "Unnamed set",
 				hidden: set.hide || false,
 				priority: set.order || 0,
 				showLabels: false
 			});
-			this.markers.set(id, markers);
+			markers.set(id, setMarkers);
 		});
+
+		this.store.commit(MutationTypes.SET_MARKER_SETS, markerSets);
+		this.store.commit(MutationTypes.SET_MARKERS, markers);
 	}
 
 	private buildMarker(id: string, marker: any): LiveAtlasPointMarker {
@@ -468,12 +471,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 		this.playerUpdateInterval = this.worldPlayerUpdateIntervals.get(world.name) || 3000;
 		this.markerUpdateInterval = this.worldMarkerUpdateIntervals.get(world.name) || 3000;
 
-		this.store.commit(MutationTypes.SET_MARKER_SETS, this.markerSets);
-		this.store.commit(MutationTypes.SET_MARKERS, this.markers);
 		this.store.commit(MutationTypes.SET_COMPONENTS, worldConfig!.components);
-
-		this.markerSets.clear();
-		this.markers.clear();
 	}
 
 	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {
