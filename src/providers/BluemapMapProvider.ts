@@ -15,7 +15,7 @@
  */
 
 import {
-	LiveAtlasMapLayer,
+	LiveAtlasMapLayer, LiveAtlasMarker,
 	LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer, LiveAtlasOverlay,
 	LiveAtlasServerConfig,
 	LiveAtlasWorldDefinition
@@ -27,10 +27,14 @@ import {MutationTypes} from "@/store/mutation-types";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {Map as BluemapMap} from "bluemap/BlueMap";
 import BluemapMapLayer from "@/layers/BluemapMapLayer";
+import BluemapMarkerSetLayer from "@/layers/BluemapMarkerSetLayer";
 
 export default class BluemapMapProvider extends AbstractMapProvider {
 	declare protected renderer: BluemapMapRenderer;
 	private configurationAbort?: AbortController = undefined;
+	private	markersAbort?: AbortController = undefined;
+	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
+	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 	private maps: Map<LiveAtlasMapDefinition, BluemapMap> = new Map<LiveAtlasMapDefinition, BluemapMap>();
 
 	constructor(name: string, config: string, renderer: BluemapMapRenderer) {
@@ -120,8 +124,44 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 	}
 
 	async populateWorld(world: LiveAtlasWorldDefinition) {
+		await this.getMarkerSets(world);
 
+		this.store.commit(MutationTypes.SET_MARKER_SETS, this.markerSets);
+		this.store.commit(MutationTypes.SET_MARKERS, this.markers);
+
+		this.markerSets.clear();
+		this.markers.clear();
 	}
+
+	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
+		const url = `${this.url}maps/${encodeURIComponent(world.name)}/live/markers.json`;
+
+		if(this.markersAbort) {
+			this.markersAbort.abort();
+		}
+
+		this.markersAbort = new AbortController();
+
+		const response = await BluemapMapProvider.getJSON(url, this.markersAbort.signal);
+
+		console.log(response);
+
+		for(const setId in response) {
+			const set = response[setId],
+				markers: Map<string, LiveAtlasMarker> = Object.freeze(new Map());
+
+			//TODO
+			this.markerSets.set(setId, {
+				id: setId,
+				label: set.label || "Unnamed set",
+				hidden: set.defaultHidden || false,
+				//TODO: Toggleable
+				priority: set.sorting  || 0
+			});
+			this.markers.set(setId, markers);
+		}
+	}
+
 
 	startUpdates() {
 	}
@@ -137,7 +177,7 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 	}
 
 	getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer {
-		return undefined;
+		return new BluemapMarkerSetLayer(this.renderer.getMapViewer()!, set);
 	}
 
 	getOverlayMapLayer(options: LiveAtlasOverlay): LiveAtlasMapLayer {
