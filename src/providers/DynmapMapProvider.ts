@@ -47,6 +47,7 @@ import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default class DynmapMapProvider extends LeafletMapProvider {
+	declare protected url: DynmapUrlConfig;
 	private configurationAbort?: AbortController = undefined;
 	private	markersAbort?: AbortController = undefined;
 	private	updateAbort?: AbortController = undefined;
@@ -62,25 +63,24 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 
 	constructor(name: string, config: DynmapUrlConfig, renderer: LeafletMapRenderer) {
 		super(name, config, renderer);
-		this.validateConfig();
 	}
 
-	private validateConfig() {
-		if(typeof this.config !== 'undefined') {
-			if (!this.config || this.config.constructor !== Object) {
+	protected validateURL() {
+		if(typeof this.url !== 'undefined') {
+			if (!this.url || this.url.constructor !== Object) {
 				throw new ConfigurationError(`Dynmap configuration object missing`);
 			}
 
-			validateConfigURL(this.config.configuration, this.name, 'configuration');
-			validateConfigURL(this.config.update, this.name,'update');
-			validateConfigURL(this.config.markers, this.name,'markers');
-			validateConfigURL(this.config.tiles, this.name,'tiles');
-			validateConfigURL(this.config.sendmessage, this.name,'sendmessage');
+			validateConfigURL(this.url.configuration, this.name, 'configuration');
+			validateConfigURL(this.url.update, this.name,'update');
+			validateConfigURL(this.url.markers, this.name,'markers');
+			validateConfigURL(this.url.tiles, this.name,'tiles');
+			validateConfigURL(this.url.sendmessage, this.name,'sendmessage');
 		}
 	}
 
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
-		const url = `${this.config.markers}_markers_/marker_${encodeURIComponent(world.name)}.json`;
+		const url = `${this.url.markers}_markers_/marker_${encodeURIComponent(world.name)}.json`;
 
 		if(this.markersAbort) {
 			this.markersAbort.abort();
@@ -101,7 +101,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 				markerSet = buildMarkerSet(key, set),
 				markers = new Map<string, LiveAtlasMarker>();
 
-			buildMarkers(set.markers || {}, markers, this.config);
+			buildMarkers(set.markers || {}, markers, this.url);
 			buildAreas(set.areas || {}, markers);
 			buildLines(set.lines || {}, markers);
 			buildCircles(set.circles || {}, markers);
@@ -118,14 +118,14 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 
 		this.configurationAbort = new AbortController();
 
-		const response = await this.getJSON(this.config.configuration, this.configurationAbort.signal);
+		const response = await this.getJSON(this.url.configuration, this.configurationAbort.signal);
 
 		if (response.error) {
 			throw new Error(response.error);
 		}
 
 		const config = buildServerConfig(response),
-			worlds = buildWorlds(response, this.config);
+			worlds = buildWorlds(response, this.url);
 
 		this.tileLayerOptions = worlds.tileLayerOptions;
 		this.updateInterval = response.updaterate || 3000;
@@ -135,7 +135,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 		this.store.commit(MutationTypes.SET_MAX_PLAYERS, response.maxcount || 0);
 		this.store.commit(MutationTypes.SET_MESSAGES, buildMessagesConfig(response));
 		this.store.commit(MutationTypes.SET_WORLDS, worlds.worlds);
-		this.store.commit(MutationTypes.SET_COMPONENTS, buildComponents(response, this.config));
+		this.store.commit(MutationTypes.SET_COMPONENTS, buildComponents(response, this.url));
 		this.store.commit(MutationTypes.SET_LOGGED_IN, response.loggedin || false);
 	}
 
@@ -154,7 +154,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 	}
 
 	private async getUpdate(): Promise<void> {
-		let url = this.config.update;
+		let url = this.url.update;
 		url = url.replace('{world}', encodeURIComponent(this.store.state.currentWorld!.name));
 		url = url.replace('{timestamp}', this.updateTimestamp.getTime().toString());
 
@@ -166,7 +166,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 
 		const response = await this.getJSON(url, this.updateAbort.signal);
 		const players: Set<LiveAtlasPlayer> = new Set(),
-			updates = buildUpdates(response.updates || [], this.updateTimestamp, this.config),
+			updates = buildUpdates(response.updates || [], this.updateTimestamp, this.url),
 			worldState = {
 				timeOfDay: response.servertime || 0,
 				thundering: response.isThundering || false,
@@ -231,7 +231,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 			return Promise.reject(this.store.state.messages.chatErrorDisabled);
 		}
 
-		return fetch(this.config.sendmessage, {
+		return fetch(this.url.sendmessage, {
 			method: 'POST',
 			credentials: 'include',
 			body: JSON.stringify({
@@ -318,7 +318,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 			body.append('j_password', data.password || '');
 
 
-			const response = await DynmapMapProvider.fetchJSON(this.config.login, {
+			const response = await DynmapMapProvider.fetchJSON(this.url.login, {
 				method: 'POST',
 				body,
 			});
@@ -347,7 +347,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 		}
 
 		try {
-			await DynmapMapProvider.fetchJSON(this.config.login, {
+			await DynmapMapProvider.fetchJSON(this.url.login, {
 				method: 'POST',
 			});
 
@@ -372,7 +372,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 			body.append('j_verify_password', data.password || '');
 			body.append('j_passcode', data.code || '');
 
-			const response = await DynmapMapProvider.fetchJSON(this.config.register, {
+			const response = await DynmapMapProvider.fetchJSON(this.url.register, {
 				method: 'POST',
 				body,
 			});

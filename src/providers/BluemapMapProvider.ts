@@ -21,7 +21,7 @@ import {
 	LiveAtlasWorldDefinition
 } from "@/index";
 import AbstractMapProvider from "@/providers/AbstractMapProvider";
-import {guessWorldDimension, validateConfigURL} from "@/util";
+import {guessWorldDimension} from "@/util";
 import BluemapMapRenderer from "@/renderers/BluemapMapRenderer";
 import {MutationTypes} from "@/store/mutation-types";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
@@ -35,16 +35,6 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 
 	constructor(name: string, config: string, renderer: BluemapMapRenderer) {
 		super(name, config, renderer);
-
-		if(this.config === true) {
-			this.config = window.location.pathname;
-		}
-
-		validateConfigURL(config, name, 'map');
-
-		if(this.config.slice(-1) !== '/') {
-			this.config = `${config}/`;
-		}
 	}
 
 	private static buildServerConfig(): LiveAtlasServerConfig {
@@ -69,7 +59,7 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 
 		this.configurationAbort = new AbortController();
 
-		const baseUrl = this.config,
+		const baseUrl = this.url,
 			response = await BluemapMapProvider.getJSON(`${baseUrl}settings.json`, this.configurationAbort.signal);
 
 		if (response.error) {
@@ -94,7 +84,7 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 			};
 
 		for(const name of worldNames) {
-			const bluemapMap = new BluemapMap(name, `${this.config}maps/${name}/`, loadBlocker, viewer.events);
+			const bluemapMap = new BluemapMap(name, `${this.url}maps/${name}/`, loadBlocker, viewer.events);
 
 			try {
 				await bluemapMap.loadSettings();

@@ -33,14 +33,13 @@ import {
 	getMiddle,
 	guessWorldDimension,
 	runSandboxed,
-	stripHTML, validateConfigURL,
+	stripHTML,
 } from "@/util";
 import {OverviewerTileLayer, OverviewerTileLayerOptions} from "@/leaflet/tileLayer/OverviewerTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {getDefaultPlayerImage} from "@/util/images";
-import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 import LeafletMapProvider from "@/providers/LeafletMapProvider";
 
 export default class OverviewerMapProvider extends LeafletMapProvider {
@@ -51,16 +50,6 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 	private readonly mapMarkers: Map<string, Map<string, Map<string, LiveAtlasMarker>>> = Object.freeze(new Map());
 	private readonly mapLayerOptions: Map<LiveAtlasMapDefinition, OverviewerTileLayerOptions> = new Map();
 	private readonly overlayLayerOptions: Map<LiveAtlasOverlay, OverviewerTileLayerOptions> = new Map();
-
-	constructor(name: string, config: string, renderer: LeafletMapRenderer) {
-		super(name, config, renderer);
-
-		validateConfigURL(config, name, 'map');
-
-		if(this.config.slice(-1) !== '/') {
-			this.config = `${config}/`;
-		}
-	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private static buildServerConfig(ignore: any): LiveAtlasServerConfig {
@@ -116,7 +105,7 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 			}
 
 			const world = worlds.get(tileset.world) as LiveAtlasWorldDefinition,
-				baseUrl = tileset.base ? `${this.config}${tileset.base}/${tileset.path}` : this.config + tileset.path,
+				baseUrl = tileset.base ? `${this.url}${tileset.base}/${tileset.path}` : this.url + tileset.path,
 				prefix = tileset.base,
 				imageFormat = tileset.imgextension,
 				nativeZoomLevels = tileset.zoomLevels,
@@ -177,7 +166,7 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 				setContents.set('spawn', {
 					id: 'spawn',
 					type: LiveAtlasMarkerType.POINT,
-					iconUrl: this.config + serverResponse?.CONST?.image?.spawnMarker,
+					iconUrl: this.url + serverResponse?.CONST?.image?.spawnMarker,
 					iconSize: [32, 37],
                     iconAnchor: [15, 33],
 					tooltip: 'Spawn',
@@ -210,7 +199,7 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 			};
 
 			this.overlayLayerOptions.set(overlay, {
-				baseUrl: tileset.base ? `${this.config}${tileset.base}/${tileset.path}` : this.config + tileset.path,
+				baseUrl: tileset.base ? `${this.url}${tileset.base}/${tileset.path}` : this.url + tileset.path,
 				tileSize,
 				prefix: tileset.base,
 				imageFormat: tileset.imgextension,
@@ -277,14 +266,14 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 		//markers.js - If present, maps marker sets to specific maps
 		//markersDB.js - If present, contains markers for each marker set
 		//additional files - i.e. regions.js, can add extra marker sets and/or markers
-		const response = await OverviewerMapProvider.getText(`${this.config}baseMarkers.js`, this.markersAbort.signal),
+		const response = await OverviewerMapProvider.getText(`${this.url}baseMarkers.js`, this.markersAbort.signal),
 			//Don't need to run this JS as getting the filenames from injectMarkerScript calls is enough
 			files = response.matchAll(this.markersRegex);
 
 		let markerSets: any = {}, markers: any = {}, result: any;
 
 		for(const file of files) {
-			let code = await OverviewerMapProvider.getText(`${this.config}${file[1]}`, this.markersAbort.signal);
+			let code = await OverviewerMapProvider.getText(`${this.url}${file[1]}`, this.markersAbort.signal);
 
 			switch(file[1]) {
 				//Contains list of marker sets per map in markers object
@@ -355,7 +344,7 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 		} else {
 			marker.type = LiveAtlasMarkerType.POINT;
 			marker.location = {x: data.x, y: data.y, z: data.z};
-			marker.iconUrl = this.config + (data.icon || markerSet.icon);
+			marker.iconUrl = this.url + (data.icon || markerSet.icon);
 		}
 
 		return marker as LiveAtlasMarker | LiveAtlasAreaMarker;
@@ -368,7 +357,7 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 
 		this.configurationAbort = new AbortController();
 
-		const baseUrl = this.config,
+		const baseUrl = this.url,
 			response = await OverviewerMapProvider.getText(`${baseUrl}overviewerConfig.js`, this.configurationAbort.signal);
 
 		try {

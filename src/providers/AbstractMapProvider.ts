@@ -21,17 +21,34 @@ import {
 } from "@/index";
 import {useStore} from "@/store";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {validateConfigURL} from "@/util";
 
 export default abstract class AbstractMapProvider implements LiveAtlasMapProvider {
 	protected readonly store = useStore();
 	protected readonly renderer: LiveAtlasMapRenderer;
 	protected name: string;
-	protected config: any;
+	protected url: any;
 
-	protected constructor(name: string, config: any, renderer: LiveAtlasMapRenderer) {
+	protected constructor(name: string, url: any, renderer: LiveAtlasMapRenderer) {
 		this.name = name;
-		this.config = config;
+		this.url = url;
 		this.renderer = renderer;
+
+		if(typeof url === 'string') {
+			if(this.url === true) {
+				this.url = window.location.pathname;
+			}
+
+			if(this.url.slice(-1) !== '/') {
+				this.url = `${config}/`;
+			}
+		}
+
+		this.validateURL();
+	}
+
+	protected validateURL() {
+		validateConfigURL(this.url, this.name, 'map');
 	}
 
 	abstract loadServerConfiguration(): Promise<void>;

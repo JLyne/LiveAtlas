@@ -32,12 +32,11 @@ import {
 import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
-import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex, validateConfigURL} from "@/util";
+import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {getDefaultPlayerImage} from "@/util/images";
-import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 import LeafletMapProvider from "@/providers/LeafletMapProvider";
 
 export default class Pl3xmapMapProvider extends LeafletMapProvider {
@@ -63,20 +62,6 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 	private tileLayerOptions: Map<LiveAtlasMapDefinition, LiveAtlasTileLayerOptions> = new Map();
-
-	constructor(name: string, config: string, renderer: LeafletMapRenderer) {
-		super(name, config, renderer);
-
-		if(this.config === true) {
-			this.config = window.location.pathname;
-		}
-
-		validateConfigURL(config, name, 'map');
-
-		if(this.config.slice(-1) !== '/') {
-			this.config = `${config}/`;
-		}
-	}
 
 	private static buildServerConfig(response: any): LiveAtlasServerConfig {
 		return {
@@ -188,7 +173,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 
 				name: 'flat',
 				displayName: 'Flat',
-				icon: world.icon ? `${this.config}images/icon/${world.icon}.png` : undefined,
+				icon: world.icon ? `${this.url}images/icon/${world.icon}.png` : undefined,
 
 				background: 'transparent',
 				backgroundDay: 'transparent',
@@ -201,7 +186,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 
 			maps.add(map);
 			this.tileLayerOptions.set(map, {
-				baseUrl: `${this.config}tiles/${w.name}/`,
+				baseUrl: `${this.url}tiles/${w.name}/`,
 				tileSize: 512,
 				nativeZoomLevels: worldResponse.zoom.max || 1,
 				extraZoomLevels: worldResponse.zoom.extra,
@@ -258,7 +243,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 	}
 
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
-		const url = `${this.config}tiles/${encodeURIComponent(world.name)}/markers.json`;
+		const url = `${this.url}tiles/${encodeURIComponent(world.name)}/markers.json`;
 
 		if(this.markersAbort) {
 			this.markersAbort.abort();
@@ -333,7 +318,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 				z: marker.point?.z || 0,
 			},
 			iconSize: marker.size ? [marker.size.x || 16, marker.size.z || 16] : [16, 16],
-			iconUrl: `${this.config}images/icon/registered/${marker.icon || "default"}.png`,
+			iconUrl: `${this.url}images/icon/registered/${marker.icon || "default"}.png`,
 
 			tooltip: marker.tooltip ? stripHTML(marker.tooltip) : '',
 			tooltipHTML: marker.tooltip,
@@ -456,7 +441,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 
 		this.configurationAbort = new AbortController();
 
-		const baseUrl = this.config,
+		const baseUrl = this.url,
 			response = await Pl3xmapMapProvider.getJSON(`${baseUrl}tiles/settings.json`, this.configurationAbort.signal);
 
 		if (response.error) {
@@ -496,7 +481,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 	}
 
 	private async getPlayers(): Promise<Set<LiveAtlasPlayer>> {
-		const url = `${this.config}tiles/players.json`;
+		const url = `${this.url}tiles/players.json`;
 
 		if(this.playersAbort) {
 			this.playersAbort.abort();
