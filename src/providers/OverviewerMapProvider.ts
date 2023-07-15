@@ -88,11 +88,12 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 		const tileSize = serverResponse.CONST.tileSize,
 			worlds: Map<string, LiveAtlasWorldDefinition> = new Map<string, LiveAtlasWorldDefinition>();
 
-		(serverResponse.worlds || []).forEach((world: string) => {
+		(serverResponse.worlds || []).forEach((world: string, index: number) => {
 			worlds.set(world, {
 				name: world,
 				displayName: world,
 				dimension: guessWorldDimension(world),
+				sort: index,
 				seaLevel: 64,
 				maps: new Set<LiveAtlasMapDefinition>(),
 			});

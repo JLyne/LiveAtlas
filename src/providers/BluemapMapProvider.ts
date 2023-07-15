@@ -80,7 +80,8 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 	}
 
 	private async buildWorlds(worldNames: string[]) {
-		const worlds: LiveAtlasWorldDefinition[] = [],
+		const promises: Promise<void>[] = [],
+			worlds: LiveAtlasWorldDefinition[] = [],
 			viewer = this.renderer.getMapViewer()!,
 			//FIXME BlueMapApp.loadBlocker
 			loadBlocker = async () => {
@@ -90,15 +91,14 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 		for(const name of worldNames) {
 			const bluemapMap = new BluemapMap(name, `${this.url}maps/${name}/`, loadBlocker, viewer.events);
 
-			try {
-				await bluemapMap.loadSettings();
-
+			promises.push(bluemapMap.loadSettings().then(() => {
 				const world = {
 					name: name,
 					displayName: bluemapMap.data.name,
 					dimension: guessWorldDimension(name),
 					maps: new Set<LiveAtlasMapDefinition>(),
-					seaLevel: 64
+					seaLevel: 64,
+					sort: bluemapMap.data.sorting
 				},
 					map = Object.freeze(new LiveAtlasMapDefinition({
 						name: bluemapMap.data.name,
@@ -113,12 +113,10 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 				world.maps.add(map);
 				worlds.push(world);
 				this.maps.set(map, bluemapMap);
-			} catch(e) {
-				throw new Error(`Failed to load settings for map '${bluemapMap.data.id}':` + e);
-			}
+			}));
 		}
 
-		//FIXME: Sorting
+		await Promise.all(promises);
 
 		return worlds;
 	}

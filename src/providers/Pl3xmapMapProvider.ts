@@ -99,8 +99,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 		this.worldMarkerUpdateIntervals.clear();
 		this.worldPlayerUpdateIntervals.clear();
 
-		const filteredWorlds = (serverResponse.worlds || []).filter((w: any) => w && !!w.name)
-			.sort((a: any, b: any) => a.order - b.order);
+		const filteredWorlds = (serverResponse.worlds || []).filter((w: any) => w && !!w.name);
 
 		filteredWorlds.forEach((world: any, index: number) => {
 			const worldResponse = worldResponses[index],
@@ -163,6 +162,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 				name: world.name || '(Unnamed world)',
 				displayName: world.display_name || world.name,
 				dimension,
+				sort: world.order,
 				seaLevel: 0,
 				maps,
 			},

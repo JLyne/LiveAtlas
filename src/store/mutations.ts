@@ -182,6 +182,8 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.currentWorldState.raining = false;
 		state.currentWorldState.thundering = false;
 
+		worlds.sort((w1, w2) => w1.sort - w2.sort);
+
 		worlds.forEach(world => {
 			state.worlds.set(world.name, world);
 			world.maps.forEach(map => state.maps.set(`${map.world.name}_${map.name}`, map));

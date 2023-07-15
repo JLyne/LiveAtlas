@@ -95,11 +95,12 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): {
 		tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions> = new Map();
 
 	//Get all the worlds first so we can handle append_to_world properly
-	(response.worlds || []).forEach((world: WorldConfiguration) => {
+	(response.worlds || []).forEach((world: WorldConfiguration, index: number) => {
 		worlds.set(world.name, {
 			name: world.name,
 			displayName: world.title || '',
 			dimension: guessWorldDimension(world.name),
+			sort: index,
 			seaLevel: world.sealevel || 64,
 			maps: new Set(),
 		});

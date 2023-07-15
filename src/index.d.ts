@@ -153,6 +153,7 @@ interface LiveAtlasWorldDefinition {
 	name: string;
 	displayName: string;
 	dimension: LiveAtlasDimension;
+	sort: number;
 	seaLevel: number;
 	maps: Set<LiveAtlasMapDefinition>;
 }
