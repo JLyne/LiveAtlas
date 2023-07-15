@@ -34,7 +34,7 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
         this.events = element;
         this.mapViewer = new MapViewer(element, this.events);
 
-        this._mapControls = new MapControls(this.mapViewer.renderer.domElement);
+        this._mapControls = new MapControls(this.mapViewer.renderer.domElement, element);
         this.freeFlightControls = new FreeFlightControls(this.mapViewer.renderer.domElement);
 
         this.resetCamera();
