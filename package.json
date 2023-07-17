@@ -46,7 +46,7 @@
     "sass": "1.63.6",
     "ts-node": "10.9.1",
     "typescript": "5.0.4",
-    "vite": "4.4.2",
+    "vite": "4.4.4",
     "vite-plugin-svg-sprite-component": "1.0.10",
     "vitest": "0.31.0",
     "vue-tsc": "1.8.4"
