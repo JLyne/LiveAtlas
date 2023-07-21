@@ -26,7 +26,7 @@ import {
 import {DynmapMarkerUpdate} from "@/dynmap";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {globalMessages, serverMessages} from "../messages";
-import {LiveAtlasMarkerType} from "@/util/markers";
+import {LiveAtlasMarkerType} from "@/leaflet/util/markers";
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 
 declare module "*.png" {

@@ -38,7 +38,7 @@ import {
 import {OverviewerTileLayer, OverviewerTileLayerOptions} from "@/leaflet/tileLayer/OverviewerTileLayer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
-import {LiveAtlasMarkerType} from "@/util/markers";
+import {LiveAtlasMarkerType} from "@/leaflet/util/markers";
 import {getDefaultPlayerImage} from "@/util/images";
 import LeafletMapProvider from "@/providers/LeafletMapProvider";
 

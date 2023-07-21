@@ -31,13 +31,13 @@ import {
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {DynmapMarkerSetUpdate, DynmapMarkerUpdate, DynmapTileUpdate, DynmapUrlConfig} from "@/dynmap";
-import {getPoints} from "@/util/areas";
+import {getPoints} from "@/leaflet/util/areas";
 import {
 	decodeHTMLEntities, getBounds, getMiddle, guessWorldDimension,
 	stripHTML,
 	titleColoursRegex
 } from "@/util";
-import {getLinePoints} from "@/util/lines";
+import {getLinePoints} from "@/leaflet/util/lines";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {
 	Configuration,
@@ -50,7 +50,7 @@ import {
 	WorldConfiguration,
 	WorldMapConfiguration
 } from "dynmap";
-import {LiveAtlasMarkerType} from "@/util/markers";
+import {LiveAtlasMarkerType} from "@/leaflet/util/markers";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {getImagePixelSize} from "@/util/images";
 import {DynmapTileLayerOptions} from "@/leaflet/tileLayer/DynmapTileLayer";

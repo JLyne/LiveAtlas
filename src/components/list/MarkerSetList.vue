@@ -44,7 +44,7 @@ import {nonReactiveState} from "@/store/state";
 import RadioList from "@/components/util/RadioList.vue";
 import MarkerList from "@/components/list/MarkerList.vue";
 import SvgIcon from "@/components/SvgIcon.vue";
-import {registerUpdateHandler, unregisterUpdateHandler} from "@/util/markers";
+import {registerUpdateHandler, unregisterUpdateHandler} from "@/leaflet/util/markers";
 
 export default defineComponent({
 	name: 'MarkerSetList',

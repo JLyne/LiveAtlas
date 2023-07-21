@@ -1,8 +1,5 @@
 /*
- * Copyright 2022 James Lyne
- *
- * Some portions of this file were taken from https://github.com/webbukkit/dynmap.
- * These portions are Copyright 2020 Dynmap Contributors.
+ * Copyright 2023 James Lyne
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +26,10 @@ import {
 import {DynmapMarkerUpdate} from "@/dynmap";
 import {useStore} from "@/store";
 import {ActionTypes} from "@/store/action-types";
-import {createCircleLayer, updateCircleLayer} from "@/util/circles";
-import {createPointLayer, updatePointLayer} from "@/util/points";
-import {createAreaLayer, updateAreaLayer} from "@/util/areas";
-import {createLineLayer, updateLineLayer} from "@/util/lines";
+import {createCircleLayer, updateCircleLayer} from "@/leaflet/util/circles";
+import {createPointLayer, updatePointLayer} from "@/leaflet/util/points";
+import {createAreaLayer, updateAreaLayer} from "@/leaflet/util/areas";
+import {createLineLayer, updateLineLayer} from "@/leaflet/util/lines";
 import {GenericMarker} from "@/leaflet/marker/GenericMarker";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";

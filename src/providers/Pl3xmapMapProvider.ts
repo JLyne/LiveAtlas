@@ -33,7 +33,7 @@ import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex} from "@/util";
-import {LiveAtlasMarkerType} from "@/util/markers";
+import {LiveAtlasMarkerType} from "@/leaflet/util/markers";
 import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {getDefaultPlayerImage} from "@/util/images";

@@ -22,7 +22,7 @@ import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
 import {ActionTypes} from "@/store/action-types";
 import {Mutations} from "@/store/mutations";
-import {startUpdateHandling, stopUpdateHandling} from "@/util/markers";
+import {startUpdateHandling, stopUpdateHandling} from "@/leaflet/util/markers";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(

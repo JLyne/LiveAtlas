@@ -22,7 +22,7 @@ import {LatLng, Layer} from "leaflet";
 import {
     createMarkerLayer,
     updateMarkerLayer
-} from "@/util/markers";
+} from "@/leaflet/util/markers";
 import {DynmapMarkerUpdate} from "@/dynmap";
 import {computed, watch, WatchStopHandle} from "vue";
 import AbstractMarkerSetLayer from "@/layers/AbstractMarkerSetLayer";

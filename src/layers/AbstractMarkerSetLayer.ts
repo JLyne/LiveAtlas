@@ -16,7 +16,7 @@
 
 import {LiveAtlasMarker, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer} from "@/index";
 import {DynmapMarkerUpdate} from "@/dynmap";
-import {registerSetUpdateHandler, unregisterSetUpdateHandler} from "@/util/markers";
+import {registerSetUpdateHandler, unregisterSetUpdateHandler} from "@/leaflet/util/markers";
 import {watch, WatchStopHandle} from "vue";
 import {nonReactiveState} from "@/store/state";
 

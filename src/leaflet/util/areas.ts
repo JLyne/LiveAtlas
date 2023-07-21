@@ -1,8 +1,5 @@
 /*
- * Copyright 2022 James Lyne
- *
- * Some portions of this file were taken from https://github.com/webbukkit/dynmap.
- * These portions are Copyright 2020 Dynmap Contributors.
+ * Copyright 2023 James Lyne
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +18,7 @@ import {LatLngExpression} from "leaflet";
 import {Coordinate, LiveAtlasAreaMarker} from "@/index";
 import LiveAtlasPolyline from "@/leaflet/vector/LiveAtlasPolyline";
 import LiveAtlasPolygon from "@/leaflet/vector/LiveAtlasPolygon";
-import {arePointsEqual, createPopup, isStyleEqual, tooltipOptions} from "@/util/paths";
+import {arePointsEqual, createPopup, isStyleEqual, tooltipOptions} from "@/leaflet/util/paths";
 
 /**
  * Creates a {@link LiveAtlasPolyline} or {@link LiveAtlasPolygon} with the given options

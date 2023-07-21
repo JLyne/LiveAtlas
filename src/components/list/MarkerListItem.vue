@@ -30,7 +30,7 @@ import {useStore} from "vuex";
 import {LiveAtlasMarker, LiveAtlasPathMarker, LiveAtlasPointMarker} from "@/index";
 import {MutationTypes} from "@/store/mutation-types";
 import SvgIcon from "@/components/SvgIcon.vue";
-import {LiveAtlasMarkerType} from "@/util/markers";
+import {LiveAtlasMarkerType} from "@/leaflet/util/markers";
 import "@/assets/icons/marker_point.svg";
 import "@/assets/icons/marker_line.svg";
 import "@/assets/icons/marker_area.svg";

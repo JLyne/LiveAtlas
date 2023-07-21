@@ -33,7 +33,7 @@ import {LiveAtlasMarkerSet, LiveAtlasMarker} from "@/index";
 import {DynmapMarkerUpdate} from "@/dynmap";
 import {useStore} from "@/store";
 import {nonReactiveState} from "@/store/state";
-import {registerSetUpdateHandler, unregisterSetUpdateHandler} from "@/util/markers";
+import {registerSetUpdateHandler, unregisterSetUpdateHandler} from "@/leaflet/util/markers";
 import RadioList from "@/components/util/RadioList.vue";
 import MarkerListItem from "@/components/list/MarkerListItem.vue";
 
