@@ -77,7 +77,7 @@ export default defineComponent({
 			}
 		});
 
-		onUnmounted(() => hide());
+		onUnmounted(() => props.layer.removePlayer(props.player));
 
 		return {
 			currentMap,
