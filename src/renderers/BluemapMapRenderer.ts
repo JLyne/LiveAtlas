@@ -15,10 +15,8 @@
  */
 
 import AbstractMapRenderer from "@/renderers/AbstractMapRenderer";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {FreeFlightControls, MapControls, MapViewer} from "bluemap/BlueMap";
-import {LiveAtlasMapLayer, LiveAtlasMapViewTarget, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer} from "@/index";
-import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
+import {LiveAtlasMapViewTarget} from "@/index";
 
 export default class BluemapMapRenderer extends AbstractMapRenderer {
     protected events: HTMLElement | undefined;
@@ -73,22 +71,26 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
     }
 
     setView(target: LiveAtlasMapViewTarget): void {
+        if (this.mapViewer && this.mapViewer.map) {
+            const controls = this.mapViewer!.controlsManager;
 
+            if (controls.controls && controls.controls.stopFollowingPlayerMarker) {
+                controls.controls.stopFollowingPlayerMarker();
+            }
+
+            controls.position.copy(target.location);
+        }
     }
 
     zoomIn(): void {
-
+        if (this.mapViewer) {
+            this.mapViewer.controlsManager.controls.mouseZoom.deltaZoom -= 3;
+        }
     }
 
     zoomOut(): void {
-
-    }
-
-    createMarkerSetLayer(options: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer {
-
-    }
-
-    hackGetLeaflet(): LiveAtlasLeafletMap {
-
+        if (this.mapViewer) {
+            this.mapViewer.controlsManager.controls.mouseZoom.deltaZoom += 3;
+        }
     }
 }
