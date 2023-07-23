@@ -54,6 +54,7 @@ import {LiveAtlasMarkerType} from "@/leaflet/util/markers";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 import {getImagePixelSize} from "@/util/images";
 import {DynmapTileLayerOptions} from "@/leaflet/tileLayer/DynmapTileLayer";
+import {reactive} from "vue";
 
 export function buildServerConfig(response: Options): LiveAtlasServerConfig {
 	let title = 'Dynmap';
@@ -90,9 +91,14 @@ export function buildMessagesConfig(response: Options): LiveAtlasServerMessageCo
 	}
 }
 
-export function buildWorlds(response: Configuration, config: DynmapUrlConfig): {worlds: LiveAtlasWorldDefinition[], tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions>} {
-	const worlds: Map<string, LiveAtlasWorldDefinition> = new Map<string, LiveAtlasWorldDefinition>(),
-		tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions> = new Map();
+export function buildWorlds(response: Configuration, config: DynmapUrlConfig): {
+	worlds: LiveAtlasWorldDefinition[],
+	tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions>
+	projections: Map<LiveAtlasMapDefinition, DynmapProjection>
+} {
+	const worlds: Map<string, LiveAtlasWorldDefinition> = new Map(),
+		tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions> = new Map(),
+		projections: Map<LiveAtlasMapDefinition, DynmapProjection> = new Map();
 
 	//Get all the worlds first so we can handle append_to_world properly
 	(response.worlds || []).forEach((world: WorldConfiguration, index: number) => {
@@ -123,19 +129,13 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): {
 
 			// Maps with append_to_world set are added both the original and target world's map set
 			// The world property is always the original world, an additional appendedWorld property contains the target world
-			const mapDef = Object.freeze(new LiveAtlasMapDefinition({
+			const mapDef = reactive(new LiveAtlasMapDefinition({
 				world: actualWorld,
 				appendedWorld: actualWorld !== assignedWorld ? assignedWorld : undefined,
 
 				name: map.name || '(Unnamed map)',
 				displayName: map.title,
 				icon: (map.icon || undefined) as string | undefined,
-				projection: new DynmapProjection({
-					mapToWorld: map.maptoworld || undefined,
-					worldToMap: map.worldtomap || undefined,
-					nativeZoomLevels,
-					tileSize,
-				}),
 
 				background: map.background || '#000000',
 				nightAndDay: map.nightandday,
@@ -147,7 +147,7 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): {
 					y: world.center.y || 0,
 					z: world.center.z || 0
 				}
-			})) as LiveAtlasMapDefinition;
+			}));
 
 			actualWorld.maps.add(mapDef);
 			tileLayerOptions.set(mapDef, {
@@ -160,6 +160,12 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): {
 				extraZoomLevels: map.mapzoomin,
 				nightAndDay: map.nightandday,
 			});
+			projections.set(mapDef, new DynmapProjection({
+				mapToWorld: map.maptoworld || undefined,
+				worldToMap: map.worldtomap || undefined,
+				nativeZoomLevels,
+				tileSize,
+			}));
 
 			if(actualWorld !== assignedWorld) {
 				assignedWorld.maps.add(mapDef);
@@ -170,6 +176,7 @@ export function buildWorlds(response: Configuration, config: DynmapUrlConfig): {
 	return {
 		worlds: Array.from(worlds.values()),
 		tileLayerOptions,
+		projections,
 	};
 }
 

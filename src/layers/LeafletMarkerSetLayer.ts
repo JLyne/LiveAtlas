@@ -24,7 +24,6 @@ import {
     updateMarkerLayer
 } from "@/leaflet/util/markers";
 import {DynmapMarkerUpdate} from "@/dynmap";
-import {computed, watch, WatchStopHandle} from "vue";
 import AbstractMarkerSetLayer from "@/layers/AbstractMarkerSetLayer";
 import {nonReactiveState} from "@/store/state";
 
@@ -34,13 +33,22 @@ export default class LeafletMarkerSetLayer extends AbstractMarkerSetLayer {
 
     private readonly layers: Map<string, Layer> = Object.freeze(new Map());
     private converter: (location: Coordinate) => LatLng;
-    private readonly _currentMapUnwatch: WatchStopHandle;
+
+    private readonly handleProjectionChange = () => {
+        //Prevent error if this marker set has just been removed due to the map change
+        if (nonReactiveState.markers.has(this.markerSet.id)) {
+            this.converter = this.leaflet.locationToLatLng.bind(this.leaflet);
+
+            for (const [id, area] of nonReactiveState.markers.get(this.markerSet.id)!) {
+                updateMarkerLayer(this.layers.get(id), area, this.converter);
+            }
+        }
+    };
 
     constructor(leaflet: LiveAtlasLeafletMap, markerSet: LiveAtlasMarkerSet) {
         super(markerSet);
 
-        const store = useStore(),
-            currentMap = computed(() => store.state.currentMap);
+        const store = useStore();
 
         this.leaflet = leaflet;
         this.layerGroup = new LiveAtlasLayerGroup({
@@ -51,20 +59,11 @@ export default class LeafletMarkerSetLayer extends AbstractMarkerSetLayer {
 			priority: markerSet.priority,
         });
 
-        this.converter = store.state.currentMap.locationToLatLng.bind(store.state.currentMap);
+        const projection = this.leaflet.getProjection()
+        this.converter = projection.locationToLatLng.bind(projection);
         this.addAllMarkers();
 
-        //FIXME: Could this go somewhere else?
-        this._currentMapUnwatch = watch(currentMap, (newValue) => {
-            //Prevent error if this marker set has just been removed due to the map change
-            if(newValue && nonReactiveState.markers.has(this.markerSet.id)) {
-                this.converter = newValue.locationToLatLng.bind(newValue);
-
-                for (const [id, area] of nonReactiveState.markers.get(this.markerSet.id)!) {
-                    updateMarkerLayer(this.layers.get(id), area, this.converter);
-                }
-            }
-        });
+        this.leaflet.on('projectionchange', this.handleProjectionChange);
     }
 
     enable() {
@@ -77,7 +76,6 @@ export default class LeafletMarkerSetLayer extends AbstractMarkerSetLayer {
     }
 
     disable() {
-        this._currentMapUnwatch();
         super.disable()
         this.leaflet.removeLayer(this.layerGroup);
     }
@@ -122,5 +120,10 @@ export default class LeafletMarkerSetLayer extends AbstractMarkerSetLayer {
             showLabels: update.showLabels || useStore().state.components.markers.showLabels, //FIXME
             priority: update.priority,
         });
+    }
+
+    destroy() {
+        super.destroy();
+        this.leaflet.off('projectionchange', this.handleProjectionChange);
     }
 }

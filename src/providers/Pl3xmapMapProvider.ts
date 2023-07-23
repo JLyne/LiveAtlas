@@ -38,6 +38,8 @@ import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 import {LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/AbstractTileLayer";
 import {getDefaultPlayerImage} from "@/util/images";
 import LeafletMapProvider from "@/providers/LeafletMapProvider";
+import {SimpleProjection} from "@/leaflet/projection/SimpleProjection";
+import {reactive} from "vue";
 
 export default class Pl3xmapMapProvider extends LeafletMapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -60,6 +62,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 	}> = new Map();
 
 	private tileLayerOptions: Map<LiveAtlasMapDefinition, LiveAtlasTileLayerOptions> = new Map();
+	private projections: Map<LiveAtlasMapDefinition, SimpleProjection> = new Map();
 
 	private static buildServerConfig(response: any): LiveAtlasServerConfig {
 		return {
@@ -166,7 +169,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 				seaLevel: 0,
 				maps,
 			},
-				map = Object.freeze(new LiveAtlasMapDefinition({
+				map = reactive(new LiveAtlasMapDefinition({
 				world: w,
 
 				name: 'flat',
@@ -180,7 +183,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 				defaultZoom: worldResponse.zoom.def || 1,
 
 				center: {x: worldResponse.spawn.x, y: 0, z: worldResponse.spawn.z},
-			}))
+			}));
 
 			maps.add(map);
 			this.tileLayerOptions.set(map, {
@@ -190,6 +193,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 				extraZoomLevels: worldResponse.zoom.extra,
 				tileUpdateInterval: worldResponse.tiles_update_interval ? worldResponse.tiles_update_interval * 1000 : undefined,
 			});
+			this.projections.set(map, new SimpleProjection(worldResponse.zoom.max || 1))
 			worlds.push(w);
 		});
 
@@ -472,6 +476,10 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 		this.markerUpdateInterval = this.worldMarkerUpdateIntervals.get(world.name) || 3000;
 
 		this.store.commit(MutationTypes.SET_COMPONENTS, worldConfig!.components);
+	}
+
+	async populateMap(map: LiveAtlasMapDefinition) {
+		this.renderer.setProjection(this.projections.get(map)!);
 	}
 
 	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {

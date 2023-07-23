@@ -1,6 +1,9 @@
 /*
  * Copyright 2022 James Lyne
  *
+ * Some portions of this file were taken from https://github.com/webbukkit/dynmap.
+ * These portions are Copyright 2020 Dynmap Contributors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,31 +17,21 @@
  * limitations under the License.
  */
 
-import {LatLng, Map, MapOptions} from 'leaflet';
+import {LatLng} from 'leaflet';
 import {Coordinate, LiveAtlasProjection} from "@/index";
-import {SimpleProjection} from "@/leaflet/projection/SimpleProjection";
 
-export default class LiveAtlasLeafletMap extends Map {
-	private _projection: LiveAtlasProjection = new SimpleProjection(1);
+export class SimpleProjection implements LiveAtlasProjection {
+	private readonly scale: number;
 
-	constructor(element: string | HTMLElement, options?: MapOptions) {
-		super(element, options);
-	}
-
-	setProjection(projection: LiveAtlasProjection) {
-		this._projection = projection;
-		this.fire('projectionchange', projection);
-	}
-
-	getProjection(): LiveAtlasProjection {
-		return this._projection;
+	constructor(nativeZoomLevels: number) {
+		this.scale = (1 / Math.pow(2, nativeZoomLevels));
 	}
 
 	locationToLatLng(location: Coordinate): LatLng {
-		return this._projection.locationToLatLng(location);
+		return new LatLng(-location.z * this.scale, location.x * this.scale);
 	}
 
 	latLngToLocation(latLng: LatLng, y: number): Coordinate {
-		return this._projection.latLngToLocation(latLng, y);
+		return {x: latLng.lng / this.scale, y: y, z: -latLng.lat / this.scale};
 	}
 }

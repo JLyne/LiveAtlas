@@ -45,6 +45,7 @@ import {validateConfigURL} from "@/util";
 import LeafletMapProvider from "@/providers/LeafletMapProvider";
 import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
+import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
 
 export default class DynmapMapProvider extends LeafletMapProvider {
 	declare protected url: DynmapUrlConfig;
@@ -59,6 +60,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 
 	private tileLayerOptions: Map<LiveAtlasMapDefinition, DynmapTileLayerOptions> = new Map();
 	private tileLayers: Map<LiveAtlasMapDefinition, DynmapTileLayer> = new Map();
+	private projections: Map<LiveAtlasMapDefinition, DynmapProjection> = new Map();
 
 	constructor(name: string, config: DynmapUrlConfig, renderer: LeafletMapRenderer) {
 		super(name, config, renderer);
@@ -130,6 +132,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 			worlds = buildWorlds(response, this.url);
 
 		this.tileLayerOptions = worlds.tileLayerOptions;
+		this.projections = worlds.projections;
 		this.updateInterval = response.updaterate || 3000;
 
 		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
@@ -143,6 +146,10 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 
 	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {
 		await this.getMarkerSets(world);
+	}
+
+	async populateMap(map: LiveAtlasMapDefinition) {
+		this.renderer.setProjection(this.projections.get(map)!);
 	}
 
 	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {

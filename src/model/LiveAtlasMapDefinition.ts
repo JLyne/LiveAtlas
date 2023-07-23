@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import {LatLng} from "leaflet";
-import {Coordinate, LiveAtlasProjection, LiveAtlasOverlay, LiveAtlasWorldDefinition} from "@/index";
+import {Coordinate, LiveAtlasOverlay, LiveAtlasWorldDefinition} from "@/index";
 
 export interface LiveAtlasMapDefinitionOptions {
 	world: LiveAtlasWorldDefinition;
@@ -30,7 +29,6 @@ export interface LiveAtlasMapDefinitionOptions {
 	nightAndDay?: boolean;
 	backgroundDay?: string;
 	backgroundNight?: string;
-	projection?: LiveAtlasProjection;
 
 	defaultZoom?: number;
 	center?: Coordinate;
@@ -51,9 +49,6 @@ export default class LiveAtlasMapDefinition implements LiveAtlasMapDefinitionOpt
 	readonly backgroundDay: string;
 	readonly backgroundNight: string;
 
-	readonly projection?: LiveAtlasProjection;
-	readonly scale: number;
-
 	readonly defaultZoom?: number;
 	readonly center?: Coordinate;
 	readonly overlays: Map<string, LiveAtlasOverlay>;
@@ -72,24 +67,10 @@ export default class LiveAtlasMapDefinition implements LiveAtlasMapDefinitionOpt
 		this.nightAndDay = options.nightAndDay || false;
 		this.backgroundDay = options.backgroundDay || '#000000';
 		this.backgroundNight = options.backgroundNight || '#000000';
-		this.projection = options.projection || undefined;
-		this.scale = 1; //FIXME
 
 		this.defaultZoom = options.defaultZoom || undefined;
 		this.center = options.center || undefined;
 		this.overlays = options.overlays || new Map();
-	}
-
-	//FIXME: Remove this
-	locationToLatLng(location: Coordinate): LatLng {
-		return this.projection ? this.projection.locationToLatLng(location)
-			: new LatLng(-location.z * this.scale, location.x * this.scale);
-	}
-
-	//FIXME: Remove this
-	latLngToLocation(latLng: LatLng, y: number): Coordinate {
-		return this.projection ? this.projection.latLngToLocation(latLng, y)
-			: {x: latLng.lng / this.scale, y: y, z: -latLng.lat / this.scale};
 	}
 
 	hasCustomIcon(): boolean {

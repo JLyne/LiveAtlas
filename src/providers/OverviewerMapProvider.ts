@@ -41,6 +41,7 @@ import {OverviewerProjection} from "@/leaflet/projection/OverviewerProjection";
 import {LiveAtlasMarkerType} from "@/leaflet/util/markers";
 import {getDefaultPlayerImage} from "@/util/images";
 import LeafletMapProvider from "@/providers/LeafletMapProvider";
+import {reactive} from "vue";
 
 export default class OverviewerMapProvider extends LeafletMapProvider {
 	private configurationAbort?: AbortController = undefined;
@@ -48,6 +49,7 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 	private readonly markersRegex: RegExp = /^overviewer.util.injectMarkerScript\('([\w.]+)'\);?$/mgi;
 	private readonly mapMarkerSets: Map<string, Map<string, LiveAtlasMarkerSet>> = new Map();
 	private readonly mapMarkers: Map<string, Map<string, Map<string, LiveAtlasMarker>>> = Object.freeze(new Map());
+	private readonly mapProjections: Map<LiveAtlasMapDefinition, OverviewerProjection> = new Map();
 	private readonly mapLayerOptions: Map<LiveAtlasMapDefinition, OverviewerTileLayerOptions> = new Map();
 	private readonly overlayLayerOptions: Map<LiveAtlasOverlay, OverviewerTileLayerOptions> = new Map();
 
@@ -118,18 +120,10 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 				return;
 			}
 
-			const map = Object.freeze(new LiveAtlasMapDefinition({
+			const map = reactive(new LiveAtlasMapDefinition({
 				world,
 				name: tileset.path,
 				displayName: tileset.name || tileset.path,
-				projection: new OverviewerProjection({
-					upperRight: serverResponse.CONST.UPPERRIGHT,
-					lowerLeft: serverResponse.CONST.LOWERLEFT,
-					lowerRight: serverResponse.CONST.LOWERRIGHT,
-					northDirection: tileset.north_direction,
-					nativeZoomLevels,
-					tileSize,
-				}),
 				background: tileset.bgcolor,
 				defaultZoom: tileset.defaultZoom,
 				center: {
@@ -152,6 +146,14 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 				minZoom,
 				maxZoom,
 			});
+			this.mapProjections.set(map, new OverviewerProjection({
+				upperRight: serverResponse.CONST.UPPERRIGHT,
+				lowerLeft: serverResponse.CONST.LOWERLEFT,
+				lowerRight: serverResponse.CONST.LOWERRIGHT,
+				northDirection: tileset.north_direction,
+				nativeZoomLevels,
+				tileSize,
+			}));
 
 			//Spawn marker
 			if(Array.isArray(tileset.spawn)) {
@@ -379,6 +381,7 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 	}
 
 	async populateMap(map:LiveAtlasMapDefinition) {
+		this.renderer.setProjection(this.mapProjections.get(map)!);
 		this.store.commit(MutationTypes.SET_MARKER_SETS, this.mapMarkerSets.get(map.name) || new Map());
 		this.store.commit(MutationTypes.SET_MARKERS, this.mapMarkers.get(map.name) || new Map());
 	}

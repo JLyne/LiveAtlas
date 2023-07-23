@@ -29,7 +29,13 @@ import {
 import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {MutationTypes} from "@/store/mutation-types";
 import {computed} from "vue";
-import {LiveAtlasMapLayer, LiveAtlasMapViewTarget, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer} from "@/index";
+import {
+    LiveAtlasMapLayer,
+    LiveAtlasMapViewTarget,
+    LiveAtlasMarkerSet,
+    LiveAtlasMarkerSetLayer,
+    LiveAtlasProjection
+} from "@/index";
 import LeafletMarkerSetLayer from "@/layers/LeafletMarkerSetLayer";
 import {AbstractTileLayer} from "@/leaflet/tileLayer/AbstractTileLayer";
 import LeafletMapLayer from "@/layers/LeafletMapLayer";
@@ -103,7 +109,7 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
 		this.leaflet.on('moveend', () => {
 			if(currentMap.value) {
 				this.store.commit(MutationTypes.SET_MAP_STATE, {
-                    location: currentMap.value.latLngToLocation(this.leaflet!.getCenter(), 64),
+                    location: this.leaflet!.latLngToLocation(this.leaflet!.getCenter(), 64),
                 });
 			}
 		});
@@ -138,13 +144,11 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
 
         if('min' in target.location) { // Bounds
             this.leaflet!.fitBounds(new LatLngBounds(
-                //FIXME: Find a way to avoid using the map for this
-                this.store.state.currentMap?.locationToLatLng(target.location.min) as LatLng,
-                this.store.state.currentMap?.locationToLatLng(target.location.max) as LatLng,
+                this.leaflet!.locationToLatLng(target.location.min) as LatLng,
+                this.leaflet!.locationToLatLng(target.location.max) as LatLng,
             ), target.options);
         } else { // Location
-            // FIXME: Find a way to avoid using the map for this
-            const location = this.store.state.currentMap?.locationToLatLng(target.location) as LatLng;
+            const location = this.leaflet!.locationToLatLng(target.location) as LatLng;
             this.leaflet!.panTo(location, target.options as PanOptions);
         }
     }
@@ -251,5 +255,15 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
 
     createMarkerSetLayer(options: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer {
         return new LeafletMarkerSetLayer(this.leaflet!, options);
+    }
+
+    setProjection(projection: LiveAtlasProjection): void {
+        if(this.leaflet) {
+            this.leaflet.setProjection(projection);
+        }
+    }
+
+    hackGetLeaflet(): LiveAtlasLeafletMap {
+        return this.leaflet!;
     }
 }
