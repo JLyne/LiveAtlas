@@ -221,12 +221,12 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 				return;
 			}
 
-			const overlay: LiveAtlasOverlay = {
+			const overlay: LiveAtlasOverlay = reactive({
 				id: tileset.path,
 				label: tileset.name || tileset.path,
 				hidden: true,
 				priority: 0,
-			};
+			});
 
 			this.overlayLayerOptions.set(overlay, {
 				baseUrl: tileset.base ? `${this.url}${tileset.base}/${tileset.path}` : this.url + tileset.path,
