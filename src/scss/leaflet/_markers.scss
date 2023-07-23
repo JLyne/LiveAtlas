@@ -243,3 +243,42 @@
 		display: none !important;
 	}
 }
+
+.bm-marker-player {
+	position: relative;
+	transform: translate(-50%, -50%);
+
+	img {
+		width: 32px;
+		image-rendering: pixelated;
+
+		transition: width 0.3s;
+	}
+
+	.bm-player-name {
+		position: absolute;
+		top: -0.5em;
+		left: 50%;
+		transform: translate(-50%, -100%);
+
+		font-size: 1.5rem;
+		line-height: 1;
+		white-space: pre-line;
+		color: var(--text-marker);
+		background: var(--background-marker);
+		padding: 0.2rem;
+
+		transition: opacity 0.3s;
+	}
+
+	&[distance-data="med"],
+	&[distance-data="far"] {
+		img {
+			width: 16px;
+		}
+
+		.bm-player-name {
+			opacity: 0;
+		}
+	}
+}

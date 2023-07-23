@@ -515,7 +515,9 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 					z: !isNaN(player.z) ? player.z + 0.5 : 0,
 					world: player.world,
 				},
-				yaw: !isNaN(player.yaw) ? parseFloat(player.yaw) + 180 : 0,
+				rotation: {
+					yaw: isNaN(player.yaw) ? parseFloat(player.yaw) + 180 : 0,
+				}
 			});
 		});
 

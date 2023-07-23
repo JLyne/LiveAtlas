@@ -77,6 +77,12 @@ interface LiveAtlasLocation {
 	world?: string;
 }
 
+interface LiveAtlasRotation {
+	yaw: number;
+	roll?: number;
+	pitch?: number;
+}
+
 interface LiveAtlasBounds {
 	min: Coordinate;
 	max: Coordinate;
@@ -142,7 +148,7 @@ interface LiveAtlasPlayer {
 	sort: number;
 	hidden: boolean;
 	location: LiveAtlasLocation;
-	yaw?: number;
+	rotation?: LiveAtlasRotation;
 }
 
 interface LiveAtlasWorldDefinition {

@@ -155,9 +155,9 @@ export class PlayerIcon extends Layer implements Icon<PlayerIconOptions> {
 		}
 
 		if(this.options.showYaw) {
-			if(this._player.yaw !== undefined) {
+			if(this._player.rotation?.yaw !== undefined) {
 				// https://stackoverflow.com/a/53416030
-				const delta = ((((this._player.yaw - this._currentYaw) % 360) + 540) % 360) - 180;
+				const delta = ((((this._player.rotation.yaw - this._currentYaw) % 360) + 540) % 360) - 180;
 
 				this._currentYaw = this._currentYaw + delta;
 				this._playerYaw!.style.setProperty('--player-yaw', `${this._currentYaw}deg`);
