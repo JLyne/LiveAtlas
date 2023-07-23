@@ -120,6 +120,10 @@ export default defineComponent({
 				this.hide();
 			}
 		}
-	}
+	},
+
+  render() {
+    return null;
+  }
 })
 </script>
