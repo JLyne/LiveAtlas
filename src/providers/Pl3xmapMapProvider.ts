@@ -63,6 +63,33 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 	private tileLayerOptions: Map<LiveAtlasMapDefinition, LiveAtlasTileLayerOptions> = new Map();
 	private projections: Map<LiveAtlasMapDefinition, SimpleProjection> = new Map();
 
+	async init(): Promise<void> {
+		if(this.configurationAbort) {
+			this.configurationAbort.abort();
+		}
+
+		this.configurationAbort = new AbortController();
+
+		const baseUrl = this.url,
+			response = await Pl3xmapMapProvider.getJSON(`${baseUrl}tiles/settings.json`, this.configurationAbort.signal);
+
+		if (response.error) {
+			throw new Error(response.error);
+		}
+
+		const config = Pl3xmapMapProvider.buildServerConfig(response),
+			worldNames: string[] = (response.worlds || []).filter((world: any) => world && !!world.name)
+				.map((world: any) => world.name);
+
+		const worldResponses = await Promise.all(worldNames.map(name =>
+			Pl3xmapMapProvider.getJSON(`${baseUrl}tiles/${name}/settings.json`, this.configurationAbort!.signal)));
+
+		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
+		this.store.commit(MutationTypes.SET_MESSAGES, Pl3xmapMapProvider.buildMessagesConfig(response));
+		this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(response, worldResponses));
+		this.store.commit(MutationTypes.SET_COMPONENTS, Pl3xmapMapProvider.buildComponents(response));
+	}
+
 	private static buildServerConfig(response: any): LiveAtlasServerConfig {
 		return {
 			title: (response.ui?.title || 'Pl3xmap').replace(titleColoursRegex, ''),
@@ -440,34 +467,9 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 		return points;
 	}
 
-	async loadServerConfiguration(): Promise<void> {
-		if(this.configurationAbort) {
-			this.configurationAbort.abort();
-		}
-
-		this.configurationAbort = new AbortController();
-
-		const baseUrl = this.url,
-			response = await Pl3xmapMapProvider.getJSON(`${baseUrl}tiles/settings.json`, this.configurationAbort.signal);
-
-		if (response.error) {
-			throw new Error(response.error);
-		}
-
-		const config = Pl3xmapMapProvider.buildServerConfig(response),
-			worldNames: string[] = (response.worlds || []).filter((world: any) => world && !!world.name)
-				.map((world: any) => world.name);
-
-		const worldResponses = await Promise.all(worldNames.map(name =>
-			Pl3xmapMapProvider.getJSON(`${baseUrl}tiles/${name}/settings.json`, this.configurationAbort!.signal)));
-
-		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
-		this.store.commit(MutationTypes.SET_MESSAGES, Pl3xmapMapProvider.buildMessagesConfig(response));
-		this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(response, worldResponses));
-		this.store.commit(MutationTypes.SET_COMPONENTS, Pl3xmapMapProvider.buildComponents(response));
-	}
-
 	async populateWorld(world: LiveAtlasWorldDefinition) {
+		this.startUpdates();
+
 		const worldConfig = this.worldComponents.get(world.name);
 		await this.getMarkerSets(world);
 
@@ -540,7 +542,11 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 		return players;
 	}
 
-	startUpdates() {
+	private startUpdates() {
+		if(this.updatesEnabled) {
+			return;
+		}
+
 		this.updatesEnabled = true;
 		this.updatePlayers();
 		this.updateMarkers();
@@ -570,7 +576,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 		//TODO: Implement once Pl3xmap offers a way to do this without recreating all markers
 	}
 
-	stopUpdates() {
+	destroy() {
 		this.updatesEnabled = false;
 
 		if (this.markerUpdateTimeout) {

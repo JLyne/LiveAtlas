@@ -33,6 +33,9 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 	declare protected renderer: BluemapMapRenderer;
 	private configurationAbort?: AbortController = undefined;
 	private	markersAbort?: AbortController = undefined;
+
+	private updatesEnabled: boolean = false;
+
 	private markerSets: Map<string, LiveAtlasMarkerSet> = new Map();
 	private markers = new Map<string, Map<string, LiveAtlasMarker>>();
 	private maps: Map<LiveAtlasMapDefinition, BluemapMap> = new Map<LiveAtlasMapDefinition, BluemapMap>();
@@ -56,7 +59,7 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 		};
 	}
 
-	async loadServerConfiguration(): Promise<void> {
+	async init(): Promise<void> {
 		if(this.configurationAbort) {
 			this.configurationAbort.abort();
 		}
@@ -122,6 +125,7 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 	}
 
 	async populateWorld(world: LiveAtlasWorldDefinition) {
+		this.startUpdates();
 		await this.getMarkerSets(world);
 
 		this.store.commit(MutationTypes.SET_MARKER_SETS, this.markerSets);
@@ -160,12 +164,12 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 		}
 	}
 
+	private startUpdates() {
+		if(this.updatesEnabled) {
+			return;
+		}
 
-	startUpdates() {
-	}
-
-	stopUpdates() {
-
+		this.updatesEnabled = true;
 	}
 
 	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {
@@ -180,5 +184,9 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 
 	getOverlayMapLayer(options: LiveAtlasOverlay): LiveAtlasMapLayer {
 		return undefined;
+	}
+
+	destroy() {
+		this.updatesEnabled = false;
 	}
 }

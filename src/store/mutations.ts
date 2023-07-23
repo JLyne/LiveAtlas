@@ -407,7 +407,7 @@ export const mutations: MutationTree<State> & Mutations = {
 		}
 
 		if(state.currentServer) {
-			state.currentServer.mapProvider.stopUpdates();
+			state.currentServer.mapProvider.destroy();
 		}
 
 		state.currentServer = state.servers.get(serverName);

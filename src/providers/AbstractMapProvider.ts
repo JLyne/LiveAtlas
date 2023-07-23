@@ -56,15 +56,12 @@ export default abstract class AbstractMapProvider implements LiveAtlasMapProvide
 		validateConfigURL(this.url, this.name, 'map');
 	}
 
-	abstract loadServerConfiguration(): Promise<void>;
+	abstract init(): Promise<void>;
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {}
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async populateMap(map: LiveAtlasMapDefinition): Promise<void> {}
-
-	startUpdates(): void {}
-	stopUpdates(): void {}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	sendChatMessage(message: string) {
@@ -159,4 +156,6 @@ export default abstract class AbstractMapProvider implements LiveAtlasMapProvide
 	getRenderer(): LiveAtlasMapRenderer {
 		return this.renderer;
 	}
+
+	abstract destroy(): void;
 }

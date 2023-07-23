@@ -207,11 +207,9 @@ interface LiveAtlasParsedUrl {
 }
 
 interface LiveAtlasMapProvider {
-	loadServerConfiguration(): Promise<void>;
+	init(element: HTMLElement): Promise<void>;
 	populateWorld(world: LiveAtlasWorldDefinition): Promise<void>;
 	populateMap(map: LiveAtlasMapDefinition): Promise<void>;
-	startUpdates(): void;
-	stopUpdates(): void;
 	sendChatMessage(message: string): void;
 	login(formData: FormData): void;
 	logout(): void;
@@ -221,6 +219,7 @@ interface LiveAtlasMapProvider {
 	getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
 	getPlayerLayer(): LiveAtlasPlayerLayer;
 	getRenderer(): LiveAtlasMapRenderer;
+	destroy(): void;
 }
 
 interface LiveAtlasMapRenderer {

@@ -17,8 +17,6 @@
 export enum ActionTypes {
 	INIT = "init",
 	LOAD_CONFIGURATION = "loadConfiguration",
-	START_UPDATES = "startUpdates",
-	STOP_UPDATES = "stopUpdates",
 	POP_MARKER_UPDATES = "popMarkerUpdates",
 	SEND_CHAT_MESSAGE = "sendChatMessage",
 	LOGIN = "login",

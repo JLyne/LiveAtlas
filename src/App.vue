@@ -72,7 +72,6 @@ export default defineComponent({
 					loading.value = true;
 
 					await store.dispatch(ActionTypes.LOAD_CONFIGURATION, undefined);
-					await store.dispatch(ActionTypes.START_UPDATES, undefined);
 
 					requestAnimationFrame(() => {
 						hideSplash();
@@ -211,7 +210,10 @@ export default defineComponent({
 			loadConfiguration();
 		});
 		onBeforeUnmount(() => {
-			store.dispatch(ActionTypes.STOP_UPDATES, undefined);
+			if(store.getters.currentMapProvider) {
+        store.getters.currentMapProvider.destroy();
+      }
+
 			clearTimeout(Number(loadingTimeout));
 
 			window.removeEventListener('resize', onResize);

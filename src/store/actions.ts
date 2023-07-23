@@ -16,13 +16,12 @@
 
 import {nextTick} from "vue";
 import {ActionContext, ActionTree} from "vuex";
-import {LiveAtlasGlobalConfig, LiveAtlasMarkerSet, LiveAtlasPlayer, LiveAtlasWorldDefinition} from "@/index";
+import {LiveAtlasGlobalConfig, LiveAtlasWorldDefinition} from "@/index";
 import {DynmapMarkerUpdate} from "@/dynmap";
 import {MutationTypes} from "@/store/mutation-types";
 import {State} from "@/store/state";
 import {ActionTypes} from "@/store/action-types";
 import {Mutations} from "@/store/mutations";
-import {startUpdateHandling, stopUpdateHandling} from "@/leaflet/util/markers";
 
 type AugmentedActionContext = {
 	commit<K extends keyof Mutations>(
@@ -37,12 +36,6 @@ export interface Actions {
 		payload: LiveAtlasGlobalConfig,
 	):Promise<void>
 	[ActionTypes.LOAD_CONFIGURATION](
-		{commit}: AugmentedActionContext,
-	):Promise<void>
-	[ActionTypes.START_UPDATES](
-		{commit}: AugmentedActionContext,
-	):Promise<void>
-	[ActionTypes.STOP_UPDATES](
 		{commit}: AugmentedActionContext,
 	):Promise<void>
 	[ActionTypes.POP_MARKER_UPDATES](
@@ -73,8 +66,11 @@ export const actions: ActionTree<State, State> & Actions = {
 		commit(MutationTypes.SET_SERVERS, config.servers)
 	},
 
-	async [ActionTypes.LOAD_CONFIGURATION]({commit, state, getters, dispatch}): Promise<void> {
-		await dispatch(ActionTypes.STOP_UPDATES, undefined);
+	async [ActionTypes.LOAD_CONFIGURATION]({commit, state, getters}): Promise<void> {
+		if(getters.currentMapProvider) {
+			getters.currentMapProvider.destroy();
+		}
+
 		commit(MutationTypes.RESET, undefined);
 
 		if(!state.currentServer) {
@@ -82,7 +78,7 @@ export const actions: ActionTree<State, State> & Actions = {
 			return;
 		}
 
-		await getters.currentMapProvider!.loadServerConfiguration();
+		await getters.currentMapProvider!.init();
 
 		//Skip default map/ui visibility logic if we already have a map selected (i.e config reload after hash change)
 		if(state.currentMap) {
@@ -142,21 +138,6 @@ export const actions: ActionTree<State, State> & Actions = {
 
 		await nextTick(() => commit(MutationTypes.SET_LOADED, undefined));
 	},
-
-	async [ActionTypes.START_UPDATES]({state, getters}) {
-		if(!state.currentWorld) {
-			return Promise.reject("No current world");
-		}
-
-		getters.currentMapProvider!.startUpdates();
-		startUpdateHandling();
-	},
-
-	async [ActionTypes.STOP_UPDATES]({getters}) {
-		getters.currentMapProvider!.stopUpdates();
-		stopUpdateHandling();
-	},
-
 
 	async [ActionTypes.POP_MARKER_UPDATES]({commit, state}, amount: number): Promise<DynmapMarkerUpdate[]> {
 		const updates = state.pendingMarkerUpdates.slice(0, amount);

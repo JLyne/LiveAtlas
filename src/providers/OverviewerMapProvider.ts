@@ -53,6 +53,33 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 	private readonly mapLayerOptions: Map<LiveAtlasMapDefinition, OverviewerTileLayerOptions> = new Map();
 	private readonly overlayLayerOptions: Map<LiveAtlasOverlay, OverviewerTileLayerOptions> = new Map();
 
+	async init(): Promise<void> {
+		if(this.configurationAbort) {
+			this.configurationAbort.abort();
+		}
+
+		this.configurationAbort = new AbortController();
+
+		const baseUrl = this.url,
+			response = await OverviewerMapProvider.getText(`${baseUrl}overviewerConfig.js`, this.configurationAbort.signal);
+
+		try {
+			//Overviewer's config is a JS object rather than JSON, so we need to run the JS to evaluate it :(
+			//Doing this in an iframe to at least attempt to protect from bad things
+			const result = await runSandboxed(response + ' return overviewerConfig;');
+
+			this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, OverviewerMapProvider.buildServerConfig(result));
+			this.store.commit(MutationTypes.SET_MESSAGES, OverviewerMapProvider.buildMessagesConfig(result));
+			this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(result));
+			this.store.commit(MutationTypes.SET_COMPONENTS, OverviewerMapProvider.buildComponents(result));
+
+			await this.getMarkerSets();
+		} catch(e) {
+			console.error(e);
+			throw e;
+		}
+	}
+
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private static buildServerConfig(ignore: any): LiveAtlasServerConfig {
 		return {
@@ -351,33 +378,6 @@ export default class OverviewerMapProvider extends LeafletMapProvider {
 		}
 
 		return marker as LiveAtlasMarker | LiveAtlasAreaMarker;
-	}
-
-	async loadServerConfiguration(): Promise<void> {
-		if(this.configurationAbort) {
-			this.configurationAbort.abort();
-		}
-
-		this.configurationAbort = new AbortController();
-
-		const baseUrl = this.url,
-			response = await OverviewerMapProvider.getText(`${baseUrl}overviewerConfig.js`, this.configurationAbort.signal);
-
-		try {
-			//Overviewer's config is a JS object rather than JSON, so we need to run the JS to evaluate it :(
-			//Doing this in an iframe to at least attempt to protect from bad things
-			const result = await runSandboxed(response + ' return overviewerConfig;');
-
-			this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, OverviewerMapProvider.buildServerConfig(result));
-			this.store.commit(MutationTypes.SET_MESSAGES, OverviewerMapProvider.buildMessagesConfig(result));
-			this.store.commit(MutationTypes.SET_WORLDS, this.buildWorlds(result));
-			this.store.commit(MutationTypes.SET_COMPONENTS, OverviewerMapProvider.buildComponents(result));
-
-			await this.getMarkerSets();
-		} catch(e) {
-			console.error(e);
-			throw e;
-		}
 	}
 
 	async populateMap(map:LiveAtlasMapDefinition) {

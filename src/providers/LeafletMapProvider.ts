@@ -26,6 +26,10 @@ export default abstract class LeafletMapProvider extends AbstractMapProvider {
         super(name, url, renderer);
     }
 
+    init(): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
     abstract getBaseMapLayer(options: LiveAtlasMapDefinition): LiveAtlasMapLayer;
 
     getOverlayMapLayer(set: LiveAtlasMarkerSet): LiveAtlasMapLayer {
@@ -40,7 +44,6 @@ export default abstract class LeafletMapProvider extends AbstractMapProvider {
         return this.renderer.createPlayerMarkerLayer();
     }
 
-    loadServerConfiguration(): Promise<void> {
-        return Promise.resolve(undefined);
+    destroy() {
     }
 }

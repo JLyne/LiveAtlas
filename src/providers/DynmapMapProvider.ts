@@ -45,6 +45,7 @@ import LeafletMapProvider from "@/providers/LeafletMapProvider";
 import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {DynmapProjection} from "@/leaflet/projection/DynmapProjection";
+import {startUpdateHandling, stopUpdateHandling} from "@/leaflet/util/markers";
 
 export default class DynmapMapProvider extends LeafletMapProvider {
 	declare protected url: DynmapUrlConfig;
@@ -114,7 +115,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 		}
 	}
 
-	async loadServerConfiguration(): Promise<void> {
+	async init(): Promise<void> {
 		if(this.configurationAbort) {
 			this.configurationAbort.abort();
 		}
@@ -144,6 +145,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 	}
 
 	async populateWorld(world: LiveAtlasWorldDefinition): Promise<void> {
+		this.startUpdates();
 		await this.getMarkerSets(world);
 	}
 
@@ -270,9 +272,14 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 		});
 	}
 
-	startUpdates() {
+	private startUpdates() {
+		if(this.updatesEnabled) {
+			return;
+		}
+
 		this.updatesEnabled = true;
 		this.update();
+		startUpdateHandling();
 	}
 
 	private async update() {
@@ -289,7 +296,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 		}
 	}
 
-	stopUpdates() {
+	destroy() {
 		this.updatesEnabled = false;
 
 		if (this.updateTimeout) {
@@ -309,6 +316,8 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 		if(this.markersAbort) {
 			this.markersAbort.abort();
 		}
+
+		stopUpdateHandling();
 	}
 
     async login(data: any) {
