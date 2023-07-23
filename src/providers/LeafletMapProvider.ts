@@ -16,7 +16,7 @@
 
 import AbstractMapProvider from "@/providers/AbstractMapProvider";
 import LeafletMapRenderer from "@/renderers/LeafletMapRenderer";
-import {LiveAtlasMapLayer, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer} from "@/index";
+import {LiveAtlasMapLayer, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer, LiveAtlasPlayerLayer} from "@/index";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 
 export default abstract class LeafletMapProvider extends AbstractMapProvider {
@@ -34,6 +34,10 @@ export default abstract class LeafletMapProvider extends AbstractMapProvider {
 
     getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer {
         return this.renderer.createMarkerSetLayer(set);
+    }
+
+    getPlayerLayer(): LiveAtlasPlayerLayer {
+        return this.renderer.createPlayerMarkerLayer();
     }
 
     loadServerConfiguration(): Promise<void> {

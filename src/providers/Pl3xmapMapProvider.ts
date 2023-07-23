@@ -30,7 +30,6 @@ import {
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {MutationTypes} from "@/store/mutation-types";
-import {ActionTypes} from "@/store/action-types";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex} from "@/util";
 import {LiveAtlasMarkerType} from "@/leaflet/util/markers";
@@ -554,7 +553,7 @@ export default class Pl3xmapMapProvider extends LeafletMapProvider {
 
 				this.playerUpdateTimestamp = new Date();
 
-				await this.store.dispatch(ActionTypes.SET_PLAYERS, players);
+				this.store.commit(MutationTypes.SET_PLAYERS, players);
 			}
 		} finally {
 			if(this.updatesEnabled) {

@@ -18,7 +18,6 @@ import {
 	LiveAtlasWorldState,
 	LiveAtlasServerDefinition,
 	LiveAtlasSidebarSection,
-	LiveAtlasSortedPlayers,
 	LiveAtlasUIElement,
 	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
@@ -59,13 +58,14 @@ export type State = {
 	layers: Map<LiveAtlasLayer, LiveAtlasLayerDefinition>;
 
 	players: Map<string, LiveAtlasPlayer>;
-	sortedPlayers: LiveAtlasSortedPlayers;
+	sortedPlayers: LiveAtlasPlayer[];
 	maxPlayers: number;
 	markerSets: Map<string, LiveAtlasMarkerSet>;
 
 	chat: {
 		unread: number;
 		messages: LiveAtlasChat[];
+		perPlayer: Map<string, LiveAtlasChat[]>;
 	};
 
 	pendingMarkerUpdates: DynmapMarkerUpdate[];
@@ -132,12 +132,13 @@ export const state: State = {
 	layers: new Map(), //Map layers
 
 	players: new Map(), //Online players from world.json
-	sortedPlayers: [] as LiveAtlasSortedPlayers, //Online players from world.json, sorted by their sort property then alphabetically
+	sortedPlayers: [], //Online players from world.json, sorted by their sort property then alphabetically
 	maxPlayers: 0,
 
 	chat: {
 		unread: 0,
 		messages: [],
+		perPlayer: new Map(),
 	},
 
 	markerSets: new Map(), //Marker sets from world_markers.json, doesn't include the markers themselves for performance reasons

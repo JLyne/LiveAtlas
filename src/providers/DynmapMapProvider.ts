@@ -27,7 +27,6 @@ import {
 } from "@/index";
 import {DynmapUrlConfig} from "@/dynmap";
 import {MutationTypes} from "@/store/mutation-types";
-import {ActionTypes} from "@/store/action-types";
 import ChatError from "@/errors/ChatError";
 import AbstractMapProvider from "@/providers/AbstractMapProvider";
 import {
@@ -203,10 +202,10 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 		//Extra fake players for testing
 		// for(let i = 0; i < 450; i++) {
 		// 	players.add({
-		// 		account: "VIDEO GAMES " + i,
+		// 		name: "VIDEO GAMES " + i,
+		// 		displayName: "VIDEO GAMES " + i,
 		// 		health: Math.round(Math.random() * 10),
 		// 		armor: Math.round(Math.random() * 10),
-		// 		name: "VIDEO GAMES " + i,
 		// 		sort: Math.round(Math.random() * 10),
 		// 		hidden: false,
 		// 		location: {
@@ -231,7 +230,7 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 
 		this.tileLayers.get(this.store.state.currentMap!)!.updateTiles(updates.tiles);
 
-		await this.store.dispatch(ActionTypes.SET_PLAYERS, players);
+		this.store.commit(MutationTypes.SET_PLAYERS, players);
 	}
 
 	sendChatMessage(message: string) {

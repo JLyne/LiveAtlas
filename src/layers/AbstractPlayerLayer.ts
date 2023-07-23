@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 James Lyne
+ * Copyright 2023 James Lyne
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,32 @@
  * limitations under the License.
  */
 
-export enum ActionTypes {
-	INIT = "init",
-	LOAD_CONFIGURATION = "loadConfiguration",
-	START_UPDATES = "startUpdates",
-	STOP_UPDATES = "stopUpdates",
-	POP_MARKER_UPDATES = "popMarkerUpdates",
-	SEND_CHAT_MESSAGE = "sendChatMessage",
-	LOGIN = "login",
-	LOGOUT = "logout",
-	REGISTER = "register",
+import {
+    LiveAtlasPlayer,
+    LiveAtlasPlayerLayer,
+    LiveAtlasPlayerMarker
+} from "@/index";
+
+export default abstract class AbstractPlayerLayer implements LiveAtlasPlayerLayer {
+
+    protected constructor() {
+
+    }
+
+    enable() {
+    }
+
+    disable() {
+
+    }
+
+    destroy() {
+        this.disable();
+    }
+
+    abstract toggle(): void;
+
+    abstract addPlayer(player: LiveAtlasPlayer): LiveAtlasPlayerMarker;
+
+    abstract removePlayer(player: LiveAtlasPlayer): void;
 }

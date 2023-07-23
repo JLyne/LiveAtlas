@@ -45,10 +45,6 @@ export interface Actions {
 	[ActionTypes.STOP_UPDATES](
 		{commit}: AugmentedActionContext,
 	):Promise<void>
-	[ActionTypes.SET_PLAYERS](
-		{commit}: AugmentedActionContext,
-		payload: Set<LiveAtlasPlayer>
-	):Promise<Map<string, LiveAtlasMarkerSet>>
 	[ActionTypes.POP_MARKER_UPDATES](
 		{commit}: AugmentedActionContext,
 		amount: number
@@ -161,31 +157,6 @@ export const actions: ActionTree<State, State> & Actions = {
 		stopUpdateHandling();
 	},
 
-	[ActionTypes.SET_PLAYERS]({commit}, players: Set<LiveAtlasPlayer>) {
-		const keep: Set<string> = new Set();
-
-		for(const player of players) {
-			keep.add(player.name);
-		}
-
-		//Remove any players that aren't in the set
-		commit(MutationTypes.SYNC_PLAYERS, keep);
-
-		const processQueue = (players: Set<LiveAtlasPlayer>, resolve: Function) => {
-			commit(MutationTypes.SET_PLAYERS_ASYNC, players);
-
-			if(!players.size) {
-				resolve();
-			} else {
-				requestAnimationFrame(() => processQueue(players, resolve));
-			}
-		}
-
-		//Set players every frame until done
-		return new Promise((resolve) => {
-			requestAnimationFrame(() => processQueue(players, resolve));
-		});
-	},
 
 	async [ActionTypes.POP_MARKER_UPDATES]({commit, state}, amount: number): Promise<DynmapMarkerUpdate[]> {
 		const updates = state.pendingMarkerUpdates.slice(0, amount);

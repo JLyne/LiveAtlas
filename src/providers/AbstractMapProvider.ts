@@ -16,7 +16,12 @@
 
 import {
 	LiveAtlasMapLayer,
-	LiveAtlasMapProvider, LiveAtlasMapRenderer, LiveAtlasMarkerSet, LiveAtlasMarkerSetLayer, LiveAtlasOverlay,
+	LiveAtlasMapProvider,
+	LiveAtlasMapRenderer,
+	LiveAtlasMarkerSet,
+	LiveAtlasMarkerSetLayer,
+	LiveAtlasOverlay,
+	LiveAtlasPlayerLayer,
 	LiveAtlasWorldDefinition
 } from "@/index";
 import {useStore} from "@/store";
@@ -149,6 +154,8 @@ export default abstract class AbstractMapProvider implements LiveAtlasMapProvide
 	abstract getBaseMapLayer(options: LiveAtlasMapDefinition): LiveAtlasMapLayer;
 	abstract getOverlayMapLayer(options: LiveAtlasOverlay): LiveAtlasMapLayer;
 	abstract getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
+	abstract getPlayerLayer(): LiveAtlasPlayerLayer;
+
 	getRenderer(): LiveAtlasMapRenderer {
 		return this.renderer;
 	}

@@ -145,10 +145,6 @@ interface LiveAtlasPlayer {
 	yaw?: number;
 }
 
-interface LiveAtlasSortedPlayers extends Array<LiveAtlasPlayer> {
-	dirty?: boolean;
-}
-
 interface LiveAtlasWorldDefinition {
 	name: string;
 	displayName: string;
@@ -223,6 +219,7 @@ interface LiveAtlasMapProvider {
 	getBaseMapLayer(options: LiveAtlasMapDefinition): LiveAtlasMapLayer;
 	getOverlayMapLayer(options: LiveAtlasOverlay): LiveAtlasMapLayer;
 	getMarkerSetLayer(set: LiveAtlasMarkerSet): LiveAtlasMarkerSetLayer;
+	getPlayerLayer(): LiveAtlasPlayerLayer;
 	getRenderer(): LiveAtlasMapRenderer;
 }
 
@@ -250,6 +247,16 @@ interface LiveAtlasMarkerSetLayer extends LiveAtlasLayer {
 }
 
 interface LiveAtlasMapLayer extends LiveAtlasLayer {
+}
+
+interface LiveAtlasPlayerLayer extends LiveAtlasLayer {
+	addPlayer(player: LiveAtlasPlayer): LiveAtlasPlayerMarker;
+	removePlayer(player: LiveAtlasPlayer): void;
+}
+
+interface LiveAtlasPlayerMarker extends LiveAtlasLayer {
+	update(update: LiveAtlasPlayer): void;
+	showChat(chat: LiveAtlasChat[]): void;
 }
 
 interface LiveAtlasOverlay {

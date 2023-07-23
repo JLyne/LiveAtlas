@@ -18,7 +18,6 @@ import {MutationTree} from "vuex";
 import {
 	LiveAtlasWorldState,
 	LiveAtlasSidebarSection,
-	LiveAtlasSortedPlayers,
 	LiveAtlasUIElement,
 	LiveAtlasWorldDefinition,
 	LiveAtlasParsedUrl,
@@ -69,8 +68,7 @@ export type Mutations<S = State> = {
 	[MutationTypes.POP_MARKER_UPDATES](state: S, amount: number): void
 
 	[MutationTypes.SET_MAX_PLAYERS](state: S, maxPlayers: number): void
-	[MutationTypes.SET_PLAYERS_ASYNC](state: S, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer>
-	[MutationTypes.SYNC_PLAYERS](state: S, keep: Set<string>): void
+	[MutationTypes.SET_PLAYERS](state: S, players: Set<LiveAtlasPlayer>): void
 	[MutationTypes.ADD_LAYER](state: State, layer: LiveAtlasLayerDefinition): void
 	[MutationTypes.UPDATE_LAYER](state: State, payload: {layer: LiveAtlasLayer, options: LiveAtlasPartialLayerDefinition}): void
 	[MutationTypes.REMOVE_LAYER](state: State, layer: LiveAtlasLayer): void
@@ -294,8 +292,18 @@ export const mutations: MutationTree<State> & Mutations = {
 	},
 
 	//Adds chat messages from an update fetch to the chat history
-	[MutationTypes.ADD_CHAT](state: State, chat: Array<LiveAtlasChat>) {
+	[MutationTypes.ADD_CHAT](state: State, chat: LiveAtlasChat[]) {
 		state.chat.messages.unshift(...chat);
+
+		for(const message of chat) {
+			if(message.type !== 'chat' || !message.playerAccount) {
+				continue;
+			}
+
+			if(state.chat.perPlayer.has(message.playerAccount)) {
+				state.chat.perPlayer.get(message.playerAccount)!.unshift(message);
+			}
+		}
 	},
 
 	//Pops the specified number of marker updates from the pending updates list
@@ -307,13 +315,16 @@ export const mutations: MutationTree<State> & Mutations = {
 		state.maxPlayers = maxPlayers;
 	},
 
-	// Set up to 10 players at once
-	[MutationTypes.SET_PLAYERS_ASYNC](state: State, players: Set<LiveAtlasPlayer>): Set<LiveAtlasPlayer> {
-		let count = 0;
+	[MutationTypes.SET_PLAYERS](state: State, players: Set<LiveAtlasPlayer>) {
+		const keep: Set<string> = new Set();
+		let sortedDirty = false;
 
 		for(const player of players) {
-			if(state.players.has(player.name)) {
-				const existing = state.players.get(player.name);
+			const id = player.uuid || player.name;
+			keep.add(id);
+
+			if(state.players.has(id)) {
+				const existing = state.players.get(id);
 
 				existing!.health = player.health;
 				existing!.uuid = player.uuid;
@@ -325,11 +336,11 @@ export const mutations: MutationTree<State> & Mutations = {
 				existing!.sort = player.sort;
 
 				if(existing!.displayName !== player.displayName || existing!.sort !== player.sort) {
-					state.sortedPlayers.dirty = true;
+					sortedDirty = true;
 				}
 			} else {
-				state.sortedPlayers.dirty = true;
-				state.players.set(player.name, {
+				sortedDirty = true;
+				state.players.set(id, {
 					name: player.name,
 					uuid: player.uuid,
 					health: player.health,
@@ -340,36 +351,27 @@ export const mutations: MutationTree<State> & Mutations = {
 					sort: player.sort,
 					hidden: player.hidden,
 				});
+				state.chat.perPlayer.set(id, []);
 			}
+		}
 
-			players.delete(player);
-
-			if(++count >= 10) {
-				break;
+		for(const [key, player] of state.players) {
+			if(!keep.has(key)) {
+				state.sortedPlayers.splice(state.sortedPlayers.indexOf(player), 1);
+				state.players.delete(key);
+				state.chat.perPlayer.delete(key);
 			}
 		}
 
 		//Re-sort sortedPlayers array if needed
-		if(!players.size && state.sortedPlayers.dirty) {
+		if(sortedDirty) {
 			state.sortedPlayers = [...state.players.values()].sort((a, b) => {
 				if(a.sort !== b.sort) {
 					return a.sort - b.sort;
 				}
 
 				return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-			}) as LiveAtlasSortedPlayers;
-		}
-
-		return players;
-	},
-
-	//Removes all players not found in the provided keep set
-	[MutationTypes.SYNC_PLAYERS](state: State, keep: Set<string>) {
-		for(const [key, player] of state.players) {
-			if(!keep.has(player.name)) {
-				state.sortedPlayers.splice(state.sortedPlayers.indexOf(player), 1);
-				state.players.delete(key);
-			}
+			});
 		}
 	},
 
@@ -596,6 +598,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
 		state.ui.visibleModal = undefined;
 		state.chat.messages = [];
+		state.chat.perPlayer.clear();
 
 		state.loggedIn = false;
 		state.loginRequired = false;

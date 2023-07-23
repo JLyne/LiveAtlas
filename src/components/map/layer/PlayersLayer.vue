@@ -15,15 +15,13 @@
   -->
 
 <template>
-	<PlayerMarker v-for="[account, player] in players" :key="account" :player="player" :layerGroup="layer"></PlayerMarker>
+	<PlayerMarker v-for="[account, player] in players" :key="account" :player="player" :layer="layer"></PlayerMarker>
 </template>
 
 <script lang="ts">
 import {defineComponent, computed, watch, onMounted, onUnmounted, reactive} from "vue";
-import {LayerGroup} from 'leaflet';
 import {useStore} from "@/store";
 import PlayerMarker from "@/components/map/marker/PlayerMarker.vue";
-import LiveAtlasLeafletMap from "@/leaflet/LiveAtlasLeafletMap";
 import {MutationTypes} from "@/store/mutation-types";
 import {markRaw} from "vue";
 
@@ -32,23 +30,12 @@ export default defineComponent({
 		PlayerMarker
 	},
 
-	props: {
-		leaflet: {
-			type: Object as () => LiveAtlasLeafletMap,
-			required: true,
-		}
-	},
-
-	setup(props) {
+	setup() {
 		const store = useStore(),
-			playerPane = props.leaflet.getPane('players') || props.leaflet.createPane('players'),
 			players = computed(() => store.state.players),
-			playerCount = computed(() => store.state.players.size),
-			playersAboveMarkers = computed(() => store.state.ui.playersAboveMarkers),
 			componentSettings = computed(() => store.state.components.players.markers),
-			layer = new LayerGroup([],{
-				pane: 'players'
-			}),
+      layer = store.getters.currentMapProvider!.getPlayerLayer(),
+
       layerDefinition = reactive({
 				layer: markRaw(layer),
 				name: store.state.components.players.markers!.layerName,
@@ -59,25 +46,20 @@ export default defineComponent({
 			}),
         enabled = computed(() => layerDefinition.enabled);
 
-		watch(playerCount, (newValue) => playerPane.classList.toggle('no-animations', newValue > 150));
-		watch(enabled, (newValue) => newValue ? props.leaflet.addLayer(layer) : props.leaflet.removeLayer(layer));
+		watch(enabled, (newValue) => newValue ? layer.enable() : layer.disable());
 
 		onMounted(() => {
 			store.commit(MutationTypes.ADD_LAYER, layerDefinition);
 
       if(layerDefinition.enabled) {
-        props.leaflet.addLayer(layer);
+        layer.enable();
       }
 		});
 
 		onUnmounted(() => {
       store.commit(MutationTypes.REMOVE_LAYER, layer);
-      props.leaflet.removeLayer(layer);
+      layer.disable();
     });
-
-		if(playersAboveMarkers.value) {
-			playerPane.style.zIndex = '600';
-		}
 
 		return {
 			players,

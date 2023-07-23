@@ -20,8 +20,7 @@
 			<BaseMapLayer v-for="[name, map] in maps" :key="name" :map="map" :renderer="currentRenderer"></BaseMapLayer>
 			<OverlayMapLayer v-for="[name, overlay] in overlays" :key="name" :overlay="overlay" :renderer="currentRenderer"></OverlayMapLayer>
 
-<!--			<TileLayerOverlay v-for="[name, overlay] in overlays" :key="name" :options="overlay" :leaflet="leaflet"></TileLayerOverlay>-->
-<!--			<PlayersLayer v-if="playerMarkersEnabled" :leaflet="leaflet"></PlayersLayer>-->
+			<PlayersLayer v-if="playerMarkersEnabled"></PlayersLayer>
 			<MarkerSetLayer v-for="[name, markerSet] in markerSets" :key="name" :markerSet="markerSet" :renderer="currentRenderer"></MarkerSetLayer>
 		</template>
 </template>

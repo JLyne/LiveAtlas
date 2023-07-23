@@ -34,11 +34,13 @@ import {
     LiveAtlasMapViewTarget,
     LiveAtlasMarkerSet,
     LiveAtlasMarkerSetLayer,
-    LiveAtlasProjection
+    LiveAtlasProjection,
+    LiveAtlasPlayerLayer
 } from "@/index";
 import LeafletMarkerSetLayer from "@/layers/LeafletMarkerSetLayer";
 import {AbstractTileLayer} from "@/leaflet/tileLayer/AbstractTileLayer";
 import LeafletMapLayer from "@/layers/LeafletMapLayer";
+import LeafletPlayerLayer from "@/layers/LeafletPlayerLayer";
 
 export default class LeafletMapRenderer extends AbstractMapRenderer {
     private leaflet: LiveAtlasLeafletMap | undefined;
@@ -263,7 +265,7 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
         }
     }
 
-    hackGetLeaflet(): LiveAtlasLeafletMap {
-        return this.leaflet!;
+    createPlayerMarkerLayer(): LiveAtlasPlayerLayer {
+        return new LeafletPlayerLayer(this.leaflet!);
     }
 }
