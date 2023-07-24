@@ -15,18 +15,16 @@
  */
 
 import {LiveAtlasPlayer, LiveAtlasPlayerMarker} from "@/index";
-import {useStore} from "vuex";
 import AbstractPlayerLayer from "@/layers/AbstractPlayerLayer";
-import {Store} from "@/store";
 import {MapViewer} from "bluemap/MapViewer";
 import {MarkerSet} from "bluemap/markers/MarkerSet";
 import {PLAYER_MARKER_SET_ID} from "bluemap/markers/PlayerMarkerManager";
 import {PlayerMarker} from "@/bluemap/marker/PlayerMarker";
+
 export default class BluemapPlayerLayer extends AbstractPlayerLayer {
     private readonly viewer: MapViewer;
     private readonly markerSet: MarkerSet;
     private readonly markers: Map<LiveAtlasPlayer, PlayerMarker> = new Map();
-    private readonly store: Store = useStore();
 
     constructor(viewer: MapViewer) {
         super();

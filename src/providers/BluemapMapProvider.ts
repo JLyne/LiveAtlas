@@ -304,8 +304,6 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 	}
 
 	getBaseMapLayer(map: LiveAtlasMapDefinition): LiveAtlasMapLayer {
-		console.log(map);
-		console.log(this.maps.get(map));
 		return new BluemapMapLayer(this.renderer.getMapViewer()!, this.maps.get(map)!);
 	}
 

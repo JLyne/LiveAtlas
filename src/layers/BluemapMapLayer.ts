@@ -31,7 +31,6 @@ export default class BluemapMapLayer extends AbstractMapLayer {
     }
 
     enable(): void {
-        console.log(this.map);
         this.viewer.switchMap(this.map);
     }
 
