@@ -17,12 +17,15 @@
 import AbstractMapRenderer from "@/renderers/AbstractMapRenderer";
 import {FreeFlightControls, MapControls, MapViewer} from "bluemap/BlueMap";
 import {LiveAtlasMapViewTarget} from "@/index";
+import {MutationTypes} from "@/store/mutation-types";
 
 export default class BluemapMapRenderer extends AbstractMapRenderer {
     protected events: HTMLElement | undefined;
     protected mapViewer: MapViewer | undefined;
     protected _mapControls: MapControls | undefined;
     protected freeFlightControls: FreeFlightControls | undefined;
+
+    protected loadingCheckFrame: number = 0;
 
     constructor() {
         super();
@@ -36,6 +39,31 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
         this.freeFlightControls = new FreeFlightControls(this.mapViewer.renderer.domElement);
 
         this.resetCamera();
+        this.startLoadingCheck();
+    }
+
+    private startLoadingCheck() {
+        this.loadingCheckFrame = requestAnimationFrame(() => this.loadingCheck());
+    }
+
+    private stopLoadingCheck() {
+        if(this.loadingCheckFrame) {
+            cancelAnimationFrame(this.loadingCheckFrame);
+        }
+    }
+
+    private loadingCheck() {
+        //Check if current map has any pending tile loads in any of its tileManagers
+        //Can't use bluemapMapTileLoad event here as it fires before currentlyLoading updates, and doesn't fire for errors
+        const loading = !this.mapViewer?.map?.isLoaded
+            || !!this.mapViewer.map.hiresTileManager.currentlyLoading
+            || !!this.mapViewer.map.lowresTileManager.filter(manager => !!manager.currentlyLoading).length;
+
+        if(loading != this.store.state.currentMapState.loading) {
+            this.store.commit(MutationTypes.SET_MAP_STATE, {loading});
+        }
+
+        this.loadingCheckFrame = requestAnimationFrame(() => this.loadingCheck());
     }
 
     resetCamera() {
@@ -63,6 +91,7 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
 
         if(this.mapViewer) {
             //FIXME: ???
+            this.stopLoadingCheck();
         }
     }
 
