@@ -43,7 +43,7 @@ export enum LiveAtlasMarkerType {
 	CIRCLE
 }
 
-let updateFrame = 0;
+let idleCallback = 0;
 let pendingUpdates: ComputedRef;
 
 const updateHandlers: Set<LiveAtlasMarkerUpdateCallback> = new Set();
@@ -58,8 +58,10 @@ export const startUpdateHandling = () => {
 	pendingUpdates = computed(() => store.state.pendingMarkerUpdates.length);
 
 	watch(pendingUpdates, (newValue, oldValue) => {
-		if(newValue && newValue > 0 && oldValue === 0 && !updateFrame) {
-			updateFrame = requestAnimationFrame(() => handlePendingUpdates());
+		if(newValue && newValue > 0 && oldValue === 0 && !idleCallback) {
+			idleCallback = requestIdleCallback((deadline) => handlePendingUpdates(deadline), {
+				timeout: 3000,
+			}); //FIXME: Safari
 		}
 	});
 }
@@ -68,9 +70,9 @@ export const startUpdateHandling = () => {
  * Stops handling of pending marker updates
  */
 export const stopUpdateHandling = () => {
-	if(updateFrame) {
-		cancelAnimationFrame(updateFrame);
-		updateFrame = 0;
+	if(idleCallback) {
+		cancelIdleCallback(idleCallback);
+		idleCallback = 0;
 	}
 }
 
@@ -122,23 +124,31 @@ export const unregisterSetUpdateHandler = (callback: LiveAtlasMarkerUpdateCallba
  * If further updates remain, an animation frame will be scheduled for further calls
  * @private
  */
-const handlePendingUpdates = async () => {
-	const store = useStore(),
-		updates = await store.dispatch(ActionTypes.POP_MARKER_UPDATES, 10);
+const handlePendingUpdates = async (deadline: IdleDeadline) => {
+	const store = useStore();
 
-	for(const update of updates) {
-		updateHandlers.forEach(callback => callback(update));
+	while(deadline.timeRemaining() > 2) {
+		const updates = await store.dispatch(ActionTypes.POP_MARKER_UPDATES, 10);
 
-		if(setUpdateHandlers[update.set]) {
-			setUpdateHandlers[update.set].forEach(callback => callback(update));
+		if(!updates) {
+			break;
+		}
+
+		for(const update of updates) {
+			updateHandlers.forEach(callback => callback(update));
+
+			if(setUpdateHandlers[update.set]) {
+				setUpdateHandlers[update.set].forEach(callback => callback(update));
+			}
 		}
 	}
 
 	if(pendingUpdates.value) {
-		// eslint-disable-next-line no-unused-vars
-		updateFrame = requestAnimationFrame(() => handlePendingUpdates());
+		idleCallback = requestIdleCallback((deadline) => handlePendingUpdates(deadline), {
+			timeout: 3000
+		}); //FIXME: Safari
 	} else {
-		updateFrame = 0;
+		idleCallback = 0;
 	}
 };
 
