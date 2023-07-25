@@ -22,10 +22,16 @@ import {MutationTypes} from "@/store/mutation-types";
 export default class BluemapMapRenderer extends AbstractMapRenderer {
     protected events: HTMLElement | undefined;
     protected mapViewer: MapViewer | undefined;
-    protected _mapControls: MapControls | undefined;
+    protected mapControls: MapControls | undefined;
     protected freeFlightControls: FreeFlightControls | undefined;
 
     protected loadingCheckFrame: number = 0;
+
+    protected lastZoom: number = 0;
+    protected lastX: number = 0;
+    protected lastY: number = 0;
+    protected lastZ: number = 0;
+
 
     constructor() {
         super();
@@ -35,36 +41,69 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
         this.events = element;
         this.mapViewer = new MapViewer(element, this.events);
 
-        this._mapControls = new MapControls(this.mapViewer.renderer.domElement, element);
+        this.mapControls = new MapControls(this.mapViewer.renderer.domElement, element);
         this.freeFlightControls = new FreeFlightControls(this.mapViewer.renderer.domElement);
         this.store.commit(MutationTypes.SET_MAP_STATE, {zoomReversed: true});
 
-        this.resetCamera();
-        this.startLoadingCheck();
+        this.mapViewer!.controlsManager.controls = this.mapControls;
+
+        this.startStateChecks();
     }
 
-    private startLoadingCheck() {
-        this.loadingCheckFrame = requestAnimationFrame(() => this.loadingCheck());
+    private startStateChecks() {
+        this.loadingCheckFrame = requestAnimationFrame(() => this.stateCheck());
     }
 
-    private stopLoadingCheck() {
+    private stopStateChecks() {
         if(this.loadingCheckFrame) {
             cancelAnimationFrame(this.loadingCheckFrame);
         }
     }
 
-    private loadingCheck() {
-        //Check if current map has any pending tile loads in any of its tileManagers
-        //Can't use bluemapMapTileLoad event here as it fires before currentlyLoading updates, and doesn't fire for errors
+    private stateCheck() {
+        //Map is loading if it has currentlyLoading in any of its tileManagers
+        //Can't use bluemapMapTileLoad event for this, as it fires before currentlyLoading updates and doesn't fire for errors
         const loading = !this.mapViewer?.map?.isLoaded
             || !!this.mapViewer.map.hiresTileManager.currentlyLoading
-            || !!this.mapViewer.map.lowresTileManager.filter(manager => !!manager.currentlyLoading).length;
+            || !!this.mapViewer.map.lowresTileManager.filter(manager => !!manager.currentlyLoading).length,
+
+            mapPosition = this.mapViewer!.controlsManager.position,
+            mapZoom = this.mapViewer!.controlsManager.distance,
+            storePosition = this.store.state.currentMapState.location,
+            storeZoom = this.store.state.currentMapState.zoom;
 
         if(loading != this.store.state.currentMapState.loading) {
             this.store.commit(MutationTypes.SET_MAP_STATE, {loading});
         }
 
-        this.loadingCheckFrame = requestAnimationFrame(() => this.loadingCheck());
+        //Zoom has finished changing if it matches previous frame but doesn't match the store
+        if(mapZoom === this.lastZoom && Math.round(this.lastZoom) !== storeZoom) {
+            console.log('Zoom changed');
+            this.store.commit(MutationTypes.SET_MAP_STATE, {
+                zoom: Math.round(this.lastZoom),
+            });
+        }
+
+        //Position has finished changing if it matches previous frame but doesn't match the store
+        if((mapPosition.x === this.lastX && this.lastX !== storePosition.x)
+            || (mapPosition.y === this.lastY && this.lastY !== storePosition.y)
+            || (mapPosition.z === this.lastZ && this.lastZ !== storePosition.z)) {
+            console.log('Position changed');
+            this.store.commit(MutationTypes.SET_MAP_STATE, {
+                location: {
+                    x: this.lastX,
+                    y: this.lastY,
+                    z: this.lastZ
+                }
+            });
+        }
+
+        this.lastZoom = this.mapViewer!.controlsManager.distance;
+        this.lastX = mapPosition.x;
+        this.lastY = mapPosition.y;
+        this.lastZ = mapPosition.z;
+
+        this.loadingCheckFrame = requestAnimationFrame(() => this.stateCheck());
     }
 
     resetCamera() {
@@ -79,8 +118,6 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
             controls.tilt = 0;
             controls.ortho = 0;
         }
-
-        controls.controls = this._mapControls;
     }
 
     getMapViewer(): MapViewer | undefined {
@@ -92,7 +129,7 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
 
         if(this.mapViewer) {
             //FIXME: ???
-            this.stopLoadingCheck();
+            this.stopStateChecks();
         }
     }
 
@@ -101,7 +138,7 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
     }
 
     setView(target: LiveAtlasMapViewTarget): void {
-        if (this.mapViewer && this.mapViewer.map) {
+        if (this.mapViewer) {
             const controls = this.mapViewer!.controlsManager;
 
             if (controls.controls && controls.controls.stopFollowingPlayerMarker) {
@@ -109,6 +146,10 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
             }
 
             controls.position.copy(target.location);
+
+            if(target.zoom) {
+                controls.distance = target.zoom;
+            }
         }
     }
 

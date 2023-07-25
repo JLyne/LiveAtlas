@@ -200,7 +200,7 @@ export const getUrlForLocation = (map: LiveAtlasMapDefinition, location: Coordin
 			return '';
 		}
 
-		return `#${map.world.name};${map.name};${locationString};${zoom}`;
+		return `#${map.world.name};${map.name};${locationString};${Math.round(zoom)}`;
 }
 
 /**
