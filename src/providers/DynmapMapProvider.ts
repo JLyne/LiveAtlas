@@ -83,6 +83,10 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 	private async getMarkerSets(world: LiveAtlasWorldDefinition): Promise<void> {
 		this.markersAbort = new AbortController();
 
+		if(this.markersAbort) {
+			this.markersAbort.abort();
+		}
+
 		const url = `${this.url.markers}_markers_/marker_${encodeURIComponent(world.name)}.json`,
 			markerSets: Map<string, LiveAtlasMarkerSet> = new Map(),
 			markers = new Map<string, Map<string, LiveAtlasMarker>>(),
@@ -108,11 +112,6 @@ export default class DynmapMapProvider extends LeafletMapProvider {
 
 		this.store.commit(MutationTypes.SET_MARKER_SETS, markerSets);
 		this.store.commit(MutationTypes.SET_MARKERS, markers);
-
-
-		if(this.markersAbort) {
-			this.markersAbort.abort();
-		}
 	}
 
 	async init(): Promise<void> {
