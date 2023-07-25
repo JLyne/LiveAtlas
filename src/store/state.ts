@@ -222,6 +222,7 @@ export const state: State = {
 		zoom: 0,
 		minZoom: 0,
 		maxZoom: 0,
+		zoomReversed: false,
 		loading: false,
 	},
 	currentWorldState: {

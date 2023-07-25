@@ -111,10 +111,14 @@ export const getters: GetterTree<State, State> & Getters = {
 	},
 
 	canZoomIn(state: State): boolean {
-		return state.currentMapState.zoom < state.currentMapState.maxZoom;
+		return state.currentMapState.zoomReversed ?
+			state.currentMapState.zoom > state.currentMapState.minZoom :
+			state.currentMapState.zoom < state.currentMapState.minZoom;
 	},
 
 	canZoomOut(state: State): boolean {
-		return state.currentMapState.zoom > state.currentMapState.minZoom;
+		return state.currentMapState.zoomReversed ?
+			state.currentMapState.zoom < state.currentMapState.maxZoom :
+			state.currentMapState.zoom > state.currentMapState.minZoom;
 	}
 }

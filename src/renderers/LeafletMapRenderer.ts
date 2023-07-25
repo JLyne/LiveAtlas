@@ -116,6 +116,8 @@ export default class LeafletMapRenderer extends AbstractMapRenderer {
 			}
 		});
 
+        this.store.commit(MutationTypes.SET_MAP_STATE, {zoomReversed: false});
+
 		this.leaflet.on('zoomend', () => this.updateZoom());
 
         this.addLoadingListeners();

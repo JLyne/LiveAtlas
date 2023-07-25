@@ -175,6 +175,7 @@ interface LiveAtlasMapState {
 	zoom: number;
 	maxZoom: number;
 	minZoom: number;
+	zoomReversed: boolean;
 	location: Coordinate;
 	loading?: boolean;
 }
@@ -183,6 +184,7 @@ interface LiveAtlasPartialMapState {
 	zoom?: number;
 	minZoom?: number;
 	maxZoom?: number;
+	zoomReversed?: boolean;
 	location?: Coordinate;
 	loading?: boolean;
 }

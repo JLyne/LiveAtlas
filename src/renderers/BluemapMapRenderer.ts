@@ -37,6 +37,7 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
 
         this._mapControls = new MapControls(this.mapViewer.renderer.domElement, element);
         this.freeFlightControls = new FreeFlightControls(this.mapViewer.renderer.domElement);
+        this.store.commit(MutationTypes.SET_MAP_STATE, {zoomReversed: true});
 
         this.resetCamera();
         this.startLoadingCheck();
@@ -121,5 +122,12 @@ export default class BluemapMapRenderer extends AbstractMapRenderer {
         if (this.mapViewer) {
             this.mapViewer.controlsManager.controls.mouseZoom.deltaZoom += 3;
         }
+    }
+
+    setZoomLimits(min: number, max: number): void {
+        this.store.commit(MutationTypes.SET_MAP_STATE, {
+            maxZoom: max,
+            minZoom: min,
+        });
     }
 }

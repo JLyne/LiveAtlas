@@ -84,6 +84,8 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 		const config = BluemapMapProvider.buildServerConfig(),
 			worldNames = response.maps || [];
 
+		this.renderer!.setZoomLimits(response.minZoomDistance, response.maxZoomDistance);
+
 		this.store.commit(MutationTypes.SET_SERVER_CONFIGURATION, config);
 		//this.store.commit(MutationTypes.SET_MESSAGES, Pl3xmapMapProvider.buildMessagesConfig(response));
 		this.store.commit(MutationTypes.SET_WORLDS, await this.buildWorlds(worldNames));
