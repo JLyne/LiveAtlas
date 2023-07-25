@@ -20,6 +20,7 @@ export class PlayerMarker extends BluemapPlayerMarker implements LiveAtlasPlayer
 
     constructor(player: LiveAtlasPlayer) {
         super("bm-player-" + player.uuid!, player.uuid!);
+        this.update(player);
     }
 
     update(player: LiveAtlasPlayer) {
