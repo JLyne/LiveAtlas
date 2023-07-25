@@ -57,9 +57,9 @@ export default class BluemapMapProvider extends AbstractMapProvider {
 			title: '//FIXME',
 			expandUI: false,
 			singleMapWorlds: true,
+			defaultZoom: 1500,
 
 			//Not used by bluemap
-			defaultZoom: 1,
 			defaultMap: undefined,
 			defaultWorld: undefined,
 			followMap: undefined,
