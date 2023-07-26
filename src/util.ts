@@ -29,7 +29,7 @@ import {globalMessages, serverMessages} from "../messages";
 import ConfigurationError from "@/errors/ConfigurationError";
 
 const documentRange = document.createRange(),
-	brToSpaceRegex = /<br \/>/g;
+	brToSpaceRegex = /<br ?\/?>/g;
 
 export const titleColoursRegex = /§[0-9a-f]/ig;
 export const netherWorldNameRegex = /[_\s]?nether([\s_]|$)/i;
