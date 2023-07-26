@@ -33,7 +33,7 @@ import {MutationTypes} from "@/store/mutation-types";
 import {ActionTypes} from "@/store/action-types";
 import LiveAtlasMapDefinition from "@/model/LiveAtlasMapDefinition";
 import MapProvider from "@/providers/MapProvider";
-import {getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex, validateConfigURL} from "@/util";
+import {cleanHTML, getBoundsFromPoints, getMiddle, stripHTML, titleColoursRegex, validateConfigURL} from "@/util";
 import {LiveAtlasMarkerType} from "@/util/markers";
 import {Pl3xmapTileLayer} from "@/leaflet/tileLayer/Pl3xmapTileLayer";
 import {LiveAtlasTileLayer, LiveAtlasTileLayerOptions} from "@/leaflet/tileLayer/LiveAtlasTileLayer";
@@ -334,7 +334,7 @@ export default class Pl3xmapMapProvider extends MapProvider {
 			iconUrl: `${this.config}images/icon/registered/${marker.icon || "default"}.png`,
 
 			tooltip: marker.tooltip ? stripHTML(marker.tooltip) : '',
-			tooltipHTML: marker.tooltip,
+			tooltipHTML: marker.tooltip? cleanHTML(marker.tooltip) : '',
 			popup: marker.popup,
 			isPopupHTML: true,
 		};

@@ -245,6 +245,16 @@ export const stripHTML = (text: string) => {
 }
 
 /**
+ * Cleans HTML from the given string using a contextual {@link DocumentFragment}
+ * @param {string} text The text to clean HTML from
+ * @returns {string} The given text with all HTML except <br>s
+ */
+export const cleanHTML = (text: string) => {
+	const textContent = documentRange.createContextualFragment(text.replace(brToSpaceRegex,'uuddlrlrbaStartSelect')).textContent || '';
+	return textContent.replace(/uuddlrlrbaStartSelect/g, "<br/>");
+}
+
+/**
  * Default success callback function for VueClipboard, will display a notification with the configured copy success
  * message
  */
