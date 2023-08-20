@@ -41,7 +41,10 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       chunkSizeWarningLimit: 600,
-      assetsDir: 'live-atlas/assets'
+      assetsDir: 'live-atlas/assets',
+      rollupOptions: {
+        external: ["leaflet/dist/leaflet.css"],
+      },
     },
     define: envWithProcessPrefix,
     test: {
