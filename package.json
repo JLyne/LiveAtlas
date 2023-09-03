@@ -13,7 +13,7 @@
     "mvn": "cpy plugin.yml dist java/target/resources --parents && cd java && mvn package && cd .."
   },
   "dependencies": {
-    "@kyvg/vue3-notification": "2.8.0",
+    "@kyvg/vue3-notification": "2.9.1",
     "@soerenmartius/vue3-clipboard": "0.1.2",
     "leaflet": "git+https://github.com/JLyne/Leaflet.git#af5b848e260c740de541acb6460611fedb78d1d7",
     "lodash.debounce": "4.0.8",
