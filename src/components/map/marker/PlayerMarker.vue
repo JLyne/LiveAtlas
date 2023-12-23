@@ -111,7 +111,9 @@ export default defineComponent({
 
 			updateChatBalloon = () => {
 				const content = playerChat.value.reduceRight<string>((previousValue, currentValue) => {
-					return previousValue + `<span>${currentValue.message}</span>`;
+          const span = document.createElement('span');
+          span.appendChild(document.createTextNode(currentValue.message || ''));
+					return previousValue + span.outerHTML;
 				}, '');
 
 				//Update balloon if content has changed
