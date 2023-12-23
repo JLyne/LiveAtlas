@@ -66,5 +66,5 @@
     },
     "rules": {}
   },
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@4.0.2"
 }
