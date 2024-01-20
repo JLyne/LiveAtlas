@@ -152,7 +152,10 @@ export const state: State = {
 		markers: {
 			showLabels: false,
 		},
-
+		nightDay: {
+			mode: "night_day",
+			value: -1
+		},
 		// Settings for player related UI elements and markers
 		players: {
 			// Settings for online player markers

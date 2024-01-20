@@ -17,6 +17,13 @@
 <template>
 	<section class="sidebar" role="none" ref="sidebar">
 		<header class="sidebar__buttons">
+			<button ref="nightDay-button" v-if="nightDay" type="button"
+              class="button--night-day"
+              :title="nightDayMode === 'night' ? messageNight : nightDayMode === 'day' ? messageDay : messageNightDay"
+              :aria-label="nightDayMode === 'night' ? messageNight : nightDayMode === 'day' ? messageDay : messageNightDay"
+              @click="handleNightDayClick">
+			<SvgIcon :name="nightDayMode"></SvgIcon>
+			</button>
 			<button ref="maps-button" v-if="mapCount > 1 || serverCount > 1" type="button"
               class="button--maps" data-section="maps"
               :title="mapCount > 1 ? messageWorlds : messageServers"
@@ -67,6 +74,9 @@ import "@/assets/icons/players.svg";
 import "@/assets/icons/maps.svg";
 import "@/assets/icons/servers.svg";
 import "@/assets/icons/marker_point.svg";
+import "@/assets/icons/day.svg";
+import "@/assets/icons/night.svg";
+import "@/assets/icons/night_day.svg";
 
 export default defineComponent({
 	components: {
@@ -90,11 +100,17 @@ export default defineComponent({
 			serverCount = computed(() => store.state.servers.size),
 			following = computed(() => store.state.followTarget),
 
+			nightDay = computed(() => store.state.currentMap?.nightAndDay),
+			nightDayMode = computed(() => store.state.components.nightDay.mode),
+			
 			messageWorlds = computed(() => store.state.messages.worldsHeading),
 			messageServers = computed(() => store.state.messages.serversHeading),
 			messageMarkers = computed(() => store.state.messages.markersHeading),
 			messagePlayers = computed(() => store.getters.playersHeading),
-
+			messageDay = computed(() => store.state.messages.day),
+			messageNight = computed(() => store.state.messages.night),
+			messageNightDay = computed(() => store.state.messages.nightDay),
+			
 			markerUIEnabled = computed(() => store.getters.markerUIEnabled),
 			playerMakersEnabled = computed(() => store.getters.playerMarkersEnabled),
 
@@ -142,6 +158,14 @@ export default defineComponent({
 			}
 		}
 
+		const handleNightDayClick = () => {
+			const modes = ['day', 'night', 'night_day'],
+				currentMode = modes.indexOf(nightDayMode.value),
+				nextMode = modes[(currentMode + 1) % modes.length];
+
+			store.state.components.nightDay.mode = nextMode;
+		}
+
 		//Move focus when sidebar sections become visible
 		const focusSection = (section: LiveAtlasSidebarSection) => focus(`[data-section=${section}] .section__heading button`);
 
@@ -157,10 +181,16 @@ export default defineComponent({
 			serverCount,
 			following,
 
+			nightDay,
+			nightDayMode,
+
 			messageWorlds,
 			messageServers,
 			messageMarkers,
 			messagePlayers,
+			messageDay,
+			messageNight,
+			messageNightDay,
 
 			previouslyVisible,
 			playersVisible,
@@ -173,6 +203,7 @@ export default defineComponent({
 			handleSidebarKeydown,
 			handleSectionKeydown,
 			handleSectionClick,
+			handleNightDayClick
 		}
 	},
 });

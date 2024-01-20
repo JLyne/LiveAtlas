@@ -170,6 +170,10 @@ export function buildComponents(response: Configuration, config: DynmapUrlConfig
 		markers: {
 			showLabels: false,
 		},
+		nightDay: {
+			mode: "night_day",
+			value: -1
+		},
 		chatBox: undefined,
 		chatBalloons: false,
 		players: {

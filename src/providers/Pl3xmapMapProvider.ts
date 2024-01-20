@@ -231,6 +231,11 @@ export default class Pl3xmapMapProvider extends MapProvider {
 				showLabels: false,
 			},
 
+			nightDay: {
+				mode: "night_day",
+				value: -1
+			},
+
 			//Not used by pl3xmap
 			chatBox: undefined,
 			chatBalloons: false,

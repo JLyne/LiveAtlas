@@ -74,6 +74,9 @@ export const globalMessages = [
 	'logoutSuccess',
 	'closeTitle',
 	'showMore',
+	'day',
+	'night',
+	'nightDay',
 ] as const;
 
 export const serverMessages = [

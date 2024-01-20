@@ -32,6 +32,7 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 	private readonly _store: Store = useStore();
 
 	private readonly _night: ComputedRef<boolean>;
+	private readonly _nightDayMode: ComputedRef<string>;
 	private readonly _pendingUpdates: ComputedRef<boolean>;
 	private _nightUnwatch: WatchStopHandle | null = null;
 	private _updateUnwatch: WatchStopHandle | null = null;
@@ -42,7 +43,8 @@ export class DynmapTileLayer extends LiveAtlasTileLayer {
 
 		this._namedTiles = Object.seal(new Map());
 		this._pendingUpdates = computed(() => !!this._store.state.pendingTileUpdates.length);
-		this._night = computed(() => this._store.getters.night);
+		this._nightDayMode = computed(() => this._store.state.components.nightDay.mode);
+		this._night = computed(() => this._nightDayMode.value === "night_day" ? this._store.getters.night : this._nightDayMode.value === "night");
 	}
 
 	onAdd(map: LeafletMap) {

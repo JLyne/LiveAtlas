@@ -274,6 +274,10 @@ interface LiveAtlasComponentConfig {
 	markers: {
 		showLabels: boolean;
 	};
+	nightDay: {
+		mode: string;
+		value: number;
+	};
 	players: {
 		markers?: LiveAtlasPlayerMarkerConfig;
 		showImages: boolean;

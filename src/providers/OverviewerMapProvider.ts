@@ -243,6 +243,11 @@ export default class OverviewerMapProvider extends MapProvider {
 				showLabels: false,
 			},
 
+			nightDay: {
+				mode: "night_day",
+				value: -1
+			},
+
 			//Not used by Overviewer
 			players: {
 				markers: undefined,
