@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <link rel="preload" href="https://fonts.gstatic.com/s/raleway/v22/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrE.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="https://fonts.gstatic.com/s/raleway/v22/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVsEpbCIPrE.woff2" as="font" crossorigin="anonymous">
 
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 
@@ -9,220 +11,322 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
     <meta name="theme-color" content="#222222">
-	<link rel="manifest" href="/live-atlas/favicons/site.webmanifest">
-	<link rel="icon" href="/live-atlas/favicons/favicon.svg">
-    <link rel=”mask-icon” href="/live-atlas/favicons/mask.svg" color="#cccccc">
-    <link rel="apple-touch-icon" sizes="180x180" href="/live-atlas/favicons/apple-touch-icon.png">
+	<link rel="manifest" href="./live-atlas/favicons/site.webmanifest">
+	<link rel="icon" href="https://raw.githubusercontent.com/Leoparking/leoparking.github.io/main/earth.png">
+    <link rel=”mask-icon” href="./live-atlas/favicons/mask.svg" color="#cccccc">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/Leoparking/leoparking.github.io/main/earth.png">
 
-    <meta name="keywords" content="minecraft, map, dynamic, liveatlas" />
-	<meta name="description" content="Minecraft Dynamic Map" />
+    <meta name="keywords" content="minecraft, map, dynamic, 地球, 我的世界, Minecraft, 地球村" />
+	<meta name="description" content="地球村·世界地图" />
 
-    <title>Minecraft Dynamic Map - LiveAtlas</title>
+    <title>地球村·世界地图</title>
 
-    <!-- Remove this if you are using the servers config below -->
-    <script src="./standalone/config.js"></script>
+    <!-- 如果您使用下面的服务器配置，请删除此项 -->
+     <script src="./standalone/config.js"></script> 
 
     <script>
         window.liveAtlasConfig = {
-        	// By default LiveAtlas looks for a dynmap standalone/config.js file
-            // This configuration can be used instead to support Pl3xmap and Squaremap installations as well as multiple servers (external webserver required)
-            // To configure multiple servers, see https://github.com/JLyne/LiveAtlas/wiki/Configuring-Multiple-Servers.
 
-            // Example Squaremap internal webserver configuration
-            // servers: {
-            //   squaremap: {
-            // 	   squaremap: window.location.pathname
-            //   },
-            // },
-
-            // Example Pl3xmap internal webserver configuration
-            // servers: {
-            //   pl3xmap: {
-            // 	   pl3xmap: window.location.pathname
-            //   },
-            // },
-
-            // Example Overviewer configuration
-            // servers: {
-            //   overviewer: {
-            // 	   overviewer: window.location.pathname
-            //   },
-            // },
-
-            // Example Dynmap internal webserver configuration without using standalone/config.js
-            // servers: {
-            //   dynmap: {
-            //     dynmap: {
-            //       configuration: 'standalone/dynmap_config.json?_={timestamp}',
-            //       update: 'standalone/dynmap_{world}.json?_={timestamp}',
-            //       sendmessage: 'standalone/sendmessage.php',
-            //       login: 'standalone/login.php',
-            //       register: 'standalone/register.php',
-            //       tiles: 'tiles/',
-            //       markers: 'tiles/'
-            //     }
-            //   },
-            // },
-
-            // Example multiple Dynmap servers on external webserver configuration
-            // servers: {
-            //   creative: {
-            //     label: 'Creative',
-            //     dynmap: {
-            //         configuration: 'http://dynmap.local/standalone/creative/MySQL_configuration.php',
-            //         update: 'http://dynmap.local/standalone/creative/MySQL_update.php?world={world}&ts={timestamp}',
-            //         sendmessage: 'http://dynmap.local/standalone/creative/MySQL_sendmessage.php',
-            //         login: 'http://dynmap.local/standalone/creative/MySQL_login.php',
-            //         register: 'http://dynmap.local/standalone/creative/MySQL_register.php',
-            //         tiles: 'http://dynmap.local/standalone/creative/MySQL_tiles.php?tile=',
-            //         markers: 'http://dynmap.local/standalone/creative/MySQL_markers.php?marker='
-            //     }
-            //   },
-            //   survival: {
-            //     label: 'Survival',
-            //     dynmap: {
-            //         configuration: 'http://dynmap.local/standalone/survival/MySQL_configuration.php',
-            //         update: 'http://dynmap.local/standalone/survival/MySQL_update.php?world={world}&ts={timestamp}',
-            //         sendmessage: 'http://dynmap.local/standalone/survival/MySQL_sendmessage.php',
-            //         login: 'http://dynmap.local/standalone/survival/MySQL_login.php',
-            //         register: 'http://dynmap.local/standalone/survival/MySQL_register.php',
-            //         tiles: 'http://dynmap.local/standalone/survival/MySQL_tiles.php?tile=',
-            //         markers: 'http://dynmap.local/standalone/survival/MySQL_markers.php?marker='
-			//     }
-            //   },
-            // },
-
-            // These messages are used throughout LiveAtlas and can be translated here
-            // If a message you want to translate isn't here, it is likely controlled by dynmap itself
-            // see https://github.com/webbukkit/dynmap/wiki/Configuration.txt
+//这些信息在整个LiveAtlas中都有使用，可以在此处翻译
+//如果你想翻译的消息不在这里，它很可能由dynmap本身控制
+//见 https://github.com/webbukkit/dynmap/wiki/Configuration.txt
             messages: {
-            	chatNoMessages: 'No chat messages yet...',
-                chatTitle: 'Chat',
-                chatLogin: 'Please login to send chat messages',
-                chatSend: 'Send',
-                chatPlaceholder: 'Type your chat message here...',
-                chatErrorUnknown: 'Unexpected error while sending chat message',
-                chatErrorDisabled: 'Chat is not enabled',
-            	serversHeading: 'Servers',
-                markersHeading: 'Markers',
-                markersSearchPlaceholder: 'Search markers...',
-                markersSkeleton: 'No markers exist for the current world',
-                markersSetSkeleton: 'This marker set is empty',
-                markersSearchSkeleton: 'No matching markers found',
-                markersUnnamed: '(Unnamed marker)',
-                worldsSkeleton: 'No maps have been configured',
-                playersSkeleton: 'No players are currently online',
-                playersTitle: 'Click to center on player\nDouble-click to follow player',
-                playersTitleHidden: 'This player is currently hidden from the map\nDouble-click to follow player when they become visible',
-                playersTitleOtherWorld: 'This player is in another world.\nClick to center on player\nDouble-click to follow player',
-                playersSearchPlaceholder: 'Search players...',
-                playersSearchSkeleton: 'No matching players found',
-                followingHeading: 'Following',
-                followingUnfollow: 'Unfollow',
-                followingTitleUnfollow: 'Stop following this player',
-                followingHidden: 'Currently hidden',
-                linkTitle: 'Copy link to current location',
-                loadingTitle: 'Loading...',
-                locationRegion: 'Region',
-                locationChunk: 'Chunk',
-                contextMenuCopyLink: 'Copy link to here',
-                contextMenuCenterHere: 'Center here',
-                toggleTitle: 'Click to toggle this section',
-                mapTitle: 'Map - Use the arrow keys to pan the map',
-                layersTitle: 'Layers',
-                copyToClipboardSuccess: 'Copied to clipboard',
-                copyToClipboardError: 'Unable to copy to clipboard',
-
-                loginTitle: 'Login/Register',
-                loginHeading: 'Existing User',
-                loginUsernameLabel: 'Username',
-                loginPasswordLabel: 'Password',
-                loginSubmit: 'Login',
-                loginErrorUnknown: 'Unexpected error while logging in',
-                loginErrorDisabled: 'Logging in is disabled on this server',
-                loginErrorIncorrect: 'Incorrect username or password',
-                loginSuccess: 'Logged in successfully',
-
-                registerHeading: 'New User',
-                registerDescription: `Enter your username and password, along with your registration code.
-
-                        You can get a registration code by running /dynmap webregister in-game.`,
-                registerConfirmPasswordLabel: 'Confirm Password',
-                registerCodeLabel: 'Registration Code',
-                registerSubmit: 'Register',
-                registerErrorUnknown: 'Unexpected error during registration',
-                registerErrorDisabled: 'Registration is disabled on this server',
-                registerErrorVerifyFailed: 'The entered passwords do not match',
-                registerErrorIncorrect: 'Registration failed, please check the entered details are correct',
-
-                logoutTitle: 'Logout',
-                logoutErrorUnknown: 'Unexpected error while logging out',
-                logoutSuccess: 'Logged out successfully',
-
-                closeTitle: 'Close',
-                showMore: 'Show more'
+            	chatNoMessages: '还没有聊天记录哦（在你进入此网页起开始记录）',
+                chatTitle: '聊天区',
+                chatLogin: '你需要登录',
+                chatSend: '发送',
+                chatPlaceholder: '在这里输入文字',
+                chatErrorUnknown: '发送聊天信息时出现意外错误',
+                chatErrorDisabled: '聊天功能没开',
+            	serversHeading: '服务器',
+                markersHeading: '标记',
+                markersSearchPlaceholder: '搜索标记',
+                markersSkeleton: '当前世界不存在标记',
+                markersSetSkeleton: '此标记集为空',
+                markersSearchSkeleton: '找不到匹配的标记',
+                markersUnnamed: '（未命名标记）',
+                worldsSkeleton: '未配置任何映射地图',
+                playersSkeleton: '当前没有玩家在线',
+                playersTitle: '单击以使玩家居中\n双击跟随玩家',
+                playersTitleHidden: '此玩家当前隐藏在地图中\n双击跟随玩家当它们可见时',
+                playersTitleOtherWorld: '这个玩家在另一个地图。\n单击以使玩家居中\n双击跟随玩家',
+                playersSearchPlaceholder: '搜索玩家',
+                playersSearchSkeleton: '找不到匹配的玩家',
+                followingHeading: '跟随中',
+                followingUnfollow: '未跟随',
+                followingTitleUnfollow: '停止跟踪此玩家',
+                followingHidden: '当前隐藏',
+    linkTitle: '复制链接到当前位置',
+    loadingTitle: '加载中...',
+    locationRegion: '区域',
+    locationChunk: '区块',
+    contextMenuCopyLink: '复制链接到这里',
+    contextMenuCenterHere: '居中显示',
+    toggleTitle: '点击切换此部分',
+    mapTitle: '地图 - 使用方向键平移地图',
+    layersTitle: '图层',
+    copyToClipboardSuccess: '已复制到剪贴板',
+    copyToClipboardError: '无法复制到剪贴板',
+    loginTitle: '登录/注册',
+    loginHeading: '现有用户',
+    loginUsernameLabel: '用户名',
+    loginPasswordLabel: '密码',
+    loginSubmit: '登录',
+    loginErrorUnknown: '登录时发生意外错误',
+    loginErrorDisabled: '该服务器上禁用了登录',
+    loginErrorIncorrect: '用户名或密码不正确',
+    loginSuccess: '登录成功',
+    registerHeading: '新用户',
+    registerDescription: '输入您的用户名和密码，以及您的注册码。\n您可以通过在游戏中运行/dynmap webregister 来获得注册码。',
+    registerConfirmPasswordLabel: '确认密码',
+    registerCodeLabel: '注册码',
+    registerSubmit: '注册',
+    registerErrorUnknown: '注册过程中发生意外错误',
+    registerErrorDisabled: '该服务器上禁用了注册',
+    registerErrorVerifyFailed: '输入的密码不匹配',
+    registerErrorIncorrect: '注册失败，请检查输入的详细信息是否正确',
+    logoutTitle: '注销',
+    logoutErrorUnknown: '注销时发生意外错误',
+    logoutSuccess: '成功注销',
+    closeTitle: '关闭',
+    showMore: '显示更多'
             },
 
             ui: {
-            	// If true, player markers will always be displayed in front of other marker types
+            	// 如果为true，玩家标记将始终显示在其他标记类型的前面
             	playersAboveMarkers: true,
 
-                // Whether to enable the player list search box
+                // 是否启用玩家列表搜索框
                 playersSearch: true,
 
-                // Use more compact pre-2.0 player marker style
+                // 使用更紧凑的2.0之前的玩家标记样式
                 compactPlayerMarkers: false,
 
-                // Disable the map right click menu
+                // 禁用地图右键菜单
                 disableContextMenu: false,
 
-                // Disable the markers button and list
+                // 禁用标记按钮和列表
                 disableMarkerUI: false,
 
-                // Custom URL to redirect to when logging in is required
-                // This URL will need to handle the login process and redirect users back to LiveAtlas
+//需要登录时重定向到的自定义URL
+//此URL需要处理登录过程并将用户重定向回LiveAtlas
                 customLoginUrl: null
             },
 
-            // Config version. Do not modify.
+            // 配置版本。请勿修改。
             version: 1
         };
     </script>
 
     <style>
-        /* Theme colours */
-        :root {
-            --background-base: #222222; /* Foreground UI elements */
-            --background-dark: #121212; /* Body/Splash screen/Shadows */
-            --background-light: #363636; /* Scrollbars/inputs */
-            --background-error: #771616; /* Errors */
-            --background-marker: var(--background-dark); /* Map markers */
+              /* 页面基础样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+              /* 悬浮图标 */
+        #calculator-icon {
+            user-select: none; /* 禁止选中 */
+            -webkit-user-select: none; /* Safari浏览器的支持 */
+            -ms-user-select: none; /* IE 和 Edge 浏览器的支持 */
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+            z-index: 99999; /* 设置一个非常高的 z-index */
+        }
+      /* 媒体查询：当设备处于竖屏模式时（portrait orientation） */
+      @media (orientation: portrait) {
+          #calculator-icon {
+              bottom: 50px; /* 修改竖屏时的位置 */
+          }
+      }
 
-            --background-disabled: #555555; /* Disabled controls */
-            --background-hover: #363636; /* :hovered buttons/menu items */
-            --background-active: #6d6d6d; /* Button :active */
-            --background-selected: #BDBDBD; /* Selected buttons/menu items */
+        #calculator-icon:hover {
+            background-color: #45a049;
+        }
 
-            --outline-focus: #eeeeee; /* :focus outline */
+        /* 计算器弹出窗口样式 */
+        #calculator-container {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: auto;  /* 超出部分可滚动 */
+            z-index: 9999;
+        }
 
-            --border-radius: 0.5rem;
-            --border-color: #333333; /* Control borders */
-            --border-error: #cc0e0e;
-            --box-shadow: 2px 2px 0px #111111;
+        /* 关闭按钮 */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            background-color: transparent;
+            border: none;
+            color: #333;
+            cursor: pointer;
+          text-shadow: none; /* 禁用部分文字的阴影 */
+        }
 
-            --text-base: rgba(255, 255, 255, 0.7); /* Normal text */
-            --text-emphasis: rgba(255, 255, 255, 0.87); /* Chat messages/:focus inputs */
-            --text-subtle: rgba(255, 255, 255, 0.5); /* Skeletons/secondary text */
-            --text-disabled: var(--text-subtle); /* Disabled controls */
-            --text-marker: var(--text-base); /* Map markers */
+        .close-btn:hover {
+            
+            background-color:gray;
 
-            --text-hover: var(--text-base); /* Text in :hover buttons */
-            --text-active: var(--text-base); /* Text in :active buttons */
-            --text-selected: var(--background-base); /* Text in selected buttons */
-            --text-shadow: 0.1rem 0.1rem #000000; /* Text in selected buttons */
+        }
 
-            --text-night: #ddffff; /* Clock time at night */
-            --text-day: #ffdd33; /* Clock time in day */
+/*计算器容器的样式*/
+        .container {
+            font-family: Arial, sans-serif;
+            width: 80%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .container h1 {
+            text-align: center;
+            color: black;
+        }
+        .container p {
+
+            text-shadow: none; /* 禁用部分文字的阴影 */
+        }
+        .form-group {
+          color:black;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            font-size:2em;
+            font-family:"黑体";
+            text-shadow: none; /* 禁用部分文字的阴影 */
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+          background-color:white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: black;  /* 设置输入文本的颜色为黑色 */
+        }
+
+
+
+
+#latitude::placeholder {
+    font-size: 12px;
+}
+#longitude::placeholder {
+    font-size: 12px;
+}
+
+
+      /* 当输入框被点击时，确保文本颜色依然为黑色 */
+        .form-group input:focus {
+            color: black;  /* 设置焦点时的输入文本颜色为黑色 */
+            outline: none; /* 去掉默认的输入框聚焦时的外边框 */
+        }
+        .container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #45a049;
+        }
+        .计算坐标 {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .计算坐标 h2 {
+          text-shadow: none; /* 禁用部分文字的阴影 */
+          color: black;
+          font-family:"等线 (中文正文)";
+        }
+        .计算坐标 p {
+          text-shadow: none; /* 禁用部分文字的阴影 */
+          color: black;
+          font-family:"等线 (中文正文)";
+        }
+
+      
+        #quick-locate-button {
+            display: none;
+            margin-top: 15px;
+            background-color: #007BFF;
+        }
+        #quick-locate-button:hover {
+            background-color: #0056b3;
+        }
+      /*计算器区域的样式设计到此为止了*/
+      
+     /* 主题颜色 */
+    :root {
+        --background-base: #2C5980; /* 前景 UI 元素 */
+        --background-dark: #121212; /* 主体/启动屏幕/阴影 */
+        --background-light: #ADD8E6; /* 滚动条/输入框*/
+        --background-error: #771616; /* 错误 暗红*/
+        --background-marker: var(--background-dark); /* 地图标记 */
+
+        --background-disabled: #C0C0C0; /* 禁用控件 深灰色*/
+        --background-hover: #30CA30; /* 鼠标悬停按钮/菜单项 绿色*/
+        --background-active: #6d6d6d; /* 按钮 :active 粉色*/
+        --background-selected: #4682B4; /* 选定按钮/菜单项*/
+
+        --outline-focus: #eeeeee; /* :focus 轮廓*/
+
+        --border-radius: 0.5rem;
+        --border-color: #AAD2E1; /* 控件边框 */
+        --border-error: #cc0e0e;  /*红色*/
+        --box-shadow: 2px 2px 0px #111111;   /*黑色*/
+
+        --text-base: rgba(255, 255, 255, 0.7); /* 普通文本 */
+        --text-emphasis: rgba(255, 255, 255, 0.87); /* 聊天消息/:focus 输入 */
+        --text-subtle: rgba(255, 255, 255, 0.5); /* 骨架/次要文本 */
+        --text-disabled: var(--text-subtle); /* 禁用控件 */
+        --text-marker: var(--text-base); /* 地图标记 */
+
+        --text-hover: var(--text-base); /* :hover 按钮中的文本 */
+        --text-active: var(--text-base); /* :active 按钮中的文本 */
+        --text-selected: var(--background-base); /* 选定按钮中的文本 */
+        --text-shadow: 0.1rem 0.1rem #000000; /* 选定按钮中的文本 纯黑*/
+
+        --text-night: #ddffff; /* 夜晚的时钟时间 */
+        --text-day: #ffdd33; /* 白天的时钟时间 */
         }
 
         @keyframes fade {
@@ -323,15 +427,6 @@
             padding: 4rem;
         }
 
-        #splash:after {
-            color: var(--text-subtle);
-            content: '3.0.0-beta.2';
-            font-family: monospace;
-            position: fixed;
-            bottom: 2rem;
-            left: 2rem;
-        }
-
         #splash[hidden] {
             display: none;
         }
@@ -368,6 +463,9 @@
             height: 100%;
         }
     </style>
+    <script type="module" crossorigin src="./live-atlas/assets/index.a82d2095.js"></script>
+    <link rel="modulepreload" href="./live-atlas/assets/vendor.d0ab50b1.js">
+    <link rel="stylesheet" href="./live-atlas/assets/index.1de34b3a.css">
   </head>
   <body>
     <div id="splash">
@@ -375,7 +473,7 @@
             <path d="M5.235.662C2.153.606 0 2.945 0 6.912v216.577c0 5.288 3.828 11.41 8.582 13.725l57.835 28.165c4.755 2.316 8.582-.078 8.582-5.367V43.434c0-5.288-3.827-11.41-8.582-13.727L8.582 1.544C7.394.965 6.262.681 5.235.662zm32.283 135.96c14.394 0 26.062 11.669 26.062 26.063 0 14.394-24.167 59.55-26.062 57.654-1.854 1.854-26.063-43.26-26.063-57.654 0-14.394 11.669-26.063 26.063-26.063zM202.388 1.013l57.833 28.165c4.755 2.315 8.583 8.437 8.583 13.726v216.58c0 5.29-3.828 7.683-8.583 5.367l-57.833-28.164c-4.755-2.316-8.583-8.438-8.583-13.727V6.38c0-5.289 3.828-7.682 8.583-5.367zM172.012.39c-1.051-.035-2.209.191-3.426.709l-68.342 29.053c-4.867 2.07-8.786 7.993-8.786 13.282V260.01c0 5.29 3.919 7.88 8.786 5.811l68.342-29.053c4.867-2.07 8.786-7.991 8.786-13.28V6.91c0-3.967-2.204-6.417-5.36-6.521zm-36.949 41.216c14.394 0 26.063 11.668 26.063 26.062 0 14.394-24.168 59.55-26.063 57.655C133.209 127.177 109 82.063 109 67.668c0-14.394 11.669-26.062 26.063-26.062z"/>
             <path d="M48.573 162.689a11.056 11.056 0 0 1-11.056 11.056 11.056 11.056 0 0 1-11.056-11.056 11.056 11.056 0 0 1 11.056-11.056 11.056 11.056 0 0 1 11.056 11.056zM146.12 67.669a11.056 11.056 0 0 1-11.057 11.056 11.056 11.056 0 0 1-11.056-11.056 11.056 11.056 0 0 1 11.056-11.056 11.056 11.056 0 0 1 11.056 11.056z"/>
         </svg>
-
+      
         <svg id="splash__spinner" width="38" height="38" viewBox="0 0 38 38" stroke="#fff" aria-label="LiveAtlas is loading">
             <g transform="translate(1 1)" stroke-width="2" fill="none">
                 <circle stroke-opacity=".5" cx="18" cy="18" r="18"/>
@@ -390,15 +488,112 @@
             <span id="splash__error-retry" aria-live="polite"></span>
         </div>
     </div>
+    <!-- 计算器图标 -->
+    <div id="calculator-icon"title="点击打开/关闭计算器">🧭</div>
 
+    <!-- 计算器弹出窗口 -->
+    <div id="calculator-container" title="计算器">
+        <button class="close-btn" onclick="closeCalculator()"title="点我也可以关闭小窗口哦">×</button>
+        <!-- 嵌入计算器 -->
+        <div class="container">
+             <h1>坐标计算器</h1>
+             <div class="form-group">
+                 <label for="latitude">纬度 (°N):</label>
+                  <p>北纬为负数</p>
+                 <input type="number" id="latitude" placeholder="请输入现实地点纬度" step="any">
+             </div>
+             <div class="form-group">
+                 <label for="longitude">经度 (°W):</label>
+                 <p>西经为负数</p>
+                 <input type="number" id="longitude" placeholder="请输入现实地点经度" step="any">
+             </div>
+             <button onclick="calculateCoordinates()">计算Minecraft坐标</button>
+             <div class="计算坐标" id="计算坐标"></div>
+             <button id="quick-locate-button" onclick="quickLocate()">快速定位</button>
+         </div> 
+    </div>
     <noscript>
-        <strong>LiveAtlas requires JavaScript to work.<br />Please enable it to continue.</strong>
+        <strong>此地图需要JavaScript才能工作<br />请启用它以继续</strong>
     </noscript>
 
     <main id="app" aria-hidden="true"></main>
-    <script type="module" src="/src/main.ts"></script>
+    
 
     <script>
+        // 获取元素
+        const calculatorIcon = document.getElementById('calculator-icon');
+        const calculatorContainer = document.getElementById('calculator-container');
+       // 监听计算器图标点击事件
+        calculatorIcon.addEventListener('click', () => {
+            // 切换计算器容器的显示/隐藏状态
+            if (calculatorContainer.style.display === 'none' || calculatorContainer.style.display === '') {
+                calculatorContainer.style.display = 'flex'; // 显示
+            } else {
+                calculatorContainer.style.display = 'none'; // 隐藏
+            }
+        });
+      
+              // 右上角小×关闭计算器窗口
+        function closeCalculator() {
+            const calculatorContainer = document.getElementById('calculator-container');
+            calculatorContainer.style.display = 'none';
+        }
+
+      
+        //计算坐标的脚本
+        let computedX, computedZ;
+        function calculateCoordinates() {
+            // 获取输入值
+            const latitude = parseFloat(document.getElementById('latitude').value);
+            const longitude = parseFloat(document.getElementById('longitude').value);
+            // 检查输入是否有效
+            if (isNaN(latitude) || isNaN(longitude)) {
+                alert("请输入有效的纬度和经度！");
+                return;
+            }
+              // 检查是否为特殊的数字，触发“彩蛋”提示
+    if ([1145, 114, 114514, 4514, -1145, -114, -114514, -4514].includes(latitude) || [ -1145, -114, -114514, -4514,1145, 114, 114514, 4514].includes(longitude)) {
+        alert("好臭");
+    }
+    if ([666,-666].includes(latitude) || [-666,666].includes(longitude)) {
+        alert("666666你发现了彩蛋");
+    }
+    // 检查纬度是否在有效范围内
+    if (latitude < -90 || latitude > 90) {
+        alert("纬度必须在 -90 到 90 之间！");
+        return ;
+    }
+
+    // 检查经度是否在有效范围内
+    if (longitude < -180 || longitude > 180) {
+        alert("经度必须在 -180 到 180 之间！");
+        return ;
+    }
+
+            // 计算X坐标（经度）
+            computedX = ((longitude + 180) / 360) * 43008 - 21504;
+            // 计算Z坐标（纬度）
+            computedZ = ((-latitude + 90) / 180) * 21504 - 10752;
+            // 显示结果
+            const resultElement = document.getElementById('计算坐标');
+            resultElement.innerHTML = `
+                <h2>计算结果</h2>
+                <p><strong>X坐标：</strong>${Math.round(computedX)}</p>
+                <p><strong>Z坐标：</strong>${Math.round(computedZ)}</p>
+            `;
+            // 显示“快速定位”按钮
+            document.getElementById('quick-locate-button').style.display = 'block';
+        }
+        function quickLocate() {
+            // 构建URL并跳转
+            const x = Math.round(computedX);
+            const z = Math.round(computedZ);
+            const url = `/#world;flat;${x},64,${z};5`;
+            window.location.href = url;
+        }
+
+
+      
         window.addEventListener('load', () => {
             if(!window.liveAtlasLoaded) {
                 document.getElementById('splash__error').setAttribute('aria-hidden', 'false');
