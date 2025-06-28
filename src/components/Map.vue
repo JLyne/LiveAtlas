@@ -14,7 +14,7 @@
   - limitations under the License.
   -->
 
-<template>
+  <template>
 	<div class="map" :style="{backgroundColor: mapBackground }" v-bind="$attrs" :aria-label="mapTitle">
 		<template v-if="leaflet">
 			<TileLayer v-for="[name, map] in maps" :key="name" :options="map" :leaflet="leaflet"></TileLayer>
@@ -34,10 +34,37 @@
 	</div>
 
 	<MapContextMenu v-if="contextMenuEnabled && leaflet" :leaflet="leaflet"></MapContextMenu>
+	<div class="coordinate-input">
+  		<label>X: <input type="number" v-model.number="inputX" /></label>
+  		<label>Y: <input type="number" v-model.number="inputY" /></label>
+  		<label>Z: <input type="number" v-model.number="inputZ" /></label>
+  	<button @click="goToCoordinates">Go</button>
+	</div>
+
+	<div class="waypoint-input">
+  		<label>
+    		New Waypoint Name:
+    		<input type="text" v-model="newWaypointName" />
+  		</label>
+  		<button @click="addWaypoint">Add Waypoint</button>
+	</div>
+
+	<div class="waypoints-list">
+  		<h3>Saved Waypoints</h3>
+  		<ul>
+    		<li v-for="(wp, index) in waypoints" :key="wp.name">
+      			<strong>{{ wp.name }}</strong>
+      			<button @click="goToWaypoint(wp)">Go</button>
+      			<button @click="removeWaypoint(index)">Remove</button>
+    		</li>
+  		</ul>
+	</div>
+
+
 </template>
 
 <script lang="ts">
-import {computed, ref, defineComponent} from "vue";
+import { computed, ref, defineComponent, onMounted } from "vue";
 import {CRS, LatLng, LatLngBounds, PanOptions, ZoomPanOptions} from 'leaflet';
 import {LiveAtlasLocation, LiveAtlasPlayer, LiveAtlasMapViewTarget} from "@/index";
 import {useStore} from '@/store';
@@ -72,64 +99,143 @@ export default defineComponent({
 	},
 
 	setup() {
-		const store = useStore(),
-			leaflet = undefined as any,
+		const inputX = ref(0);
+		const inputY = ref(64);
+		const inputZ = ref(0);
 
-			maps = computed(() => store.state.maps),
-			overlays = computed(() => store.state.currentMap?.overlays),
-			markerSets = computed(() => store.state.markerSets),
-			configuration = computed(() => store.state.configuration),
+		function goToCoordinates() {
+  			if (!currentMap.value || !leaflet) return;
+  
+ 			const latlng = currentMap.value.locationToLatLng({x: inputX.value, y: inputY.value, z: inputZ.value});
+  			leaflet.value.setView(latlng, leaflet.getZoom());
+		}
 
-			playerMarkersEnabled = computed(() => store.getters.playerMarkersEnabled),
-			coordinatesControlEnabled = computed(() => store.getters.coordinatesControlEnabled),
-			clockControlEnabled = computed(() => store.getters.clockControlEnabled),
-			linkControlEnabled = computed(() => store.state.components.linkControl),
-			chatBoxEnabled = computed(() => store.state.components.chatBox),
-			loginEnabled = computed(() => store.state.components.login),
-			contextMenuEnabled = computed(() => !store.state.ui.disableContextMenu),
-			logoControls = computed(() => store.state.components.logoControls),
+		const newWaypointName = ref("");
+		interface Waypoint {
+			name: string;
+			location: LiveAtlasLocation;
+		}
+		const waypoints = ref<Waypoint[]>([]);
 
-			currentWorld = computed(() => store.state.currentWorld),
-			currentMap = computed(() => store.state.currentMap),
-			mapBackground = computed(() => store.getters.mapBackground),
+		// Load from localStorage
+		onMounted(() => {
+  			const saved = localStorage.getItem("waypoints");
+  			if (saved) waypoints.value = JSON.parse(saved);
+		});
 
-			followTarget = computed(() => store.state.followTarget),
-			viewTarget = computed(() => store.state.viewTarget),
-			parsedUrl = computed(() => store.state.parsedUrl),
+		function saveWaypoints() {
+  			localStorage.setItem("waypoints", JSON.stringify(waypoints.value));
+		}
+
+		function addWaypoint() {
+			if (!newWaypointName.value.trim()) return;
+  			const exists = waypoints.value.some(wp => wp.name === newWaypointName.value);
+  			if (exists) return alert("Waypoint name already exists");
+
+  			const location = currentMap.value.latLngToLocation(leaflet.getCenter(), 64);
+  			waypoints.value.push({ name: newWaypointName.value.trim(), location });
+  			newWaypointName.value = "";
+  			saveWaypoints();
+		}
+
+		function goToWaypoint(wp: {name: string, location: LiveAtlasLocation}) {
+  			if (!currentMap.value || !leaflet) return;
+  			const latlng = currentMap.value.locationToLatLng(wp.location);
+  			leaflet.value.setView(latlng, leaflet.getZoom());
+		}
+
+		function removeWaypoint(index: number) {
+  			waypoints.value.splice(index, 1);
+  			saveWaypoints();
+		}
+
+		function setView(target: LiveAtlasMapViewTarget) {
+			const latlng = currentMap.value?.locationToLatLng(target.location);
+			if (latlng && leaflet.value) {
+				leaflet.value.setView(latlng, leaflet.value.getZoom(), target.options);
+			}
+		}
+
+		watch(viewTarget, (newValue) => {
+			if (newValue && currentWorld.value && newValue.location.world === currentWorld.value.name) {
+				store.commit(MutationTypes.CLEAR_VIEW_TARGET, undefined);
+			}
+
+			if (newValue && leaflet.value) {
+				setView(newValue);
+			}
+		}, { deep: true });
+
+		watch(currentMap, (newValue, oldValue) => {
+  			if (newValue) {
+    			store.state.currentMapProvider!.populateMap(newValue);
+
+    			if (leaflet.value) {
+      				let viewTarget = scheduledView.value;
+
+      				if (!viewTarget && oldValue) {
+        			viewTarget = {
+          				location: oldValue.latLngToLocation(leaflet.value.getCenter(), 64) as LiveAtlasLocation
+        			};
+      } else if (!viewTarget) {
+        	viewTarget = { location: { x: 0, y: 64, z: 0, world: newValue.name } }; // fallback
+      	}
+
+      leaflet.value.setView(
+        currentMap.value.locationToLatLng(viewTarget.location),
+        leaflet.value.getZoom()
+      );
+    }
+  }
+		});
+
+
+		const store = useStore();
+		const leaflet = ref<LiveAtlasLeafletMap | null>(null);
+
+		onMounted(() => {
+			leaflet.value = new LiveAtlasLeafletMap(store, mapContainerRef, config);
+		});
+
+			const maps = computed(() => store.state.maps);
+			const overlays = computed(() => store.state.currentMap?.overlays);
+			const markerSets = computed(() => store.state.markerSets);
+			const configuration = computed(() => store.state.configuration);
+
+			const playerMarkersEnabled = computed(() => store.getters.playerMarkersEnabled);
+			const coordinatesControlEnabled = computed(() => store.getters.coordinatesControlEnabled);
+			const clockControlEnabled = computed(() => store.getters.clockControlEnabled);
+			const linkControlEnabled = computed(() => store.state.components.linkControl);
+			const chatBoxEnabled = computed(() => store.state.components.chatBox);
+			const loginEnabled = computed(() => store.state.components.login);
+			const contextMenuEnabled = computed(() => !store.state.ui.disableContextMenu);
+			const logoControls = computed(() => store.state.components.logoControls);
+
+			const currentWorld = computed(() => store.state.currentWorld);
+			const currentMap = computed(() => store.state.currentMap);
+			const mapBackground = computed(() => store.getters.mapBackground);
+
+			const followTarget = computed(() => store.state.followTarget);
+			const viewTarget = computed(() => store.state.viewTarget);
+			const parsedUrl = computed(() => store.state.parsedUrl);
 
 			//Location and zoom to pan to upon next projection change
-			scheduledView = ref<LiveAtlasMapViewTarget|null>(null),
+			const scheduledView = ref<LiveAtlasMapViewTarget|null>(null);
 
-			mapTitle = computed(() => store.state.messages.mapTitle);
+			const mapTitle = computed(() => store.state.messages.mapTitle);
 
-		return {
-			leaflet,
-			maps,
-			overlays,
-			markerSets,
-			configuration,
+			return {
+  				leaflet, maps, overlays, markerSets, configuration,
+  				playerMarkersEnabled, coordinatesControlEnabled,
+  				clockControlEnabled, linkControlEnabled, chatBoxEnabled,
+  				loginEnabled, contextMenuEnabled, logoControls,
+  				followTarget, viewTarget, parsedUrl, mapBackground,
+  				currentWorld, currentMap, scheduledView, mapTitle,
+  				inputX, inputY, inputZ, goToCoordinates,
+  				newWaypointName, waypoints, addWaypoint, goToWaypoint, removeWaypoint
+			};
 
-			playerMarkersEnabled,
-			coordinatesControlEnabled,
-			clockControlEnabled,
-			linkControlEnabled,
-			chatBoxEnabled,
-			loginEnabled,
-			contextMenuEnabled,
 
-			logoControls,
-			followTarget,
-			viewTarget,
-			parsedUrl,
-			mapBackground,
-
-			currentWorld,
-			currentMap,
-
-			scheduledView,
-
-			mapTitle
-		}
 	},
 
 	watch: {
@@ -141,44 +247,7 @@ export default defineComponent({
 			},
 			deep: true
 		},
-		viewTarget: {
-			handler(newValue) {
-				if (newValue) {
-					//Immediately clear if on the correct world, to allow repeated panning
-					if (this.currentWorld && newValue.location.world === this.currentWorld.name) {
-						useStore().commit(MutationTypes.CLEAR_VIEW_TARGET, undefined);
-					}
 
-					this.setView(newValue);
-				}
-			},
-			deep: true
-		},
-		currentMap(newValue, oldValue) {
-			const store = useStore();
-
-			if(newValue) {
-				store.state.currentMapProvider!.populateMap(newValue);
-
-				if(this.leaflet) {
-					let viewTarget = this.scheduledView;
-
-					if(!viewTarget && oldValue) {
-						viewTarget = {location: oldValue.latLngToLocation(this.leaflet.getCenter(), 64) as LiveAtlasLocation};
-					} else if(!viewTarget) {
-						viewTarget = {location: {x: 0, y: 0, z: 0} as LiveAtlasLocation};
-					}
-
-					viewTarget.options = {
-						animate: false,
-						noMoveStart: false,
-					}
-
-					this.setView(viewTarget);
-					this.scheduledView = null;
-				}
-			}
-		},
 		currentWorld(newValue, oldValue) {
 			const store = useStore();
 
@@ -395,4 +464,20 @@ export default defineComponent({
 			}
 		}
 	}
+
+	.coordinate-input, .waypoint-input {
+	margin: 1rem 0;
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+  }
+  
+  .waypoints-list ul {
+	list-style: none;
+	padding: 0;
+  }
+  
+  .waypoints-list li {
+	margin-bottom: 0.5rem;
+  }
 </style>
