@@ -354,7 +354,6 @@ export default defineComponent({
 			if(!currentWorld || currentWorld.name !== player.location.world || newFollow) {
 				map = store.state.configuration.followMap;
 			}
-
 			this.setView({
 				location: player.location,
 				map,
